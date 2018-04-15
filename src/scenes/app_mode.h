@@ -10,8 +10,6 @@ class Text;
 
 enum ModeId {
 	MODE_NULL,
-	MODE_MAINMENU,
-	MODE_OPTIONSMENU,
 	MODE_MENU,
 	MODE_GAME
 };
@@ -27,16 +25,15 @@ public:
 	virtual ModeId getModeId   () = 0;
 };
 
-class AppModeMainMenu : public AppMode, Menu::IListener {
+class AppModeMenu : public AppMode {
 public:
-	AppModeMainMenu();
+	AppModeMenu();
 	virtual void   processInput();
 	virtual void   run();
 	virtual void   render();
 	virtual void   init() {}
 	virtual void   deactivate();
-	virtual ModeId getModeId() { return MODE_MAINMENU; }
-	virtual void onSelected(MenuItem* menuItem);
+	virtual ModeId getModeId() { return MODE_MENU; }
 
 private:
 	Menu* m_mainMenu;
@@ -45,38 +42,6 @@ private:
 	Menu* m_activeMenu;
 	std::vector<MenuItem*> m_menuItems;
 	int m_seletedItem;
-};
-
-class AppModeOptionsMenu : public AppMode, public IInputManager::IListener {
-public:
-	AppModeOptionsMenu();
-	virtual void   processInput();
-	virtual void   run();
-	virtual void   render();
-	virtual void   init() {}
-	virtual void   deactivate();
-	virtual ModeId getModeId() { return MODE_OPTIONSMENU; }
-	virtual bool   onEvent(const IInputManager::Event&);
-
-private:
-	std::vector<MenuItem*> m_menuItems;
-	int m_seletedItem;
-};
-
-class AppModeMenu : public AppMode, public Button::IListener {
-public:
-	AppModeMenu                ();
-	virtual void   processInput();
-	virtual void   run         (){}
-	virtual void   render      ();
-	virtual void   init        (){}
-	virtual void   deactivate  ();
-	virtual ModeId getModeId   (){ return MODE_MENU; }
-	virtual void   onClick     (Button* button);
-
-private:
-	bool m_keyReleased = false;
-	std::vector<Control*> m_controls;
 };
 
 class AppModeGame : public AppMode, public IInputManager::IListener {
@@ -90,8 +55,5 @@ public:
 	virtual ModeId getModeId   (){ return MODE_GAME; }
 	virtual bool   onEvent     (const IInputManager::Event&);
 private:
-	std::vector<MenuItem*> m_menuItems;
-	int m_seletedItem;
 	bool m_isPaused;
-	Text* m_PauseText;
 };

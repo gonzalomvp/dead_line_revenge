@@ -1,6 +1,8 @@
 #include "../common/stdafx.h"
 #include "graphics_engine.h"
 
+#include <algorithm>
+
 void Sprite::render() {
 	if (m_isActive) {
 		CORE_RenderCenteredSprite(m_pos, m_size, m_texture);
@@ -66,6 +68,15 @@ GLuint GraphicsEngine::getTexture(const char* fileName) {
 
 void GraphicsEngine::render() {
 	glClear(GL_COLOR_BUFFER_BIT);
+
+	//sort by priority
+	std::sort(m_gfxEntities.begin(),
+		m_gfxEntities.end(),
+		[](const GfxEntity* lhs, const GfxEntity* rhs)
+	{
+		return lhs->getPriority() > rhs->getPriority();
+	});
+
 	for (size_t i = 0; i < m_gfxEntities.size(); i++) {
 		m_gfxEntities[i]->render();
 	}

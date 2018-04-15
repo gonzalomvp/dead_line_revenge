@@ -16,6 +16,7 @@ class GraphicsEngine;
 class InputManager;
 class StringManager;
 class GUIManager;
+class MenuManager;
 
 struct Settings {
 	bool music;
@@ -29,4 +30,5 @@ extern GraphicsEngine* g_graphicsEngine;
 extern InputManager*   g_inputManager;
 extern StringManager*  g_stringManager;
 extern GUIManager*     g_guiManager;
+extern MenuManager*    g_menuManager;
 extern Settings        g_settings;

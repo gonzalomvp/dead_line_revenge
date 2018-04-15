@@ -147,7 +147,7 @@ EntityBullet::EntityBullet(vec2 pos, vec2 dir) {
 	m_pos = pos;
 	m_size = vmake(10, 10);
 	m_speed = vscale(dir, 6);
-	m_sprite = new Sprite(g_graphicsEngine->getTexture("data/bullet.png"));
+	m_sprite = new Sprite(g_graphicsEngine->getTexture("data/bullet.png"), 2);
 	m_sprite->setPos(m_pos);
 	m_sprite->setSize(m_size);
 	g_graphicsEngine->addGfxEntity(m_sprite);

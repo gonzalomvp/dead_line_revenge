@@ -33,12 +33,6 @@ void AppManager::applyMode() {
 		switch (m_wantedMode) {
 			case MODE_NULL:
 				break;
-			case MODE_MAINMENU:
-				m_appMode = new AppModeMainMenu();
-				break;
-			case MODE_OPTIONSMENU:
-				m_appMode = new AppModeOptionsMenu();
-				break;
 			case MODE_MENU:
 				m_appMode = new AppModeMenu();
 				break;

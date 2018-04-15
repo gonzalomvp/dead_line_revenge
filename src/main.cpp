@@ -10,6 +10,7 @@ InputManager*   g_inputManager;
 AppManager* g_appManager;
 StringManager*  g_stringManager;
 GUIManager*     g_guiManager;
+MenuManager*    g_menuManager;
 Settings g_settings;
 
 int Main(void) {
@@ -24,10 +25,10 @@ int Main(void) {
 	g_stringManager = &stringManager;
 	g_stringManager->loadLanguage(g_settings.language);
 	g_guiManager = GUIManager::instance();
-
 	g_inputManager = new InputManager();
+	g_menuManager = new MenuManager();
 	g_appManager =  new AppManager();
-	g_appManager->switchMode(MODE_MAINMENU);
+	g_appManager->switchMode(MODE_MENU);
 	
 	while (!SYS_GottaQuit()) {
 		g_appManager->applyMode();

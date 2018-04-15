@@ -1,5 +1,9 @@
 #include "menu.h"
 #include "menu_item.h"
+#include "../globals.h"
+#include "../scenes/app_manager.h"
+#include "../gui/string_manager.h"
+#include "../scenes/world.h"
 
 Menu::~Menu() {
 	g_inputManager->unregisterEvent(this);
@@ -11,7 +15,7 @@ Menu* Menu::createMainMenu() {
 	menuItem = new MenuItem("PLAY_MENU", vmake(SCR_WIDTH / 2, SCR_HEIGHT * 0.6), "LTEXT_GUI_PLAY_MENU_ITEM");
 	menuItem->init();
 	menu->m_menuItems.push_back(menuItem);
-	menuItem = new MenuItem("OPTIONS", vmake(SCR_WIDTH / 2, SCR_HEIGHT * 0.5), "LTEXT_GUI_OPTIONS_MENU_ITEM");
+	menuItem = new MenuItem("OPTIONS_MENU", vmake(SCR_WIDTH / 2, SCR_HEIGHT * 0.5), "LTEXT_GUI_OPTIONS_MENU_ITEM");
 	menuItem->init();
 	menu->m_menuItems.push_back(menuItem);
 	menuItem = new MenuItem("EXIT", vmake(SCR_WIDTH / 2, SCR_HEIGHT * 0.4), "LTEXT_GUI_OPTIONS_EXIT_ITEM");
@@ -57,6 +61,21 @@ Menu* Menu::createOptionsMenu() {
 	menuItem->init();
 	menu->m_menuItems.push_back(menuItem);
 	menuItem = new MenuItem("MAIN_MENU", vmake(SCR_WIDTH / 2, SCR_HEIGHT * 0.3), "LTEXT_GUI_BACK_MENU_ITEM");
+	menuItem->init();
+	menu->m_menuItems.push_back(menuItem);
+	menu->m_seletedItem = 0;
+	menu->m_menuItems[menu->m_seletedItem]->setSelected(true);
+	menu->deactivate();
+	return menu;
+}
+
+Menu* Menu::createPauseMenu() {
+	Menu* menu = new Menu();
+	MenuItem* menuItem;
+	menuItem = new MenuItem("RESUME", vmake(SCR_WIDTH / 2, SCR_HEIGHT * 0.6), "LTEXT_GUI_RESUME_MENU_ITEM");
+	menuItem->init();
+	menu->m_menuItems.push_back(menuItem);
+	menuItem = new MenuItem("ABANDON", vmake(SCR_WIDTH / 2, SCR_HEIGHT * 0.5), "LTEXT_GUI_ABANDON_MENU_ITEM");
 	menuItem->init();
 	menu->m_menuItems.push_back(menuItem);
 	menu->m_seletedItem = 0;
@@ -138,4 +157,104 @@ bool Menu::onEvent(const IInputManager::Event& event) {
 	}
 
 	return true;
+}
+
+MenuManager::MenuManager() {
+	m_mainMenu = Menu::createMainMenu();
+	m_mainMenu->addListener(this);
+	m_playMenu = Menu::createPlayMenu();
+	m_playMenu->addListener(this);
+	m_optionsMenu = Menu::createOptionsMenu();
+	m_optionsMenu->addListener(this);
+	m_pauseMenu = Menu::createPauseMenu();
+	m_pauseMenu->addListener(this);
+}
+
+void MenuManager::run() {
+	if (g_settings.music)
+		m_optionsMenu->m_menuItems[0]->setValue("LTEXT_GUI_MENU_ITEM_ON");
+	else
+		m_optionsMenu->m_menuItems[0]->setValue("LTEXT_GUI_MENU_ITEM_OFF");
+
+	if (g_settings.sfx)
+		m_optionsMenu->m_menuItems[1]->setValue("LTEXT_GUI_MENU_ITEM_ON");
+	else
+		m_optionsMenu->m_menuItems[1]->setValue("LTEXT_GUI_MENU_ITEM_OFF");
+
+	m_activeMenu->run();
+}
+
+void MenuManager::activateMenu(TMenu menu) {
+	if (m_activeMenu) {
+		m_activeMenu->deactivate();
+	}
+	switch (menu)
+	{
+		case MenuManager::EMainMenu:
+			m_activeMenu = m_mainMenu;
+			break;
+		case MenuManager::EOptionsMenu:
+			m_activeMenu = m_optionsMenu;
+			break;
+		case MenuManager::EPlayMenu:
+			m_activeMenu = m_playMenu;
+			break;
+		case MenuManager::EPauseMenu:
+			m_activeMenu = m_pauseMenu;
+			break;
+		default:
+			break;
+	}
+	m_activeMenu->activate();
+	m_activeMenu->setSelectedItem(0);
+
+}
+
+void MenuManager::deactivateMenu() {
+	m_activeMenu->deactivate();
+}
+
+void MenuManager::onSelected(MenuItem* menuItem) {
+	if (menuItem->getName() == "PLAY_MENU") {
+		activateMenu(EPlayMenu);
+	}
+	else if (menuItem->getName() == "OPTIONS_MENU") {
+		activateMenu(EOptionsMenu);
+	}
+	else if (menuItem->getName() == "MAIN_MENU") {
+		activateMenu(EMainMenu);
+	}
+	else if (menuItem->getName() == "EASY") {
+		g_appManager->switchMode(MODE_GAME, 1);
+	}
+	else if (menuItem->getName() == "MEDIUM") {
+		g_appManager->switchMode(MODE_GAME, 2);
+	}
+	else if (menuItem->getName() == "HARD") {
+		g_appManager->switchMode(MODE_GAME, 3);
+	}
+	else if (menuItem->getName() == "SETTINGS_MUSIC") {
+		g_settings.music = !g_settings.music;
+	}
+	else if (menuItem->getName() == "SETTINGS_SFX") {
+		g_settings.sfx = !g_settings.sfx;
+	}
+	else if (menuItem->getName() == "SETTINGS_LANGUAGE") {
+		if (g_settings.language == EEnglish)
+			g_settings.language = ESpanish;
+		else if (g_settings.language == ESpanish)
+			g_settings.language = EEnglish;
+		g_stringManager->loadLanguage(g_settings.language);
+	}
+	else if (menuItem->getName() == "RESUME") {
+		IInputManager::KeyEvent* pauseEvent = new IInputManager::KeyEvent();
+		pauseEvent->setType(IInputManager::EPause);
+		g_inputManager->addEvent(pauseEvent);
+	}
+	else if (menuItem->getName() == "ABANDON") {
+		g_appManager->switchMode(MODE_MENU);
+	}
+	else if (menuItem->getName() == "EXIT") {
+		exit(0);
+	}
 }

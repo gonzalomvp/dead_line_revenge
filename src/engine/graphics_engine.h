@@ -29,25 +29,28 @@ private:
 // GraphicsEntity class
 class GfxEntity {
 public:
-	GfxEntity(vec2 pos) : m_pos(pos), m_isActive(true) {}
+	GfxEntity(vec2 pos, int priority) : m_pos(pos), m_priority(priority), m_isActive(true) {}
 
 	void activate() { m_isActive = true; }
 	void deactivate() { m_isActive = false; }
 
 	void setPos(vec2 pos) { m_pos = pos; }
 	vec2 getPos() { return m_pos; }
+
+	int getPriority() const { return m_priority; }
 	virtual void render() = 0;
 
 protected:
 	vec2   m_pos;
-	bool m_isActive;
+	int    m_priority;
+	bool   m_isActive;
 };
 
 //=============================================================================
 // Sprite class
 class Sprite : public GfxEntity {
 public:
-	Sprite(GLuint texture, vec2 pos = vmake(0, 0)) : GfxEntity(pos), m_texture(texture), m_size(vmake(0, 0)) {}
+	Sprite(GLuint texture, int priority, vec2 pos = vmake(0, 0)) : GfxEntity(pos, priority), m_texture(texture), m_size(vmake(0, 0)) {}
 
 	virtual void setSize(vec2 size) { m_size = size; }
 	vec2 getSize() { return m_size; }
@@ -63,7 +66,7 @@ private:
 // Text class
 class Text : public GfxEntity {
 public:
-	Text(std::string text, vec2 pos = vmake(0, 0)) : GfxEntity(pos), m_text(text) {}
+	Text(std::string text, int priority, vec2 pos = vmake(0, 0)) : GfxEntity(pos, priority), m_text(text) {}
 
 	void setText(std::string text) { m_text = text; }
 	std::string getText() { return m_text; }

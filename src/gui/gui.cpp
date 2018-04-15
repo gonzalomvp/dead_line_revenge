@@ -25,10 +25,10 @@ Control::~Control() {
 }
 
 Button::Button(std::string name, vec2 pos, vec2 size, const char* spriteOn, const char* spriteOff) : Control(name, pos, size) {
-	m_spriteOn = new Sprite(g_graphicsEngine->getTexture(spriteOn));
+	m_spriteOn = new Sprite(g_graphicsEngine->getTexture(spriteOn), 1);
 	m_spriteOn->setPos(pos);
 	m_spriteOn->setSize(size);
-	m_spriteOff = new Sprite(g_graphicsEngine->getTexture(spriteOff));
+	m_spriteOff = new Sprite(g_graphicsEngine->getTexture(spriteOff), 1);
 	m_spriteOff->setPos(pos);
 	m_spriteOff->setSize(size);
 	g_graphicsEngine->addGfxEntity(m_spriteOff);

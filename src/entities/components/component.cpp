@@ -163,7 +163,7 @@ ComponentRenderable::~ComponentRenderable() {
 
 void ComponentRenderable::init() {
 	Component::init();
-	m_sprite = new Sprite(g_graphicsEngine->getTexture(m_texture));
+	m_sprite = new Sprite(g_graphicsEngine->getTexture(m_texture), 2);
 	g_graphicsEngine->addGfxEntity(m_sprite);
 }
 
@@ -372,7 +372,7 @@ void ComponentWeapon::receiveMessage(Message* message) {
 // C_Target class
 //=============================================================================
 C_Target::C_Target(Entity* owner, char* texture) : Component(owner){
-	m_sprite = new Sprite(g_graphicsEngine->getTexture(texture));
+	m_sprite = new Sprite(g_graphicsEngine->getTexture(texture), 1);
 	m_sprite->setSize(vmake(50, 50));
 	g_graphicsEngine->addGfxEntity(m_sprite);
 	g_inputManager->registerEvent(this, IInputManager::TEvent::EKey, 0);
@@ -623,7 +623,7 @@ void ComponentWeaponPickup::receiveMessage(Message* message) {
 // C_HUDLife class
 //=============================================================================
 C_HUDLife::C_HUDLife(Entity* owner, Entity* player) : Component(owner), m_player(player) {
-	m_hudLife = new Text("", vmake(20, 20));
+	m_hudLife = new Text("", 1, vmake(20, 20));
 	if (m_player) {
 		MessageGetLife msgLife;
 		m_player->receiveMessage(&msgLife);

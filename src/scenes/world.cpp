@@ -103,7 +103,7 @@ World::World(int level) {
 	//addEntity(createWeaponPickup(vmake(400, 400), Component::ERevolver));
 
 	//HUD
-	m_lifeHUD = new Text("", vmake(20, 20));
+	m_lifeHUD = new Text("", 1,  vmake(20, 20));
 	//g_graphicsEngine->addGfxEntity(m_lifeHUD);
 	Entity* hudLife = new Entity();
 	C_HUDLife* c_hudLife = new C_HUDLife(hudLife, m_player);
@@ -111,14 +111,14 @@ World::World(int level) {
 	addEntity(hudLife);
 
 
-	m_scoreHUD = new Text("| 120", vmake(40, 20));
+	m_scoreHUD = new Text("| 120", 1, vmake(40, 20));
 	g_graphicsEngine->addGfxEntity(m_scoreHUD);
 
-	m_ammoHUD = new Text("| 6/-", vmake(120, 20));
+	m_ammoHUD = new Text("| 6/-", 1, vmake(120, 20));
 	g_graphicsEngine->addGfxEntity(m_ammoHUD);
 
 	//ver si se puede hacer de otra forma
-	m_reloadAnim = new Sprite(g_graphicsEngine->getTexture("data/playerReload.png"));
+	m_reloadAnim = new Sprite(g_graphicsEngine->getTexture("data/playerReload.png"), 1);
 	g_graphicsEngine->addGfxEntity(m_reloadAnim);
 
 	//for (int i = 0; i < NUM_BALLS; i++)
@@ -147,6 +147,15 @@ World::~World() {
 		delete m_entities[i];
 	}
 	delete m_level;
+
+	g_graphicsEngine->removeGfxEntity(m_lifeHUD);
+	g_graphicsEngine->removeGfxEntity(m_scoreHUD);
+	g_graphicsEngine->removeGfxEntity(m_ammoHUD);
+	g_graphicsEngine->removeGfxEntity(m_reloadAnim);
+	delete m_lifeHUD;
+	delete m_scoreHUD;
+	delete m_ammoHUD;
+	delete m_reloadAnim;
 }
 
 void World::addEntity(Entity* entity) {
