@@ -15,8 +15,12 @@ struct MessageSetTransform : public Message {
 	vec2 size;
 };
 
-struct MessageLife : public Message {
+struct MessageGetLife : public Message {
 	int currentLife;
+};
+
+struct MessageChangeLife : public Message {
+	int deltaLife;
 };
 
 struct MessageReload : public Message {
@@ -54,7 +58,8 @@ struct MessageGetCollider : public Message {
 
 struct MessageCollision: public Message {
 	Entity* other = nullptr;
-	int deltaLife = 0;
+	Component::TFaction faction;
+	int deltaLife;
 };
 
 struct MessageWeaponChange : public Message {

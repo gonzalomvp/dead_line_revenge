@@ -2,11 +2,15 @@
 #include "graphics_engine.h"
 
 void Sprite::render() {
-	CORE_RenderCenteredSprite(m_pos, m_size, m_texture);
+	if (m_isActive) {
+		CORE_RenderCenteredSprite(m_pos, m_size, m_texture);
+	}
 }
 
 void Text::render() {
-	FONT_DrawString(m_pos, m_text.c_str());
+	if (m_isActive) {
+		FONT_DrawString(m_pos, m_text.c_str());
+	}
 }
 
 GraphicsEngine::GraphicsEngine() {

@@ -1,6 +1,11 @@
 #include "menu_item.h"
 #include "string_manager.h"
 
+void MenuItem::init() {
+	m_active = true;
+	g_graphicsEngine->addGfxEntity(m_gfxText);
+}
+
 void MenuItem::run() {
 	std::string textToDraw = g_stringManager->getText(m_text);
 	if (m_value != "")
@@ -16,13 +21,10 @@ void MenuItem::run() {
 
 void MenuItem::activate() {
 	m_active = true;
-	//sustituir por un activar
-	g_graphicsEngine->addGfxEntity(m_gfxText);
+	m_gfxText->activate();
 }
 
 void MenuItem::deactivate() {
 	m_active = false;
-
-	//sustituir por un desactivar
-	g_graphicsEngine->removeGfxEntity(m_gfxText);
+	m_gfxText->deactivate();
 }

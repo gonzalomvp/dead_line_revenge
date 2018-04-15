@@ -26,6 +26,8 @@ public:
 	enum TFaction {
 		EAllied,
 		EEnemy,
+		ENeutral,
+		EBounds,
 	};
 
 	virtual ~Component() {}
@@ -246,9 +248,13 @@ private:
 	int m_points;
 };
 
-class C_WeaponPickup : public Component {
+//=============================================================================
+// ComponentWeaponPickup class
+//=============================================================================
+class ComponentWeaponPickup : public Component {
 public:
-	C_WeaponPickup(Entity* owner, TWeapon weapon) : Component(owner), m_weapon(weapon) {}
+	ComponentWeaponPickup(Entity* owner, TWeapon weapon) : Component(owner), m_weapon(weapon) {}
+	
 	virtual void receiveMessage(Message* message);
 private:
 	TWeapon m_weapon;

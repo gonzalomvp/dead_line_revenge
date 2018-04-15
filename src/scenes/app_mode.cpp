@@ -8,6 +8,7 @@
 #include "app_manager.h"
 #include "../engine/graphics_engine.h"
 #include "../input/input_manager.h"
+#include "../gui/menu.h"
 #include "../gui/menu_item.h"
 #include "../gui/string_manager.h"
 
@@ -19,12 +20,14 @@ World* g_world;
 AppModeMainMenu::AppModeMainMenu() {
 
 	//ShowCursor(true);
-	m_menuItems.push_back(new MenuItem("", vmake(SCR_WIDTH / 2, SCR_HEIGHT * 0.6), "LTEXT_GUI_PLAY_MENU_ITEM"));
-	m_menuItems.push_back(new MenuItem("", vmake(SCR_WIDTH / 2, SCR_HEIGHT * 0.5), "LTEXT_GUI_OPTIONS_MENU_ITEM"));
-	m_menuItems.push_back(new MenuItem("", vmake(SCR_WIDTH / 2, SCR_HEIGHT * 0.4), "LTEXT_GUI_OPTIONS_EXIT_ITEM"));
-	m_seletedItem = 0;
-	m_menuItems[m_seletedItem]->setSelected(true);
-
+	//m_menuItems.push_back(new MenuItem("", vmake(SCR_WIDTH / 2, SCR_HEIGHT * 0.6), "LTEXT_GUI_PLAY_MENU_ITEM"));
+	//m_menuItems.push_back(new MenuItem("", vmake(SCR_WIDTH / 2, SCR_HEIGHT * 0.5), "LTEXT_GUI_OPTIONS_MENU_ITEM"));
+	//m_menuItems.push_back(new MenuItem("", vmake(SCR_WIDTH / 2, SCR_HEIGHT * 0.4), "LTEXT_GUI_OPTIONS_EXIT_ITEM"));
+	//m_seletedItem = 0;
+	//m_menuItems[m_seletedItem]->setSelected(true);
+	m_mainMenu = Menu::createMainMenu();
+	m_playMenu = Menu::createPlayMenu();
+	m_activeMenu = m_mainMenu;
 	g_inputManager->registerEvent(this, IInputManager::TEvent::EQuit, 0);
 }
 
@@ -48,6 +51,7 @@ void AppModeMainMenu::run() {
 	for (auto itControls = m_menuItems.begin(); itControls != m_menuItems.end(); ++itControls) {
 		(*itControls)->run();
 	}
+	m_activeMenu->run();
 }
 
 void AppModeMainMenu::render() {
@@ -69,23 +73,18 @@ bool AppModeMainMenu::onEvent(const IInputManager::Event& event) {
 			switch (keyEvent.key)
 			{
 			case VK_UP:
-				m_menuItems[m_seletedItem]->setSelected(false);
-				m_seletedItem--;
-				if (m_seletedItem < 0)
-					m_seletedItem = m_menuItems.size() - 1;
-				m_menuItems[m_seletedItem]->setSelected(true);
+				m_activeMenu->selectPrevious();
 				break;
 			case VK_DOWN:
-				m_menuItems[m_seletedItem]->setSelected(false);
-				m_seletedItem++;
-				if (m_seletedItem >= m_menuItems.size())
-					m_seletedItem = 0;
-				m_menuItems[m_seletedItem]->setSelected(true);
+				m_activeMenu->selectNext();
 				break;
 			case VK_RETURN:
-				switch (m_seletedItem)
+				switch (m_activeMenu->getSelectedItem())
 				{
 				case 0:
+					//m_activeMenu->deactivate();
+					//m_playMenu->activate();
+					//m_activeMenu = m_playMenu;
 					g_appManager->switchMode(MODE_MENU);
 					break;
 				case 1:
@@ -109,10 +108,19 @@ bool AppModeMainMenu::onEvent(const IInputManager::Event& event) {
 // AppModeOptionsMenu class
 
 AppModeOptionsMenu::AppModeOptionsMenu() {
-	m_menuItems.push_back(new MenuItem("", vmake(SCR_WIDTH / 2, SCR_HEIGHT * 0.6), "LTEXT_GUI_MUSIC_MENU_ITEM"));
-	m_menuItems.push_back(new MenuItem("", vmake(SCR_WIDTH / 2, SCR_HEIGHT * 0.5), "LTEXT_GUI_SFX_MENU_ITEM"));
-	m_menuItems.push_back(new MenuItem("", vmake(SCR_WIDTH / 2, SCR_HEIGHT * 0.4), "LTEXT_GUI_LANGUAGE_MENU_ITEM"));
-	m_menuItems.push_back(new MenuItem("", vmake(SCR_WIDTH / 2, SCR_HEIGHT * 0.3), "LTEXT_GUI_BACK_MENU_ITEM"));
+	MenuItem* menuItem;
+	menuItem = new MenuItem("", vmake(SCR_WIDTH / 2, SCR_HEIGHT * 0.6), "LTEXT_GUI_MUSIC_MENU_ITEM");
+	menuItem->init();
+	m_menuItems.push_back(menuItem);
+	menuItem = new MenuItem("", vmake(SCR_WIDTH / 2, SCR_HEIGHT * 0.5), "LTEXT_GUI_SFX_MENU_ITEM");
+	menuItem->init();
+	m_menuItems.push_back(menuItem);
+	menuItem = new MenuItem("", vmake(SCR_WIDTH / 2, SCR_HEIGHT * 0.4), "LTEXT_GUI_LANGUAGE_MENU_ITEM");
+	menuItem->init();
+	m_menuItems.push_back(menuItem);
+	menuItem = new MenuItem("", vmake(SCR_WIDTH / 2, SCR_HEIGHT * 0.3), "LTEXT_GUI_BACK_MENU_ITEM");
+	menuItem->init();
+	m_menuItems.push_back(menuItem);
 
 	m_seletedItem = 0;
 	m_menuItems[m_seletedItem]->setSelected(true);

@@ -64,6 +64,8 @@ void ComponentTransform::receiveMessage(Message* message) {
 		}
 		if (outOfBounds) {
 			MessageCollision msgCollision;
+			msgCollision.deltaLife = 0;
+			msgCollision.faction = EBounds;
 			m_owner->receiveMessage(&msgCollision);
 		}
 	}
@@ -110,16 +112,16 @@ void ComponentLife::receiveMessage(Message* message) {
 	if (!m_isActive)
 		return;
 
-	MessageLife *msgLife = dynamic_cast<MessageLife*>(message);
-	if (msgLife) {
-		msgLife->currentLife = m_life;
+	MessageGetLife *msgGetLife = dynamic_cast<MessageGetLife*>(message);
+	if (msgGetLife) {
+		msgGetLife->currentLife = m_life;
 		
 	}
 	else {
-		MessageCollision *msgCollision = dynamic_cast<MessageCollision*>(message);
-		if (msgCollision) {
+		MessageChangeLife *msgChangeLife = dynamic_cast<MessageChangeLife*>(message);
+		if (msgChangeLife) {
 			if (m_hitTimer >= m_invencibleTime) {
-				m_life += msgCollision->deltaLife;
+				m_life += msgChangeLife->deltaLife;
 				m_hitTimer = 0;
 				if (m_life <= 0) {
 					MessageDestroy msgDestroy;
@@ -186,8 +188,8 @@ void ComponentRenderable::receiveMessage(Message* message) {
 	if (!m_isActive)
 		return;
 
-	MessageCollision *msgCollision = dynamic_cast<MessageCollision*>(message);
-	if (msgCollision && msgCollision->deltaLife < 0 && m_hitTexture) {
+	MessageChangeLife *msgChangeLife = dynamic_cast<MessageChangeLife*>(message);
+	if (msgChangeLife && msgChangeLife->deltaLife < 0 && m_hitTexture) {
 		m_sprite->setTexture(g_graphicsEngine->getTexture(m_hitTexture));
 		m_hitTimer = 0;
 	}
@@ -574,6 +576,14 @@ void ComponentCollider::receiveMessage(Message* message) {
 		msgCollider->size      = m_size;
 		msgCollider->deltaLife = m_deltaLife;
 	}
+	else {
+		MessageCollision *msgCollision = dynamic_cast<MessageCollision*>(message);
+		if (msgCollision && m_faction != ENeutral && msgCollision->faction != ENeutral) {
+			MessageChangeLife mgsChangeLife;
+			mgsChangeLife.deltaLife = msgCollision->deltaLife;
+			m_owner->receiveMessage(&mgsChangeLife);
+		}
+	}
 }
 
 //=============================================================================
@@ -589,19 +599,23 @@ void ComponentPoints::receiveMessage(Message* message) {
 	}
 }
 
+//Revisar el tema colisiones y facciones
 //=============================================================================
-// C_WeaponPickup class
+// ComponentWeaponPickup class
 //=============================================================================
-void C_WeaponPickup::receiveMessage(Message* message) {
+void ComponentWeaponPickup::receiveMessage(Message* message) {
+	if (!m_isActive)
+		return;
+
 	MessageCollision *msgCollision = dynamic_cast<MessageCollision*>(message);
 	if (msgCollision && g_world->getPlayer() == msgCollision->other) {
 		MessageWeaponChange msgWeapon;
 		msgWeapon.weapon = m_weapon;
 		msgCollision->other->receiveMessage(&msgWeapon);
-		MessageDestroy msgDestroy;
-		m_owner->receiveMessage(&msgDestroy);
-		m_owner->deactivate();
-		g_world->removeEntity(m_owner);
+		
+		MessageChangeLife mgsChangeLife;
+		mgsChangeLife.deltaLife = msgCollision->deltaLife;
+		m_owner->receiveMessage(&mgsChangeLife);
 	}
 }
 
@@ -611,7 +625,7 @@ void C_WeaponPickup::receiveMessage(Message* message) {
 C_HUDLife::C_HUDLife(Entity* owner, Entity* player) : Component(owner), m_player(player) {
 	m_hudLife = new Text("", vmake(20, 20));
 	if (m_player) {
-		MessageLife msgLife;
+		MessageGetLife msgLife;
 		m_player->receiveMessage(&msgLife);
 		m_hudLife->setText(std::to_string(msgLife.currentLife));
 	}
@@ -624,7 +638,7 @@ C_HUDLife::~C_HUDLife() {
 
 void C_HUDLife::run() {
 	if (m_player) {
-		MessageLife msgLife;
+		MessageGetLife msgLife;
 		m_player->receiveMessage(&msgLife);
 		m_hudLife->setText(std::to_string(msgLife.currentLife));
 	}

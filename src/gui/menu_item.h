@@ -16,6 +16,7 @@ public:
 	std::string getName() { return m_name; }
 	void setSelected(bool selected) { m_selected = selected; }
 	void setValue(std::string value) { m_value = value; }
+	void init();
 	void activate();
 	void deactivate();
 	void run();

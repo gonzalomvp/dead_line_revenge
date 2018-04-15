@@ -3,6 +3,7 @@
 #include "../gui/gui.h"
 #include "../input/input_manager.h"
 
+class Menu;
 class MenuItem;
 class Text;
 
@@ -37,6 +38,9 @@ public:
 	virtual bool   onEvent(const IInputManager::Event&);
 
 private:
+	Menu* m_mainMenu;
+	Menu* m_playMenu;
+	Menu* m_activeMenu;
 	std::vector<MenuItem*> m_menuItems;
 	int m_seletedItem;
 };

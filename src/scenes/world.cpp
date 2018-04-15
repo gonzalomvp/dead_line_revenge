@@ -177,7 +177,7 @@ void World::run() {
 	if (m_player) {
 		m_scoreHUD->setText("- " + std::to_string(m_level->m_score));
 
-		MessageLife msgLife;
+		MessageGetLife msgLife;
 		m_player->receiveMessage(&msgLife);
 		m_lifeHUD->setText(std::to_string(msgLife.currentLife));
 
@@ -348,10 +348,12 @@ void World::checkCollisions() {
 						MessageCollision msgCollision;
 						msgCollision.deltaLife = msg1.deltaLife;
 						msgCollision.other = entityCollision;
+						msgCollision.faction = msg1.faction;
 						entityToCheck->receiveMessage(&msgCollision);
 
 						msgCollision.deltaLife = msg2.deltaLife;
 						msgCollision.other = entityToCheck;
+						msgCollision.faction = msg2.faction;
 						entityCollision->receiveMessage(&msgCollision);
 
 						//MessageLife msgLife;
@@ -530,12 +532,14 @@ Entity* createWeaponPickup(vec2 pos, Component::TWeapon type) {
 	}
 	ComponentRenderable* renderable = new ComponentRenderable(weaponPickup, "data/SimpleCrate.png");
 	renderable->init();
-	ComponentCollider* collider = new ComponentCollider(weaponPickup, ComponentCollider::ECircleCollider, ComponentCollider::EEnemy, 0);
+	ComponentCollider* collider = new ComponentCollider(weaponPickup, ComponentCollider::ERectCollider, ComponentCollider::ENeutral, 0);
 	collider->init();
-	C_WeaponPickup* pickup = new C_WeaponPickup(weaponPickup, type);
+	ComponentWeaponPickup* pickup = new ComponentWeaponPickup(weaponPickup, type);
 	pickup->init();
 	ComponentPoints* points = new ComponentPoints(weaponPickup, 1);
 	points->init();
+	ComponentLife* life = new ComponentLife(weaponPickup, 0, 0, 0);
+	life->init();
 	return weaponPickup;
 }
 

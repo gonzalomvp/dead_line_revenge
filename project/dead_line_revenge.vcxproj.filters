@@ -84,6 +84,9 @@
     <ClInclude Include="..\src\common\sys.h">
       <Filter>src\common</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\gui\menu.h">
+      <Filter>src\gui</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\main.cpp">
@@ -139,6 +142,9 @@
     </ClCompile>
     <ClCompile Include="..\src\common\sys_win.cpp">
       <Filter>src\common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\gui\menu.cpp">
+      <Filter>src\gui</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -29,7 +29,10 @@ private:
 // GraphicsEntity class
 class GfxEntity {
 public:
-	GfxEntity(vec2 pos) : m_pos(pos) {}
+	GfxEntity(vec2 pos) : m_pos(pos), m_isActive(true) {}
+
+	void activate() { m_isActive = true; }
+	void deactivate() { m_isActive = false; }
 
 	void setPos(vec2 pos) { m_pos = pos; }
 	vec2 getPos() { return m_pos; }
@@ -37,6 +40,7 @@ public:
 
 protected:
 	vec2   m_pos;
+	bool m_isActive;
 };
 
 //=============================================================================
