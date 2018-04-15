@@ -1,0 +1,70 @@
+#pragma once
+
+#include <map>
+
+class Sprite;
+class GfxEntity;
+
+//=============================================================================
+// GraphicsEngine class
+class GraphicsEngine {
+public:
+	GraphicsEngine();
+	~GraphicsEngine();
+
+	void   addGfxEntity       (GfxEntity* gfxEntity);
+	void   removeGfxEntity(const GfxEntity* gfxEntity);
+	void   removeAllGfxEntities();
+	GLuint getTexture      (const char* fileName);
+	void   render          ();
+
+private:
+	std::vector<GfxEntity*>          m_gfxEntities;
+	std::map<std::string, GLuint>    m_textures;
+};
+
+//incluir un gestor de texturas
+
+//=============================================================================
+// GraphicsEntity class
+class GfxEntity {
+public:
+	GfxEntity(vec2 pos) : m_pos(pos) {}
+
+	void setPos(vec2 pos) { m_pos = pos; }
+	vec2 getPos() { return m_pos; }
+	virtual void render() = 0;
+
+protected:
+	vec2   m_pos;
+};
+
+//=============================================================================
+// Sprite class
+class Sprite : public GfxEntity {
+public:
+	Sprite(GLuint texture, vec2 pos = vmake(0, 0)) : GfxEntity(pos), m_texture(texture), m_size(vmake(0, 0)) {}
+
+	virtual void setSize(vec2 size) { m_size = size; }
+	vec2 getSize() { return m_size; }
+	virtual void setTexture(GLuint texture) { m_texture = texture;  }
+	virtual void render();
+
+private:
+	vec2   m_size;
+	GLuint m_texture;
+};
+
+//=============================================================================
+// Text class
+class Text : public GfxEntity {
+public:
+	Text(std::string text, vec2 pos = vmake(0, 0)) : GfxEntity(pos), m_text(text) {}
+
+	void setText(std::string text) { m_text = text; }
+	std::string getText() { return m_text; }
+	virtual void render();
+
+private:
+	std::string m_text;
+};

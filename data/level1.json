@@ -1,0 +1,35 @@
+{
+	"spawnPoints": 3,
+	"spawnFrecuency": 60,
+	"concurrentEnemies": 0,
+	"meleeEnemy":
+	{
+		"speed": 3,
+		"life": 1,
+		"damage": -1,
+		"spawnProbability": 1 
+	},
+	"bigEnemy":
+	{
+		"speed": 2,
+		"life": 3,
+		"damage": -2,
+		"spawnProbability": 0 
+	},
+	"rangeEnemy":
+	{
+		"speed": 2,
+		"life": 3,
+		"damage": -2,
+		"spawnProbability": 0 
+	},
+	
+	"enemies": [
+	{
+		"type": "melee",
+		"speed": 2,
+		"life": 2,
+		"spawnProbability": 1 
+	}
+	]
+}

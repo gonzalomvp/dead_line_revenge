@@ -1,0 +1,144 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="src">
+      <UniqueIdentifier>{c017f4a5-4be6-4149-ac40-9cacfcae77c9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\common">
+      <UniqueIdentifier>{3a45b9ef-7c64-4e80-b8c4-20cbb54fe36f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\engine">
+      <UniqueIdentifier>{d5c39ebc-87e7-4e97-bcd6-2c4bba20fba1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\entities">
+      <UniqueIdentifier>{e563c26e-cd97-4e18-bf0f-d8fadd6349c9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\gui">
+      <UniqueIdentifier>{6b8eeb33-5d66-4802-8959-ead5e542def3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\input">
+      <UniqueIdentifier>{8cc9d121-0efa-4813-8876-9d033ca9850c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\scenes">
+      <UniqueIdentifier>{08b59a67-b885-4c29-8356-d5411c95aa45}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\entities\components">
+      <UniqueIdentifier>{659c16cb-67c8-4ca8-ba53-51fd22035e04}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\src\globals.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\scenes\app_manager.h">
+      <Filter>src\scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\scenes\app_mode.h">
+      <Filter>src\scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\scenes\level.h">
+      <Filter>src\scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\scenes\world.h">
+      <Filter>src\scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\input\input_manager.h">
+      <Filter>src\input</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\input\mouse_input_manager.h">
+      <Filter>src\input</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\gui\gui.h">
+      <Filter>src\gui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\gui\menu_item.h">
+      <Filter>src\gui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\gui\string_manager.h">
+      <Filter>src\gui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\entities\components\component.h">
+      <Filter>src\entities\components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\entities\entity.h">
+      <Filter>src\entities</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\entities\message.h">
+      <Filter>src\entities</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\engine\graphics_engine.h">
+      <Filter>src\engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\common\core.h">
+      <Filter>src\common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\common\font.h">
+      <Filter>src\common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\common\lodepng.h">
+      <Filter>src\common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\common\stdafx.h">
+      <Filter>src\common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\common\sys.h">
+      <Filter>src\common</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\src\main.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\scenes\app_manager.cpp">
+      <Filter>src\scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\scenes\app_mode.cpp">
+      <Filter>src\scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\scenes\level.cpp">
+      <Filter>src\scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\scenes\world.cpp">
+      <Filter>src\scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\input\input_manager.cpp">
+      <Filter>src\input</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\input\mouse_input_manager.cpp">
+      <Filter>src\input</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\gui\gui.cpp">
+      <Filter>src\gui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\gui\menu_item.cpp">
+      <Filter>src\gui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\gui\string_manager.cpp">
+      <Filter>src\gui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\entities\components\component.cpp">
+      <Filter>src\entities\components</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\entities\entity.cpp">
+      <Filter>src\entities</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\engine\graphics_engine.cpp">
+      <Filter>src\engine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\common\core.cpp">
+      <Filter>src\common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\common\font.cpp">
+      <Filter>src\common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\common\lodepng.cpp">
+      <Filter>src\common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\common\stdafx.cpp">
+      <Filter>src\common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\common\sys_win.cpp">
+      <Filter>src\common</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>
