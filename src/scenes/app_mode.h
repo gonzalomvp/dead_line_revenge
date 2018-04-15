@@ -2,6 +2,7 @@
 
 #include "../gui/gui.h"
 #include "../input/input_manager.h"
+#include "../gui/menu.h"
 
 class Menu;
 class MenuItem;
@@ -26,7 +27,7 @@ public:
 	virtual ModeId getModeId   () = 0;
 };
 
-class AppModeMainMenu : public AppMode, public IInputManager::IListener {
+class AppModeMainMenu : public AppMode, Menu::IListener {
 public:
 	AppModeMainMenu();
 	virtual void   processInput();
@@ -35,11 +36,12 @@ public:
 	virtual void   init() {}
 	virtual void   deactivate();
 	virtual ModeId getModeId() { return MODE_MAINMENU; }
-	virtual bool   onEvent(const IInputManager::Event&);
+	virtual void onSelected(MenuItem* menuItem);
 
 private:
 	Menu* m_mainMenu;
 	Menu* m_playMenu;
+	Menu* m_optionsMenu;
 	Menu* m_activeMenu;
 	std::vector<MenuItem*> m_menuItems;
 	int m_seletedItem;

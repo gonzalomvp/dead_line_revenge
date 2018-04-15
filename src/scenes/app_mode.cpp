@@ -18,17 +18,14 @@ World* g_world;
 // AppModeMainMenu class
 
 AppModeMainMenu::AppModeMainMenu() {
-
-	//ShowCursor(true);
-	//m_menuItems.push_back(new MenuItem("", vmake(SCR_WIDTH / 2, SCR_HEIGHT * 0.6), "LTEXT_GUI_PLAY_MENU_ITEM"));
-	//m_menuItems.push_back(new MenuItem("", vmake(SCR_WIDTH / 2, SCR_HEIGHT * 0.5), "LTEXT_GUI_OPTIONS_MENU_ITEM"));
-	//m_menuItems.push_back(new MenuItem("", vmake(SCR_WIDTH / 2, SCR_HEIGHT * 0.4), "LTEXT_GUI_OPTIONS_EXIT_ITEM"));
-	//m_seletedItem = 0;
-	//m_menuItems[m_seletedItem]->setSelected(true);
 	m_mainMenu = Menu::createMainMenu();
+	m_mainMenu->addListener(this);
 	m_playMenu = Menu::createPlayMenu();
+	m_playMenu->addListener(this);
+	m_optionsMenu= Menu::createOptionsMenu();
+	m_optionsMenu->addListener(this);
 	m_activeMenu = m_mainMenu;
-	g_inputManager->registerEvent(this, IInputManager::TEvent::EQuit, 0);
+	m_activeMenu->activate();
 }
 
 
@@ -37,7 +34,6 @@ void AppModeMainMenu::deactivate() {
 	for (auto itControls = m_menuItems.begin(); itControls != m_menuItems.end(); ++itControls) {
 		delete *itControls;
 	}
-	g_inputManager->unregisterEvent(this);
 	g_inputManager->clearListeners();
 	g_graphicsEngine->removeAllGfxEntities();
 }
@@ -55,53 +51,56 @@ void AppModeMainMenu::run() {
 }
 
 void AppModeMainMenu::render() {
-	//glClear(GL_COLOR_BUFFER_BIT);
-	//for (auto itControls = m_menuItems.begin(); itControls != m_menuItems.end(); ++itControls) {
-	//	(*itControls)->run();
-	//}
-	//SYS_Show();
 	g_graphicsEngine->render();
 }
 
-
-bool AppModeMainMenu::onEvent(const IInputManager::Event& event) {
-	IInputManager::TEvent eventType = event.getType();
-
-	if (eventType == IInputManager::TEvent::EKey) {
-		const IInputManager::KeyEvent keyEvent = *static_cast<const IInputManager::KeyEvent*>(&event);
-		if (keyEvent.action == keyEvent.KeyPressed) {
-			switch (keyEvent.key)
-			{
-			case VK_UP:
-				m_activeMenu->selectPrevious();
-				break;
-			case VK_DOWN:
-				m_activeMenu->selectNext();
-				break;
-			case VK_RETURN:
-				switch (m_activeMenu->getSelectedItem())
-				{
-				case 0:
-					//m_activeMenu->deactivate();
-					//m_playMenu->activate();
-					//m_activeMenu = m_playMenu;
-					g_appManager->switchMode(MODE_MENU);
-					break;
-				case 1:
-					g_appManager->switchMode(MODE_OPTIONSMENU);
-					break;
-				case 2:
-					exit(0);
-					break;
-				}
-
-				
-				break;
-			}
-		}
+void AppModeMainMenu::onSelected(MenuItem* menuItem) {
+	if (menuItem->getName() == "PLAY_MENU") {
+		m_activeMenu->deactivate();
+		m_activeMenu = m_playMenu;
+		m_activeMenu->activate();
+		m_activeMenu->setSelectedItem(0);
 	}
-
-	return true;
+	else if (menuItem->getName() == "OPTIONS_MENU") {
+		m_activeMenu->deactivate();
+		m_activeMenu = m_optionsMenu;
+		m_activeMenu->activate();
+		m_activeMenu->setSelectedItem(0);
+	}
+	else if (menuItem->getName() == "MAIN_MENU") {
+		m_activeMenu->deactivate();
+		m_activeMenu = m_mainMenu;
+		m_activeMenu->activate();
+		m_activeMenu->setSelectedItem(0);
+	}
+	else if (menuItem->getName() == "OPTIONS") {
+		g_appManager->switchMode(MODE_OPTIONSMENU);
+	}
+	else if (menuItem->getName() == "EASY") {
+		g_appManager->switchMode(MODE_GAME, 1);
+	}
+	else if (menuItem->getName() == "MEDIUM") {
+		g_appManager->switchMode(MODE_GAME, 2);
+	}
+	else if (menuItem->getName() == "HARD") {
+		g_appManager->switchMode(MODE_GAME, 3);
+	}
+	else if (menuItem->getName() == "SETTINGS_MUSIC") {
+		g_settings.music = !g_settings.music;
+	}
+	else if (menuItem->getName() == "SETTINGS_SFX") {
+		g_settings.sfx = !g_settings.sfx;
+	}
+	else if (menuItem->getName() == "SETTINGS_LANGUAGE") {
+		if (g_settings.language == EEnglish)
+			g_settings.language = ESpanish;
+		else if (g_settings.language == ESpanish)
+			g_settings.language = EEnglish;
+		g_stringManager->loadLanguage(g_settings.language);
+	}
+	else if (menuItem->getName() == "EXIT") {
+		exit(0);
+	}
 }
 
 //=============================================================================

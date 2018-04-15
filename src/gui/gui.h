@@ -26,10 +26,12 @@ private:
 
 class Control : public IInputManager::IListener {
 public:
-	Control(std::string name, vec2 pos, vec2 size /*, Container* parent*/) : m_name(name), m_pos(pos), m_size(size) {}
+	Control(std::string name, vec2 pos, vec2 size /*, Container* parent*/) : m_name(name), m_pos(pos), m_size(size), m_isActive(true) {}
 	~Control();
 	virtual bool onEvent(const IInputManager::Event&) { return false; }
 	virtual void update(float deltaTime) {}
+	virtual void activate() { m_isActive = true; }
+	virtual void deactivate() { m_isActive = false; }
 
 	std::string getName() { return m_name; }
 
@@ -37,6 +39,7 @@ protected:
 	vec2 m_pos;
 	vec2 m_size;
 	std::string m_name;
+	bool m_isActive;
 };
 
 class Button : public Control {
