@@ -146,7 +146,7 @@ void ComponentInertialMove::run() {
 	if (!m_isActive)
 		return;
 
-	m_owner->receiveMessage(&msgGetTransform);
+	if (vlen2(m_direction) != 0) {
 		MessageGetTransform msgGetTransform;
 		m_owner->receiveMessage(&msgGetTransform);
 
