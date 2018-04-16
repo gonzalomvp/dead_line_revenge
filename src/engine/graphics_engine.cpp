@@ -4,15 +4,11 @@
 #include <algorithm>
 
 void Sprite::render() {
-	if (m_isActive) {
-		CORE_RenderCenteredSprite(m_pos, m_size, m_texture);
-	}
+	CORE_RenderCenteredSprite(m_pos, m_size, m_texture);
 }
 
 void Text::render() {
-	if (m_isActive) {
-		FONT_DrawString(m_pos, m_text.c_str());
-	}
+	FONT_DrawString(m_pos, m_text.c_str());
 }
 
 GraphicsEngine::GraphicsEngine() {

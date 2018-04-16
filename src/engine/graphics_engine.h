@@ -31,8 +31,8 @@ class GfxEntity {
 public:
 	GfxEntity(vec2 pos, int priority) : m_pos(pos), m_priority(priority), m_isActive(true) {}
 
-	void activate() { m_isActive = true; }
-	void deactivate() { m_isActive = false; }
+	void activate() { m_isActive = true; g_graphicsEngine->addGfxEntity(this); }
+	void deactivate() { m_isActive = false; g_graphicsEngine->removeGfxEntity(this); }
 
 	void setPos(vec2 pos) { m_pos = pos; }
 	vec2 getPos() { return m_pos; }

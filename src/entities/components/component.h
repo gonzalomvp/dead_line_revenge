@@ -86,11 +86,14 @@ private:
 //=============================================================================
 class ComponentInertialMove : public Component {
 public:
-	ComponentInertialMove(Entity* owner, const vec2& direction, float speed) : Component(owner), m_direction(direction), m_speed(speed) {}
+	ComponentInertialMove(Entity* owner, const vec2& direction, float speed, bool hasInertia) : Component(owner), m_direction(direction), m_speed(speed), m_hasInertia(hasInertia) {}
+	
 	virtual void run();
+	virtual void receiveMessage(Message* message);
 private:
 	vec2  m_direction;
 	float m_speed;
+	bool  m_hasInertia;
 };
 
 //=============================================================================

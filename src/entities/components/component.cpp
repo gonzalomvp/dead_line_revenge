@@ -62,6 +62,11 @@ void ComponentTransform::receiveMessage(Message* message) {
 			m_pos.y = 0;
 			outOfBounds = true;
 		}
+		MessageTransformChanged msgTransformChanged;
+		msgTransformChanged.pos = m_pos;
+		msgTransformChanged.size = m_size;
+		m_owner->receiveMessage(&msgTransformChanged);
+
 		if (outOfBounds) {
 			MessageCollision msgCollision;
 			msgCollision.deltaLife = 0;
@@ -141,13 +146,29 @@ void ComponentInertialMove::run() {
 	if (!m_isActive)
 		return;
 
-	MessageGetTransform msgGetTransform;
 	m_owner->receiveMessage(&msgGetTransform);
+		MessageGetTransform msgGetTransform;
+		m_owner->receiveMessage(&msgGetTransform);
 
-	MessageSetTransform msgSetTransform;
-	msgSetTransform.pos = vadd(msgGetTransform.pos, vscale(m_direction, m_speed));
-	msgSetTransform.size = msgGetTransform.size;
-	m_owner->receiveMessage(&msgSetTransform);
+		MessageSetTransform msgSetTransform;
+		msgSetTransform.pos = vadd(msgGetTransform.pos, vscale(vnorm(m_direction), m_speed));
+		msgSetTransform.size = msgGetTransform.size;
+		m_owner->receiveMessage(&msgSetTransform);
+	}
+	
+	if (!m_hasInertia) {
+		m_direction = vmake(0.0f, 0.0f);
+	}
+}
+
+void ComponentInertialMove::receiveMessage(Message* message) {
+	if (!m_isActive)
+		return;
+
+	MessageAddMovement *msgAddMovement = dynamic_cast<MessageAddMovement*>(message);
+	if (msgAddMovement) {
+		m_direction = vadd(m_direction, msgAddMovement->dir);
+	}
 }
 
 //=============================================================================
@@ -188,10 +209,17 @@ void ComponentRenderable::receiveMessage(Message* message) {
 	if (!m_isActive)
 		return;
 
-	MessageChangeLife *msgChangeLife = dynamic_cast<MessageChangeLife*>(message);
-	if (msgChangeLife && msgChangeLife->deltaLife < 0 && m_hitTexture) {
-		m_sprite->setTexture(g_graphicsEngine->getTexture(m_hitTexture));
-		m_hitTimer = 0;
+	MessageTransformChanged *msgTransformChanged = dynamic_cast<MessageTransformChanged*>(message);
+	if (msgTransformChanged) {
+		m_sprite->setPos(msgTransformChanged->pos);
+		m_sprite->setSize(msgTransformChanged->size);
+	}
+	else {
+		MessageChangeLife *msgChangeLife = dynamic_cast<MessageChangeLife*>(message);
+		if (msgChangeLife && msgChangeLife->deltaLife < 0 && m_hitTexture) {
+			m_sprite->setTexture(g_graphicsEngine->getTexture(m_hitTexture));
+			m_hitTimer = 0;
+		}
 	}
 }
 
@@ -234,13 +262,17 @@ bool ComponentPlayerController::onEvent(const IInputManager::Event& event) {
 				break;
 		}
 		if (vlen2(direction) != 0) {
-			MessageGetTransform msgGetTransform;
+			/*MessageGetTransform msgGetTransform;
 			m_owner->receiveMessage(&msgGetTransform);
 
 			MessageSetTransform msgSetTransform;
 			msgSetTransform.pos = vadd(msgGetTransform.pos, vscale(vnorm(direction), m_speed));
 			msgSetTransform.size = msgGetTransform.size;
-			m_owner->receiveMessage(&msgSetTransform);
+			m_owner->receiveMessage(&msgSetTransform);*/
+
+			MessageAddMovement msgAddMovement;
+			msgAddMovement.dir = direction;
+			m_owner->receiveMessage(&msgAddMovement);
 		}
 	}
 
@@ -358,7 +390,7 @@ void ComponentWeapon::receiveMessage(Message* message) {
 				}
 				else {
 					MessageReload *msgReload = dynamic_cast<MessageReload*>(message);
-					if (msgReload && m_currentBullets < m_bullets) {
+					if (msgReload && m_currentBullets < m_bullets && m_reloadTimer >= m_reloadTime) {
 						m_reloadTimer = 0;
 					}
 				}

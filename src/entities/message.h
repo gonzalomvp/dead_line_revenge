@@ -15,12 +15,21 @@ struct MessageSetTransform : public Message {
 	vec2 size;
 };
 
+struct MessageTransformChanged : public Message {
+	vec2 pos;
+	vec2 size;
+};
+
 struct MessageGetLife : public Message {
 	int currentLife;
 };
 
 struct MessageChangeLife : public Message {
 	int deltaLife;
+};
+
+struct MessageAddMovement : public Message {
+	vec2 dir;
 };
 
 struct MessageReload : public Message {

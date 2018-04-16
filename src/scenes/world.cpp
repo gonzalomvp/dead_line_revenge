@@ -423,6 +423,8 @@ Entity* createPlayer(vec2 pos) {
 	renderable->init();
 	ComponentPlayerController* playerControl = new ComponentPlayerController(player, 5);
 	playerControl->init();
+	ComponentInertialMove* movement = new ComponentInertialMove(player, vmake(0.0f, 0.0f), 5, false);
+	movement->init();
 	ComponentWeapon* revolver = new ComponentWeapon(player, Component::ERevolver, 20, 40, 6, 6, false, "data/shot.wav");
 	revolver->init();
 	//revolver->deactivate();
@@ -444,7 +446,7 @@ Entity* createBullet(vec2 pos, vec2 direction, float speed, ComponentCollider::T
 	transform->init();
 	ComponentRenderable* renderable = new ComponentRenderable(bullet, "data/bullet.png");
 	renderable->init();
-	ComponentInertialMove* movement = new ComponentInertialMove(bullet, direction, speed);
+	ComponentInertialMove* movement = new ComponentInertialMove(bullet, direction, speed, true);
 	movement->init();
 	ComponentCollider* collider = new ComponentCollider(bullet, ComponentCollider::ECircleCollider, faction, -1);
 	collider->init();
