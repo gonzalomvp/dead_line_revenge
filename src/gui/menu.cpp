@@ -22,7 +22,7 @@ Menu* Menu::createMainMenu() {
 	menuItem->init();
 	menu->m_menuItems.push_back(menuItem);
 	menu->m_seletedItem = 0;
-	menu->m_menuItems[menu->m_seletedItem]->setSelected(true);
+	menu->m_menuItems[menu->m_seletedItem]->setFocus(true);
 	menu->deactivate();
 	return menu;
 }
@@ -43,7 +43,7 @@ Menu* Menu::createPlayMenu() {
 	menuItem->init();
 	menu->m_menuItems.push_back(menuItem);
 	menu->m_seletedItem = 0;
-	menu->m_menuItems[menu->m_seletedItem]->setSelected(true);
+	menu->m_menuItems[menu->m_seletedItem]->setFocus(true);
 	menu->deactivate();
 	return menu;
 }
@@ -53,9 +53,13 @@ Menu* Menu::createOptionsMenu() {
 	MenuItem* menuItem;
 	menuItem = new MenuItem("SETTINGS_MUSIC", vmake(SCR_WIDTH / 2, SCR_HEIGHT * 0.6), "LTEXT_GUI_MUSIC_MENU_ITEM");
 	menuItem->init();
+	menuItem->addOption("LTEXT_GUI_MENU_ITEM_ON");
+	menuItem->addOption("LTEXT_GUI_MENU_ITEM_OFF");
 	menu->m_menuItems.push_back(menuItem);
 	menuItem = new MenuItem("SETTINGS_SFX", vmake(SCR_WIDTH / 2, SCR_HEIGHT * 0.5), "LTEXT_GUI_SFX_MENU_ITEM");
 	menuItem->init();
+	menuItem->addOption("LTEXT_GUI_MENU_ITEM_ON");
+	menuItem->addOption("LTEXT_GUI_MENU_ITEM_OFF");
 	menu->m_menuItems.push_back(menuItem);
 	menuItem = new MenuItem("SETTINGS_LANGUAGE", vmake(SCR_WIDTH / 2, SCR_HEIGHT * 0.4), "LTEXT_GUI_LANGUAGE_MENU_ITEM");
 	menuItem->init();
@@ -64,7 +68,7 @@ Menu* Menu::createOptionsMenu() {
 	menuItem->init();
 	menu->m_menuItems.push_back(menuItem);
 	menu->m_seletedItem = 0;
-	menu->m_menuItems[menu->m_seletedItem]->setSelected(true);
+	menu->m_menuItems[menu->m_seletedItem]->setFocus(true);
 	menu->deactivate();
 	return menu;
 }
@@ -79,7 +83,7 @@ Menu* Menu::createPauseMenu() {
 	menuItem->init();
 	menu->m_menuItems.push_back(menuItem);
 	menu->m_seletedItem = 0;
-	menu->m_menuItems[menu->m_seletedItem]->setSelected(true);
+	menu->m_menuItems[menu->m_seletedItem]->setFocus(true);
 	menu->deactivate();
 	return menu;
 }
@@ -95,26 +99,26 @@ void Menu::run() {
 
 void Menu::setSelectedItem(int newOption) {
 	if (newOption >= 0 && newOption < m_menuItems.size()) {
-		m_menuItems[m_seletedItem]->setSelected(false);
+		m_menuItems[m_seletedItem]->setFocus(false);
 		m_seletedItem = newOption;
-		m_menuItems[m_seletedItem]->setSelected(true);
+		m_menuItems[m_seletedItem]->setFocus(true);
 	}
 }
 
 void Menu::selectPrevious() {
-	m_menuItems[m_seletedItem]->setSelected(false);
+	m_menuItems[m_seletedItem]->setFocus(false);
 	m_seletedItem--;
 	if (m_seletedItem < 0)
 		m_seletedItem = m_menuItems.size() - 1;
-	m_menuItems[m_seletedItem]->setSelected(true);
+	m_menuItems[m_seletedItem]->setFocus(true);
 }
 
 void Menu::selectNext() {
-	m_menuItems[m_seletedItem]->setSelected(false);
+	m_menuItems[m_seletedItem]->setFocus(false);
 	m_seletedItem++;
 	if (m_seletedItem >= m_menuItems.size())
 		m_seletedItem = 0;
-	m_menuItems[m_seletedItem]->setSelected(true);
+	m_menuItems[m_seletedItem]->setFocus(true);
 }
 
 void Menu::activate() {
@@ -148,6 +152,7 @@ bool Menu::onEvent(const IInputManager::Event& event) {
 					selectNext();
 					break;
 				case VK_RETURN:
+					m_menuItems[m_seletedItem]->nextOption();
 					for (auto itListener = m_listeners.begin(); itListener != m_listeners.end(); ++itListener) {
 						(*itListener)->onSelected(m_menuItems[m_seletedItem]);
 					}
@@ -171,16 +176,6 @@ MenuManager::MenuManager() {
 }
 
 void MenuManager::run() {
-	if (g_settings.music)
-		m_optionsMenu->m_menuItems[0]->setValue("LTEXT_GUI_MENU_ITEM_ON");
-	else
-		m_optionsMenu->m_menuItems[0]->setValue("LTEXT_GUI_MENU_ITEM_OFF");
-
-	if (g_settings.sfx)
-		m_optionsMenu->m_menuItems[1]->setValue("LTEXT_GUI_MENU_ITEM_ON");
-	else
-		m_optionsMenu->m_menuItems[1]->setValue("LTEXT_GUI_MENU_ITEM_OFF");
-
 	m_activeMenu->run();
 }
 

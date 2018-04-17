@@ -7,15 +7,17 @@
 #include "../globals.h"
 #include "../engine/graphics_engine.h"
 
+#include <vector>
 
 class MenuItem {
 public:
-	MenuItem(std::string name, vec2 pos, std::string text, std::string value = "") : m_name(name), m_pos(pos), m_text(text), m_selected(false), m_value(value) { m_gfxText = new Text("", 1); this->activate(); }
+	MenuItem(std::string name, vec2 pos, std::string text) : m_name(name), m_pos(pos), m_text(text), m_hasFocus(false), m_selectedOption(-1) { m_gfxText = new Text("", 1); }
 	~MenuItem() { g_graphicsEngine->removeGfxEntity(m_gfxText); delete m_gfxText; }
 
 	std::string getName() { return m_name; }
-	void setSelected(bool selected) { m_selected = selected; }
-	void setValue(std::string value) { m_value = value; }
+	void setFocus(bool hasFocus) { m_hasFocus = hasFocus; }
+	void addOption(std::string option) { m_options.push_back(option); m_selectedOption = 0; }
+	void nextOption();
 	void init();
 	void activate();
 	void deactivate();
@@ -25,8 +27,9 @@ protected:
 	vec2 m_pos;
 	std::string m_name;
 	std::string m_text;
-	std::string m_value;
 	Text* m_gfxText;
-	bool m_selected;
+	bool m_hasFocus;
 	bool m_active;
+	std::vector<std::string> m_options;
+	int m_selectedOption;
 };
