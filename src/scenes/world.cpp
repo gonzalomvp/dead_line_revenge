@@ -154,7 +154,7 @@ void World::init() {
 	//borrar
 	//addEntity(createEnemy(200, 200, m_player, 0, 1, -1));
 	//addEntity(createEnemy(205, 200, m_player, 0, 1, -1));
-	m_pickup = createWeaponPickup(vmake(110, SCR_HEIGHT - 110), Component::EMachinegun);
+	m_pickup = createWeaponPickup();
 	addEntity(m_pickup);
 	//addEntity(createWeaponPickup(vmake(400, 400), Component::ERevolver));
 }
@@ -188,7 +188,7 @@ void World::run() {
 		if (m_pickupTimer <= m_pickupSpawnWait) {
 			++m_pickupTimer;
 			if (m_pickupTimer == m_pickupSpawnWait) {
-				m_pickup = createWeaponPickup(vmake(CORE_FRand(0.0, SCR_WIDTH), CORE_FRand(0.0, SCR_HEIGHT)), Component::EMachinegun);
+				m_pickup = createWeaponPickup();
 				addEntity(m_pickup);
 			}
 		}
@@ -323,6 +323,10 @@ void World::removePendingEntities() {
 			std::string scoreMessage = g_stringManager->getText("LTEXT_GUI_SCORE_MESSAGE") + std::to_string(m_level->m_score);
 			g_menuManager->getMenu(MenuManager::EGameOverMenu)->setTitle(scoreMessage.c_str());
 			g_menuManager->activateMenu(MenuManager::EGameOverMenu);
+			for (size_t i = 0; i < m_entities.size(); ++i) {
+				delete m_entities[i];
+			}
+			m_entities.clear();
 			m_player = nullptr;
 		}
 		else if (*it == m_pickup) {
@@ -460,24 +464,23 @@ Entity* createTurretEnemy(int x, int y, vec2 dir, Entity* player) {
 	return enemy;
 }
 
-Entity* createWeaponPickup(vec2 pos, Component::TWeapon type) {
-	Entity* weaponPickup = new Entity();
-	ComponentTransform* transform = new ComponentTransform(weaponPickup, pos, vmake(20, 20));
-	transform->init();
-	std::string weaponIcon = "";
+Entity* createWeaponPickup() {
 	int randomType = rand() % Component::EWeaponCount;
+	vec2 randomPos = vmake(CORE_FRand(0.0, SCR_WIDTH), CORE_FRand(0.0, SCR_HEIGHT));
+	Entity* weaponPickup = new Entity();
+	ComponentTransform* transform = new ComponentTransform(weaponPickup, randomPos, vmake(20, 20));
+	transform->init();
+	
+	Component::TWeapon type;
 	switch (randomType)
 	{
 	case 0:
-		weaponIcon = "R";
 		type = Component::ERevolver;
 		break;
 	case 1:
-		weaponIcon = "M";
 		type = Component::EMachinegun;
 		break;
 	case 2:
-		weaponIcon = "M";
 		type = Component::EShotgun;
 		break;
 	}

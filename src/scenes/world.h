@@ -48,7 +48,7 @@ Entity* createRangeEnemy(int x, int y, Entity* player);
 Entity* createTurretEnemy(int x, int y, vec2 dir, Entity* player);
 Entity* createBullet(vec2 pos, vec2 direction, float speed, int damage, int range, ComponentCollider::TFaction faction);
 void createShotgunBullets(vec2 pos, vec2 direction, float speed, int damage, int range, ComponentCollider::TFaction faction);
-Entity* createWeaponPickup(vec2 pos, Component::TWeapon type);
+Entity* createWeaponPickup();
 Entity* createHUDMessage(std::string, vec2 pos, int displayTime);
 
 // Collision utils
