@@ -15,6 +15,8 @@ public:
 	enum TWeapon {
 		ERevolver,
 		EMachinegun,
+		EShotgun,
+		EWeaponCount = 3
 	};
 
 	enum TColliderType {
@@ -261,6 +263,21 @@ public:
 	virtual void receiveMessage(Message* message);
 private:
 	TWeapon m_weapon;
+};
+
+//=============================================================================
+// ComponentHUDMessage class
+//=============================================================================
+class ComponentHUDMessage : public Component {
+public:
+	ComponentHUDMessage(Entity* owner, vec2 pos, std::string messageText) : Component(owner), m_pos(pos), m_messageText(messageText), m_message(nullptr) {}
+	~ComponentHUDMessage();
+
+	virtual void init();
+private:
+	vec2        m_pos;
+	std::string m_messageText;
+	Text*       m_message;
 };
 
 class C_HUDLife : public Component {

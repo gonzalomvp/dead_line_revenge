@@ -4,6 +4,7 @@
 #include "../scenes/app_manager.h"
 #include "../gui/string_manager.h"
 #include "../scenes/world.h"
+#include "../engine/graphics_engine.h"
 
 Menu::~Menu() {
 	g_inputManager->unregisterEvent(this);
@@ -88,6 +89,23 @@ Menu* Menu::createPauseMenu() {
 	return menu;
 }
 
+Menu* Menu::createGameOverMenu() {
+	Menu* menu = new Menu();
+	menu->m_title = new Text("GAME OVER", 1, vmake(SCR_WIDTH / 2, SCR_HEIGHT * 0.8));
+	menu->m_title->activate();
+	MenuItem* menuItem;
+	menuItem = new MenuItem("RETRY", vmake(SCR_WIDTH / 2, SCR_HEIGHT * 0.6), "LTEXT_GUI_RETRY_MENU_ITEM");
+	menuItem->init();
+	menu->m_menuItems.push_back(menuItem);
+	menuItem = new MenuItem("MAIN_MENU", vmake(SCR_WIDTH / 2, SCR_HEIGHT * 0.5), "LTEXT_GUI_ABANDON_MENU_ITEM");
+	menuItem->init();
+	menu->m_menuItems.push_back(menuItem);
+	menu->m_seletedItem = 0;
+	menu->m_menuItems[menu->m_seletedItem]->setFocus(true);
+	menu->deactivate();
+	return menu;
+}
+
 void Menu::run() {
 	if (!m_isActive)
 		return;
@@ -126,6 +144,9 @@ void Menu::activate() {
 	for (auto itControls = m_menuItems.begin(); itControls != m_menuItems.end(); ++itControls) {
 		(*itControls)->activate();
 	}
+	if (m_title) {
+		m_title->activate();
+	}
 	g_inputManager->registerEvent(this, IInputManager::TEvent::EQuit, 0);
 }
 
@@ -133,6 +154,9 @@ void Menu::deactivate() {
 	Control::deactivate();
 	for (auto itControls = m_menuItems.begin(); itControls != m_menuItems.end(); ++itControls) {
 		(*itControls)->deactivate();
+	}
+	if (m_title) {
+		m_title->deactivate();
 	}
 	g_inputManager->unregisterEvent(this);
 }
@@ -164,15 +188,36 @@ bool Menu::onEvent(const IInputManager::Event& event) {
 	return true;
 }
 
+void Menu::setTitle(const char* title) {
+	if (m_title) {
+		m_title->setText(title);
+	}
+	else {
+		m_title = new Text(title, 1, vmake(SCR_WIDTH / 2, SCR_HEIGHT * 0.8));
+	}
+	m_title->setPos(vmake((SCR_WIDTH / 2) - (strlen(title) / 2.0f * 16), m_title->getPos().y));
+}
+
 MenuManager::MenuManager() {
-	m_mainMenu = Menu::createMainMenu();
-	m_mainMenu->addListener(this);
-	m_playMenu = Menu::createPlayMenu();
-	m_playMenu->addListener(this);
-	m_optionsMenu = Menu::createOptionsMenu();
-	m_optionsMenu->addListener(this);
-	m_pauseMenu = Menu::createPauseMenu();
-	m_pauseMenu->addListener(this);
+	Menu* menu = Menu::createMainMenu();
+	menu->addListener(this);
+	m_menus[EMainMenu] = menu;
+
+	menu = Menu::createPlayMenu();
+	menu->addListener(this);
+	m_menus[EPlayMenu] = menu;
+
+	menu = Menu::createOptionsMenu();
+	menu->addListener(this);
+	m_menus[EOptionsMenu] = menu;
+
+	menu = Menu::createPauseMenu();
+	menu->addListener(this);
+	m_menus[EPauseMenu] = menu;
+
+	menu = Menu::createGameOverMenu();
+	menu->addListener(this);
+	m_menus[EGameOverMenu] = menu;
 }
 
 void MenuManager::run() {
@@ -185,17 +230,20 @@ void MenuManager::activateMenu(TMenu menu) {
 	}
 	switch (menu)
 	{
-		case MenuManager::EMainMenu:
-			m_activeMenu = m_mainMenu;
+		case EMainMenu:
+			m_activeMenu = m_menus[EMainMenu];
 			break;
-		case MenuManager::EOptionsMenu:
-			m_activeMenu = m_optionsMenu;
+		case EOptionsMenu:
+			m_activeMenu = m_menus[EOptionsMenu];
 			break;
-		case MenuManager::EPlayMenu:
-			m_activeMenu = m_playMenu;
+		case EPlayMenu:
+			m_activeMenu = m_menus[EPlayMenu];
 			break;
-		case MenuManager::EPauseMenu:
-			m_activeMenu = m_pauseMenu;
+		case EPauseMenu:
+			m_activeMenu = m_menus[EPauseMenu];
+			break;
+		case EGameOverMenu:
+			m_activeMenu = m_menus[EGameOverMenu];
 			break;
 		default:
 			break;
@@ -217,6 +265,7 @@ void MenuManager::onSelected(MenuItem* menuItem) {
 		activateMenu(EOptionsMenu);
 	}
 	else if (menuItem->getName() == "MAIN_MENU") {
+		g_appManager->switchMode(ModeId::MODE_MENU);
 		activateMenu(EMainMenu);
 	}
 	else if (menuItem->getName() == "EASY") {
@@ -249,7 +298,15 @@ void MenuManager::onSelected(MenuItem* menuItem) {
 	else if (menuItem->getName() == "ABANDON") {
 		g_appManager->switchMode(MODE_MENU);
 	}
+	else if (menuItem->getName() == "RETRY") {
+		g_world->init();
+		m_activeMenu->deactivate();
+	}
 	else if (menuItem->getName() == "EXIT") {
 		exit(0);
 	}
+}
+
+Menu* MenuManager::getMenu(TMenu menu) {
+	return m_menus[menu];
 }

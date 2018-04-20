@@ -59,6 +59,7 @@ void AppModeMenu::render() {
 
 AppModeGame::AppModeGame(int level) {
 	g_world = new World(level);
+	g_world->init();
 	m_isPaused = false;
 	g_inputManager->registerEvent(this, IInputManager::TEvent::EQuit, 0);
 	ShowCursor(false);

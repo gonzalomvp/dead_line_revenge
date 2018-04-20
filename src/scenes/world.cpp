@@ -10,6 +10,7 @@
 #include "../globals.h"
 #include "app_manager.h"
 #include "level.h"
+#include "../gui/string_manager.h"
 
 struct Ball
 {
@@ -66,44 +67,12 @@ GLuint enemyTexture;
 
 
 World::World(int level) {
-
-	char *fileName = nullptr;
-	switch (level)
-	{
-	case 1:
-		fileName = "data/level1.json";
-		break;
-	case 2:
-		fileName = "data/level2.json";
-		break;
-	case 3:
-		fileName = "data/level3.json";
-		break;
-	}
-	
-	m_player = createPlayer(vmake(SCR_WIDTH * 0.5f, SCR_HEIGHT * 0.5f));
-	addEntity(m_player);
-
-	//addEntity(createRangeEnemy(300, 300, m_player));
-	bullet.pos = vmake(-1000, -1000);
-	bullet.vel = vmake(0, 0);
-	bullet.pos = vmake(-1000, -1000);
-	bullet.vel = vmake(0, 0);
-	enemy.pos = vmake(0, 0);
-
-	m_level = Level::loadLevel(fileName);
-	//m_level = new Level();
-	addEntity(createTurretEnemy(100, SCR_HEIGHT - 100, vmake(0, -1), m_player));
-	addEntity(createTurretEnemy(SCR_WIDTH - 100, 100, vmake(-1, 0), m_player));
-
-	//borrar
-	//addEntity(createEnemy(200, 200, m_player, 0, 1, -1));
-	//addEntity(createEnemy(205, 200, m_player, 0, 1, -1));
-	addEntity(createWeaponPickup(vmake(250, 250), Component::EMachinegun));
-	//addEntity(createWeaponPickup(vmake(400, 400), Component::ERevolver));
+	m_isGameOver = false;
+	m_difficulty = level;
+	m_pickupSpawnWait = 500;
 
 	//HUD
-	m_lifeHUD = new Text("", 1,  vmake(20, 20));
+	m_lifeHUD = new Text("", 1, vmake(20, 20));
 	//g_graphicsEngine->addGfxEntity(m_lifeHUD);
 	Entity* hudLife = new Entity();
 	C_HUDLife* c_hudLife = new C_HUDLife(hudLife, m_player);
@@ -120,22 +89,6 @@ World::World(int level) {
 	//ver si se puede hacer de otra forma
 	m_reloadAnim = new Sprite(g_graphicsEngine->getTexture("data/playerReload.png"), 1);
 	g_graphicsEngine->addGfxEntity(m_reloadAnim);
-
-	//for (int i = 0; i < NUM_BALLS; i++)
-	//{
-	//  balls[i].pos = vmake(CORE_FRand(0.0, SCR_WIDTH), CORE_FRand(0.0, SCR_HEIGHT));
-	//  balls[i].vel = vmake(CORE_FRand(-MAX_BALL_SPEED, +MAX_BALL_SPEED), CORE_FRand(-MAX_BALL_SPEED, +MAX_BALL_SPEED));
-	//  if (CORE_FRand(0.f, 1.f) < 0.10f)
-	//  {
-	//    balls[i].radius = 64.f;
-	//    balls[i].gfx = texlargeball;
-	//  }
-	//  else
-	//  {
-	//    balls[i].radius = 16.f;
-	//    balls[i].gfx = texsmallball;
-	//  }
-	//}
 }
 
 World::~World() {
@@ -158,6 +111,54 @@ World::~World() {
 	delete m_reloadAnim;
 }
 
+void World::init() {
+	m_isGameOver = false;
+	m_pickupTimer = m_pickupSpawnWait;
+	//borrar lo anterior
+	for (size_t i = 0; i < m_entities.size(); ++i) {
+		if (m_entities[i]) {
+			delete m_entities[i];
+		}
+	}
+	m_entities.clear();
+
+	char *fileName = nullptr;
+	switch (m_difficulty)
+	{
+		case 1:
+			fileName = "data/level1.json";
+			break;
+		case 2:
+			fileName = "data/level2.json";
+			break;
+		case 3:
+			fileName = "data/level3.json";
+			break;
+	}
+
+	m_player = createPlayer(vmake(SCR_WIDTH * 0.5f, SCR_HEIGHT * 0.5f));
+	addEntity(m_player);
+
+	//addEntity(createRangeEnemy(300, 300, m_player));
+	bullet.pos = vmake(-1000, -1000);
+	bullet.vel = vmake(0, 0);
+	bullet.pos = vmake(-1000, -1000);
+	bullet.vel = vmake(0, 0);
+	enemy.pos = vmake(0, 0);
+
+	m_level = Level::loadLevel(fileName);
+	//m_level = new Level();
+	addEntity(createTurretEnemy(100, SCR_HEIGHT - 100, vmake(0, -1), m_player));
+	addEntity(createTurretEnemy(SCR_WIDTH - 100, 100, vmake(-1, 0), m_player));
+
+	//borrar
+	//addEntity(createEnemy(200, 200, m_player, 0, 1, -1));
+	//addEntity(createEnemy(205, 200, m_player, 0, 1, -1));
+	m_pickup = createWeaponPickup(vmake(110, SCR_HEIGHT - 110), Component::EMachinegun);
+	addEntity(m_pickup);
+	//addEntity(createWeaponPickup(vmake(400, 400), Component::ERevolver));
+}
+
 void World::addEntity(Entity* entity) {
 	m_entities.push_back(entity);
 }
@@ -170,143 +171,49 @@ void World::removeEntity(Entity* entity) {
 }
 
 void World::run() {
-	// Render
-	glClear(GL_COLOR_BUFFER_BIT);
+	if (!m_isGameOver) {
+		// Render
+		glClear(GL_COLOR_BUFFER_BIT);
 
-	//m_player->run();
+		//m_player->run();
 
-	for (size_t i = 0; i < m_entities.size(); ++i) {
-		m_entities[i]->run();
+		for (size_t i = 0; i < m_entities.size(); ++i) {
+			m_entities[i]->run();
+		}
+		checkCollisions();
+		removePendingEntities();
+		m_level->run();
+
+		//Pick up
+		if (m_pickupTimer <= m_pickupSpawnWait) {
+			++m_pickupTimer;
+			if (m_pickupTimer == m_pickupSpawnWait) {
+				m_pickup = createWeaponPickup(vmake(CORE_FRand(0.0, SCR_WIDTH), CORE_FRand(0.0, SCR_HEIGHT)), Component::EMachinegun);
+				addEntity(m_pickup);
+			}
+		}
+
+		//HUD
+		if (m_player) {
+			m_scoreHUD->setText("- " + std::to_string(m_level->m_score));
+
+			MessageGetLife msgLife;
+			m_player->receiveMessage(&msgLife);
+			m_lifeHUD->setText(std::to_string(msgLife.currentLife));
+
+			MessageAmmoInfo msgAmmo;
+			m_player->receiveMessage(&msgAmmo);
+			std::string totalAmmo = "-";
+			if (msgAmmo.totalAmmo >= 0)
+				totalAmmo = std::to_string(msgAmmo.totalAmmo);
+			m_ammoHUD->setText("- " + std::to_string(msgAmmo.currentAmmo) + "/" + totalAmmo);
+
+			MessageGetTransform msgTransform;
+			m_player->receiveMessage(&msgTransform);
+			m_reloadAnim->setPos(vmake(msgTransform.pos.x, msgTransform.pos.y - msgTransform.size.y * msgAmmo.reloadPercent * 0.5f));
+			m_reloadAnim->setSize(vmake(msgTransform.size.x, msgTransform.size.y * (1 - msgAmmo.reloadPercent)));
+		}
 	}
-	checkCollisions();
-	removePendingEntities();
-	m_level->run();
-
-	//HUD
-	if (m_player) {
-		m_scoreHUD->setText("- " + std::to_string(m_level->m_score));
-
-		MessageGetLife msgLife;
-		m_player->receiveMessage(&msgLife);
-		m_lifeHUD->setText(std::to_string(msgLife.currentLife));
-
-		MessageAmmoInfo msgAmmo;
-		m_player->receiveMessage(&msgAmmo);
-		std::string totalAmmo = "-";
-		if (msgAmmo.totalAmmo >= 0)
-			totalAmmo = std::to_string(msgAmmo.totalAmmo);
-		m_ammoHUD->setText("- " + std::to_string(msgAmmo.currentAmmo) + "/" + totalAmmo);
-
-		MessageGetTransform msgTransform;
-		m_player->receiveMessage(&msgTransform);
-		m_reloadAnim->setPos(vmake(msgTransform.pos.x, msgTransform.pos.y - msgTransform.size.y * msgAmmo.reloadPercent * 0.5f));
-		m_reloadAnim->setSize(vmake(msgTransform.size.x, msgTransform.size.y * (1- msgAmmo.reloadPercent)));
-	}
-	
-
-	//ivec2 mousePos = SYS_MousePos();
-	//newMousePos = vmake(mousePos.x, mousePos.y);
-
-	//vec2 dirMouseMove = vsub(newMousePos, playerPos);
-	//if (dirMouseMove.x != 0 || dirMouseMove.y != 0) {
-	//	targetDir = vscale(vscale(dirMouseMove, 1.0f / vlen(dirMouseMove)), 100);
-	//}
-
-	//targetPos = vadd(playerPos, targetDir);
-
-	//oldMousePos = newMousePos;
-
-	//CORE_RenderCenteredSprite(targetPos, vmake(50, 50), targetTexture);
-	//CORE_RenderCenteredSprite(playerPos, vmake(20, 20), playerTexture);
-	//CORE_RenderCenteredSprite(bullet.pos, vmake(10, 10), bulletTexture);
-	//CORE_RenderCenteredSprite(enemy.pos, vmake(20, 20), enemyTexture);
-
-
-	//SYS_Show();
-
-	//// Run balls
-	//bullet.pos = vadd(bullet.pos, bullet.vel);
-	//vec2 enemyDir = vsub(playerPos, enemy.pos);
-	//enemy.pos = vadd(enemy.pos, vscale(enemyDir, 0.01f));
-
-	//if (vlen(vsub(bullet.pos, enemy.pos)) < 10) {
-	//	enemy.pos = vmake(0, 0);
-	//	bullet.pos = vmake(-1000, -1000);
-	//	bullet.vel = vmake(0, 0);
-	//}
-
-	//if (SYS_KeyPressed(SYS_KEY_LEFT)) {
-	//	playerPos = vadd(playerPos, vmake(-5, 0));
-	//}
-	//if (SYS_KeyPressed(SYS_KEY_RIGHT)) {
-	//	playerPos = vadd(playerPos, vmake(5, 0));
-	//}
-	//if (SYS_KeyPressed(SYS_KEY_UP)) {
-	//	playerPos = vadd(playerPos, vmake(0, 5));
-	//}
-	//if (SYS_KeyPressed(SYS_KEY_DOWN)) {
-	//	playerPos = vadd(playerPos, vmake(0, -5));
-	//}
-
-	//if (SYS_MouseButonPressed(SYS_MB_LEFT)) {
-	//	bullet.pos = vadd(playerPos, vscale(targetDir, 0.2f));
-	//	bullet.vel = vscale(targetDir, 0.1f);
-	//}
-	//if (SYS_MouseButonPressed(SYS_MB_RIGHT)) {
-	//	enemybullet.pos = enemy.pos;
-	//	enemybullet.vel = vscale(targetDir, 0.1f);
-	//}
-
-	//for (int i = 0; i < NUM_BALLS; i++)
-	//{
-	//	vec2 oldpos = balls[i].pos;
-	//	vec2 newpos = vadd(oldpos, balls[i].vel);
-
-	//	bool collision = false;
-	//	int colliding_ball = -1;
-	//	for (int j = 0; j < NUM_BALLS; j++)
-	//	{
-	//		if (i != j)
-	//		{
-	//			float limit2 = (balls[i].radius + balls[j].radius) * (balls[i].radius + balls[j].radius);
-	//			if (vlen2(vsub(oldpos, balls[j].pos)) > limit2 && vlen2(vsub(newpos, balls[j].pos)) <= limit2)
-	//			{
-	//				collision = true;
-	//				colliding_ball = j;
-	//				break;
-	//			}
-	//		}
-	//	}
-
-	//	if (!collision)
-	//		balls[i].pos = newpos;
-	//	else
-	//	{
-	//		// Rebound!
-	//		balls[i].vel = vscale(balls[i].vel, -1.f);
-	//		balls[colliding_ball].vel = vscale(balls[colliding_ball].vel, -1.f);
-	//	}
-
-	//	// Rebound on margins
-	//	if (balls[i].vel.x > 0.0)
-	//	{
-	//		if (balls[i].pos.x > SCR_WIDTH)
-	//			balls[i].vel.x *= -1.0;
-	//	}
-	//	else {
-	//		if (balls[i].pos.x < 0)
-	//			balls[i].vel.x *= -1.0;
-	//	}
-	//	if (balls[i].vel.y > 0.0)
-	//	{
-	//		if (balls[i].pos.y > SCR_HEIGHT)
-	//			balls[i].vel.y *= -1.0;
-	//	}
-	//	else {
-	//		if (balls[i].pos.y < 0)
-	//			balls[i].vel.y *= -1.0;
-	//	}
-	//}
 }
 
 
@@ -381,7 +288,9 @@ void World::checkCollisions() {
 						//	g_appManager->switchMode(ModeId::MODE_MENU);
 						//else
 						//	addEntity(createEnemy(300, 300, m_player));
-						break;
+						
+						//ver si arregla colisiones multiples
+						//break;
 					}
 				}
 			}
@@ -407,9 +316,18 @@ void World::removePendingEntities() {
 				++it2;
 		}
 
+
+		//Poner antes
 		if (*it == m_player) {
-			g_appManager->switchMode(ModeId::MODE_MENU);
+			m_isGameOver = true;
+			std::string scoreMessage = g_stringManager->getText("LTEXT_GUI_SCORE_MESSAGE") + std::to_string(m_level->m_score);
+			g_menuManager->getMenu(MenuManager::EGameOverMenu)->setTitle(scoreMessage.c_str());
+			g_menuManager->activateMenu(MenuManager::EGameOverMenu);
 			m_player = nullptr;
+		}
+		else if (*it == m_pickup) {
+			m_pickupTimer = 0;
+			m_pickup = nullptr;
 		}
 	}
 	m_entitiesToRemove.clear();
@@ -440,7 +358,7 @@ Entity* createPlayer(vec2 pos) {
 	return player;
 }
 
-Entity* createBullet(vec2 pos, vec2 direction, float speed, ComponentCollider::TFaction faction) {
+Entity* createBullet(vec2 pos, vec2 direction, float speed, int damage, int timeTolive, ComponentCollider::TFaction faction) {
 	Entity* bullet = new Entity();
 	ComponentTransform* transform = new ComponentTransform(bullet, pos, vmake(10, 10));
 	transform->init();
@@ -448,11 +366,32 @@ Entity* createBullet(vec2 pos, vec2 direction, float speed, ComponentCollider::T
 	renderable->init();
 	ComponentInertialMove* movement = new ComponentInertialMove(bullet, direction, speed, true);
 	movement->init();
-	ComponentCollider* collider = new ComponentCollider(bullet, ComponentCollider::ECircleCollider, faction, -1);
+	ComponentCollider* collider = new ComponentCollider(bullet, ComponentCollider::ECircleCollider, faction, damage);
 	collider->init();
-	ComponentLife* life = new ComponentLife(bullet, 0, 0, 0);
+	ComponentLife* life = new ComponentLife(bullet, 0, timeTolive, 0);
 	life->init();
 	return bullet;
+}
+
+void createShotgunBullets(vec2 pos, vec2 direction, float speed, ComponentCollider::TFaction faction) {
+	float dispersionAngle = 15.0f;
+	int range = 30;
+	int damage = -2;
+	
+	vec2 bulletDir = direction;
+	g_world->addEntity(createBullet(pos, bulletDir, speed, damage, range, faction));
+
+	float angle = vangle(direction);
+	angle += dispersionAngle;
+	bulletDir = vunit(DEG2RAD(angle));
+	g_world->addEntity(createBullet(pos, bulletDir, speed, damage, range, faction));
+
+	angle = vangle(direction);
+	angle -= dispersionAngle;
+	bulletDir = vunit(DEG2RAD(angle));
+	g_world->addEntity(createBullet(pos, bulletDir, speed, damage, range, faction));
+
+	return;
 }
 
 Entity* createEnemy(int x, int y, Entity* player, int speed, int lives, int damage) {
@@ -515,7 +454,7 @@ Entity* createTurretEnemy(int x, int y, vec2 dir, Entity* player) {
 	ComponentRenderable* renderable = new ComponentRenderable(enemy, "data/enemy.png", "data/player.png", 10);
 	renderable->init();
 	ComponentAIFire* aiFire = new ComponentAIFire(enemy, dir);
-	aiFire->init();
+	//aiFire->init();
 	ComponentWeapon* gun = new ComponentWeapon(enemy, Component::ERevolver, 100, 1, 1, 6, false);
 	gun->init();
 	ComponentCollider* collider = new ComponentCollider(enemy, ComponentCollider::ERectCollider, ComponentCollider::EEnemy, -1);
@@ -532,13 +471,20 @@ Entity* createWeaponPickup(vec2 pos, Component::TWeapon type) {
 	ComponentTransform* transform = new ComponentTransform(weaponPickup, pos, vmake(20, 20));
 	transform->init();
 	std::string weaponIcon = "";
-	switch (type)
+	int randomType = rand() % Component::EWeaponCount;
+	switch (randomType)
 	{
-	case Component::ERevolver:
+	case 0:
 		weaponIcon = "R";
+		type = Component::ERevolver;
 		break;
-	case Component::EMachinegun:
+	case 1:
 		weaponIcon = "M";
+		type = Component::EMachinegun;
+		break;
+	case 2:
+		weaponIcon = "M";
+		type = Component::EShotgun;
 		break;
 	}
 	ComponentRenderable* renderable = new ComponentRenderable(weaponPickup, "data/SimpleCrate.png");
@@ -552,6 +498,16 @@ Entity* createWeaponPickup(vec2 pos, Component::TWeapon type) {
 	ComponentLife* life = new ComponentLife(weaponPickup, 0, 0, 0);
 	life->init();
 	return weaponPickup;
+}
+
+Entity* createHUDMessage(std::string message, vec2 pos, int displayTime) {
+	Entity* hudMessage = new Entity();
+	ComponentHUDMessage* hudMessageComponent = new ComponentHUDMessage(hudMessage, pos, message);
+	hudMessageComponent->init();
+	ComponentLife* life = new ComponentLife(hudMessage, 0, displayTime, 0);
+	life->init();
+	g_world->addEntity(hudMessage);
+	return hudMessage;
 }
 
 bool checkCircleRect(const vec2& circlePos, float circleRadius, const vec2& rectPos, const vec2& rectSize) {

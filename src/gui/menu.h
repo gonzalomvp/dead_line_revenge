@@ -2,8 +2,10 @@
 
 #include "gui.h"
 #include <vector>
+#include <map>
 
 class MenuItem;
+class Text;
 
 class Menu : public Control {
 
@@ -19,6 +21,7 @@ public:
 	static Menu* createPlayMenu();
 	static Menu* createOptionsMenu();
 	static Menu* createPauseMenu();
+	static Menu* createGameOverMenu();
 
 	void run();
 	void selectPrevious();
@@ -29,14 +32,16 @@ public:
 	int  getSelectedItem() { return m_seletedItem; }
 	void addListener(IListener* listener) { m_listeners.push_back(listener); }
 	virtual bool onEvent(const IInputManager::Event&);
+	void setTitle(const char* title);
 
 	std::vector<MenuItem*> m_menuItems;
 private:
-	Menu() : Control(std::string(""), vmake(0,0), vmake(0, 0)) {}
+	Menu() : Control(std::string(""), vmake(0,0), vmake(0, 0)), m_title(nullptr) {}
 
 	int m_seletedItem;
 
 	std::vector<IListener*> m_listeners;
+	Text* m_title;
 };
 
 class MenuManager : public Menu::IListener {
@@ -46,6 +51,7 @@ public:
 		EOptionsMenu,
 		EPlayMenu,
 		EPauseMenu,
+		EGameOverMenu,
 	};
 
 	MenuManager();
@@ -54,10 +60,13 @@ public:
 	void activateMenu(TMenu menu);
 	void deactivateMenu();
 	virtual void onSelected(MenuItem* menuItem);
+	Menu* getMenu(TMenu menu);
 private:
-	Menu* m_mainMenu;
-	Menu* m_playMenu;
-	Menu* m_optionsMenu;
-	Menu* m_pauseMenu;
+	std::map<TMenu, Menu*> m_menus;
+	//Menu* m_mainMenu;
+	//Menu* m_playMenu;
+	//Menu* m_optionsMenu;
+	//Menu* m_pauseMenu;
 	Menu* m_activeMenu;
+	//Menu* m_gameOverMenu;
 };

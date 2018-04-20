@@ -12,20 +12,25 @@ public:
 	void addEntity(Entity* entity);
 	void removeEntity(Entity* entity);
 
+	void init();
 	void run();
 
 	Entity* getPlayer();
 
 	Entity* m_player;
+	Entity* m_pickup;
+	int m_pickupTimer;
+	int m_pickupSpawnWait;
 	std::vector <Entity*> m_entities;
 	Level* m_level;
+	int m_difficulty;
 
 private:
 	void checkCollisions();
 	void removePendingEntities();
 
 	std::vector <Entity*> m_entitiesToRemove;
-	
+	bool m_isGameOver;
 
 	//HUD
 	Text* m_lifeHUD;
@@ -41,8 +46,10 @@ Entity* createEnemy(int x, int y, Entity* player, int speed, int lives, int dama
 Entity* createBigEnemy(int x, int y, Entity* player, int speed, int lives, int damage);
 Entity* createRangeEnemy(int x, int y, Entity* player);
 Entity* createTurretEnemy(int x, int y, vec2 dir, Entity* player);
-Entity* createBullet(vec2 pos, vec2 direction, float speed, Component::TFaction faction);
+Entity* createBullet(vec2 pos, vec2 direction, float speed, int damage, int timeTolive, ComponentCollider::TFaction faction);
+void createShotgunBullets(vec2 pos, vec2 direction, float speed, Component::TFaction faction);
 Entity* createWeaponPickup(vec2 pos, Component::TWeapon type);
+Entity* createHUDMessage(std::string, vec2 pos, int displayTime);
 
 // Collision utils
 inline float clamp(float value, float inf, float sup) { return (value <= inf) ? inf : (value >= sup) ? sup : value; };

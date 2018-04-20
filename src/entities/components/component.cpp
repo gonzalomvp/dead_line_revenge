@@ -4,6 +4,7 @@
 #include "../message.h"
 #include "../../scenes/world.h"
 #include "../../scenes/level.h"
+#include "../../gui/string_manager.h"
 
 #define EVASION_ANGLE         45.0f
 #define EVASION_MIN_WALL_DIST 20.0f
@@ -344,7 +345,17 @@ void ComponentWeapon::run() {
 		m_owner->receiveMessage(&messageGetTranform);
 		MessageGetCollider msgGetCollider;
 		m_owner->receiveMessage(&msgGetCollider);
-		g_world->addEntity(createBullet(messageGetTranform.pos, m_aimDirection, m_bulletSpeed, msgGetCollider.faction));
+
+		switch (m_type)
+		{
+			case EShotgun:
+				createShotgunBullets(messageGetTranform.pos, m_aimDirection, m_bulletSpeed, msgGetCollider.faction);
+				break;
+			default:
+				g_world->addEntity(createBullet(messageGetTranform.pos, m_aimDirection, m_bulletSpeed, -1, 0, msgGetCollider.faction));
+				break;
+		}
+		
 		
 		if (!m_isAutomatic) {
 			m_isFiring = false;
@@ -648,7 +659,36 @@ void ComponentWeaponPickup::receiveMessage(Message* message) {
 		MessageChangeLife mgsChangeLife;
 		mgsChangeLife.deltaLife = msgCollision->deltaLife;
 		m_owner->receiveMessage(&mgsChangeLife);
+
+		std::string hudMessage = g_stringManager->getText("LTEXT_GUI_PICKUP_MESSAGE");
+		switch (m_weapon)
+		{
+			case Component::ERevolver:
+				hudMessage += g_stringManager->getText("LTEXT_GUI_REVOLVER_MESSAGE");
+				break;
+			case Component::EMachinegun:
+				hudMessage += g_stringManager->getText("LTEXT_GUI_MACHINEGUN_MESSAGE");
+				break;
+			case Component::EShotgun:
+				hudMessage += g_stringManager->getText("LTEXT_GUI_SHOTGUN_MESSAGE");
+				break;
+		}
+
+		createHUDMessage(hudMessage, vmake((SCR_WIDTH / 2) - (hudMessage.length() / 2.0f * 16), SCR_HEIGHT * 0.8f), 100);
 	}
+}
+
+//=============================================================================
+// ComponentHUDMessage class
+//=============================================================================
+ComponentHUDMessage::~ComponentHUDMessage() {
+	g_graphicsEngine->removeGfxEntity(m_message);
+}
+
+void ComponentHUDMessage::init() {
+	Component::init();
+	m_message = new Text(m_messageText, 1, m_pos);
+	g_graphicsEngine->addGfxEntity(m_message);
 }
 
 //=============================================================================
