@@ -138,7 +138,7 @@ private:
 //=============================================================================
 class ComponentWeapon : public Component {
 public:
-	ComponentWeapon(Entity* owner, TWeapon type, int fireRate, int reloadTime, int bullets, int bulletSpeed, bool isAutomatic, const char* soundFilename = nullptr);
+	ComponentWeapon(Entity* owner, TWeapon type, int fireRate, int reloadTime, int bullets, int bulletSpeed, int bulletDamage, int bulletRange, bool isAutomatic, const char* soundFilename = nullptr);
 
 	virtual void init          ();
 	virtual void run           ();
@@ -149,6 +149,8 @@ private:
 	int         m_reloadTime;
 	int         m_bullets;
 	int         m_bulletSpeed;
+	int         m_bulletDamage;
+	int         m_bulletRange;
 	bool        m_isAutomatic;
 	const char* m_soundFilename;
 	vec2        m_aimDirection;

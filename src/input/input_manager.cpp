@@ -13,7 +13,7 @@ void InputManager::processInput() {
 	checkKeyState(VK_DOWN);
 	checkKeyState(VK_RETURN);
 	checkKeyState(VK_SPACE);
-	checkKeyState('P');
+	checkKeyState(VK_ESCAPE);
 
 
 	if (SYS_KeyPressed('A')) {
@@ -123,7 +123,7 @@ void InputManager::checkKeyState(int key) {
 		event->action = KeyEvent::KeyPressed;
 		g_inputManager->addEvent(event);
 
-		if (key == 'P') {
+		if (key == VK_ESCAPE) {
 			event = new KeyEvent();
 			event->setType(EPause);
 			g_inputManager->addEvent(event);

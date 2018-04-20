@@ -343,12 +343,8 @@ Entity* createPlayer(vec2 pos) {
 	playerControl->init();
 	ComponentInertialMove* movement = new ComponentInertialMove(player, vmake(0.0f, 0.0f), 5, false);
 	movement->init();
-	ComponentWeapon* revolver = new ComponentWeapon(player, Component::ERevolver, 20, 40, 6, 6, false, "data/shot.wav");
-	revolver->init();
-	//revolver->deactivate();
-	ComponentWeapon* machinegun = new ComponentWeapon(player, Component::EMachinegun, 10, 80, 20, 8, true, "data/shot.wav");
-	machinegun->init();
-	machinegun->deactivate();
+	ComponentWeapon* weapon = new ComponentWeapon(player, Component::ERevolver, 20, 40, 6, 6, -2, 60, false, "data/shot.wav");
+	weapon->init();
 	C_Target* target = new C_Target(player, "data/target.png");
 	target->init();
 	ComponentCollider* collider = new ComponentCollider(player, ComponentCollider::ERectCollider, ComponentCollider::EAllied, 0);
@@ -358,7 +354,7 @@ Entity* createPlayer(vec2 pos) {
 	return player;
 }
 
-Entity* createBullet(vec2 pos, vec2 direction, float speed, int damage, int timeTolive, ComponentCollider::TFaction faction) {
+Entity* createBullet(vec2 pos, vec2 direction, float speed, int damage, int range, ComponentCollider::TFaction faction) {
 	Entity* bullet = new Entity();
 	ComponentTransform* transform = new ComponentTransform(bullet, pos, vmake(10, 10));
 	transform->init();
@@ -368,15 +364,13 @@ Entity* createBullet(vec2 pos, vec2 direction, float speed, int damage, int time
 	movement->init();
 	ComponentCollider* collider = new ComponentCollider(bullet, ComponentCollider::ECircleCollider, faction, damage);
 	collider->init();
-	ComponentLife* life = new ComponentLife(bullet, 0, timeTolive, 0);
+	ComponentLife* life = new ComponentLife(bullet, 0, range, 0);
 	life->init();
 	return bullet;
 }
 
-void createShotgunBullets(vec2 pos, vec2 direction, float speed, ComponentCollider::TFaction faction) {
+void createShotgunBullets(vec2 pos, vec2 direction, float speed, int damage, int range, ComponentCollider::TFaction faction) {
 	float dispersionAngle = 15.0f;
-	int range = 30;
-	int damage = -2;
 	
 	vec2 bulletDir = direction;
 	g_world->addEntity(createBullet(pos, bulletDir, speed, damage, range, faction));
@@ -438,7 +432,7 @@ Entity* createRangeEnemy(int x, int y, Entity* player) {
 	aiMelee->init();
 	ComponentAIFire* aiFire = new ComponentAIFire(enemy, player);
 	aiFire->init();
-	ComponentWeapon* gun = new ComponentWeapon(enemy, Component::ERevolver, 40, 1, 1, 6, false);
+	ComponentWeapon* gun = new ComponentWeapon(enemy, Component::ERevolver, 40, 1, 1, 6, 1, 0, false);
 	gun->init();
 	ComponentCollider* collider = new ComponentCollider(enemy, ComponentCollider::ERectCollider, ComponentCollider::EEnemy, -1);
 	collider->init();
@@ -455,7 +449,7 @@ Entity* createTurretEnemy(int x, int y, vec2 dir, Entity* player) {
 	renderable->init();
 	ComponentAIFire* aiFire = new ComponentAIFire(enemy, dir);
 	//aiFire->init();
-	ComponentWeapon* gun = new ComponentWeapon(enemy, Component::ERevolver, 100, 1, 1, 6, false);
+	ComponentWeapon* gun = new ComponentWeapon(enemy, Component::ERevolver, 100, 1, 1, 6, 1, 0, false);
 	gun->init();
 	ComponentCollider* collider = new ComponentCollider(enemy, ComponentCollider::ERectCollider, ComponentCollider::EEnemy, -1);
 	collider->init();

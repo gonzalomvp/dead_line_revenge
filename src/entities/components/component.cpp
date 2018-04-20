@@ -304,7 +304,7 @@ bool ComponentPlayerController::onEvent(const IInputManager::Event& event) {
 //=============================================================================
 // ComponentWeapon class
 //=============================================================================
-ComponentWeapon::ComponentWeapon(Entity* owner, TWeapon type, int fireRate, int reloadTime, int bullets, int bulletSpeed, bool isAutomatic, const char* soundFilename) : Component(owner), m_type(type), m_fireRate(fireRate), m_reloadTime(reloadTime), m_bullets(bullets), m_bulletSpeed(bulletSpeed), m_isAutomatic(isAutomatic), m_soundFilename(soundFilename) {
+ComponentWeapon::ComponentWeapon(Entity* owner, TWeapon type, int fireRate, int reloadTime, int bullets, int bulletSpeed, int bulletDamage, int bulletRange, bool isAutomatic, const char* soundFilename) : Component(owner), m_type(type), m_fireRate(fireRate), m_reloadTime(reloadTime), m_bullets(bullets), m_bulletSpeed(bulletSpeed), m_bulletDamage(bulletDamage), m_bulletRange(bulletRange), m_isAutomatic(isAutomatic), m_soundFilename(soundFilename) {
 	m_aimDirection   = vmake(0.0f, 0.0f);
 	m_currentBullets = m_bullets;
 	m_isFiring       = false;
@@ -339,6 +339,7 @@ void ComponentWeapon::run() {
 		--m_currentBullets;
 		if (m_currentBullets <= 0) {
 			m_reloadTimer = 0;
+			m_isFiring = false;
 		}
 
 		MessageGetTransform messageGetTranform;
@@ -349,10 +350,10 @@ void ComponentWeapon::run() {
 		switch (m_type)
 		{
 			case EShotgun:
-				createShotgunBullets(messageGetTranform.pos, m_aimDirection, m_bulletSpeed, msgGetCollider.faction);
+				createShotgunBullets(messageGetTranform.pos, m_aimDirection, m_bulletSpeed, m_bulletDamage, m_bulletRange, msgGetCollider.faction);
 				break;
 			default:
-				g_world->addEntity(createBullet(messageGetTranform.pos, m_aimDirection, m_bulletSpeed, -1, 0, msgGetCollider.faction));
+				g_world->addEntity(createBullet(messageGetTranform.pos, m_aimDirection, m_bulletSpeed, m_bulletDamage, m_bulletRange, msgGetCollider.faction));
 				break;
 		}
 		
@@ -369,17 +370,53 @@ void ComponentWeapon::run() {
 }
 
 void ComponentWeapon::receiveMessage(Message* message) {
+	if (!m_isActive)
+		return;
+
 	MessageWeaponChange *msgWeaponChange = dynamic_cast<MessageWeaponChange*>(message);
 	if (msgWeaponChange) {
-		if (m_type == msgWeaponChange->weapon)
-			this->activate();
-		else
-			this->deactivate();
+		m_type = msgWeaponChange->weapon;
+		switch (m_type) {
+			case ERevolver:
+				m_fireRate = 20;
+				m_reloadTime = 40;
+				m_bullets = 6;
+				m_bulletSpeed = 6;
+				m_bulletDamage = -2;
+				m_bulletRange = 60;
+				m_isAutomatic = false;
+				m_soundFilename = "data/shot.wav";
+				break;
+			case EMachinegun:
+				m_fireRate = 10;
+				m_reloadTime = 80;
+				m_bullets = 20;
+				m_bulletSpeed = 8;
+				m_bulletDamage = -1;
+				m_bulletRange = 0;
+				m_isAutomatic = true;
+				m_soundFilename = "data/shot.wav";
+				break;
+			case EShotgun:
+				m_fireRate = 30;
+				m_reloadTime = 60;
+				m_bullets = 2;
+				m_bulletSpeed = 4;
+				m_bulletDamage = -1;
+				m_bulletRange = 30;
+				m_isAutomatic = false;
+				m_soundFilename = "data/shot.wav";
+				break;
+		}
+		m_isFiring = false;
+		m_currentBullets = m_bullets;
+		m_fireTimer = m_fireRate;
+		m_reloadTimer = m_reloadTime;
+		if (m_soundFilename) {
+			m_soundId = CORE_LoadWav(m_soundFilename);
+		}
 	}
 	else {
-		if (!m_isActive)
-			return;
-
 		MessageFire *msgFire = dynamic_cast<MessageFire*>(message);
 		if (msgFire) {
 			m_isFiring = msgFire->isFiring;
@@ -403,6 +440,7 @@ void ComponentWeapon::receiveMessage(Message* message) {
 					MessageReload *msgReload = dynamic_cast<MessageReload*>(message);
 					if (msgReload && m_currentBullets < m_bullets && m_reloadTimer >= m_reloadTime) {
 						m_reloadTimer = 0;
+						m_isFiring = false;
 					}
 				}
 			}
@@ -663,13 +701,13 @@ void ComponentWeaponPickup::receiveMessage(Message* message) {
 		std::string hudMessage = g_stringManager->getText("LTEXT_GUI_PICKUP_MESSAGE");
 		switch (m_weapon)
 		{
-			case Component::ERevolver:
+			case ERevolver:
 				hudMessage += g_stringManager->getText("LTEXT_GUI_REVOLVER_MESSAGE");
 				break;
-			case Component::EMachinegun:
+			case EMachinegun:
 				hudMessage += g_stringManager->getText("LTEXT_GUI_MACHINEGUN_MESSAGE");
 				break;
-			case Component::EShotgun:
+			case EShotgun:
 				hudMessage += g_stringManager->getText("LTEXT_GUI_SHOTGUN_MESSAGE");
 				break;
 		}
