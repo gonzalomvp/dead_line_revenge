@@ -388,6 +388,7 @@ void ComponentWeapon::receiveMessage(Message* message) {
 
 	MessageWeaponChange *msgWeaponChange = dynamic_cast<MessageWeaponChange*>(message);
 	if (msgWeaponChange) {
+		activate();
 		m_type = msgWeaponChange->weapon;
 		switch (m_type) {
 			case ERevolver:
