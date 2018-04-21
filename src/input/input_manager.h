@@ -48,6 +48,7 @@ public:
 		enum KeyAction {
 			KeyPressed,
 			KeyReleased,
+			KeyDown,
 		};
 		int key;
 		KeyAction action;
@@ -59,7 +60,7 @@ public:
 	};
 
 	virtual int registerEvent(IListener*, TEvent e, int priority) = 0;
-	virtual int unregisterEvent(IListener*) = 0;
+	virtual int unregisterEvent(IListener*, TEvent event) = 0;
 	virtual void processInput() = 0;
 };
 
@@ -68,15 +69,16 @@ public:
 	InputManager();
 	~InputManager();
 	virtual int registerEvent(IListener*, TEvent e, int priority);
-	virtual int unregisterEvent(IListener*);
+	virtual int unregisterEvent(IListener*, TEvent event);
 	virtual void processInput();
 	void addEvent(Event* event);
-	void clearListeners() { m_listeners.clear(); }
+	//void clearListeners() { m_listeners.clear(); }
 
 private:
 	void checkKeyState(int key);
-	std::vector<IListener*> m_listeners;
+	//std::vector<IListener*> m_listeners;
 	std::vector<Event*> m_events;
 	MouseInputManager* m_mouseInputManager;
 	std::map<int, bool> m_keys;
+	std::map<TEvent, std::vector<IListener*>> m_listenersMap;
 };

@@ -61,12 +61,14 @@ AppModeGame::AppModeGame(int level) {
 	g_world = new World(level);
 	g_world->init();
 	m_isPaused = false;
-	g_inputManager->registerEvent(this, IInputManager::TEvent::EQuit, 0);
+	g_inputManager->registerEvent(this, IInputManager::TEvent::EKey, 0);
+	g_inputManager->registerEvent(this, IInputManager::TEvent::EPause, 0);
 	ShowCursor(false);
 }
 
 void AppModeGame::deactivate() {
-	g_inputManager->unregisterEvent(this);
+	g_inputManager->unregisterEvent(this, IInputManager::TEvent::EKey);
+	g_inputManager->unregisterEvent(this, IInputManager::TEvent::EPause);
 	//g_inputManager->clearListeners();
 	//g_graphicsEngine->removeAllGfxEntities();
 	ShowCursor(true);

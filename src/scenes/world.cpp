@@ -600,8 +600,10 @@ void createExplossion(vec2 pos, vec2 size) {
 	life->init();
 	g_world->addEntity(explossionImpactToPlayer);
 
-	uint m_soundId = CORE_LoadWav("data/explossion.wav");
-	CORE_PlayMusic(m_soundId);
+	if (g_settings.sfx) {
+		uint m_soundId = CORE_LoadWav("data/explossion.wav");
+		CORE_PlayMusic(m_soundId);
+	}
 
 	return;
 }

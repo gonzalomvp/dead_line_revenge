@@ -7,7 +7,7 @@
 #include "../engine/graphics_engine.h"
 
 Menu::~Menu() {
-	g_inputManager->unregisterEvent(this);
+	g_inputManager->unregisterEvent(this, IInputManager::TEvent::EKey);
 }
 
 Menu* Menu::createMainMenu() {
@@ -147,7 +147,7 @@ void Menu::activate() {
 	if (m_title) {
 		m_title->activate();
 	}
-	g_inputManager->registerEvent(this, IInputManager::TEvent::EQuit, 0);
+	g_inputManager->registerEvent(this, IInputManager::TEvent::EKey, 0);
 }
 
 void Menu::deactivate() {
@@ -158,7 +158,7 @@ void Menu::deactivate() {
 	if (m_title) {
 		m_title->deactivate();
 	}
-	g_inputManager->unregisterEvent(this);
+	g_inputManager->unregisterEvent(this, IInputManager::TEvent::EKey);
 }
 
 bool Menu::onEvent(const IInputManager::Event& event) {

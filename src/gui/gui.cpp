@@ -21,7 +21,7 @@ void GUIManager::render() {
 }
 
 Control::~Control() {
-	g_inputManager->unregisterEvent(this);
+	g_inputManager->unregisterEvent(this, IInputManager::TEvent::EKey);
 }
 
 Button::Button(std::string name, vec2 pos, vec2 size, const char* spriteOn, const char* spriteOff) : Control(name, pos, size) {

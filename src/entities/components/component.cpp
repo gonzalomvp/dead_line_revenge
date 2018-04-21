@@ -228,10 +228,12 @@ void ComponentRenderable::receiveMessage(Message* message) {
 void ComponentPlayerController::init() {
 	Component::init();
 	g_inputManager->registerEvent(this, IInputManager::TEvent::EKey, 0);
+	g_inputManager->registerEvent(this, IInputManager::TEvent::EMouse, 0);
 }
 
 ComponentPlayerController::~ComponentPlayerController() {
-	g_inputManager->unregisterEvent(this);
+	g_inputManager->unregisterEvent(this, IInputManager::TEvent::EKey);
+	g_inputManager->unregisterEvent(this, IInputManager::TEvent::EMouse);
 }
 
 bool ComponentPlayerController::onEvent(const IInputManager::Event& event) {
@@ -501,14 +503,14 @@ void ComponentWeapon::receiveMessage(Message* message) {
 //=============================================================================
 ComponentExplossive::~ComponentExplossive() {
 	if (m_isActivatedRemotely) {
-		g_inputManager->unregisterEvent(this);
+		g_inputManager->unregisterEvent(this, IInputManager::TEvent::EMouse);
 	}
 }
 
 void ComponentExplossive::init() {
 	Component::init();
 	if (m_isActivatedRemotely) {
-		g_inputManager->registerEvent(this, IInputManager::TEvent::EKey, 0);
+		g_inputManager->registerEvent(this, IInputManager::TEvent::EMouse, 0);
 	}
 }
 
@@ -553,12 +555,12 @@ C_Target::C_Target(Entity* owner, char* texture) : Component(owner){
 	m_sprite = new Sprite(g_graphicsEngine->getTexture(texture), 1);
 	m_sprite->setSize(vmake(50, 50));
 	g_graphicsEngine->addGfxEntity(m_sprite);
-	g_inputManager->registerEvent(this, IInputManager::TEvent::EKey, 0);
+	g_inputManager->registerEvent(this, IInputManager::TEvent::EMouse, 0);
 }
 
 C_Target::~C_Target() {
 	g_graphicsEngine->removeGfxEntity(m_sprite);
-	g_inputManager->unregisterEvent(this);
+	g_inputManager->unregisterEvent(this, IInputManager::TEvent::EMouse);
 }
 
 

@@ -65,7 +65,7 @@ EntityPlayer::EntityPlayer(int i) {
 EntityPlayer::~EntityPlayer() {
 	//no se esta llamando porque ahora todo son entidades genericas
 	g_graphicsEngine->removeGfxEntity(m_targetSprite);
-	g_inputManager->unregisterEvent(this);
+	g_inputManager->unregisterEvent(this, IInputManager::TEvent::EKey);
 }
 
 void EntityPlayer::run() {
