@@ -385,8 +385,6 @@ void ComponentWeapon::run() {
 }
 
 void ComponentWeapon::receiveMessage(Message* message) {
-	if (!m_isActive)
-		return;
 
 	MessageWeaponChange *msgWeaponChange = dynamic_cast<MessageWeaponChange*>(message);
 	if (msgWeaponChange) {
@@ -446,7 +444,8 @@ void ComponentWeapon::receiveMessage(Message* message) {
 				m_fireRate = 20;
 				m_reloadTime = 40;
 				m_bullets = 2;
-				m_bulletSpeed = 5;
+				m_bulletSpeed = 5
+					;
 				m_bulletDamage = -1;
 				m_bulletRange = 0;
 				m_isAutomatic = false;
@@ -462,6 +461,9 @@ void ComponentWeapon::receiveMessage(Message* message) {
 		}
 	}
 	else {
+		if (!m_isActive)
+			return;
+
 		MessageFire *msgFire = dynamic_cast<MessageFire*>(message);
 		if (msgFire) {
 			m_isFiring = msgFire->isFiring;
@@ -518,6 +520,9 @@ void ComponentExplossive::receiveMessage(Message* message) {
 		MessageGetTransform messageSelfPos;
 		m_owner->receiveMessage(&messageSelfPos);
 		createExplossion(messageSelfPos.pos, vmake(100, 100));
+		if (m_weapon) {
+			m_weapon->activate();
+		}
 	}
 }
 
@@ -843,19 +848,6 @@ void ComponentWeaponPickup::receiveMessage(Message* message) {
 		}
 
 		createHUDMessage(hudMessage, vmake((SCR_WIDTH / 2) - (hudMessage.length() / 2.0f * 16), SCR_HEIGHT * 0.8f), 100);
-	}
-}
-
-//=============================================================================
-// ComponentWeaponReactivator class
-//=============================================================================
-void ComponentWeaponReactivator::receiveMessage(Message* message) {
-	if (!m_isActive)
-		return;
-
-	MessageDestroy *msgDestroy = dynamic_cast<MessageDestroy*>(message);
-	if (msgDestroy && m_weapon) {
-		m_weapon->activate();
 	}
 }
 

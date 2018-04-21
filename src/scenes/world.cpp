@@ -409,10 +409,8 @@ Entity* createMine(Component* weapon, vec2 pos, int damage, ComponentCollider::T
 	collider->init();
 	ComponentLife* life = new ComponentLife(mine, 0, 0, 0);
 	life->init();
-	ComponentExplossive* explossion = new ComponentExplossive(mine, false);
+	ComponentExplossive* explossion = new ComponentExplossive(mine, false, weapon);
 	explossion->init();
-	ComponentWeaponReactivator* weaponReactivator = new ComponentWeaponReactivator(mine, weapon);
-	weaponReactivator->init();
 	g_world->addEntity(mine);
 	return mine;
 }
@@ -425,10 +423,8 @@ Entity* createC4(Component* weapon, vec2 pos, int damage, ComponentCollider::TFa
 	renderable->init();
 	ComponentLife* life = new ComponentLife(mine, 0, 0, 0);
 	life->init();
-	ComponentExplossive* explossion = new ComponentExplossive(mine, true);
+	ComponentExplossive* explossion = new ComponentExplossive(mine, true, weapon);
 	explossion->init();
-	ComponentWeaponReactivator* weaponReactivator = new ComponentWeaponReactivator(mine, weapon);
-	weaponReactivator->init();
 	g_world->addEntity(mine);
 	return mine;
 }
@@ -445,9 +441,7 @@ Entity* createRocket(Component* weapon, vec2 pos, vec2 direction, float speed, i
 	collider->init();
 	ComponentLife* life = new ComponentLife(rocket, 0, range, 0);
 	life->init();
-	ComponentExplossive* explossive = new ComponentExplossive(rocket, false);
-	ComponentWeaponReactivator* weaponReactivator = new ComponentWeaponReactivator(rocket, weapon);
-	weaponReactivator->init();
+	ComponentExplossive* explossive = new ComponentExplossive(rocket, false, weapon);
 	explossive->init();
 	g_world->addEntity(rocket);
 	return rocket;

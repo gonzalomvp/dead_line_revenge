@@ -172,14 +172,15 @@ private:
 //=============================================================================
 class ComponentExplossive : public Component, public IInputManager::IListener {
 public:
-	ComponentExplossive(Entity* owner, bool isActivatedRemotely) : Component(owner), m_isActivatedRemotely(isActivatedRemotely) {}
+	ComponentExplossive(Entity* owner, bool isActivatedRemotely, Component* weapon = nullptr) : Component(owner), m_isActivatedRemotely(isActivatedRemotely), m_weapon(weapon) {}
 	~ComponentExplossive();
 
 	virtual void init          ();
 	virtual void receiveMessage(Message* message);
 	virtual bool onEvent       (const IInputManager::Event&);
 private:
-	bool m_isActivatedRemotely;
+	bool       m_isActivatedRemotely;
+	Component* m_weapon;
 };
 
 //=============================================================================
@@ -287,18 +288,6 @@ public:
 	virtual void receiveMessage(Message* message);
 private:
 	TWeapon m_weapon;
-};
-
-//=============================================================================
-// ComponentWeaponReactivator class
-//=============================================================================
-class ComponentWeaponReactivator : public Component {
-public:
-	ComponentWeaponReactivator(Entity* owner, Component* weapon) : Component(owner), m_weapon(weapon) {}
-
-	virtual void receiveMessage(Message* message);
-private:
-	Component* m_weapon;
 };
 
 //=============================================================================
