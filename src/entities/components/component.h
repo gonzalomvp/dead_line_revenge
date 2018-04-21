@@ -103,7 +103,7 @@ private:
 //=============================================================================
 class ComponentRenderable : public Component {
 public:
-	ComponentRenderable(Entity* owner, const char* texture, const char* hitTexture = nullptr, int hitTime = 0);
+	ComponentRenderable(Entity* owner, const char* texture, float alpha= 1.0f, const char* hitTexture = nullptr, int hitTime = 0);
 	~ComponentRenderable();
 
 	virtual void init          ();
@@ -112,6 +112,7 @@ public:
 private:
 	Sprite*     m_sprite;
 	const char* m_texture;
+	float       m_alpha;
 	const char* m_hitTexture;
 	int         m_hitTime;
 
@@ -161,6 +162,16 @@ private:
 	//Timers
 	int m_fireTimer;
 	int m_reloadTimer;
+};
+
+//=============================================================================
+// ComponentExplossion class
+//=============================================================================
+class ComponentExplossion : public Component {
+public:
+	ComponentExplossion(Entity* owner) : Component(owner) {}
+
+	virtual void receiveMessage(Message* message);
 };
 
 //=============================================================================

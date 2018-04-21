@@ -125,16 +125,14 @@ void ComponentLife::receiveMessage(Message* message) {
 	}
 	else {
 		MessageChangeLife *msgChangeLife = dynamic_cast<MessageChangeLife*>(message);
-		if (msgChangeLife) {
-			if (m_hitTimer >= m_invencibleTime) {
-				m_life += msgChangeLife->deltaLife;
-				m_hitTimer = 0;
-				if (m_life <= 0) {
-					MessageDestroy msgDestroy;
-					m_owner->receiveMessage(&msgDestroy);
-					m_owner->deactivate();
-					g_world->removeEntity(m_owner);
-				}
+		if (msgChangeLife && (m_life != -1) && (m_hitTimer >= m_invencibleTime)) {
+			m_life += msgChangeLife->deltaLife;
+			m_hitTimer = 0;
+			if (m_life <= 0) {
+				MessageDestroy msgDestroy;
+				m_owner->receiveMessage(&msgDestroy);
+				m_owner->deactivate();
+				g_world->removeEntity(m_owner);
 			}
 		}
 	}
@@ -175,7 +173,7 @@ void ComponentInertialMove::receiveMessage(Message* message) {
 //=============================================================================
 // ComponentRenderable class
 //=============================================================================
-ComponentRenderable::ComponentRenderable(Entity* owner, const char* texture, const char* hitTexture, int hitTime) : Component(owner), m_texture(texture), m_hitTexture(hitTexture), m_hitTime(hitTime) {
+ComponentRenderable::ComponentRenderable(Entity* owner, const char* texture, float alpha, const char* hitTexture, int hitTime) : Component(owner), m_texture(texture), m_alpha(alpha), m_hitTexture(hitTexture), m_hitTime(hitTime) {
 	m_hitTimer = 0;
 }
 
@@ -185,7 +183,7 @@ ComponentRenderable::~ComponentRenderable() {
 
 void ComponentRenderable::init() {
 	Component::init();
-	m_sprite = new Sprite(g_graphicsEngine->getTexture(m_texture), 2);
+	m_sprite = new Sprite(g_graphicsEngine->getTexture(m_texture), 2, m_alpha);
 	g_graphicsEngine->addGfxEntity(m_sprite);
 }
 
@@ -379,7 +377,7 @@ void ComponentWeapon::receiveMessage(Message* message) {
 		switch (m_type) {
 			case ERevolver:
 				m_fireRate = 20;
-				m_reloadTime = 40;
+				m_reloadTime = 60;
 				m_bullets = 6;
 				m_bulletSpeed = 6;
 				m_bulletDamage = -2;
@@ -398,8 +396,8 @@ void ComponentWeapon::receiveMessage(Message* message) {
 				m_soundFilename = "data/shot.wav";
 				break;
 			case EShotgun:
-				m_fireRate = 30;
-				m_reloadTime = 60;
+				m_fireRate = 20;
+				m_reloadTime = 40;
 				m_bullets = 2;
 				m_bulletSpeed = 4;
 				m_bulletDamage = -1;
@@ -447,6 +445,22 @@ void ComponentWeapon::receiveMessage(Message* message) {
 		}
 	}
 }
+
+//=============================================================================
+// ComponentExplossion class
+//=============================================================================
+void ComponentExplossion::receiveMessage(Message* message) {
+	if (!m_isActive)
+		return;
+
+	MessageDestroy *msgDestroy = dynamic_cast<MessageDestroy*>(message);
+	if (msgDestroy) {
+		MessageGetTransform messageSelfPos;
+		m_owner->receiveMessage(&messageSelfPos);
+		createExplossion(messageSelfPos.pos);
+	}
+}
+
 
 //Me lo salto por si lo muevo al HUD
 //=============================================================================

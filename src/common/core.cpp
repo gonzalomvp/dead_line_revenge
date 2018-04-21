@@ -54,17 +54,19 @@ void CORE_RenderSprite(vec2 p0, vec2 p1, GLuint texid)
 }
 
 //-----------------------------------------------------------------------------
-void CORE_RenderCenteredSprite(vec2 pos, vec2 size, GLuint texid)
+void CORE_RenderCenteredSprite(vec2 pos, vec2 size, GLuint texid, float alpha)
 {
   vec2 p0 = vsub(pos, vscale(size, .5f));
   vec2 p1 = vadd(pos, vscale(size, .5f));
 
   glBindTexture( GL_TEXTURE_2D, texid );
+  glColor4f(1.0f, 1.0f, 1.0f, alpha);
   glBegin( GL_QUADS );
   glTexCoord2d(0.0,0.0); glVertex2f(p0.x, p0.y);
   glTexCoord2d(1.0,0.0); glVertex2f(p1.x, p0.y);
   glTexCoord2d(1.0,1.0); glVertex2f(p1.x, p1.y);
   glTexCoord2d(0.0,1.0); glVertex2f(p0.x, p1.y);
+  glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
   glEnd();
 }
 

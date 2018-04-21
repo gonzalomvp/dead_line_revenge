@@ -4,7 +4,7 @@
 #include <algorithm>
 
 void Sprite::render() {
-	CORE_RenderCenteredSprite(m_pos, m_size, m_texture);
+	CORE_RenderCenteredSprite(m_pos, m_size, m_texture, m_alpha);
 }
 
 void Text::render() {

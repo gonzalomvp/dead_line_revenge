@@ -50,7 +50,7 @@ protected:
 // Sprite class
 class Sprite : public GfxEntity {
 public:
-	Sprite(GLuint texture, int priority, vec2 pos = vmake(0, 0)) : GfxEntity(pos, priority), m_texture(texture), m_size(vmake(0, 0)) {}
+	Sprite(GLuint texture, int priority, float alpha = 1.0f, vec2 pos = vmake(0, 0)) : GfxEntity(pos, priority), m_alpha(alpha), m_texture(texture), m_size(vmake(0, 0)) {}
 
 	virtual void setSize(vec2 size) { m_size = size; }
 	vec2 getSize() { return m_size; }
@@ -60,6 +60,7 @@ public:
 private:
 	vec2   m_size;
 	GLuint m_texture;
+	float  m_alpha;
 };
 
 //=============================================================================

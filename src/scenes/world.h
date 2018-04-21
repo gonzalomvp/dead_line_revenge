@@ -28,8 +28,10 @@ public:
 private:
 	void checkCollisions();
 	void removePendingEntities();
+	void addPendingEntities();
 
 	std::vector <Entity*> m_entitiesToRemove;
+	std::vector <Entity*> m_entitiesToAdd;
 	bool m_isGameOver;
 
 	//HUD
@@ -49,6 +51,7 @@ Entity* createTurretEnemy(int x, int y, vec2 dir, Entity* player);
 Entity* createBullet(vec2 pos, vec2 direction, float speed, int damage, int range, ComponentCollider::TFaction faction);
 void createShotgunBullets(vec2 pos, vec2 direction, float speed, int damage, int range, ComponentCollider::TFaction faction);
 Entity* createWeaponPickup();
+Entity* createExplossion(vec2 pos);
 Entity* createHUDMessage(std::string, vec2 pos, int displayTime);
 
 // Collision utils

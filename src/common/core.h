@@ -71,7 +71,7 @@ GLuint CORE_LoadPNG   (const char filename[], bool wrap);
 void   CORE_UnloadBmp (GLuint texid);
 void   CORE_UnloadPNG (GLuint texid);
 void   CORE_RenderSprite(vec2 p0, vec2 p1, GLuint texid);
-void   CORE_RenderCenteredSprite(vec2 pos, vec2 size, GLuint texid);
+void   CORE_RenderCenteredSprite(vec2 pos, vec2 size, GLuint texid, float alpha);
 void   CORE_RenderCenteredRotatedSprite(vec2 pos, vec2 size, float angle, GLuint texid, rgba_t color = RGBA(255,255,255,255));
 
 #ifdef SWALIB_SOUND
