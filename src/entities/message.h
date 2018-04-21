@@ -39,6 +39,9 @@ struct MessageFire : public Message {
 	bool isFiring;
 };
 
+struct MessageFireDone : public Message {
+};
+
 struct MessageAimDirection : public Message {
 	vec2 direction;
 };

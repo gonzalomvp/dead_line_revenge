@@ -230,12 +230,15 @@ private:
 class ComponentAIFire : public Component {
 public:
 	ComponentAIFire(Entity* owner, Entity* player)            : Component(owner), m_player(player) {}
-	ComponentAIFire(Entity* owner, const vec2& fireDirection) : Component(owner), m_fireDirection(fireDirection) {}
+	ComponentAIFire(Entity* owner, const std::vector<vec2> fireDirections) : Component(owner), m_fireDirections(fireDirections) {}
 	
-	virtual void run();
+	virtual void init          ();
+	virtual void run           ();
+	virtual void receiveMessage(Message* message);
 private:
-	Entity* m_player;
-	vec2    m_fireDirection;
+	Entity*           m_player;
+	std::vector<vec2> m_fireDirections;
+	int               m_currentFireDirection;
 };
 
 //=============================================================================

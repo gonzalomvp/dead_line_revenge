@@ -332,14 +332,16 @@ void ComponentWeapon::run() {
 		}
 	}
 
-	if (m_isFiring && m_fireTimer >= m_fireRate && m_reloadTimer >= m_reloadTime && m_currentBullets > 0) {
+	if (m_isFiring && m_fireTimer >= m_fireRate && m_reloadTimer >= m_reloadTime && m_currentBullets != 0) {
 		m_fireTimer = 0;
-		--m_currentBullets;
-		if (m_currentBullets <= 0) {
-			m_reloadTimer = 0;
-			m_isFiring = false;
+		if (m_currentBullets >= 0) {
+			--m_currentBullets;
+			if (m_currentBullets == 0) {
+				m_reloadTimer = 0;
+				m_isFiring = false;
+			}
 		}
-
+		
 		MessageGetTransform messageGetTranform;
 		m_owner->receiveMessage(&messageGetTranform);
 		MessageGetCollider msgGetCollider;
@@ -368,6 +370,9 @@ void ComponentWeapon::run() {
 		if (g_settings.sfx && m_soundId) {
 			CORE_PlayMusic(m_soundId);
 		}
+
+		MessageFireDone messageFireDone;
+		m_owner->receiveMessage(&messageFireDone);
 	}
 }
 
@@ -405,9 +410,9 @@ void ComponentWeapon::receiveMessage(Message* message) {
 				m_bullets = 2;
 				m_bulletSpeed = 4;
 				m_bulletDamage = -1;
-				m_bulletRange = 30;
+				m_bulletRange = 40;
 				m_isAutomatic = false;
-				m_soundFilename = "data/shot.wav";
+				m_soundFilename = "data/shotgun.wav";
 				break;
 			case EMines:
 				m_fireRate = 20;
@@ -417,7 +422,7 @@ void ComponentWeapon::receiveMessage(Message* message) {
 				m_bulletDamage = -1;
 				m_bulletRange = 30;
 				m_isAutomatic = false;
-				m_soundFilename = "data/shot.wav";
+				m_soundFilename = "data/mine.wav";
 				break;
 		}
 		m_isFiring = false;
@@ -471,7 +476,7 @@ void ComponentExplossion::receiveMessage(Message* message) {
 	if (msgDestroy) {
 		MessageGetTransform messageSelfPos;
 		m_owner->receiveMessage(&messageSelfPos);
-		createExplossion(messageSelfPos.pos);
+		createExplossion(messageSelfPos.pos, vmake(100, 100));
 	}
 }
 
@@ -636,6 +641,29 @@ vec2 ComponentAIEvade::calculatIntersectionWithWall(vec2 position, float angle) 
 //=============================================================================
 // ComponentAIFire class
 //=============================================================================
+void ComponentAIFire::init() {
+	Component::init();
+
+	MessageFire msgFire;
+	msgFire.isFiring = true;
+	m_owner->receiveMessage(&msgFire);
+
+	if (m_player) {
+		MessageGetTransform messageSelfPos;
+		m_owner->receiveMessage(&messageSelfPos);
+		MessageGetTransform messagePlayerPos;
+		m_player->receiveMessage(&messagePlayerPos);
+		MessageAimDirection messageAimDirection;
+		messageAimDirection.direction = vnorm(vsub(messagePlayerPos.pos, messageSelfPos.pos));
+		m_owner->receiveMessage(&messageAimDirection);
+	}
+	else {
+		MessageAimDirection messageAimDirection;
+		messageAimDirection.direction = m_fireDirections[m_currentFireDirection];
+		m_owner->receiveMessage(&messageAimDirection);
+	}
+}
+
 void ComponentAIFire::run() {
 	if (!m_isActive)
 		return;
@@ -649,15 +677,22 @@ void ComponentAIFire::run() {
 		messageAimDirection.direction = vnorm(vsub(messagePlayerPos.pos, messageSelfPos.pos));
 		m_owner->receiveMessage(&messageAimDirection);
 	}
-	else {
+}
+
+void ComponentAIFire::receiveMessage(Message* message) {
+	if (!m_isActive)
+		return;
+
+	MessageFireDone *msgFireDone = dynamic_cast<MessageFireDone*>(message);
+	if (msgFireDone && ! m_player) {
+		++m_currentFireDirection;
+		if (m_currentFireDirection >= m_fireDirections.size()) {
+			m_currentFireDirection = 0;
+		}
 		MessageAimDirection messageAimDirection;
-		messageAimDirection.direction = m_fireDirection;
+		messageAimDirection.direction = m_fireDirections[m_currentFireDirection];
 		m_owner->receiveMessage(&messageAimDirection);
 	}
-	
-	MessageFire msgFire;
-	msgFire.isFiring = true;
-	m_owner->receiveMessage(&msgFire);
 }
 
 //=============================================================================

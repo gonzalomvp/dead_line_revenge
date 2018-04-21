@@ -52,7 +52,7 @@ Entity* createBullet(vec2 pos, vec2 direction, float speed, int damage, int rang
 void createShotgunBullets(vec2 pos, vec2 direction, float speed, int damage, int range, ComponentCollider::TFaction faction);
 Entity* createMine(Component* weapon, vec2 pos, int damage, ComponentCollider::TFaction faction);
 Entity* createWeaponPickup();
-Entity* createExplossion(vec2 pos);
+void createExplossion(vec2 pos, vec2 size);
 Entity* createHUDMessage(std::string, vec2 pos, int displayTime);
 
 // Collision utils

@@ -71,15 +71,6 @@ World::World(int level) {
 	m_difficulty = level;
 	m_pickupSpawnWait = 10;
 
-	//HUD
-	m_lifeHUD = new Text("", 1, vmake(20, 20));
-	//g_graphicsEngine->addGfxEntity(m_lifeHUD);
-	Entity* hudLife = new Entity();
-	C_HUDLife* c_hudLife = new C_HUDLife(hudLife, m_player);
-	c_hudLife->init();
-	addEntity(hudLife);
-
-
 	m_scoreHUD = new Text("| 120", 1, vmake(40, 20));
 	g_graphicsEngine->addGfxEntity(m_scoreHUD);
 
@@ -138,6 +129,14 @@ void World::init() {
 
 	m_player = createPlayer(vmake(SCR_WIDTH * 0.5f, SCR_HEIGHT * 0.5f));
 	addEntity(m_player);
+
+	//HUD
+	m_lifeHUD = new Text("", 1, vmake(20, 20));
+	//g_graphicsEngine->addGfxEntity(m_lifeHUD);
+	Entity* hudLife = new Entity();
+	C_HUDLife* c_hudLife = new C_HUDLife(hudLife, m_player);
+	c_hudLife->init();
+	addEntity(hudLife);
 
 	//addEntity(createRangeEnemy(300, 300, m_player));
 	bullet.pos = vmake(-1000, -1000);
@@ -458,14 +457,14 @@ Entity* createRangeEnemy(int x, int y, Entity* player) {
 	transform->init();
 	ComponentRenderable* renderable = new ComponentRenderable(enemy, "data/enemy.png", 1.0f, "data/player.png", 10);
 	renderable->init();
+	ComponentWeapon* gun = new ComponentWeapon(enemy, Component::ERevolver, 40, 1, -1, 6, -1, 0, true);
+	gun->init();
 	ComponentAIEvade* aiLong = new ComponentAIEvade(enemy, player, 4, 250);
 	aiLong->init();
 	ComponentAIMelee* aiMelee = new ComponentAIMelee(enemy, player, 4, 300);
 	aiMelee->init();
 	ComponentAIFire* aiFire = new ComponentAIFire(enemy, player);
 	aiFire->init();
-	ComponentWeapon* gun = new ComponentWeapon(enemy, Component::ERevolver, 40, 1, 1, 6, 1, 0, false);
-	gun->init();
 	ComponentCollider* collider = new ComponentCollider(enemy, ComponentCollider::ERectCollider, ComponentCollider::EEnemy, -1);
 	collider->init();
 	ComponentLife* life = new ComponentLife(enemy, 1, 0, 0);
@@ -479,10 +478,11 @@ Entity* createTurretEnemy(int x, int y, vec2 dir, Entity* player) {
 	transform->init();
 	ComponentRenderable* renderable = new ComponentRenderable(enemy, "data/enemy.png", 1.0f, "data/player.png", 10);
 	renderable->init();
-	ComponentAIFire* aiFire = new ComponentAIFire(enemy, dir);
-	//aiFire->init();
-	ComponentWeapon* gun = new ComponentWeapon(enemy, Component::ERevolver, 100, 1, 1, 6, 1, 0, false);
+	ComponentWeapon* gun = new ComponentWeapon(enemy, Component::ERevolver, 100, 1, -1, 6, -1, 0, true);
 	gun->init();
+	std::vector<vec2> aimDirections = { vmake(1,0), vmake(0,1), vmake(-1, 0), vmake(0, -1) };
+	ComponentAIFire* aiFire = new ComponentAIFire(enemy, aimDirections);
+	aiFire->init();
 	ComponentCollider* collider = new ComponentCollider(enemy, ComponentCollider::ERectCollider, ComponentCollider::EEnemy, -1);
 	collider->init();
 	ComponentLife* life = new ComponentLife(enemy, 3, 0, 0);
@@ -538,18 +538,38 @@ Entity* createHUDMessage(std::string message, vec2 pos, int displayTime) {
 	return hudMessage;
 }
 
-Entity* createExplossion(vec2 pos) {
-	Entity* explossion = new Entity();
-	ComponentTransform* transform = new ComponentTransform(explossion, pos, vmake(50, 50));
+void createExplossion(vec2 pos, vec2 size) {
+	Entity* explossionFx = new Entity();
+	ComponentTransform* transform = new ComponentTransform(explossionFx, pos, size);
 	transform->init();
-	ComponentRenderable* renderable = new ComponentRenderable(explossion, "data/bullet.png", 0.5f);
+	ComponentRenderable* renderable = new ComponentRenderable(explossionFx, "data/bullet.png", 0.5f);
 	renderable->init();
-	ComponentCollider* collider = new ComponentCollider(explossion, ComponentCollider::ECircleCollider, ComponentCollider::EAllied, -5);
-	collider->init();
-	ComponentLife* life = new ComponentLife(explossion, -1, 50, 0);
+	ComponentLife* life = new ComponentLife(explossionFx, -1, 50, 0);
 	life->init();
-	g_world->addEntity(explossion);
-	return explossion;
+	g_world->addEntity(explossionFx);
+
+	Entity* explossionImpactToEnemies = new Entity();
+	transform = new ComponentTransform(explossionImpactToEnemies, pos, size);
+	transform->init();
+	ComponentCollider* colliderEnemy = new ComponentCollider(explossionImpactToEnemies, ComponentCollider::ECircleCollider, ComponentCollider::EAllied, -5);
+	colliderEnemy->init();
+	life = new ComponentLife(explossionImpactToEnemies, -1, 50, 0);
+	life->init();
+	g_world->addEntity(explossionImpactToEnemies);
+
+	Entity* explossionImpactToPlayer = new Entity();
+	transform = new ComponentTransform(explossionImpactToPlayer, pos, size);
+	transform->init();
+	ComponentCollider* colliderAllied = new ComponentCollider(explossionImpactToPlayer, ComponentCollider::ECircleCollider, ComponentCollider::EEnemy, -1);
+	colliderAllied->init();
+	life = new ComponentLife(explossionImpactToPlayer, -1, 50, 0);
+	life->init();
+	g_world->addEntity(explossionImpactToPlayer);
+
+	uint m_soundId = CORE_LoadWav("data/explossion.wav");
+	CORE_PlayMusic(m_soundId);
+
+	return;
 }
 
 bool checkCircleRect(const vec2& circlePos, float circleRadius, const vec2& rectPos, const vec2& rectSize) {
