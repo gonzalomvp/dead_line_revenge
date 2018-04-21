@@ -377,8 +377,6 @@ Entity* createBullet(vec2 pos, vec2 direction, float speed, int damage, int rang
 	collider->init();
 	ComponentLife* life = new ComponentLife(bullet, 0, range, 0);
 	life->init();
-	//ComponentExplossion* explossion = new ComponentExplossion(bullet);
-	//explossion->init();
 	return bullet;
 }
 
@@ -433,6 +431,26 @@ Entity* createC4(Component* weapon, vec2 pos, int damage, ComponentCollider::TFa
 	weaponReactivator->init();
 	g_world->addEntity(mine);
 	return mine;
+}
+
+Entity* createRocket(Component* weapon, vec2 pos, vec2 direction, float speed, int damage, int range, ComponentCollider::TFaction faction) {
+	Entity* rocket = new Entity();
+	ComponentTransform* transform = new ComponentTransform(rocket, pos, vmake(10, 10));
+	transform->init();
+	ComponentRenderable* renderable = new ComponentRenderable(rocket, "data/bullet.png");
+	renderable->init();
+	ComponentInertialMove* movement = new ComponentInertialMove(rocket, direction, speed, true);
+	movement->init();
+	ComponentCollider* collider = new ComponentCollider(rocket, ComponentCollider::ECircleCollider, faction, damage);
+	collider->init();
+	ComponentLife* life = new ComponentLife(rocket, 0, range, 0);
+	life->init();
+	ComponentExplossive* explossive = new ComponentExplossive(rocket, false);
+	ComponentWeaponReactivator* weaponReactivator = new ComponentWeaponReactivator(rocket, weapon);
+	weaponReactivator->init();
+	explossive->init();
+	g_world->addEntity(rocket);
+	return rocket;
 }
 
 Entity* createEnemy(int x, int y, Entity* player, int speed, int lives, int damage) {
@@ -532,6 +550,9 @@ Entity* createWeaponPickup() {
 		break;
 	case 4:
 		type = Component::EC4;
+		break;
+	case 5:
+		type = Component::ERocketLauncher;
 		break;
 	}
 	ComponentRenderable* renderable = new ComponentRenderable(weaponPickup, "data/SimpleCrate.png");

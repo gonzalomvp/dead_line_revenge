@@ -18,7 +18,8 @@ public:
 		EShotgun,
 		EMines,
 		EC4,
-		EWeaponCount = 5
+		ERocketLauncher,
+		EWeaponCount = 6
 	};
 
 	enum TColliderType {

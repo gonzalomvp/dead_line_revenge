@@ -360,6 +360,10 @@ void ComponentWeapon::run() {
 				createC4(this, messageGetTranform.pos, m_bulletDamage, msgGetCollider.faction);
 				deactivate();
 				break;
+			case ERocketLauncher:
+				createRocket(this, messageGetTranform.pos, m_aimDirection, m_bulletSpeed, m_bulletDamage, m_bulletRange, msgGetCollider.faction);
+				deactivate();
+				break;
 			default:
 				g_world->addEntity(createBullet(messageGetTranform.pos, m_aimDirection, m_bulletSpeed, m_bulletDamage, m_bulletRange, msgGetCollider.faction));
 				break;
@@ -437,6 +441,16 @@ void ComponentWeapon::receiveMessage(Message* message) {
 				m_bulletRange = 30;
 				m_isAutomatic = false;
 				m_soundFilename = "data/mine.wav";
+				break;
+			case ERocketLauncher:
+				m_fireRate = 20;
+				m_reloadTime = 40;
+				m_bullets = 2;
+				m_bulletSpeed = 5;
+				m_bulletDamage = -1;
+				m_bulletRange = 0;
+				m_isAutomatic = false;
+				m_soundFilename = "data/rocketlauncher.wav";
 				break;
 		}
 		m_isFiring = false;
@@ -822,6 +836,9 @@ void ComponentWeaponPickup::receiveMessage(Message* message) {
 				break;
 			case EC4:
 				hudMessage += g_stringManager->getText("LTEXT_GUI_C4_MESSAGE");
+				break;
+			case ERocketLauncher:
+				hudMessage += g_stringManager->getText("LTEXT_GUI_ROCKETLAUNCHER_MESSAGE");
 				break;
 		}
 
