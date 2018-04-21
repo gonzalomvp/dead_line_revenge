@@ -350,6 +350,10 @@ void ComponentWeapon::run() {
 			case EShotgun:
 				createShotgunBullets(messageGetTranform.pos, m_aimDirection, m_bulletSpeed, m_bulletDamage, m_bulletRange, msgGetCollider.faction);
 				break;
+			case EMines:
+				createMine(this, messageGetTranform.pos, m_bulletDamage, msgGetCollider.faction);
+				deactivate();
+				break;
 			default:
 				g_world->addEntity(createBullet(messageGetTranform.pos, m_aimDirection, m_bulletSpeed, m_bulletDamage, m_bulletRange, msgGetCollider.faction));
 				break;
@@ -396,6 +400,16 @@ void ComponentWeapon::receiveMessage(Message* message) {
 				m_soundFilename = "data/shot.wav";
 				break;
 			case EShotgun:
+				m_fireRate = 20;
+				m_reloadTime = 40;
+				m_bullets = 2;
+				m_bulletSpeed = 4;
+				m_bulletDamage = -1;
+				m_bulletRange = 30;
+				m_isAutomatic = false;
+				m_soundFilename = "data/shot.wav";
+				break;
+			case EMines:
 				m_fireRate = 20;
 				m_reloadTime = 40;
 				m_bullets = 2;
@@ -724,9 +738,25 @@ void ComponentWeaponPickup::receiveMessage(Message* message) {
 			case EShotgun:
 				hudMessage += g_stringManager->getText("LTEXT_GUI_SHOTGUN_MESSAGE");
 				break;
+			case EMines:
+				hudMessage += g_stringManager->getText("LTEXT_GUI_MINES_MESSAGE");
+				break;
 		}
 
 		createHUDMessage(hudMessage, vmake((SCR_WIDTH / 2) - (hudMessage.length() / 2.0f * 16), SCR_HEIGHT * 0.8f), 100);
+	}
+}
+
+//=============================================================================
+// ComponentWeaponReactivator class
+//=============================================================================
+void ComponentWeaponReactivator::receiveMessage(Message* message) {
+	if (!m_isActive)
+		return;
+
+	MessageDestroy *msgDestroy = dynamic_cast<MessageDestroy*>(message);
+	if (msgDestroy && m_weapon) {
+		m_weapon->activate();
 	}
 }
 

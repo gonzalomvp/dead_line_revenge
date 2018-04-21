@@ -16,7 +16,8 @@ public:
 		ERevolver,
 		EMachinegun,
 		EShotgun,
-		EWeaponCount = 3
+		EMines,
+		EWeaponCount = 4
 	};
 
 	enum TColliderType {
@@ -276,6 +277,18 @@ public:
 	virtual void receiveMessage(Message* message);
 private:
 	TWeapon m_weapon;
+};
+
+//=============================================================================
+// ComponentWeaponReactivator class
+//=============================================================================
+class ComponentWeaponReactivator : public Component {
+public:
+	ComponentWeaponReactivator(Entity* owner, Component* weapon) : Component(owner), m_weapon(weapon) {}
+
+	virtual void receiveMessage(Message* message);
+private:
+	Component* m_weapon;
 };
 
 //=============================================================================

@@ -69,7 +69,7 @@ GLuint enemyTexture;
 World::World(int level) {
 	m_isGameOver = false;
 	m_difficulty = level;
-	m_pickupSpawnWait = 500;
+	m_pickupSpawnWait = 10;
 
 	//HUD
 	m_lifeHUD = new Text("", 1, vmake(20, 20));
@@ -402,6 +402,24 @@ void createShotgunBullets(vec2 pos, vec2 direction, float speed, int damage, int
 	return;
 }
 
+Entity* createMine(Component* weapon, vec2 pos, int damage, ComponentCollider::TFaction faction) {
+	Entity* mine = new Entity();
+	ComponentTransform* transform = new ComponentTransform(mine, pos, vmake(10, 10));
+	transform->init();
+	ComponentRenderable* renderable = new ComponentRenderable(mine, "data/bullet.png");
+	renderable->init();
+	ComponentCollider* collider = new ComponentCollider(mine, ComponentCollider::ECircleCollider, faction, 0);
+	collider->init();
+	ComponentLife* life = new ComponentLife(mine, 0, 0, 0);
+	life->init();
+	ComponentExplossion* explossion = new ComponentExplossion(mine);
+	explossion->init();
+	ComponentWeaponReactivator* weaponReactivator = new ComponentWeaponReactivator(mine, weapon);
+	weaponReactivator->init();
+	g_world->addEntity(mine);
+	return mine;
+}
+
 Entity* createEnemy(int x, int y, Entity* player, int speed, int lives, int damage) {
 	Entity* enemy = new Entity();
 	ComponentTransform* transform = new ComponentTransform(enemy, vmake(x, y), vmake(20, 20));
@@ -492,6 +510,9 @@ Entity* createWeaponPickup() {
 		break;
 	case 2:
 		type = Component::EShotgun;
+		break;
+	case 3:
+		type = Component::EMines;
 		break;
 	}
 	ComponentRenderable* renderable = new ComponentRenderable(weaponPickup, "data/SimpleCrate.png");
