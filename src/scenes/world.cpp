@@ -411,7 +411,23 @@ Entity* createMine(Component* weapon, vec2 pos, int damage, ComponentCollider::T
 	collider->init();
 	ComponentLife* life = new ComponentLife(mine, 0, 0, 0);
 	life->init();
-	ComponentExplossion* explossion = new ComponentExplossion(mine);
+	ComponentExplossive* explossion = new ComponentExplossive(mine, false);
+	explossion->init();
+	ComponentWeaponReactivator* weaponReactivator = new ComponentWeaponReactivator(mine, weapon);
+	weaponReactivator->init();
+	g_world->addEntity(mine);
+	return mine;
+}
+
+Entity* createC4(Component* weapon, vec2 pos, int damage, ComponentCollider::TFaction faction) {
+	Entity* mine = new Entity();
+	ComponentTransform* transform = new ComponentTransform(mine, pos, vmake(10, 10));
+	transform->init();
+	ComponentRenderable* renderable = new ComponentRenderable(mine, "data/bullet.png");
+	renderable->init();
+	ComponentLife* life = new ComponentLife(mine, 0, 0, 0);
+	life->init();
+	ComponentExplossive* explossion = new ComponentExplossive(mine, true);
 	explossion->init();
 	ComponentWeaponReactivator* weaponReactivator = new ComponentWeaponReactivator(mine, weapon);
 	weaponReactivator->init();
@@ -513,6 +529,9 @@ Entity* createWeaponPickup() {
 		break;
 	case 3:
 		type = Component::EMines;
+		break;
+	case 4:
+		type = Component::EC4;
 		break;
 	}
 	ComponentRenderable* renderable = new ComponentRenderable(weaponPickup, "data/SimpleCrate.png");

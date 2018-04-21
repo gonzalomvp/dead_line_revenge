@@ -17,7 +17,8 @@ public:
 		EMachinegun,
 		EShotgun,
 		EMines,
-		EWeaponCount = 4
+		EC4,
+		EWeaponCount = 5
 	};
 
 	enum TColliderType {
@@ -166,13 +167,18 @@ private:
 };
 
 //=============================================================================
-// ComponentExplossion class
+// ComponentExplossive class
 //=============================================================================
-class ComponentExplossion : public Component {
+class ComponentExplossive : public Component, public IInputManager::IListener {
 public:
-	ComponentExplossion(Entity* owner) : Component(owner) {}
+	ComponentExplossive(Entity* owner, bool isActivatedRemotely) : Component(owner), m_isActivatedRemotely(isActivatedRemotely) {}
+	~ComponentExplossive();
 
+	virtual void init          ();
 	virtual void receiveMessage(Message* message);
+	virtual bool onEvent       (const IInputManager::Event&);
+private:
+	bool m_isActivatedRemotely;
 };
 
 //=============================================================================

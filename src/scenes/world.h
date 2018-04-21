@@ -51,6 +51,7 @@ Entity* createTurretEnemy(int x, int y, vec2 dir, Entity* player);
 Entity* createBullet(vec2 pos, vec2 direction, float speed, int damage, int range, ComponentCollider::TFaction faction);
 void createShotgunBullets(vec2 pos, vec2 direction, float speed, int damage, int range, ComponentCollider::TFaction faction);
 Entity* createMine(Component* weapon, vec2 pos, int damage, ComponentCollider::TFaction faction);
+Entity* createC4(Component* weapon, vec2 pos, int damage, ComponentCollider::TFaction faction);
 Entity* createWeaponPickup();
 void createExplossion(vec2 pos, vec2 size);
 Entity* createHUDMessage(std::string, vec2 pos, int displayTime);

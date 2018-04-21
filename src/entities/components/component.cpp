@@ -356,6 +356,10 @@ void ComponentWeapon::run() {
 				createMine(this, messageGetTranform.pos, m_bulletDamage, msgGetCollider.faction);
 				deactivate();
 				break;
+			case EC4:
+				createC4(this, messageGetTranform.pos, m_bulletDamage, msgGetCollider.faction);
+				deactivate();
+				break;
 			default:
 				g_world->addEntity(createBullet(messageGetTranform.pos, m_aimDirection, m_bulletSpeed, m_bulletDamage, m_bulletRange, msgGetCollider.faction));
 				break;
@@ -424,6 +428,16 @@ void ComponentWeapon::receiveMessage(Message* message) {
 				m_isAutomatic = false;
 				m_soundFilename = "data/mine.wav";
 				break;
+			case EC4:
+				m_fireRate = 20;
+				m_reloadTime = 40;
+				m_bullets = 2;
+				m_bulletSpeed = 4;
+				m_bulletDamage = -1;
+				m_bulletRange = 30;
+				m_isAutomatic = false;
+				m_soundFilename = "data/mine.wav";
+				break;
 		}
 		m_isFiring = false;
 		m_currentBullets = m_bullets;
@@ -466,9 +480,22 @@ void ComponentWeapon::receiveMessage(Message* message) {
 }
 
 //=============================================================================
-// ComponentExplossion class
+// ComponentExplossive class
 //=============================================================================
-void ComponentExplossion::receiveMessage(Message* message) {
+ComponentExplossive::~ComponentExplossive() {
+	if (m_isActivatedRemotely) {
+		g_inputManager->unregisterEvent(this);
+	}
+}
+
+void ComponentExplossive::init() {
+	Component::init();
+	if (m_isActivatedRemotely) {
+		g_inputManager->registerEvent(this, IInputManager::TEvent::EKey, 0);
+	}
+}
+
+void ComponentExplossive::receiveMessage(Message* message) {
 	if (!m_isActive)
 		return;
 
@@ -480,6 +507,23 @@ void ComponentExplossion::receiveMessage(Message* message) {
 	}
 }
 
+bool ComponentExplossive::onEvent(const IInputManager::Event& event) {
+	if (!m_isActive)
+		return false;
+
+	IInputManager::TEvent eventType = event.getType();
+
+	if (eventType == IInputManager::TEvent::EMouse) {
+		const IInputManager::MouseEvent mouseEvent = *static_cast<const IInputManager::MouseEvent*>(&event);
+		if (mouseEvent.mouseButton == mouseEvent.BLeft && mouseEvent.mouseButtonAction == mouseEvent.AButtonDown) {
+			MessageChangeLife msgChangeLife;
+			msgChangeLife.deltaLife = -1;
+			m_owner->receiveMessage(&msgChangeLife);
+		}
+	}
+
+	return true;
+}
 
 //Me lo salto por si lo muevo al HUD
 //=============================================================================
@@ -775,6 +819,9 @@ void ComponentWeaponPickup::receiveMessage(Message* message) {
 				break;
 			case EMines:
 				hudMessage += g_stringManager->getText("LTEXT_GUI_MINES_MESSAGE");
+				break;
+			case EC4:
+				hudMessage += g_stringManager->getText("LTEXT_GUI_C4_MESSAGE");
 				break;
 		}
 
