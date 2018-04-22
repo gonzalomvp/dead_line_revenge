@@ -1,56 +1,37 @@
 #pragma once
-#include "../engine/graphics_engine.h"
-#include "../input/input_manager.h"
 
-class Component;
+#include "components/component.h"
+
 struct Message;
-class Sprite;
 
 class Entity {
 public:
+	static Entity* createPlayer(vec2 pos);
+	static Entity* createEnemy(int x, int y, Entity* player, int speed, int lives, int damage);
+	static Entity* createBigEnemy(int x, int y, Entity* player, int speed, int lives, int damage);
+	static Entity* createRangeEnemy(int x, int y, Entity* player);
+	static Entity* createTurretEnemy(int x, int y, vec2 dir, Entity* player);
+	static Entity* createBullet(vec2 pos, vec2 direction, float speed, int damage, int range, ComponentCollider::TFaction faction);
+	static void createShotgunBullets(vec2 pos, vec2 direction, float speed, int damage, int range, ComponentCollider::TFaction faction);
+	static Entity* createMine(Component* weapon, vec2 pos, int damage, ComponentCollider::TFaction faction);
+	static Entity* createC4(Component* weapon, vec2 pos, int damage, ComponentCollider::TFaction faction);
+	static Entity* createRocket(Component* weapon, vec2 pos, vec2 direction, float speed, int damage, int range, ComponentCollider::TFaction faction);
+	static Entity* createNuclearBomb();
+	static Entity* createWeaponPickup();
+	static void createExplossion(vec2 pos, vec2 size);
+	static Entity* createHUDMessage(std::string, vec2 pos, int displayTime);
+
 	~Entity();
 
 	void activate();
 	void deactivate();
 
-
-	void setPos(vec2 pos);
-	void move(vec2 speed);
 	virtual void run();
 	void receiveMessage(Message* message);
 	void addComponent(Component* component);
 	void removeComponent(Component* component) {}
 
-	vec2    m_pos;
-	vec2    m_speed;
-	vec2    m_size;
-	Sprite* m_sprite;
 	std::vector<Component*> m_components;
 };
 
-class EntityPlayer : public Entity, public IInputManager::IListener {
-public:
-	EntityPlayer(int i);
-	~EntityPlayer();
-	void setTargetPos(vec2 targetPos);
-	void fire();
-	void dash();
-	virtual void run();
-	virtual bool onEvent(const IInputManager::Event&);
-
-private:
-	vec2    m_targetPos;
-	Sprite* m_targetSprite;
-	float   m_coolDown;
-	float   m_dashCoolDown;
-};
-
-class EntityEnemy : public Entity {
-	virtual void run() = 0;
-};
-
-class EntityBullet : public Entity {
-public:
-	EntityBullet(vec2 pos, vec2 dir);
-	virtual void run();
-};
+// Game utils

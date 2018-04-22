@@ -1,8 +1,7 @@
 #include "../common/stdafx.h"
 #include "entity.h"
-#include "./components/component.h"
-#include "../scenes/world.h"
 
+#include "../scenes/world.h"
 
 Entity::~Entity() {
 	for (auto itComponents = m_components.begin(); itComponents != m_components.end(); ++itComponents) {
@@ -32,126 +31,302 @@ void Entity::addComponent(Component* component) {
 	m_components.push_back(component);
 }
 
-void Entity::setPos(vec2 pos) {
-	m_pos = pos;
-	m_sprite->setPos(m_pos);
-}
-
-void Entity::move(vec2 speed) {
-	setPos(vadd(m_pos, speed));
-}
-
 void Entity::receiveMessage(Message* message) {
 	for (auto itComponents = m_components.begin(); itComponents != m_components.end(); ++itComponents) {
 		(*itComponents)->receiveMessage(message);
 	}
 }
 
-EntityPlayer::EntityPlayer(int i) {
-	m_pos  = vmake(i, i);
-	m_size = vmake(20, 20);
-	m_coolDown = 0.0f;
-	m_dashCoolDown = 0.0f;
-	
-	//m_sprite = new Sprite(m_pos, m_size, g_graphicsEngine->getTexture("data/player.png"));
-	g_graphicsEngine->addGfxEntity(m_sprite);
-	//m_targetSprite = new Sprite(m_targetPos, vmake(50, 50), g_graphicsEngine->getTexture("data/target.png"));
-	g_graphicsEngine->addGfxEntity(m_targetSprite);
-
-	setTargetPos(vadd(m_pos, vmake(-500, -500)));
-	g_inputManager->registerEvent(this, IInputManager::TEvent::EKey, 0);
+Entity* Entity::createPlayer(vec2 pos) {
+	Entity* player = new Entity();
+	ComponentTransform* transform = new ComponentTransform(player, pos, vmake(20, 20));
+	transform->init();
+	ComponentRenderable* renderable = new ComponentRenderable(player, "data/player.png", 2, 1.0f, "data/enemy.png", 10);
+	renderable->init();
+	ComponentPlayerController* playerControl = new ComponentPlayerController(player, 5);
+	playerControl->init();
+	ComponentInertialMove* movement = new ComponentInertialMove(player, vmake(0.0f, 0.0f), 5, false);
+	movement->init();
+	ComponentWeapon* weapon = new ComponentWeapon(player, Component::ERevolver, 20, 60, 6, 6, -2, 60, false, "data/shot.wav");
+	weapon->init();
+	C_Target* target = new C_Target(player, "data/target.png");
+	target->init();
+	ComponentCollider* collider = new ComponentCollider(player, ComponentCollider::ERectCollider, ComponentCollider::EAllied, 0);
+	collider->init();
+	ComponentLife* life = new ComponentLife(player, 5, 0, 20);
+	life->init();
+	ComponentHUD* hudComponent = new ComponentHUD(player);
+	hudComponent->init();
+	return player;
 }
 
-EntityPlayer::~EntityPlayer() {
-	//no se esta llamando porque ahora todo son entidades genericas
-	g_graphicsEngine->removeGfxEntity(m_targetSprite);
-	g_inputManager->unregisterEvent(this, IInputManager::TEvent::EKey);
+Entity* Entity::createBullet(vec2 pos, vec2 direction, float speed, int damage, int range, ComponentCollider::TFaction faction) {
+	Entity* bullet = new Entity();
+	ComponentTransform* transform = new ComponentTransform(bullet, pos, vmake(10, 10));
+	transform->init();
+	ComponentRenderable* renderable = new ComponentRenderable(bullet, "data/bullet.png");
+	renderable->init();
+	ComponentInertialMove* movement = new ComponentInertialMove(bullet, direction, speed, true);
+	movement->init();
+	ComponentCollider* collider = new ComponentCollider(bullet, ComponentCollider::ECircleCollider, faction, damage);
+	collider->init();
+	ComponentLife* life = new ComponentLife(bullet, 0, range, 0);
+	life->init();
+	return bullet;
 }
 
-void EntityPlayer::run() {
-	++m_coolDown;
-	++m_dashCoolDown;
-	if (m_dashCoolDown >= 8.0f) {
-		m_speed = vmake(0.0f, 0.0f);
+void Entity::createShotgunBullets(vec2 pos, vec2 direction, float speed, int damage, int range, ComponentCollider::TFaction faction) {
+	float dispersionAngle = 15.0f;
+
+	vec2 bulletDir = direction;
+	g_world->addEntity(createBullet(pos, bulletDir, speed, damage, range, faction));
+
+	float angle = vangle(direction);
+	angle += dispersionAngle;
+	bulletDir = vunit(DEG2RAD(angle));
+	g_world->addEntity(createBullet(pos, bulletDir, speed, damage, range, faction));
+
+	angle = vangle(direction);
+	angle -= dispersionAngle;
+	bulletDir = vunit(DEG2RAD(angle));
+	g_world->addEntity(createBullet(pos, bulletDir, speed, damage, range, faction));
+
+	return;
+}
+
+Entity* Entity::createMine(Component* weapon, vec2 pos, int damage, ComponentCollider::TFaction faction) {
+	Entity* mine = new Entity();
+	ComponentTransform* transform = new ComponentTransform(mine, pos, vmake(10, 10));
+	transform->init();
+	ComponentRenderable* renderable = new ComponentRenderable(mine, "data/bullet.png");
+	renderable->init();
+	ComponentCollider* collider = new ComponentCollider(mine, ComponentCollider::ECircleCollider, faction, 0);
+	collider->init();
+	ComponentLife* life = new ComponentLife(mine, 0, 0, 0);
+	life->init();
+	ComponentExplossive* explossion = new ComponentExplossive(mine, false, weapon);
+	explossion->init();
+	g_world->addEntity(mine);
+	return mine;
+}
+
+Entity* Entity::createC4(Component* weapon, vec2 pos, int damage, ComponentCollider::TFaction faction) {
+	Entity* mine = new Entity();
+	ComponentTransform* transform = new ComponentTransform(mine, pos, vmake(10, 10));
+	transform->init();
+	ComponentRenderable* renderable = new ComponentRenderable(mine, "data/bullet.png");
+	renderable->init();
+	ComponentLife* life = new ComponentLife(mine, 0, 0, 0);
+	life->init();
+	ComponentExplossive* explossion = new ComponentExplossive(mine, true, weapon);
+	explossion->init();
+	g_world->addEntity(mine);
+	return mine;
+}
+
+Entity* Entity::createRocket(Component* weapon, vec2 pos, vec2 direction, float speed, int damage, int range, ComponentCollider::TFaction faction) {
+	Entity* rocket = new Entity();
+	ComponentTransform* transform = new ComponentTransform(rocket, pos, vmake(10, 10));
+	transform->init();
+	ComponentRenderable* renderable = new ComponentRenderable(rocket, "data/bullet.png");
+	renderable->init();
+	ComponentInertialMove* movement = new ComponentInertialMove(rocket, direction, speed, true);
+	movement->init();
+	ComponentCollider* collider = new ComponentCollider(rocket, ComponentCollider::ECircleCollider, faction, damage);
+	collider->init();
+	ComponentLife* life = new ComponentLife(rocket, 0, range, 0);
+	life->init();
+	ComponentExplossive* explossive = new ComponentExplossive(rocket, false, weapon);
+	explossive->init();
+	g_world->addEntity(rocket);
+	return rocket;
+}
+
+Entity* Entity::createNuclearBomb() {
+	Entity* bomb = new Entity();
+	ComponentTransform* transform = new ComponentTransform(bomb, vmake(SCR_WIDTH / 2.0, SCR_HEIGHT / 2.0), vmake(SCR_WIDTH, SCR_HEIGHT));
+	transform->init();
+	ComponentRenderable* renderable = new ComponentRenderable(bomb, "data/bullet.png", 0.5f);
+	renderable->init();
+	ComponentCollider* colliderEnemy = new ComponentCollider(bomb, ComponentCollider::ECircleCollider, ComponentCollider::EAllied, -50);
+	colliderEnemy->init();
+	ComponentLife* life = new ComponentLife(bomb, -1, 50, 0);
+	life->init();
+	g_world->addEntity(bomb);
+
+	if (g_settings.sfx) {
+		uint m_soundId = CORE_LoadWav("data/explossion.wav");
+		CORE_PlayMusic(m_soundId);
 	}
-	move(m_speed);
+
+	return bomb;
 }
 
-void EntityPlayer::setTargetPos(vec2 targetPos) {
-	m_targetPos = targetPos;
-	m_targetSprite->setPos(m_targetPos);
+Entity* Entity::createEnemy(int x, int y, Entity* player, int speed, int lives, int damage) {
+	Entity* enemy = new Entity();
+	ComponentTransform* transform = new ComponentTransform(enemy, vmake(x, y), vmake(20, 20));
+	transform->init();
+	ComponentRenderable* renderable = new ComponentRenderable(enemy, "data/enemy.png", 2, 1.0f, "data/player.png", 10);
+	renderable->init();
+	ComponentAIMelee* ai = new ComponentAIMelee(enemy, player, speed, 0);
+	ai->init();
+	ComponentCollider* collider = new ComponentCollider(enemy, ComponentCollider::ERectCollider, ComponentCollider::EEnemy, damage);
+	collider->init();
+	ComponentLife* life = new ComponentLife(enemy, lives, 0, 0);
+	life->init();
+	ComponentPoints* points = new ComponentPoints(enemy, 10);
+	points->init();
+	return enemy;
 }
 
-bool EntityPlayer::onEvent(const IInputManager::Event& event) {
-	IInputManager::TEvent eventType = event.getType();
+Entity* Entity::createBigEnemy(int x, int y, Entity* player, int speed, int lives, int damage) {
+	Entity* enemy = new Entity();
+	ComponentTransform* transform = new ComponentTransform(enemy, vmake(x, y), vmake(30, 30));
+	transform->init();
+	ComponentRenderable* renderable = new ComponentRenderable(enemy, "data/enemy.png", 2, 1.0f, "data/player.png", 10);
+	renderable->init();
+	ComponentAIMelee* ai = new ComponentAIMelee(enemy, player, speed, 0);
+	ai->init();
+	ComponentCollider* collider = new ComponentCollider(enemy, ComponentCollider::ERectCollider, ComponentCollider::EEnemy, damage);
+	collider->init();
+	ComponentLife* life = new ComponentLife(enemy, lives, 0, 0);
+	life->init();
+	return enemy;
+}
 
-	if (eventType == IInputManager::TEvent::EKey) {
-		const IInputManager::KeyEvent keyEvent = *static_cast<const IInputManager::KeyEvent*>(&event);
-		switch (keyEvent.key)
-		{
-		case 'A': move(vmake(-5, 0));
+Entity* Entity::createRangeEnemy(int x, int y, Entity* player) {
+	Entity* enemy = new Entity();
+	ComponentTransform* transform = new ComponentTransform(enemy, vmake(x, y), vmake(20, 20));
+	transform->init();
+	ComponentRenderable* renderable = new ComponentRenderable(enemy, "data/enemy.png", 2, 1.0f, "data/player.png", 10);
+	renderable->init();
+	ComponentWeapon* gun = new ComponentWeapon(enemy, Component::ERevolver, 40, 1, -1, 6, -1, 0, true);
+	gun->init();
+	ComponentAIEvade* aiLong = new ComponentAIEvade(enemy, player, 4, 250);
+	aiLong->init();
+	ComponentAIMelee* aiMelee = new ComponentAIMelee(enemy, player, 4, 300);
+	aiMelee->init();
+	ComponentAIFire* aiFire = new ComponentAIFire(enemy, player);
+	aiFire->init();
+	ComponentCollider* collider = new ComponentCollider(enemy, ComponentCollider::ERectCollider, ComponentCollider::EEnemy, -1);
+	collider->init();
+	ComponentLife* life = new ComponentLife(enemy, 1, 0, 0);
+	life->init();
+	return enemy;
+}
+
+Entity* Entity::createTurretEnemy(int x, int y, vec2 dir, Entity* player) {
+	Entity* enemy = new Entity();
+	ComponentTransform* transform = new ComponentTransform(enemy, vmake(x, y), vmake(20, 20));
+	transform->init();
+	ComponentRenderable* renderable = new ComponentRenderable(enemy, "data/enemy.png", 2, 1.0f, "data/player.png", 10);
+	renderable->init();
+	ComponentInertialMove* movement = new ComponentInertialMove(enemy, vmake(1, 0), 2, true);
+	movement->init();
+	ComponentWeapon* gun = new ComponentWeapon(enemy, Component::ERevolver, 100, 1, -1, 6, -1, 0, true);
+	gun->init();
+	std::vector<vec2> aimDirections = { vmake(1,0), vmake(0,1), vmake(-1, 0), vmake(0, -1) };
+	ComponentAIFire* aiFire = new ComponentAIFire(enemy, aimDirections);
+	aiFire->init();
+	ComponentCollider* collider = new ComponentCollider(enemy, ComponentCollider::ERectCollider, ComponentCollider::EEnemy, -1);
+	collider->init();
+	ComponentLife* life = new ComponentLife(enemy, 3, 0, 0);
+	life->init();
+	ComponentPoints* points = new ComponentPoints(enemy, 10);
+	points->init();
+	return enemy;
+}
+
+Entity* Entity::createWeaponPickup() {
+	int randomType = rand() % Component::EWeaponCount;
+	vec2 randomPos = vmake(CORE_FRand(0.0, SCR_WIDTH), CORE_FRand(0.0, SCR_HEIGHT));
+	Entity* weaponPickup = new Entity();
+	ComponentTransform* transform = new ComponentTransform(weaponPickup, randomPos, vmake(20, 20));
+	transform->init();
+
+	Component::TWeapon type;
+	switch (randomType)
+	{
+		case 0:
+			type = Component::ERevolver;
 			break;
-		case 'D': move(vmake(5, 0));
+		case 1:
+			type = Component::EMachinegun;
 			break;
-		case 'W': move(vmake(0, 5));
+		case 2:
+			type = Component::EShotgun;
 			break;
-		case 'S': move(vmake(0, -5));
+		case 3:
+			type = Component::EMines;
 			break;
-		}
+		case 4:
+			type = Component::EC4;
+			break;
+		case 5:
+			type = Component::ERocketLauncher;
+			break;
+	}
+	ComponentRenderable* renderable = new ComponentRenderable(weaponPickup, "data/SimpleCrate.png");
+	renderable->init();
+	ComponentCollider* collider = new ComponentCollider(weaponPickup, ComponentCollider::ERectCollider, ComponentCollider::ENeutral, 0);
+	collider->init();
+	ComponentWeaponPickup* pickup = new ComponentWeaponPickup(weaponPickup, type);
+	pickup->init();
+	ComponentPoints* points = new ComponentPoints(weaponPickup, 1);
+	points->init();
+	ComponentLife* life = new ComponentLife(weaponPickup, 0, 0, 0);
+	life->init();
+	return weaponPickup;
+}
+
+Entity* Entity::createHUDMessage(std::string message, vec2 pos, int displayTime) {
+	Entity* hudMessage = new Entity();
+	ComponentHUDMessage* hudMessageComponent = new ComponentHUDMessage(hudMessage, pos, message);
+	hudMessageComponent->init();
+	ComponentLife* life = new ComponentLife(hudMessage, 0, displayTime, 0);
+	life->init();
+	if (g_world->m_hudMessage) {
+
+		//mal puede apuntar a otro sitio
+		g_world->removeEntity(g_world->m_hudMessage);
+	}
+	g_world->m_hudMessage = hudMessage;
+	g_world->addEntity(hudMessage);
+	return hudMessage;
+}
+
+void Entity::createExplossion(vec2 pos, vec2 size) {
+	Entity* explossionFx = new Entity();
+	ComponentTransform* transform = new ComponentTransform(explossionFx, pos, vmake(10, 10), vmake(2, 2));
+	transform->init();
+	ComponentRenderable* renderable = new ComponentRenderable(explossionFx, "data/bullet.png", 0.5f);
+	renderable->init();
+	ComponentLife* life = new ComponentLife(explossionFx, -1, 50, 0);
+	life->init();
+	g_world->addEntity(explossionFx);
+
+	Entity* explossionImpactToEnemies = new Entity();
+	transform = new ComponentTransform(explossionImpactToEnemies, pos, vmake(10, 10), vmake(2, 2));
+	transform->init();
+	ComponentCollider* colliderEnemy = new ComponentCollider(explossionImpactToEnemies, ComponentCollider::ECircleCollider, ComponentCollider::EAllied, -5);
+	colliderEnemy->init();
+	life = new ComponentLife(explossionImpactToEnemies, -1, 50, 0);
+	life->init();
+	g_world->addEntity(explossionImpactToEnemies);
+
+	Entity* explossionImpactToPlayer = new Entity();
+	transform = new ComponentTransform(explossionImpactToPlayer, pos, vmake(10, 10), vmake(2, 2));
+	transform->init();
+	ComponentCollider* colliderAllied = new ComponentCollider(explossionImpactToPlayer, ComponentCollider::ECircleCollider, ComponentCollider::EEnemy, -1);
+	colliderAllied->init();
+	life = new ComponentLife(explossionImpactToPlayer, -1, 50, 0);
+	life->init();
+	g_world->addEntity(explossionImpactToPlayer);
+
+	if (g_settings.sfx) {
+		uint m_soundId = CORE_LoadWav("data/explossion.wav");
+		CORE_PlayMusic(m_soundId);
 	}
 
-	if (eventType == IInputManager::TEvent::EMouse) {
-		const IInputManager::MouseEvent mouseEvent = *static_cast<const IInputManager::MouseEvent*>(&event);
-		setTargetPos(vmake(mouseEvent.x, mouseEvent.y));
-		if (mouseEvent.buttonMask == 1) {
-			fire();
-		}
-		if (mouseEvent.buttonMask == 2) {
-			dash();
-		}
-	}
-
-	return true;
-}
-
-void EntityPlayer::fire() {
-	if (m_coolDown >= 20) {
-		vec2 direction = vsub(m_targetPos, m_pos);
-		vec2 bulletDir= vscale(direction, 1 / vlen(direction));
-		EntityBullet* bullet = new EntityBullet(m_pos, bulletDir);
-		g_world->addEntity(bullet);
-
-		//float a = atan2(bulletDir.y, bulletDir.x - 1) + DEG2RAD(5);
-		//printf("%f\n", RAD2DEG(a));
-		//bulletDir = vunit(a);
-		//bullet = new EntityBullet(vadd(m_pos, vscale(bulletDir,30)), bulletDir);
-		//g_world->addEntity(bullet);
-		//a = atan2(bulletDir.y, bulletDir.x - 1) - DEG2RAD(5);
-		//printf("%f\n", RAD2DEG(a));
-		//bulletDir = vunit(a);
-		//bullet = new EntityBullet(m_pos, bulletDir);
-		//g_world->addEntity(bullet);
-		m_coolDown = 0.0f;
-	}	
-}
-
-void EntityPlayer::dash() {
-	if (m_dashCoolDown >=20.0f) {
-		vec2 direction = vsub(m_targetPos, m_pos);
-		m_speed = vscale(direction, 30 / vlen(direction));
-		m_dashCoolDown = 0.0f;
-	}
-}
-
-EntityBullet::EntityBullet(vec2 pos, vec2 dir) {
-	m_pos = pos;
-	m_size = vmake(10, 10);
-	m_speed = vscale(dir, 6);
-	m_sprite = new Sprite(g_graphicsEngine->getTexture("data/bullet.png"), 2);
-	m_sprite->setPos(m_pos);
-	m_sprite->setSize(m_size);
-	g_graphicsEngine->addGfxEntity(m_sprite);
-}
-void EntityBullet::run() {
-	move(m_speed);
+	return;
 }

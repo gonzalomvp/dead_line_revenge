@@ -40,23 +40,6 @@ private:
 	
 };
 
-
-// Game utils
-Entity* createPlayer(vec2 pos);
-Entity* createEnemy(int x, int y, Entity* player, int speed, int lives, int damage);
-Entity* createBigEnemy(int x, int y, Entity* player, int speed, int lives, int damage);
-Entity* createRangeEnemy(int x, int y, Entity* player);
-Entity* createTurretEnemy(int x, int y, vec2 dir, Entity* player);
-Entity* createBullet(vec2 pos, vec2 direction, float speed, int damage, int range, ComponentCollider::TFaction faction);
-void createShotgunBullets(vec2 pos, vec2 direction, float speed, int damage, int range, ComponentCollider::TFaction faction);
-Entity* createMine(Component* weapon, vec2 pos, int damage, ComponentCollider::TFaction faction);
-Entity* createC4(Component* weapon, vec2 pos, int damage, ComponentCollider::TFaction faction);
-Entity* createRocket(Component* weapon, vec2 pos, vec2 direction, float speed, int damage, int range, ComponentCollider::TFaction faction);
-Entity* createNuclearBomb();
-Entity* createWeaponPickup();
-void createExplossion(vec2 pos, vec2 size);
-Entity* createHUDMessage(std::string, vec2 pos, int displayTime);
-
 // Collision utils
 inline float clamp(float value, float inf, float sup) { return (value <= inf) ? inf : (value >= sup) ? sup : value; };
 inline bool  isInBounds(float value, float inf, float sup) { return (value > inf) && (value < sup); };

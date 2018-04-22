@@ -5,6 +5,7 @@
 #include "../../scenes/world.h"
 #include "../../scenes/level.h"
 #include "../../gui/string_manager.h"
+#include "../../engine/graphics_engine.h"
 
 #define EVASION_ANGLE         45.0f
 #define EVASION_MIN_WALL_DIST 20.0f
@@ -377,23 +378,23 @@ void ComponentWeapon::run() {
 		switch (m_type)
 		{
 			case EShotgun:
-				createShotgunBullets(messageGetTranform.pos, m_aimDirection, m_bulletSpeed, m_bulletDamage, m_bulletRange, msgGetCollider.faction);
+				Entity::createShotgunBullets(messageGetTranform.pos, m_aimDirection, m_bulletSpeed, m_bulletDamage, m_bulletRange, msgGetCollider.faction);
 				break;
 			case EMines:
-				createMine(this, messageGetTranform.pos, m_bulletDamage, msgGetCollider.faction);
+				Entity::createMine(this, messageGetTranform.pos, m_bulletDamage, msgGetCollider.faction);
 				//createNuclearBomb();
 				deactivate();
 				break;
 			case EC4:
-				createC4(this, messageGetTranform.pos, m_bulletDamage, msgGetCollider.faction);
+				Entity::createC4(this, messageGetTranform.pos, m_bulletDamage, msgGetCollider.faction);
 				deactivate();
 				break;
 			case ERocketLauncher:
-				createRocket(this, messageGetTranform.pos, m_aimDirection, m_bulletSpeed, m_bulletDamage, m_bulletRange, msgGetCollider.faction);
+				Entity::createRocket(this, messageGetTranform.pos, m_aimDirection, m_bulletSpeed, m_bulletDamage, m_bulletRange, msgGetCollider.faction);
 				deactivate();
 				break;
 			default:
-				g_world->addEntity(createBullet(messageGetTranform.pos, m_aimDirection, m_bulletSpeed, m_bulletDamage, m_bulletRange, msgGetCollider.faction));
+				g_world->addEntity(Entity::createBullet(messageGetTranform.pos, m_aimDirection, m_bulletSpeed, m_bulletDamage, m_bulletRange, msgGetCollider.faction));
 				break;
 		}
 		
@@ -548,7 +549,7 @@ void ComponentExplossive::receiveMessage(Message* message) {
 	if (msgDestroy) {
 		MessageGetTransform messageSelfPos;
 		m_owner->receiveMessage(&messageSelfPos);
-		createExplossion(messageSelfPos.pos, vmake(100, 100));
+		Entity::createExplossion(messageSelfPos.pos, vmake(100, 100));
 		if (m_weapon) {
 			m_weapon->activate();
 		}
@@ -879,7 +880,7 @@ void ComponentWeaponPickup::receiveMessage(Message* message) {
 				break;
 		}
 
-		createHUDMessage(hudMessage, vmake((SCR_WIDTH / 2) - (hudMessage.length() / 2.0f * 16), SCR_HEIGHT * 0.8f), 100);
+		Entity::createHUDMessage(hudMessage, vmake((SCR_WIDTH / 2) - (hudMessage.length() / 2.0f * 16), SCR_HEIGHT * 0.8f), 100);
 	}
 }
 
