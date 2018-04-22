@@ -38,7 +38,7 @@ void Entity::receiveMessage(Message* message) {
 }
 
 Entity* Entity::createPlayer(vec2 pos) {
-	Entity* player = new Entity();
+	Entity* player = new Entity(EPlayer);
 	ComponentTransform* transform = new ComponentTransform(player, pos, vmake(20, 20));
 	transform->init();
 	ComponentRenderable* renderable = new ComponentRenderable(player, "data/player.png", 2, 1.0f, "data/enemy.png", 10);
@@ -61,7 +61,7 @@ Entity* Entity::createPlayer(vec2 pos) {
 }
 
 Entity* Entity::createBullet(vec2 pos, vec2 direction, float speed, int damage, int range, ComponentCollider::TFaction faction) {
-	Entity* bullet = new Entity();
+	Entity* bullet = new Entity(EWeapon);
 	ComponentTransform* transform = new ComponentTransform(bullet, pos, vmake(10, 10));
 	transform->init();
 	ComponentRenderable* renderable = new ComponentRenderable(bullet, "data/bullet.png");
@@ -95,7 +95,7 @@ void Entity::createShotgunBullets(vec2 pos, vec2 direction, float speed, int dam
 }
 
 Entity* Entity::createMine(Component* weapon, vec2 pos, int damage, ComponentCollider::TFaction faction) {
-	Entity* mine = new Entity();
+	Entity* mine = new Entity(EWeapon);
 	ComponentTransform* transform = new ComponentTransform(mine, pos, vmake(10, 10));
 	transform->init();
 	ComponentRenderable* renderable = new ComponentRenderable(mine, "data/bullet.png");
@@ -111,7 +111,7 @@ Entity* Entity::createMine(Component* weapon, vec2 pos, int damage, ComponentCol
 }
 
 Entity* Entity::createC4(Component* weapon, vec2 pos, int damage, ComponentCollider::TFaction faction) {
-	Entity* mine = new Entity();
+	Entity* mine = new Entity(EWeapon);
 	ComponentTransform* transform = new ComponentTransform(mine, pos, vmake(10, 10));
 	transform->init();
 	ComponentRenderable* renderable = new ComponentRenderable(mine, "data/bullet.png");
@@ -125,7 +125,7 @@ Entity* Entity::createC4(Component* weapon, vec2 pos, int damage, ComponentColli
 }
 
 Entity* Entity::createRocket(Component* weapon, vec2 pos, vec2 direction, float speed, int damage, int range, ComponentCollider::TFaction faction) {
-	Entity* rocket = new Entity();
+	Entity* rocket = new Entity(EWeapon);
 	ComponentTransform* transform = new ComponentTransform(rocket, pos, vmake(10, 10));
 	transform->init();
 	ComponentRenderable* renderable = new ComponentRenderable(rocket, "data/bullet.png");
@@ -143,7 +143,7 @@ Entity* Entity::createRocket(Component* weapon, vec2 pos, vec2 direction, float 
 }
 
 Entity* Entity::createNuclearBomb() {
-	Entity* bomb = new Entity();
+	Entity* bomb = new Entity(EWeapon);
 	ComponentTransform* transform = new ComponentTransform(bomb, vmake(SCR_WIDTH / 2.0, SCR_HEIGHT / 2.0), vmake(SCR_WIDTH, SCR_HEIGHT));
 	transform->init();
 	ComponentRenderable* renderable = new ComponentRenderable(bomb, "data/bullet.png", 0.5f);
@@ -163,7 +163,7 @@ Entity* Entity::createNuclearBomb() {
 }
 
 Entity* Entity::createEnemy(int x, int y, Entity* player, int speed, int lives, int damage) {
-	Entity* enemy = new Entity();
+	Entity* enemy = new Entity(EEnemy);
 	ComponentTransform* transform = new ComponentTransform(enemy, vmake(x, y), vmake(20, 20));
 	transform->init();
 	ComponentRenderable* renderable = new ComponentRenderable(enemy, "data/enemy.png", 2, 1.0f, "data/player.png", 10);
@@ -180,7 +180,7 @@ Entity* Entity::createEnemy(int x, int y, Entity* player, int speed, int lives, 
 }
 
 Entity* Entity::createBigEnemy(int x, int y, Entity* player, int speed, int lives, int damage) {
-	Entity* enemy = new Entity();
+	Entity* enemy = new Entity(EEnemy);
 	ComponentTransform* transform = new ComponentTransform(enemy, vmake(x, y), vmake(30, 30));
 	transform->init();
 	ComponentRenderable* renderable = new ComponentRenderable(enemy, "data/enemy.png", 2, 1.0f, "data/player.png", 10);
@@ -195,7 +195,7 @@ Entity* Entity::createBigEnemy(int x, int y, Entity* player, int speed, int live
 }
 
 Entity* Entity::createRangeEnemy(int x, int y, Entity* player) {
-	Entity* enemy = new Entity();
+	Entity* enemy = new Entity(EEnemy);
 	ComponentTransform* transform = new ComponentTransform(enemy, vmake(x, y), vmake(20, 20));
 	transform->init();
 	ComponentRenderable* renderable = new ComponentRenderable(enemy, "data/enemy.png", 2, 1.0f, "data/player.png", 10);
@@ -216,7 +216,7 @@ Entity* Entity::createRangeEnemy(int x, int y, Entity* player) {
 }
 
 Entity* Entity::createTurretEnemy(int x, int y, vec2 dir, Entity* player) {
-	Entity* enemy = new Entity();
+	Entity* enemy = new Entity(EOther);
 	ComponentTransform* transform = new ComponentTransform(enemy, vmake(x, y), vmake(20, 20));
 	transform->init();
 	ComponentRenderable* renderable = new ComponentRenderable(enemy, "data/enemy.png", 2, 1.0f, "data/player.png", 10);
@@ -240,7 +240,7 @@ Entity* Entity::createTurretEnemy(int x, int y, vec2 dir, Entity* player) {
 Entity* Entity::createWeaponPickup() {
 	int randomType = rand() % Component::EWeaponCount;
 	vec2 randomPos = vmake(CORE_FRand(0.0, SCR_WIDTH), CORE_FRand(0.0, SCR_HEIGHT));
-	Entity* weaponPickup = new Entity();
+	Entity* weaponPickup = new Entity(EPickup);
 	ComponentTransform* transform = new ComponentTransform(weaponPickup, randomPos, vmake(20, 20));
 	transform->init();
 
@@ -280,7 +280,7 @@ Entity* Entity::createWeaponPickup() {
 }
 
 Entity* Entity::createHUDMessage(std::string message, vec2 pos, int displayTime) {
-	Entity* hudMessage = new Entity();
+	Entity* hudMessage = new Entity(EHUD);
 	ComponentHUDMessage* hudMessageComponent = new ComponentHUDMessage(hudMessage, pos, message);
 	hudMessageComponent->init();
 	ComponentLife* life = new ComponentLife(hudMessage, 0, displayTime, 0);
@@ -296,7 +296,7 @@ Entity* Entity::createHUDMessage(std::string message, vec2 pos, int displayTime)
 }
 
 void Entity::createExplossion(vec2 pos, vec2 size) {
-	Entity* explossionFx = new Entity();
+	Entity* explossionFx = new Entity(EWeapon);
 	ComponentTransform* transform = new ComponentTransform(explossionFx, pos, vmake(10, 10), vmake(2, 2));
 	transform->init();
 	ComponentRenderable* renderable = new ComponentRenderable(explossionFx, "data/bullet.png", 2, 0.5f);
@@ -305,7 +305,7 @@ void Entity::createExplossion(vec2 pos, vec2 size) {
 	life->init();
 	g_world->addEntity(explossionFx);
 
-	Entity* explossionImpactToEnemies = new Entity();
+	Entity* explossionImpactToEnemies = new Entity(EWeapon);
 	transform = new ComponentTransform(explossionImpactToEnemies, pos, vmake(10, 10), vmake(2, 2));
 	transform->init();
 	ComponentCollider* colliderEnemy = new ComponentCollider(explossionImpactToEnemies, ComponentCollider::ECircleCollider, ComponentCollider::EAllied, -5);
@@ -314,7 +314,7 @@ void Entity::createExplossion(vec2 pos, vec2 size) {
 	life->init();
 	g_world->addEntity(explossionImpactToEnemies);
 
-	Entity* explossionImpactToPlayer = new Entity();
+	Entity* explossionImpactToPlayer = new Entity(EWeapon);
 	transform = new ComponentTransform(explossionImpactToPlayer, pos, vmake(10, 10), vmake(2, 2));
 	transform->init();
 	ComponentCollider* colliderAllied = new ComponentCollider(explossionImpactToPlayer, ComponentCollider::ECircleCollider, ComponentCollider::EEnemy, -1);

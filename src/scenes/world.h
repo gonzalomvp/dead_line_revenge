@@ -43,17 +43,14 @@ private:
 	void addPendingEntities   ();
 
 	void spawnEnemy();
-	void killEnemy(Entity* entity);
 
 	bool loadLevel(const char* fileName);
 
 	uint16_t              m_level;
 	Entity*               m_player;
-	Entity*               m_pickup;
 	std::vector <Entity*> m_entities;
 	std::vector <Entity*> m_entitiesToRemove;
 	std::vector <Entity*> m_entitiesToAdd;
-	std::vector <Entity*> m_enemies;
 	bool                  m_isGameOver;
 	bool                  m_isPaused;
 
@@ -62,6 +59,7 @@ private:
 	int m_pickupSpawnWait;
 	int m_enemySpawnWait;
 	int m_spawnPoints;
+	int m_currentEnemies;
 	int m_maxEnemies;
 
 	std::vector<TEnemyData> m_enemyData;

@@ -75,10 +75,9 @@ GLuint enemyTexture;
 World::World(uint16_t level) {
 	m_level       = level;
 	m_player      = nullptr;
-	m_pickup      = nullptr;
 	m_isGameOver  = false;
 	m_isPaused    = false;
-	m_score       = 0;
+	
 
 	//sacar de aqui
 	m_spawnData.push_back(vmake(SCR_WIDTH / 2.0f, SCR_HEIGHT));
@@ -104,6 +103,9 @@ World::~World() {
 
 void World::init() {
 	m_isGameOver = false;
+	m_isPaused = false;
+	m_score = 0;
+	m_currentEnemies = 0;
 	m_pickupSpawnTimer = m_pickupSpawnWait;
 	g_inputManager->unregisterEvent(this, IInputManager::TEvent::EPause);
 	g_inputManager->registerEvent(this, IInputManager::TEvent::EPause, 0);
@@ -150,8 +152,7 @@ void World::init() {
 	//borrar
 	//addEntity(createEnemy(200, 200, m_player, 0, 1, -1));
 	//addEntity(createEnemy(205, 200, m_player, 0, 1, -1));
-	m_pickup = Entity::createWeaponPickup();
-	addEntity(m_pickup);
+	addEntity(Entity::createWeaponPickup());
 	//addEntity(createWeaponPickup(vmake(400, 400), Component::ERevolver));
 }
 
@@ -184,15 +185,14 @@ void World::run(float deltaTime) {
 		if (m_pickupSpawnTimer <= m_pickupSpawnWait) {
 			++m_pickupSpawnTimer;
 			if (m_pickupSpawnTimer == m_pickupSpawnWait) {
-				m_pickup = Entity::createWeaponPickup();
-				addEntity(m_pickup);
+				addEntity(Entity::createWeaponPickup());
 			}
 		}
 
 		//enemy
 		++m_enemySpawnTimer;
 
-		if (m_enemySpawnTimer >= m_enemySpawnWait && m_enemies.size() < m_maxEnemies) {
+		if (m_enemySpawnTimer >= m_enemySpawnWait && m_currentEnemies < m_maxEnemies) {
 			spawnEnemy();
 			m_enemySpawnTimer = 0;
 		}
@@ -284,7 +284,32 @@ void World::checkCollisions() {
 void World::removePendingEntities() {
 	for (auto it = m_entitiesToRemove.begin(); it != m_entitiesToRemove.end(); ++it)
 	{
-		killEnemy(*it);
+		Entity::TType type = (*it)->getType();
+		switch (type)
+		{
+			case Entity::EPlayer: {
+				m_isGameOver = true;
+				std::string scoreMessage = g_stringManager->getText("LTEXT_GUI_SCORE_MESSAGE") + std::to_string(m_score);
+				g_menuManager->getMenu(MenuManager::EGameOverMenu)->setTitle(scoreMessage.c_str());
+				g_menuManager->activateMenu(MenuManager::EGameOverMenu);
+				for (size_t i = 0; i < m_entities.size(); ++i) {
+					delete m_entities[i];
+				}
+				m_entities.clear();
+				m_player = nullptr;
+				break;
+			}
+			case Entity::EPickup: {
+				m_pickupSpawnTimer = 0;
+				break;
+			}
+			case Entity::EEnemy: {
+				--m_currentEnemies;
+				break;
+			}
+			case Entity::EHUD:
+				break;
+		}
 		auto it2 = m_entities.begin();
 		bool bErased = false;
 		while (!bErased && (it2 != m_entities.end()))
@@ -297,24 +322,6 @@ void World::removePendingEntities() {
 			}
 			else
 				++it2;
-		}
-
-
-		//Poner antes
-		if (*it == m_player) {
-			m_isGameOver = true;
-			std::string scoreMessage = g_stringManager->getText("LTEXT_GUI_SCORE_MESSAGE") + std::to_string(m_score);
-			g_menuManager->getMenu(MenuManager::EGameOverMenu)->setTitle(scoreMessage.c_str());
-			g_menuManager->activateMenu(MenuManager::EGameOverMenu);
-			for (size_t i = 0; i < m_entities.size(); ++i) {
-				delete m_entities[i];
-			}
-			m_entities.clear();
-			m_player = nullptr;
-		}
-		else if (*it == m_pickup) {
-			m_pickupSpawnTimer = 0;
-			m_pickup = nullptr;
 		}
 	}
 	m_entitiesToRemove.clear();
@@ -432,14 +439,5 @@ void World::spawnEnemy() {
 	}
 
 	g_world->addEntity(enemy);
-	m_enemies.push_back(enemy);
-}
-
-void World::killEnemy(Entity* entity) {
-	for (auto itEnemy = m_enemies.begin(); itEnemy != m_enemies.end(); ++itEnemy) {
-		if (*itEnemy == entity) {
-			m_enemies.erase(itEnemy);
-			break;
-		}
-	}
+	++m_currentEnemies;
 }

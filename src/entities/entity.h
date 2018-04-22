@@ -6,6 +6,15 @@ struct Message;
 
 class Entity {
 public:
+	enum TType {
+		EPlayer,
+		EPickup,
+		EEnemy,
+		EWeapon,
+		EHUD,
+		EOther,
+	};
+
 	static Entity* createPlayer(vec2 pos);
 	static Entity* createEnemy(int x, int y, Entity* player, int speed, int lives, int damage);
 	static Entity* createBigEnemy(int x, int y, Entity* player, int speed, int lives, int damage);
@@ -21,10 +30,12 @@ public:
 	static void createExplossion(vec2 pos, vec2 size);
 	static Entity* createHUDMessage(std::string, vec2 pos, int displayTime);
 
+	Entity(TType type) : m_type(type) {}
 	~Entity();
 
 	void activate();
 	void deactivate();
+	TType getType() { return m_type; }
 
 	virtual void run();
 	void receiveMessage(Message* message);
@@ -32,6 +43,8 @@ public:
 	void removeComponent(Component* component) {}
 
 	std::vector<Component*> m_components;
+private:
+	TType m_type;
 };
 
 // Game utils
