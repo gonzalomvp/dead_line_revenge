@@ -35,10 +35,7 @@ private:
 	bool m_isGameOver;
 
 	//HUD
-	Text* m_lifeHUD;
-	Text* m_scoreHUD;
-	Text* m_ammoHUD;
-	Sprite* m_reloadAnim;
+	
 };
 
 

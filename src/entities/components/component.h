@@ -308,12 +308,22 @@ private:
 	Text*       m_message;
 };
 
-class C_HUDLife : public Component {
+//=============================================================================
+// ComponentHUD class
+//=============================================================================
+class ComponentHUD : public Component {
 public:
-	C_HUDLife(Entity* owner, Entity* player);
-	~C_HUDLife();
-	virtual void run();
+	ComponentHUD(Entity* owner) : Component(owner) {}
+	~ComponentHUD();
+
+	virtual void init();
+	virtual void run ();
 private:
-	Entity* m_player;
-	Text* m_hudLife;
+	Text*   m_life;
+	Text*   m_score;
+	Text*   m_ammo;
+	Text*   m_fps;
+
+	//ver si cambiar a Renderable
+	Sprite* m_reloadAnim;
 };

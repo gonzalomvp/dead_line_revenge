@@ -897,26 +897,50 @@ void ComponentHUDMessage::init() {
 }
 
 //=============================================================================
-// C_HUDLife class
+// ComponentHUD class
 //=============================================================================
-C_HUDLife::C_HUDLife(Entity* owner, Entity* player) : Component(owner), m_player(player) {
-	m_hudLife = new Text("", 1, vmake(20, 20));
-	if (m_player) {
-		MessageGetLife msgLife;
-		m_player->receiveMessage(&msgLife);
-		m_hudLife->setText(std::to_string(msgLife.currentLife));
-	}
-	g_graphicsEngine->addGfxEntity(m_hudLife);
+ComponentHUD::~ComponentHUD() {
+	g_graphicsEngine->removeGfxEntity(m_life);
+	g_graphicsEngine->removeGfxEntity(m_score);
+	g_graphicsEngine->removeGfxEntity(m_ammo);
+	g_graphicsEngine->removeGfxEntity(m_fps);
+	g_graphicsEngine->removeGfxEntity(m_reloadAnim);
 }
 
-C_HUDLife::~C_HUDLife() {
-	g_graphicsEngine->removeGfxEntity(m_hudLife);
+void ComponentHUD::init() {
+	Component::init();
+	m_life = new Text("", 1, vmake(20, 20));
+	g_graphicsEngine->addGfxEntity(m_life);
+
+	m_score = new Text("| 120", 1, vmake(40, 20));
+	g_graphicsEngine->addGfxEntity(m_score);
+
+	m_ammo = new Text("| 6/-", 1, vmake(120, 20));
+	g_graphicsEngine->addGfxEntity(m_ammo);
+
+	m_fps = new Text("", 1, vmake(300, 300));
+	g_graphicsEngine->addGfxEntity(m_fps);
+
+	m_reloadAnim = new Sprite(g_graphicsEngine->getTexture("data/playerReload.png"), 1);
+	g_graphicsEngine->addGfxEntity(m_reloadAnim);
 }
 
-void C_HUDLife::run() {
-	if (m_player) {
-		MessageGetLife msgLife;
-		m_player->receiveMessage(&msgLife);
-		m_hudLife->setText(std::to_string(msgLife.currentLife));
-	}
+void ComponentHUD::run() {
+	MessageGetLife msgLife;
+	m_owner->receiveMessage(&msgLife);
+	m_life->setText(std::to_string(msgLife.currentLife));
+	
+	m_score->setText("- " + std::to_string(g_world->m_level->m_score));
+
+	MessageAmmoInfo msgAmmo;
+	m_owner->receiveMessage(&msgAmmo);
+	std::string totalAmmo = "-";
+	if (msgAmmo.totalAmmo >= 0)
+		totalAmmo = std::to_string(msgAmmo.totalAmmo);
+	m_ammo->setText("- " + std::to_string(msgAmmo.currentAmmo) + "/" + totalAmmo);
+
+	MessageGetTransform msgTransform;
+	m_owner->receiveMessage(&msgTransform);
+	m_reloadAnim->setPos(vmake(msgTransform.pos.x, msgTransform.pos.y - msgTransform.size.y * msgAmmo.reloadPercent * 0.5f));
+	m_reloadAnim->setSize(vmake(msgTransform.size.x, msgTransform.size.y * (1 - msgAmmo.reloadPercent)));
 }

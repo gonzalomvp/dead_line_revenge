@@ -70,16 +70,6 @@ World::World(int level) {
 	m_isGameOver = false;
 	m_difficulty = level;
 	m_pickupSpawnWait = 10;
-
-	m_scoreHUD = new Text("| 120", 1, vmake(40, 20));
-	g_graphicsEngine->addGfxEntity(m_scoreHUD);
-
-	m_ammoHUD = new Text("| 6/-", 1, vmake(120, 20));
-	g_graphicsEngine->addGfxEntity(m_ammoHUD);
-
-	//ver si se puede hacer de otra forma
-	m_reloadAnim = new Sprite(g_graphicsEngine->getTexture("data/playerReload.png"), 1);
-	g_graphicsEngine->addGfxEntity(m_reloadAnim);
 }
 
 World::~World() {
@@ -91,15 +81,6 @@ World::~World() {
 		delete m_entities[i];
 	}
 	delete m_level;
-
-	g_graphicsEngine->removeGfxEntity(m_lifeHUD);
-	g_graphicsEngine->removeGfxEntity(m_scoreHUD);
-	g_graphicsEngine->removeGfxEntity(m_ammoHUD);
-	g_graphicsEngine->removeGfxEntity(m_reloadAnim);
-	delete m_lifeHUD;
-	delete m_scoreHUD;
-	delete m_ammoHUD;
-	delete m_reloadAnim;
 }
 
 void World::init() {
@@ -131,12 +112,7 @@ void World::init() {
 	addEntity(m_player);
 
 	//HUD
-	m_lifeHUD = new Text("", 1, vmake(20, 20));
-	//g_graphicsEngine->addGfxEntity(m_lifeHUD);
-	Entity* hudLife = new Entity();
-	C_HUDLife* c_hudLife = new C_HUDLife(hudLife, m_player);
-	c_hudLife->init();
-	addEntity(hudLife);
+	//createHUD(m_player);
 
 	//addEntity(createRangeEnemy(300, 300, m_player));
 	bullet.pos = vmake(-1000, -1000);
@@ -191,28 +167,6 @@ void World::run() {
 				m_pickup = createWeaponPickup();
 				addEntity(m_pickup);
 			}
-		}
-
-		//HUD
-		if (m_player) {
-			m_scoreHUD->setText("- " + std::to_string(m_level->m_score));
-			m_scoreHUD->setText("- " + std::to_string(m_entities.size()));
-
-			MessageGetLife msgLife;
-			m_player->receiveMessage(&msgLife);
-			m_lifeHUD->setText(std::to_string(msgLife.currentLife));
-
-			MessageAmmoInfo msgAmmo;
-			m_player->receiveMessage(&msgAmmo);
-			std::string totalAmmo = "-";
-			if (msgAmmo.totalAmmo >= 0)
-				totalAmmo = std::to_string(msgAmmo.totalAmmo);
-			m_ammoHUD->setText("- " + std::to_string(msgAmmo.currentAmmo) + "/" + totalAmmo);
-
-			MessageGetTransform msgTransform;
-			m_player->receiveMessage(&msgTransform);
-			m_reloadAnim->setPos(vmake(msgTransform.pos.x, msgTransform.pos.y - msgTransform.size.y * msgAmmo.reloadPercent * 0.5f));
-			m_reloadAnim->setSize(vmake(msgTransform.size.x, msgTransform.size.y * (1 - msgAmmo.reloadPercent)));
 		}
 	}
 }
@@ -363,6 +317,8 @@ Entity* createPlayer(vec2 pos) {
 	collider->init();
 	ComponentLife* life = new ComponentLife(player, 5, 0, 20);
 	life->init();
+	ComponentHUD* hudComponent = new ComponentHUD(player);
+	hudComponent->init();
 	return player;
 }
 
