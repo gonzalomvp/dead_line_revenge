@@ -1,12 +1,5 @@
 #pragma once
 
-#include "../common/stdafx.h"
-#include "../input/input_manager.h"
-
-class Menu;
-class MenuItem;
-class Text;
-
 //=============================================================================
 // AppMode class
 //=============================================================================

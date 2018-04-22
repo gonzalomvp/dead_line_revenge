@@ -1,8 +1,8 @@
 #include "../common/stdafx.h"
 #include "app_mode.h"
+#include "../globals.h"
 
 #include "../engine/graphics_engine.h"
-#include "../globals.h"
 #include "../gui/menu.h"
 #include "../scenes/world.h"
 
@@ -37,12 +37,9 @@ void AppModeMenu::render() const {
 void AppModeGame::init() {
 	g_world = new World(m_level);
 	g_world->init();
-	
-	//ShowCursor(false);
 }
 
 AppModeGame::~AppModeGame() {
-	//ShowCursor(true);
 	g_menuManager->deactivateMenu();
 	delete g_world;
 }
