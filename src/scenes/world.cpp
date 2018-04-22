@@ -196,6 +196,7 @@ void World::run() {
 		//HUD
 		if (m_player) {
 			m_scoreHUD->setText("- " + std::to_string(m_level->m_score));
+			m_scoreHUD->setText("- " + std::to_string(m_entities.size()));
 
 			MessageGetLife msgLife;
 			m_player->receiveMessage(&msgLife);
@@ -447,6 +448,26 @@ Entity* createRocket(Component* weapon, vec2 pos, vec2 direction, float speed, i
 	return rocket;
 }
 
+Entity* createNuclearBomb() {
+	Entity* bomb = new Entity();
+	ComponentTransform* transform = new ComponentTransform(bomb, vmake(SCR_WIDTH / 2.0, SCR_HEIGHT/ 2.0), vmake(SCR_WIDTH, SCR_HEIGHT));
+	transform->init();
+	ComponentRenderable* renderable = new ComponentRenderable(bomb, "data/bullet.png", 0.5f);
+	renderable->init();
+	ComponentCollider* colliderEnemy = new ComponentCollider(bomb, ComponentCollider::ECircleCollider, ComponentCollider::EAllied, -50);
+	colliderEnemy->init();
+	ComponentLife* life = new ComponentLife(bomb, -1, 50, 0);
+	life->init();
+	g_world->addEntity(bomb);
+
+	if (g_settings.sfx) {
+		uint m_soundId = CORE_LoadWav("data/explossion.wav");
+		CORE_PlayMusic(m_soundId);
+	}
+
+	return bomb;
+}
+
 Entity* createEnemy(int x, int y, Entity* player, int speed, int lives, int damage) {
 	Entity* enemy = new Entity();
 	ComponentTransform* transform = new ComponentTransform(enemy, vmake(x, y), vmake(20, 20));
@@ -506,6 +527,8 @@ Entity* createTurretEnemy(int x, int y, vec2 dir, Entity* player) {
 	transform->init();
 	ComponentRenderable* renderable = new ComponentRenderable(enemy, "data/enemy.png", 1.0f, "data/player.png", 10);
 	renderable->init();
+	ComponentInertialMove* movement = new ComponentInertialMove(enemy, vmake(1,0), 2, true);
+	movement->init();
 	ComponentWeapon* gun = new ComponentWeapon(enemy, Component::ERevolver, 100, 1, -1, 6, -1, 0, true);
 	gun->init();
 	std::vector<vec2> aimDirections = { vmake(1,0), vmake(0,1), vmake(-1, 0), vmake(0, -1) };
@@ -568,13 +591,19 @@ Entity* createHUDMessage(std::string message, vec2 pos, int displayTime) {
 	hudMessageComponent->init();
 	ComponentLife* life = new ComponentLife(hudMessage, 0, displayTime, 0);
 	life->init();
+	if (g_world->m_hudMessage) {
+
+		//mal puede apuntar a otro sitio
+		g_world->removeEntity(g_world->m_hudMessage);
+	}
+	g_world->m_hudMessage = hudMessage;
 	g_world->addEntity(hudMessage);
 	return hudMessage;
 }
 
 void createExplossion(vec2 pos, vec2 size) {
 	Entity* explossionFx = new Entity();
-	ComponentTransform* transform = new ComponentTransform(explossionFx, pos, size);
+	ComponentTransform* transform = new ComponentTransform(explossionFx, pos, vmake(10,10), vmake(2, 2));
 	transform->init();
 	ComponentRenderable* renderable = new ComponentRenderable(explossionFx, "data/bullet.png", 0.5f);
 	renderable->init();
@@ -583,7 +612,7 @@ void createExplossion(vec2 pos, vec2 size) {
 	g_world->addEntity(explossionFx);
 
 	Entity* explossionImpactToEnemies = new Entity();
-	transform = new ComponentTransform(explossionImpactToEnemies, pos, size);
+	transform = new ComponentTransform(explossionImpactToEnemies, pos, vmake(10, 10), vmake(2, 2));
 	transform->init();
 	ComponentCollider* colliderEnemy = new ComponentCollider(explossionImpactToEnemies, ComponentCollider::ECircleCollider, ComponentCollider::EAllied, -5);
 	colliderEnemy->init();
@@ -592,7 +621,7 @@ void createExplossion(vec2 pos, vec2 size) {
 	g_world->addEntity(explossionImpactToEnemies);
 
 	Entity* explossionImpactToPlayer = new Entity();
-	transform = new ComponentTransform(explossionImpactToPlayer, pos, size);
+	transform = new ComponentTransform(explossionImpactToPlayer, pos, vmake(10, 10), vmake(2, 2));
 	transform->init();
 	ComponentCollider* colliderAllied = new ComponentCollider(explossionImpactToPlayer, ComponentCollider::ECircleCollider, ComponentCollider::EEnemy, -1);
 	colliderAllied->init();

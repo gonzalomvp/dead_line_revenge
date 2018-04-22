@@ -59,12 +59,14 @@ protected:
 //=============================================================================
 class ComponentTransform : public Component {
 public:
-	ComponentTransform(Entity* owner, const vec2& pos, const vec2& size) : Component(owner), m_pos(pos), m_size(size) {}
+	ComponentTransform(Entity* owner, const vec2& pos, const vec2& size, const vec2 sizeDelta = vmake(0,0)) : Component(owner), m_pos(pos), m_size(size), m_sizeDelta(sizeDelta) {}
 
+	virtual void run           ();
 	virtual void receiveMessage(Message* message);
 private:
 	vec2 m_pos;
 	vec2 m_size;
+	vec2 m_sizeDelta;
 };
 
 //=============================================================================

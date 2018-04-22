@@ -72,6 +72,7 @@ struct MessageCollision: public Message {
 	Entity* other = nullptr;
 	Component::TFaction faction;
 	int deltaLife;
+	vec2 bounceDirection;
 };
 
 struct MessageWeaponChange : public Message {

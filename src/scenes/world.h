@@ -24,7 +24,7 @@ public:
 	std::vector <Entity*> m_entities;
 	Level* m_level;
 	int m_difficulty;
-
+	Entity* m_hudMessage;
 private:
 	void checkCollisions();
 	void removePendingEntities();
@@ -53,6 +53,7 @@ void createShotgunBullets(vec2 pos, vec2 direction, float speed, int damage, int
 Entity* createMine(Component* weapon, vec2 pos, int damage, ComponentCollider::TFaction faction);
 Entity* createC4(Component* weapon, vec2 pos, int damage, ComponentCollider::TFaction faction);
 Entity* createRocket(Component* weapon, vec2 pos, vec2 direction, float speed, int damage, int range, ComponentCollider::TFaction faction);
+Entity* createNuclearBomb();
 Entity* createWeaponPickup();
 void createExplossion(vec2 pos, vec2 size);
 Entity* createHUDMessage(std::string, vec2 pos, int displayTime);

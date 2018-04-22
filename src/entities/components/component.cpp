@@ -37,6 +37,10 @@ void Component::deactivate() {
 //=============================================================================
 // ComponentTransform class
 //=============================================================================
+void ComponentTransform::run() {
+	m_size = vadd(m_size, m_sizeDelta);
+}
+
 void ComponentTransform::receiveMessage(Message* message) {
 	if (!m_isActive)
 		return;
@@ -46,22 +50,27 @@ void ComponentTransform::receiveMessage(Message* message) {
 		m_pos = msgSetTransform->pos;
 		m_size = msgSetTransform->size;
 		bool outOfBounds = false;
+		vec2 bounceDIrection;
 
 		if (m_pos.x > SCR_WIDTH) {
 			m_pos.x = SCR_WIDTH;
 			outOfBounds = true;
+			bounceDIrection = vmake(-1.0f , 1.0f);
 		}
 		else if (m_pos.x < 0) {
 			m_pos.x = 0;
 			outOfBounds = true;
+			bounceDIrection = vmake(-1.0f, 1.0f);
 		}
 		if (m_pos.y > SCR_HEIGHT) {
 			m_pos.y = SCR_HEIGHT;
 			outOfBounds = true;
+			bounceDIrection = vmake(1.0f, -1.0f);
 		}
 		else if (m_pos.y < 0) {
 			m_pos.y = 0;
 			outOfBounds = true;
+			bounceDIrection = vmake(1.0f, -1.0f);
 		}
 		MessageTransformChanged msgTransformChanged;
 		msgTransformChanged.pos = m_pos;
@@ -72,6 +81,7 @@ void ComponentTransform::receiveMessage(Message* message) {
 			MessageCollision msgCollision;
 			msgCollision.deltaLife = 0;
 			msgCollision.faction = EBounds;
+			msgCollision.bounceDirection = bounceDIrection;
 			m_owner->receiveMessage(&msgCollision);
 		}
 	}
@@ -167,6 +177,12 @@ void ComponentInertialMove::receiveMessage(Message* message) {
 	MessageAddMovement *msgAddMovement = dynamic_cast<MessageAddMovement*>(message);
 	if (msgAddMovement) {
 		m_direction = vadd(m_direction, msgAddMovement->dir);
+	}
+	else {
+		MessageCollision *msgCollision = dynamic_cast<MessageCollision*>(message);
+		if (msgCollision && msgCollision->faction == EBounds) {
+			m_direction = vmake(m_direction.x * msgCollision->bounceDirection.x, m_direction.y * msgCollision->bounceDirection.y);
+		}
 	}
 }
 
@@ -356,6 +372,7 @@ void ComponentWeapon::run() {
 				break;
 			case EMines:
 				createMine(this, messageGetTranform.pos, m_bulletDamage, msgGetCollider.faction);
+				//createNuclearBomb();
 				deactivate();
 				break;
 			case EC4:
