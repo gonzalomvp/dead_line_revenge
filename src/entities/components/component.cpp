@@ -190,7 +190,7 @@ void ComponentInertialMove::receiveMessage(Message* message) {
 // ComponentRenderable class
 //=============================================================================
 ComponentRenderable::ComponentRenderable(Entity* owner, const char* texture, float alpha, const char* hitTexture, int hitTime) : Component(owner), m_texture(texture), m_alpha(alpha), m_hitTexture(hitTexture), m_hitTime(hitTime) {
-	m_hitTimer = 0;
+	m_hitTimer = m_hitTime;
 }
 
 ComponentRenderable::~ComponentRenderable() {
@@ -212,10 +212,18 @@ void ComponentRenderable::run() {
 	m_sprite->setPos(msgGetTransform.pos);
 	m_sprite->setSize(msgGetTransform.size);
 
-	if (m_hitTimer <= m_hitTime) {
+	if (m_hitTimer < m_hitTime) {
 		++m_hitTimer;
+		int hitAnim = m_hitTimer % 2;
+		if (hitAnim) {
+			m_sprite->deactivate();
+		}
+		else {
+			m_sprite->activate();
+		}
 		if (m_hitTimer == m_hitTime) {
-			m_sprite->setTexture(g_graphicsEngine->getTexture(m_texture));
+			//m_sprite->setTexture(g_graphicsEngine->getTexture(m_texture));
+			m_sprite->activate();
 		}
 	}
 }
@@ -232,7 +240,8 @@ void ComponentRenderable::receiveMessage(Message* message) {
 	else {
 		MessageChangeLife *msgChangeLife = dynamic_cast<MessageChangeLife*>(message);
 		if (msgChangeLife && msgChangeLife->deltaLife < 0 && m_hitTexture) {
-			m_sprite->setTexture(g_graphicsEngine->getTexture(m_hitTexture));
+			//m_sprite->setTexture(g_graphicsEngine->getTexture(m_hitTexture));
+			//m_sprite->deactivate();
 			m_hitTimer = 0;
 		}
 	}
