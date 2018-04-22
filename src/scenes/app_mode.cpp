@@ -37,13 +37,12 @@ void AppModeMenu::render() const {
 void AppModeGame::init() {
 	g_world = new World(m_level);
 	g_world->init();
-	g_inputManager->registerEvent(this, IInputManager::TEvent::EPause, 0);
-	ShowCursor(false);
+	
+	//ShowCursor(false);
 }
 
 AppModeGame::~AppModeGame() {
-	g_inputManager->unregisterEvent(this, IInputManager::TEvent::EPause);
-	ShowCursor(true);
+	//ShowCursor(true);
 	g_menuManager->deactivateMenu();
 	delete g_world;
 }
@@ -54,28 +53,9 @@ void AppModeGame::processInput() const {
 
 void AppModeGame::run(float deltaTime) const {
 	g_menuManager->run();
-	if (!m_isPaused) {
-		g_world->run();
-	}
+	g_world->run();
 }
 
 void AppModeGame::render() const {
 	g_graphicsEngine->render();
-}
-
-bool AppModeGame::onEvent(const IInputManager::Event& event) {
-	IInputManager::TEvent eventType = event.getType();
-	if (eventType == IInputManager::TEvent::EPause) {
-		m_isPaused = !m_isPaused;
-		ShowCursor(m_isPaused);
-		if (m_isPaused) {
-			g_world->getPlayer()->deactivate();
-			g_menuManager->activateMenu(MenuManager::EPauseMenu);
-		}
-		else {
-			g_world->getPlayer()->activate();
-			g_menuManager->deactivateMenu();
-		}
-	}
-	return true;
 }

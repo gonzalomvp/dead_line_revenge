@@ -5,7 +5,7 @@
 
 class Level;
 
-class World {
+class World : public IInputManager::IListener {
 public:
 	World(int level);
 	~World();
@@ -14,6 +14,7 @@ public:
 
 	void init();
 	void run();
+	virtual bool onEvent(const IInputManager::Event& event);
 
 	Entity* getPlayer();
 
@@ -33,6 +34,7 @@ private:
 	std::vector <Entity*> m_entitiesToRemove;
 	std::vector <Entity*> m_entitiesToAdd;
 	bool m_isGameOver;
+	bool     m_isPaused;
 
 	//HUD
 	

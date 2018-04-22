@@ -222,12 +222,15 @@ MenuManager::MenuManager() {
 }
 
 void MenuManager::run() {
-	m_activeMenu->run();
+	if (m_activeMenu) {
+		m_activeMenu->run();
+	}
 }
 
 void MenuManager::activateMenu(TMenu menu) {
 	if (m_activeMenu) {
 		m_activeMenu->deactivate();
+		ShowCursor(false);
 	}
 	switch (menu)
 	{
@@ -251,11 +254,13 @@ void MenuManager::activateMenu(TMenu menu) {
 	}
 	m_activeMenu->activate();
 	m_activeMenu->setSelectedItem(0);
-
+	ShowCursor(true);
 }
 
 void MenuManager::deactivateMenu() {
 	m_activeMenu->deactivate();
+	m_activeMenu = nullptr;
+	ShowCursor(false);
 }
 
 void MenuManager::onSelected(MenuItem* menuItem) {

@@ -44,9 +44,9 @@ public:
 //=============================================================================
 // AppModeGame class
 //=============================================================================
-class AppModeGame : public AppMode, public IInputManager::IListener {
+class AppModeGame : public AppMode {
 public:
-	AppModeGame (uint16_t level) : m_level(level), m_isPaused(false) {}
+	AppModeGame (uint16_t level) : m_level(level) {}
 	virtual ~AppModeGame();
 
 	virtual void  init        ();
@@ -54,8 +54,6 @@ public:
 	virtual void  run         (float deltaTime) const;
 	virtual void  render      ()                const;
 	virtual TMode getModeId   ()                const { return EGAME; }
-	virtual bool  onEvent     (const IInputManager::Event& event);
 private:
 	uint16_t m_level;
-	bool     m_isPaused;
 };

@@ -81,12 +81,15 @@ World::~World() {
 	for (size_t i = 0; i < m_entities.size(); ++i) {
 		delete m_entities[i];
 	}
+	g_inputManager->unregisterEvent(this, IInputManager::TEvent::EPause);
 	delete m_level;
 }
 
 void World::init() {
 	m_isGameOver = false;
 	m_pickupTimer = m_pickupSpawnWait;
+	g_inputManager->unregisterEvent(this, IInputManager::TEvent::EPause);
+	g_inputManager->registerEvent(this, IInputManager::TEvent::EPause, 0);
 	//borrar lo anterior
 	for (size_t i = 0; i < m_entities.size(); ++i) {
 		if (m_entities[i]) {
@@ -147,7 +150,7 @@ void World::removeEntity(Entity* entity) {
 }
 
 void World::run() {
-	if (!m_isGameOver) {
+	if (!m_isPaused && !m_isGameOver) {
 		// Render
 		glClear(GL_COLOR_BUFFER_BIT);
 
@@ -304,7 +307,7 @@ Entity* createPlayer(vec2 pos) {
 	Entity* player = new Entity();
 	ComponentTransform* transform = new ComponentTransform(player, pos, vmake(20, 20));
 	transform->init();
-	ComponentRenderable* renderable = new ComponentRenderable(player, "data/player.png", 1.0f, "data/enemy.png", 10);
+	ComponentRenderable* renderable = new ComponentRenderable(player, "data/player.png", 2, 1.0f, "data/enemy.png", 10);
 	renderable->init();
 	ComponentPlayerController* playerControl = new ComponentPlayerController(player, 5);
 	playerControl->init();
@@ -429,7 +432,7 @@ Entity* createEnemy(int x, int y, Entity* player, int speed, int lives, int dama
 	Entity* enemy = new Entity();
 	ComponentTransform* transform = new ComponentTransform(enemy, vmake(x, y), vmake(20, 20));
 	transform->init();
-	ComponentRenderable* renderable = new ComponentRenderable(enemy, "data/enemy.png", 1.0f, "data/player.png", 10);
+	ComponentRenderable* renderable = new ComponentRenderable(enemy, "data/enemy.png", 2, 1.0f, "data/player.png", 10);
 	renderable->init();
 	ComponentAIMelee* ai = new ComponentAIMelee(enemy, player, speed, 0);
 	ai->init();
@@ -446,7 +449,7 @@ Entity* createBigEnemy(int x, int y, Entity* player, int speed, int lives, int d
 	Entity* enemy = new Entity();
 	ComponentTransform* transform = new ComponentTransform(enemy, vmake(x, y), vmake(30, 30));
 	transform->init();
-	ComponentRenderable* renderable = new ComponentRenderable(enemy, "data/enemy.png", 1.0f, "data/player.png", 10);
+	ComponentRenderable* renderable = new ComponentRenderable(enemy, "data/enemy.png", 2, 1.0f, "data/player.png", 10);
 	renderable->init();
 	ComponentAIMelee* ai = new ComponentAIMelee(enemy, player, speed, 0);
 	ai->init();
@@ -461,7 +464,7 @@ Entity* createRangeEnemy(int x, int y, Entity* player) {
 	Entity* enemy = new Entity();
 	ComponentTransform* transform = new ComponentTransform(enemy, vmake(x, y), vmake(20, 20));
 	transform->init();
-	ComponentRenderable* renderable = new ComponentRenderable(enemy, "data/enemy.png", 1.0f, "data/player.png", 10);
+	ComponentRenderable* renderable = new ComponentRenderable(enemy, "data/enemy.png", 2, 1.0f, "data/player.png", 10);
 	renderable->init();
 	ComponentWeapon* gun = new ComponentWeapon(enemy, Component::ERevolver, 40, 1, -1, 6, -1, 0, true);
 	gun->init();
@@ -482,7 +485,7 @@ Entity* createTurretEnemy(int x, int y, vec2 dir, Entity* player) {
 	Entity* enemy = new Entity();
 	ComponentTransform* transform = new ComponentTransform(enemy, vmake(x, y), vmake(20, 20));
 	transform->init();
-	ComponentRenderable* renderable = new ComponentRenderable(enemy, "data/enemy.png", 1.0f, "data/player.png", 10);
+	ComponentRenderable* renderable = new ComponentRenderable(enemy, "data/enemy.png", 2, 1.0f, "data/player.png", 10);
 	renderable->init();
 	ComponentInertialMove* movement = new ComponentInertialMove(enemy, vmake(1,0), 2, true);
 	movement->init();
@@ -602,4 +605,21 @@ bool checkCircleRect(const vec2& circlePos, float circleRadius, const vec2& rect
 bool checkRectRect(const vec2& rectPos1, const vec2& rectSize1, const vec2& rectPos2, const vec2& rectSize2) {
 	return ((isInBounds(rectPos1.x, rectPos2.x, rectPos2.x + rectSize2.x) || isInBounds(rectPos2.x, rectPos1.x, rectPos1.x + rectSize1.x) || rectPos1.x == rectPos2.x) &&
 		(isInBounds(rectPos1.y, rectPos2.y, rectPos2.y + rectSize2.y) || isInBounds(rectPos2.y, rectPos1.y, rectPos1.y + rectSize1.y) || rectPos1.y == rectPos2.y));
+}
+
+bool World::onEvent(const IInputManager::Event& event) {
+	IInputManager::TEvent eventType = event.getType();
+	if (eventType == IInputManager::TEvent::EPause) {
+		m_isPaused = !m_isPaused;
+		//ShowCursor(m_isPaused);
+		if (m_isPaused) {
+			m_player->deactivate();
+			g_menuManager->activateMenu(MenuManager::EPauseMenu);
+		}
+		else {
+			m_player->activate();
+			g_menuManager->deactivateMenu();
+		}
+	}
+	return true;
 }

@@ -189,7 +189,7 @@ void ComponentInertialMove::receiveMessage(Message* message) {
 //=============================================================================
 // ComponentRenderable class
 //=============================================================================
-ComponentRenderable::ComponentRenderable(Entity* owner, const char* texture, float alpha, const char* hitTexture, int hitTime) : Component(owner), m_texture(texture), m_alpha(alpha), m_hitTexture(hitTexture), m_hitTime(hitTime) {
+ComponentRenderable::ComponentRenderable(Entity* owner, const char* texture, int priority, float alpha, const char* hitTexture, int hitTime) : Component(owner), m_texture(texture), m_priority(priority), m_alpha(alpha), m_hitTexture(hitTexture), m_hitTime(hitTime) {
 	m_hitTimer = m_hitTime;
 }
 
@@ -199,7 +199,7 @@ ComponentRenderable::~ComponentRenderable() {
 
 void ComponentRenderable::init() {
 	Component::init();
-	m_sprite = new Sprite(g_graphicsEngine->getTexture(m_texture), 2, m_alpha);
+	m_sprite = new Sprite(g_graphicsEngine->getTexture(m_texture), m_priority, m_alpha);
 	g_graphicsEngine->addGfxEntity(m_sprite);
 }
 
