@@ -2,47 +2,47 @@
 
 AppManager::~AppManager() {
 	if (m_appMode) {
-		m_appMode->deactivate();
 		delete m_appMode;
 	}
 }
 
-void AppManager::processInput() {
+void AppManager::processInput() const {
 	m_appMode->processInput();
 }
 
-void AppManager::run() {
-	m_appMode->run();
+void AppManager::run(float deltaTime) const {
+	m_appMode->run(deltaTime);
 }
 
-void AppManager::render() {
+void AppManager::render() const {
 	m_appMode->render();
 }
 
 void AppManager::applyMode() {
-	ModeId currentMode = MODE_NULL;
-	if (m_appMode)
+	AppMode::TMode currentMode = AppMode::ENULL;
+	if (m_appMode) {
 		currentMode = m_appMode->getModeId();
-
+	}
 	if (m_wantedMode != currentMode) {
 		if (m_appMode) {
-			m_appMode->deactivate();
 			delete m_appMode;
 		}
-
 		switch (m_wantedMode) {
-			case MODE_NULL:
-				break;
-			case MODE_MENU:
+			case AppMode::EMENU:
 				m_appMode = new AppModeMenu();
+				m_appMode->init();
 				break;
-			case MODE_GAME:
+			case AppMode::EGAME:
 				m_appMode = new AppModeGame(m_level);
+				m_appMode->init();
 				break;
-			default:
+			case AppMode::ENULL:
 				break;
-		}
-		if (m_appMode)
-			m_appMode->init();
+		}	
 	}
+}
+
+void AppManager::switchMode(AppMode::TMode wantedMode, uint16_t level) { 
+	m_wantedMode = wantedMode;
+	m_level      = level;
 }

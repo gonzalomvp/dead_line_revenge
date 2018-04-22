@@ -29,15 +29,8 @@ AppModeMenu::AppModeMenu() {
 	g_menuManager->activateMenu(MenuManager::EMainMenu);
 }
 
-
-//ver por qué no funciona con el destructor. Seguramente porque el destructor no es virtual
-void AppModeMenu::deactivate() {
+AppModeMenu::~AppModeMenu() {
 	g_menuManager->deactivateMenu();
-	//for (auto itControls = m_menuItems.begin(); itControls != m_menuItems.end(); ++itControls) {
-	//	delete *itControls;
-	//}
-	//g_inputManager->clearListeners();
-	//g_graphicsEngine->removeAllGfxEntities();
 }
 
 //rehacer
@@ -45,7 +38,7 @@ void AppModeMenu::processInput() {
 	g_inputManager->processInput();
 }
 
-void AppModeMenu::run() {
+void AppModeMenu::run(float deltaTime) {
 	g_menuManager->run();
 }
 
@@ -66,20 +59,21 @@ AppModeGame::AppModeGame(int level) {
 	ShowCursor(false);
 }
 
-void AppModeGame::deactivate() {
+AppModeGame::~AppModeGame() {
 	g_inputManager->unregisterEvent(this, IInputManager::TEvent::EKey);
 	g_inputManager->unregisterEvent(this, IInputManager::TEvent::EPause);
 	//g_inputManager->clearListeners();
 	//g_graphicsEngine->removeAllGfxEntities();
 	ShowCursor(true);
 	delete g_world;
+	g_menuManager->deactivateMenu();
 }
 
 void AppModeGame::processInput() {
 	g_inputManager->processInput();
 }
 
-void AppModeGame::run() {	
+void AppModeGame::run(float deltaTime) {
 	g_menuManager->run();
 	if (!m_isPaused) {
 		g_world->run();

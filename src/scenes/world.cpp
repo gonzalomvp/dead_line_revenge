@@ -509,24 +509,24 @@ Entity* createWeaponPickup() {
 	Component::TWeapon type;
 	switch (randomType)
 	{
-	case 0:
-		type = Component::ERevolver;
-		break;
-	case 1:
-		type = Component::EMachinegun;
-		break;
-	case 2:
-		type = Component::EShotgun;
-		break;
-	case 3:
-		type = Component::EMines;
-		break;
-	case 4:
-		type = Component::EC4;
-		break;
-	case 5:
-		type = Component::ERocketLauncher;
-		break;
+		case 0:
+			type = Component::ERevolver;
+			break;
+		case 1:
+			type = Component::EMachinegun;
+			break;
+		case 2:
+			type = Component::EShotgun;
+			break;
+		case 3:
+			type = Component::EMines;
+			break;
+		case 4:
+			type = Component::EC4;
+			break;
+		case 5:
+			type = Component::ERocketLauncher;
+			break;
 	}
 	ComponentRenderable* renderable = new ComponentRenderable(weaponPickup, "data/SimpleCrate.png");
 	renderable->init();

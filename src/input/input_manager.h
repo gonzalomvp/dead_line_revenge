@@ -61,6 +61,7 @@ public:
 
 	virtual int registerEvent(IListener*, TEvent e, int priority) = 0;
 	virtual int unregisterEvent(IListener*, TEvent event) = 0;
+	virtual void addEvent(Event* event) = 0;
 	virtual void processInput() = 0;
 };
 
@@ -71,7 +72,7 @@ public:
 	virtual int registerEvent(IListener*, TEvent e, int priority);
 	virtual int unregisterEvent(IListener*, TEvent event);
 	virtual void processInput();
-	void addEvent(Event* event);
+	virtual void addEvent(Event* event);
 	//void clearListeners() { m_listeners.clear(); }
 
 private:

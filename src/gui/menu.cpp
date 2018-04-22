@@ -265,17 +265,17 @@ void MenuManager::onSelected(MenuItem* menuItem) {
 		activateMenu(EOptionsMenu);
 	}
 	else if (menuItem->getName() == "MAIN_MENU") {
-		g_appManager->switchMode(ModeId::MODE_MENU);
+		g_appManager->switchMode(AppMode::EMENU);
 		activateMenu(EMainMenu);
 	}
 	else if (menuItem->getName() == "EASY") {
-		g_appManager->switchMode(MODE_GAME, 1);
+		g_appManager->switchMode(AppMode::EGAME, 1);
 	}
 	else if (menuItem->getName() == "MEDIUM") {
-		g_appManager->switchMode(MODE_GAME, 2);
+		g_appManager->switchMode(AppMode::EGAME, 2);
 	}
 	else if (menuItem->getName() == "HARD") {
-		g_appManager->switchMode(MODE_GAME, 3);
+		g_appManager->switchMode(AppMode::EGAME, 3);
 	}
 	else if (menuItem->getName() == "SETTINGS_MUSIC") {
 		g_settings.music = !g_settings.music;
@@ -296,7 +296,7 @@ void MenuManager::onSelected(MenuItem* menuItem) {
 		g_inputManager->addEvent(pauseEvent);
 	}
 	else if (menuItem->getName() == "ABANDON") {
-		g_appManager->switchMode(MODE_MENU);
+		g_appManager->switchMode(AppMode::EMENU);
 	}
 	else if (menuItem->getName() == "RETRY") {
 		g_world->init();

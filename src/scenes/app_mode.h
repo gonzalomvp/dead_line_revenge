@@ -8,32 +8,32 @@ class Menu;
 class MenuItem;
 class Text;
 
-enum ModeId {
-	MODE_NULL,
-	MODE_MENU,
-	MODE_GAME
-};
-
 class AppMode {
 public:
+	enum TMode {
+		ENULL,
+		EMENU,
+		EGAME,
+	};
+
 	AppMode                    () {}
+	virtual ~AppMode() {}
 	virtual void   processInput() = 0;
-	virtual void   run         () = 0;
+	virtual void   run         (float deltaTime) = 0;
 	virtual void   render      () = 0;
 	virtual void   init        () = 0;
-	virtual void   deactivate  () = 0;
-	virtual ModeId getModeId   () = 0;
+	virtual TMode getModeId   () = 0;
 };
 
 class AppModeMenu : public AppMode {
 public:
 	AppModeMenu();
+	virtual ~AppModeMenu();
 	virtual void   processInput();
-	virtual void   run();
+	virtual void   run(float deltaTime);
 	virtual void   render();
 	virtual void   init() {}
-	virtual void   deactivate();
-	virtual ModeId getModeId() { return MODE_MENU; }
+	virtual TMode getModeId() { return EMENU; }
 
 private:
 	Menu* m_mainMenu;
@@ -47,12 +47,12 @@ private:
 class AppModeGame : public AppMode, public IInputManager::IListener {
 public:
 	AppModeGame                (int level);
+	virtual ~AppModeGame();
 	virtual void   processInput();
-	virtual void   run         ();
+	virtual void   run         (float deltaTime);
 	virtual void   render      ();
 	virtual void   init        (){}
-	virtual void   deactivate  ();
-	virtual ModeId getModeId   (){ return MODE_GAME; }
+	virtual TMode getModeId   (){ return EGAME; }
 	virtual bool   onEvent     (const IInputManager::Event&);
 private:
 	bool m_isPaused;
