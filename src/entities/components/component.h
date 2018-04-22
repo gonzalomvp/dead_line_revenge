@@ -209,13 +209,14 @@ private:
 //=============================================================================
 class ComponentAIMelee : public Component {
 public:
-	ComponentAIMelee(Entity* owner, Entity* player, float speed, float maxDistance) : Component(owner), m_player(player), m_speed(speed), m_maxDistance(maxDistance) {}
+	ComponentAIMelee(Entity* owner, Entity* player, float speed, float maxDistance);
 	
 	virtual void run();
 private:
 	Entity* m_player;
 	float   m_speed;
 	float   m_maxDistance;
+	vec2    m_offset;
 };
 
 //=============================================================================

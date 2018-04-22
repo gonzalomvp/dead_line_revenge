@@ -637,6 +637,9 @@ void C_Target::deactivate() {
 //=============================================================================
 // ComponentAIMelee class
 //=============================================================================
+ComponentAIMelee::ComponentAIMelee(Entity* owner, Entity* player, float speed, float maxDistance) : Component(owner), m_player(player), m_speed(speed), m_maxDistance(maxDistance) {
+	m_offset = vmake(CORE_FRand(-20, 20), CORE_FRand(-20, 20));
+}
 void ComponentAIMelee::run() {
 	if (!m_isActive)
 		return;
@@ -645,7 +648,7 @@ void ComponentAIMelee::run() {
 	m_owner->receiveMessage(&messageSelfPos);
 	MessageGetTransform messagePlayerPos;
 	m_player->receiveMessage(&messagePlayerPos);
-	vec2 direction = vsub(messagePlayerPos.pos, messageSelfPos.pos);
+	vec2 direction = vsub(vadd(messagePlayerPos.pos, m_offset), messageSelfPos.pos);
 
 	if (vlen(direction) > m_maxDistance) {
 		MessageSetTransform msgSetTransform;
