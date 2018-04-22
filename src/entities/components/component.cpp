@@ -835,7 +835,7 @@ void ComponentPoints::receiveMessage(Message* message) {
 
 	MessageDestroy *msgDestroy = dynamic_cast<MessageDestroy*>(message);
 	if (msgDestroy) {
-		g_world->m_level->addPoints(m_points);
+		g_world->addPoints(m_points);
 	}
 }
 
@@ -931,7 +931,7 @@ void ComponentHUD::run() {
 	m_owner->receiveMessage(&msgLife);
 	m_life->setText(std::to_string(msgLife.currentLife));
 	
-	m_score->setText("- " + std::to_string(g_world->m_level->m_score));
+	m_score->setText("- " + std::to_string(g_world->getScore()));
 
 	MessageAmmoInfo msgAmmo;
 	m_owner->receiveMessage(&msgAmmo);

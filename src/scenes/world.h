@@ -1,43 +1,75 @@
 #pragma once
-//#include <vector>
-#include "../entities/entity.h"
-#include "../entities/components/component.h"
 
+#include "../input/input_manager.h"
+
+class Entity;
 class Level;
 
 class World : public IInputManager::IListener {
 public:
-	World(int level);
+	enum TEnemyType {
+		EMelee,
+		EBig,
+		ERange,
+	};
+
+	struct TEnemyData {
+		TEnemyType type;
+		int speed;
+		int life;
+		int damage;
+		float spawnProbability;
+	};
+
+	World(uint16_t level);
 	~World();
-	void addEntity(Entity* entity);
-	void removeEntity(Entity* entity);
 
 	void init();
-	void run();
+	void run (float deltaTime);
+
+	void addEntity   (Entity* entity);
+	void removeEntity(Entity* entity);
+	
 	virtual bool onEvent(const IInputManager::Event& event);
 
-	Entity* getPlayer();
+	void addPoints(uint16_t points) { m_score += points; }
+	uint16_t getScore() const { return m_score; }
 
-	Entity* m_player;
-	Entity* m_pickup;
-	int m_pickupTimer;
-	int m_pickupSpawnWait;
-	std::vector <Entity*> m_entities;
-	Level* m_level;
-	int m_difficulty;
+	Entity* getPlayer();
 	Entity* m_hudMessage;
 private:
-	void checkCollisions();
+	void checkCollisions      ();
 	void removePendingEntities();
-	void addPendingEntities();
+	void addPendingEntities   ();
 
+	void spawnEnemy();
+	void killEnemy(Entity* entity);
+
+	bool loadLevel(const char* fileName);
+
+	uint16_t              m_level;
+	Entity*               m_player;
+	Entity*               m_pickup;
+	std::vector <Entity*> m_entities;
 	std::vector <Entity*> m_entitiesToRemove;
 	std::vector <Entity*> m_entitiesToAdd;
-	bool m_isGameOver;
-	bool     m_isPaused;
+	std::vector <Entity*> m_enemies;
+	bool                  m_isGameOver;
+	bool                  m_isPaused;
 
-	//HUD
-	
+	// Game rules
+	uint16_t m_score;
+	int m_pickupSpawnWait;
+	int m_enemySpawnWait;
+	int m_spawnPoints;
+	int m_maxEnemies;
+
+	std::vector<TEnemyData> m_enemyData;
+	std::vector<vec2>       m_spawnData;
+
+	// Timers
+	int m_pickupSpawnTimer;
+	int m_enemySpawnTimer;
 };
 
 // Collision utils

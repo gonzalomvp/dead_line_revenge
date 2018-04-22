@@ -50,7 +50,7 @@ void AppModeGame::processInput() const {
 
 void AppModeGame::run(float deltaTime) const {
 	g_menuManager->run();
-	g_world->run();
+	g_world->run(deltaTime);
 }
 
 void AppModeGame::render() const {

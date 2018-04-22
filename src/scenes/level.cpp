@@ -4,6 +4,7 @@
 #include "world.h"
 #include "rapidjson/document.h"
 #include "rapidjson/filereadstream.h"
+#include "../entities/entity.h"
 
 #include <fstream>
 

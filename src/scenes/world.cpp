@@ -9,9 +9,14 @@
 #include "../entities/message.h"
 #include "../globals.h"
 #include "app_manager.h"
-#include "level.h"
 #include "../gui/string_manager.h"
 #include "../gui/menu.h"
+
+#include "rapidjson/document.h"
+#include "rapidjson/filereadstream.h"
+#include <fstream>
+
+using namespace rapidjson;
 
 struct Ball
 {
@@ -67,10 +72,23 @@ GLuint bulletTexture;
 GLuint enemyTexture;
 
 
-World::World(int level) {
-	m_isGameOver = false;
-	m_difficulty = level;
-	m_pickupSpawnWait = 10;
+World::World(uint16_t level) {
+	m_level       = level;
+	m_player      = nullptr;
+	m_pickup      = nullptr;
+	m_isGameOver  = false;
+	m_isPaused    = false;
+	m_score       = 0;
+
+	//sacar de aqui
+	m_spawnData.push_back(vmake(SCR_WIDTH / 2.0f, SCR_HEIGHT));
+	m_spawnData.push_back(vmake(SCR_WIDTH, SCR_HEIGHT / 2.0f));
+	m_spawnData.push_back(vmake(0.0f, SCR_HEIGHT / 2.0f));
+	m_spawnData.push_back(vmake(SCR_WIDTH / 2.0f, 0.0f));
+
+	//revisar
+	//m_pickupSpawnTimer = 0;
+	m_enemySpawnTimer = 0;
 }
 
 World::~World() {
@@ -82,12 +100,11 @@ World::~World() {
 		delete m_entities[i];
 	}
 	g_inputManager->unregisterEvent(this, IInputManager::TEvent::EPause);
-	delete m_level;
 }
 
 void World::init() {
 	m_isGameOver = false;
-	m_pickupTimer = m_pickupSpawnWait;
+	m_pickupSpawnTimer = m_pickupSpawnWait;
 	g_inputManager->unregisterEvent(this, IInputManager::TEvent::EPause);
 	g_inputManager->registerEvent(this, IInputManager::TEvent::EPause, 0);
 	//borrar lo anterior
@@ -99,7 +116,7 @@ void World::init() {
 	m_entities.clear();
 
 	char *fileName = nullptr;
-	switch (m_difficulty)
+	switch (m_level)
 	{
 		case 1:
 			fileName = "data/level1.json";
@@ -111,6 +128,8 @@ void World::init() {
 			fileName = "data/level3.json";
 			break;
 	}
+
+	loadLevel(fileName);
 
 	m_player = Entity::createPlayer(vmake(SCR_WIDTH * 0.5f, SCR_HEIGHT * 0.5f));
 	addEntity(m_player);
@@ -125,8 +144,6 @@ void World::init() {
 	bullet.vel = vmake(0, 0);
 	enemy.pos = vmake(0, 0);
 
-	m_level = Level::loadLevel(fileName);
-	//m_level = new Level();
 	addEntity(Entity::createTurretEnemy(100, SCR_HEIGHT - 100, vmake(0, -1), m_player));
 	addEntity(Entity::createTurretEnemy(SCR_WIDTH - 100, 100, vmake(-1, 0), m_player));
 
@@ -149,7 +166,7 @@ void World::removeEntity(Entity* entity) {
 	//delete entity;
 }
 
-void World::run() {
+void World::run(float deltaTime) {
 	if (!m_isPaused && !m_isGameOver) {
 		// Render
 		glClear(GL_COLOR_BUFFER_BIT);
@@ -162,15 +179,22 @@ void World::run() {
 		checkCollisions();
 		removePendingEntities();
 		addPendingEntities();
-		m_level->run();
 
 		//Pick up
-		if (m_pickupTimer <= m_pickupSpawnWait) {
-			++m_pickupTimer;
-			if (m_pickupTimer == m_pickupSpawnWait) {
+		if (m_pickupSpawnTimer <= m_pickupSpawnWait) {
+			++m_pickupSpawnTimer;
+			if (m_pickupSpawnTimer == m_pickupSpawnWait) {
 				m_pickup = Entity::createWeaponPickup();
 				addEntity(m_pickup);
 			}
+		}
+
+		//enemy
+		++m_enemySpawnTimer;
+
+		if (m_enemySpawnTimer >= m_enemySpawnWait && m_enemies.size() < m_maxEnemies) {
+			spawnEnemy();
+			m_enemySpawnTimer = 0;
 		}
 	}
 }
@@ -260,7 +284,7 @@ void World::checkCollisions() {
 void World::removePendingEntities() {
 	for (auto it = m_entitiesToRemove.begin(); it != m_entitiesToRemove.end(); ++it)
 	{
-		m_level->killEnemy(*it);
+		killEnemy(*it);
 		auto it2 = m_entities.begin();
 		bool bErased = false;
 		while (!bErased && (it2 != m_entities.end()))
@@ -279,7 +303,7 @@ void World::removePendingEntities() {
 		//Poner antes
 		if (*it == m_player) {
 			m_isGameOver = true;
-			std::string scoreMessage = g_stringManager->getText("LTEXT_GUI_SCORE_MESSAGE") + std::to_string(m_level->m_score);
+			std::string scoreMessage = g_stringManager->getText("LTEXT_GUI_SCORE_MESSAGE") + std::to_string(m_score);
 			g_menuManager->getMenu(MenuManager::EGameOverMenu)->setTitle(scoreMessage.c_str());
 			g_menuManager->activateMenu(MenuManager::EGameOverMenu);
 			for (size_t i = 0; i < m_entities.size(); ++i) {
@@ -289,7 +313,7 @@ void World::removePendingEntities() {
 			m_player = nullptr;
 		}
 		else if (*it == m_pickup) {
-			m_pickupTimer = 0;
+			m_pickupSpawnTimer = 0;
 			m_pickup = nullptr;
 		}
 	}
@@ -328,4 +352,94 @@ bool World::onEvent(const IInputManager::Event& event) {
 		}
 	}
 	return true;
+}
+
+bool World::loadLevel(const char* fileName) {
+	FILE* file = fopen(fileName, "r");
+	if (!file) return false;
+
+	fseek(file, 0, SEEK_END);
+	std::vector<char> fileData(ftell(file));
+	fseek(file, 0, SEEK_SET);
+	FileReadStream is(file, fileData.data(), fileData.size());
+	Document doc;
+	doc.ParseStream(is);
+
+	//leer de fichero
+	m_pickupSpawnWait = 300;
+	m_pickupSpawnTimer = m_pickupSpawnWait;
+	float totalProbability = 0.0f;
+	int spawnPoints = doc["spawnPoints"].GetInt();
+	int spawnFrecuency = doc["spawnFrecuency"].GetInt();
+	int concurrentEnemies = doc["concurrentEnemies"].GetInt();
+
+	TEnemyData meleeEnemy;
+	meleeEnemy.type = EMelee;
+	meleeEnemy.speed = doc["meleeEnemy"].GetObject()["speed"].GetInt();
+	meleeEnemy.life = doc["meleeEnemy"].GetObject()["life"].GetInt();
+	meleeEnemy.damage = doc["meleeEnemy"].GetObject()["damage"].GetInt();
+	totalProbability += doc["meleeEnemy"].GetObject()["spawnProbability"].GetFloat();
+	meleeEnemy.spawnProbability = totalProbability;
+
+	TEnemyData bigEnemy;
+	bigEnemy.type = EBig;
+	bigEnemy.speed = doc["bigEnemy"].GetObject()["speed"].GetInt();
+	bigEnemy.life = doc["bigEnemy"].GetObject()["life"].GetInt();
+	bigEnemy.damage = doc["bigEnemy"].GetObject()["damage"].GetInt();
+	totalProbability += doc["bigEnemy"].GetObject()["spawnProbability"].GetFloat();
+	bigEnemy.spawnProbability = totalProbability;
+
+	TEnemyData rangeEnemy;
+	rangeEnemy.type = ERange;
+	rangeEnemy.speed = doc["rangeEnemy"].GetObject()["speed"].GetInt();
+	rangeEnemy.life = doc["rangeEnemy"].GetObject()["life"].GetInt();
+	rangeEnemy.damage = doc["rangeEnemy"].GetObject()["damage"].GetInt();
+	totalProbability += doc["rangeEnemy"].GetObject()["spawnProbability"].GetFloat();
+	rangeEnemy.spawnProbability = totalProbability;
+
+	m_spawnPoints = spawnPoints;
+	m_enemySpawnWait = spawnFrecuency;
+	m_maxEnemies = concurrentEnemies;
+
+	m_enemyData.push_back(meleeEnemy);
+	m_enemyData.push_back(bigEnemy);
+	m_enemyData.push_back(rangeEnemy);
+
+	fclose(file);
+	return true;
+}
+
+void World::spawnEnemy() {
+	vec2 spawnLocation = m_spawnData[rand() % m_spawnPoints];
+	float enemyType = CORE_FRand(0.0f, 1.0f);
+	Entity* enemy = nullptr;
+	for (size_t i = 0; i < m_enemyData.size(); i++)
+	{
+		if (enemyType <= m_enemyData[i].spawnProbability) {
+			switch (m_enemyData[i].type) {
+				case EMelee:
+					enemy = Entity::createEnemy(spawnLocation.x, spawnLocation.y, g_world->getPlayer(), m_enemyData[i].speed, m_enemyData[i].life, m_enemyData[i].damage);
+					break;
+				case EBig:
+					enemy = Entity::createBigEnemy(spawnLocation.x, spawnLocation.y, g_world->getPlayer(), m_enemyData[i].speed, m_enemyData[i].life, m_enemyData[i].damage);
+					break;
+				case ERange:
+					enemy = Entity::createRangeEnemy(spawnLocation.x, spawnLocation.y, g_world->getPlayer());
+					break;
+			}
+			break;
+		}
+	}
+
+	g_world->addEntity(enemy);
+	m_enemies.push_back(enemy);
+}
+
+void World::killEnemy(Entity* entity) {
+	for (auto itEnemy = m_enemies.begin(); itEnemy != m_enemies.end(); ++itEnemy) {
+		if (*itEnemy == entity) {
+			m_enemies.erase(itEnemy);
+			break;
+		}
+	}
 }

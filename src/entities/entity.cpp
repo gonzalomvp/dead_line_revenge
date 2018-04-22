@@ -299,7 +299,7 @@ void Entity::createExplossion(vec2 pos, vec2 size) {
 	Entity* explossionFx = new Entity();
 	ComponentTransform* transform = new ComponentTransform(explossionFx, pos, vmake(10, 10), vmake(2, 2));
 	transform->init();
-	ComponentRenderable* renderable = new ComponentRenderable(explossionFx, "data/bullet.png", 0.5f);
+	ComponentRenderable* renderable = new ComponentRenderable(explossionFx, "data/bullet.png", 2, 0.5f);
 	renderable->init();
 	ComponentLife* life = new ComponentLife(explossionFx, -1, 50, 0);
 	life->init();
