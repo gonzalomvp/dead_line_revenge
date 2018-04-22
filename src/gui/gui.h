@@ -1,9 +1,10 @@
 #pragma once
 
-#include "../common/stdafx.h"
-#include "../common/sys.h"
 #include "../common/core.h"
 #include "../common/font.h"
+#include "../common/stdafx.h"
+#include "../common/sys.h"
+
 
 #include "../input/input_manager.h"
 

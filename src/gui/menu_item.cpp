@@ -1,3 +1,4 @@
+#include "../common/stdafx.h"
 #include "menu_item.h"
 #include "string_manager.h"
 

@@ -1,3 +1,4 @@
+#include "../common/stdafx.h"
 #include "level.h"
 #include "../globals.h"
 #include "world.h"

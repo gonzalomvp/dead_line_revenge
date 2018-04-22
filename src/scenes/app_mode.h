@@ -1,13 +1,15 @@
 #pragma once
 
-#include "../gui/gui.h"
+#include "../common/stdafx.h"
 #include "../input/input_manager.h"
-#include "../gui/menu.h"
 
 class Menu;
 class MenuItem;
 class Text;
 
+//=============================================================================
+// AppMode class
+//=============================================================================
 class AppMode {
 public:
 	enum TMode {

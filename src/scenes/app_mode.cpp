@@ -1,3 +1,4 @@
+#include "../common/stdafx.h"
 #include "app_mode.h"
 #include "../globals.h"
 #include "../common/stdafx.h"

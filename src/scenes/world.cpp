@@ -11,6 +11,7 @@
 #include "app_manager.h"
 #include "level.h"
 #include "../gui/string_manager.h"
+#include "../gui/menu.h"
 
 struct Ball
 {

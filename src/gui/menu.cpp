@@ -1,3 +1,4 @@
+#include "../common/stdafx.h"
 #include "menu.h"
 #include "menu_item.h"
 #include "../globals.h"

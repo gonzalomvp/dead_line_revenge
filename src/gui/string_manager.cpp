@@ -1,3 +1,4 @@
+#include "../common/stdafx.h"
 #include "string_manager.h"
 #include <fstream>
 

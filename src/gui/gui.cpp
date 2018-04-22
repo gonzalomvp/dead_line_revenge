@@ -1,3 +1,4 @@
+#include "../common/stdafx.h"
 #include "gui.h"
 #include "../globals.h"
 #include "../engine/graphics_engine.h"

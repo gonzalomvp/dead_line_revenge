@@ -1,3 +1,4 @@
+#include "../common/stdafx.h"
 #include "app_manager.h"
 
 AppManager::~AppManager() {
