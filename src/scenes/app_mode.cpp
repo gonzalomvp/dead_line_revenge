@@ -1,32 +1,17 @@
 #include "../common/stdafx.h"
 #include "app_mode.h"
-#include "../globals.h"
-#include "../common/stdafx.h"
-#include "../common/sys.h"
-#include "../common/core.h"
-#include "../common/font.h"
-#include "../scenes/world.h"
-#include "app_manager.h"
+
 #include "../engine/graphics_engine.h"
-#include "../input/input_manager.h"
+#include "../globals.h"
 #include "../gui/menu.h"
-#include "../gui/menu_item.h"
-#include "../gui/string_manager.h"
+#include "../scenes/world.h"
 
 World* g_world;
 
 //=============================================================================
-// AppModeMainMenu class
-
-AppModeMenu::AppModeMenu() {
-	//m_mainMenu = Menu::createMainMenu();
-	//m_mainMenu->addListener(this);
-	//m_playMenu = Menu::createPlayMenu();
-	//m_playMenu->addListener(this);
-	//m_optionsMenu= Menu::createOptionsMenu();
-	//m_optionsMenu->addListener(this);
-	//m_activeMenu = m_mainMenu;
-	//m_activeMenu->activate();
+// AppModeMenu class
+//=============================================================================
+void AppModeMenu::init() {
 	g_menuManager->activateMenu(MenuManager::EMainMenu);
 }
 
@@ -34,64 +19,55 @@ AppModeMenu::~AppModeMenu() {
 	g_menuManager->deactivateMenu();
 }
 
-//rehacer
-void AppModeMenu::processInput() {
+void AppModeMenu::processInput() const {
 	g_inputManager->processInput();
 }
 
-void AppModeMenu::run(float deltaTime) {
+void AppModeMenu::run(float deltaTime) const {
 	g_menuManager->run();
 }
 
-void AppModeMenu::render() {
+void AppModeMenu::render() const {
 	g_graphicsEngine->render();
 }
 
-
 //=============================================================================
 // AppModeGame class
-
-AppModeGame::AppModeGame(int level) {
-	g_world = new World(level);
+//=============================================================================
+void AppModeGame::init() {
+	g_world = new World(m_level);
 	g_world->init();
-	m_isPaused = false;
-	g_inputManager->registerEvent(this, IInputManager::TEvent::EKey, 0);
 	g_inputManager->registerEvent(this, IInputManager::TEvent::EPause, 0);
 	ShowCursor(false);
 }
 
 AppModeGame::~AppModeGame() {
-	g_inputManager->unregisterEvent(this, IInputManager::TEvent::EKey);
 	g_inputManager->unregisterEvent(this, IInputManager::TEvent::EPause);
-	//g_inputManager->clearListeners();
-	//g_graphicsEngine->removeAllGfxEntities();
 	ShowCursor(true);
-	delete g_world;
 	g_menuManager->deactivateMenu();
+	delete g_world;
 }
 
-void AppModeGame::processInput() {
+void AppModeGame::processInput() const {
 	g_inputManager->processInput();
 }
 
-void AppModeGame::run(float deltaTime) {
+void AppModeGame::run(float deltaTime) const {
 	g_menuManager->run();
 	if (!m_isPaused) {
 		g_world->run();
 	}
 }
 
-void AppModeGame::render() {
+void AppModeGame::render() const {
 	g_graphicsEngine->render();
 }
 
 bool AppModeGame::onEvent(const IInputManager::Event& event) {
 	IInputManager::TEvent eventType = event.getType();
-	
 	if (eventType == IInputManager::TEvent::EPause) {
 		m_isPaused = !m_isPaused;
 		ShowCursor(m_isPaused);
-
 		if (m_isPaused) {
 			g_world->getPlayer()->deactivate();
 			g_menuManager->activateMenu(MenuManager::EPauseMenu);

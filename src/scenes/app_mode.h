@@ -18,44 +18,44 @@ public:
 		EGAME,
 	};
 
-	AppMode                    () {}
 	virtual ~AppMode() {}
-	virtual void   processInput() = 0;
-	virtual void   run         (float deltaTime) = 0;
-	virtual void   render      () = 0;
-	virtual void   init        () = 0;
-	virtual TMode getModeId   () = 0;
+
+	virtual void  init        ()                      = 0;
+	virtual void  processInput()                const = 0;
+	virtual void  run         (float deltaTime) const = 0;
+	virtual void  render      ()                const = 0;
+	virtual TMode getModeId   ()                const = 0;
 };
 
+//=============================================================================
+// AppModeMenu class
+//=============================================================================
 class AppModeMenu : public AppMode {
 public:
-	AppModeMenu();
 	virtual ~AppModeMenu();
-	virtual void   processInput();
-	virtual void   run(float deltaTime);
-	virtual void   render();
-	virtual void   init() {}
-	virtual TMode getModeId() { return EMENU; }
 
-private:
-	Menu* m_mainMenu;
-	Menu* m_playMenu;
-	Menu* m_optionsMenu;
-	Menu* m_activeMenu;
-	std::vector<MenuItem*> m_menuItems;
-	int m_seletedItem;
+	virtual void  init        ();
+	virtual void  processInput()                const;
+	virtual void  run         (float deltaTime) const;
+	virtual void  render      ()                const;
+	virtual TMode getModeId   ()                const { return EMENU; }
 };
 
+//=============================================================================
+// AppModeGame class
+//=============================================================================
 class AppModeGame : public AppMode, public IInputManager::IListener {
 public:
-	AppModeGame                (int level);
+	AppModeGame (uint16_t level) : m_level(level), m_isPaused(false) {}
 	virtual ~AppModeGame();
-	virtual void   processInput();
-	virtual void   run         (float deltaTime);
-	virtual void   render      ();
-	virtual void   init        (){}
-	virtual TMode getModeId   (){ return EGAME; }
-	virtual bool   onEvent     (const IInputManager::Event&);
+
+	virtual void  init        ();
+	virtual void  processInput()                const;
+	virtual void  run         (float deltaTime) const;
+	virtual void  render      ()                const;
+	virtual TMode getModeId   ()                const { return EGAME; }
+	virtual bool  onEvent     (const IInputManager::Event& event);
 private:
-	bool m_isPaused;
+	uint16_t m_level;
+	bool     m_isPaused;
 };

@@ -3,10 +3,14 @@
 #include "./engine/graphics_engine.h"
 #include "./input/input_manager.h"
 #include "./gui/string_manager.h"
+#include "./gui/gui.h"
+#include "./gui/menu.h"
+
+#include <ctime>
 
 // Global variables
 GraphicsEngine* g_graphicsEngine;
-InputManager*   g_inputManager;
+IInputManager*   g_inputManager;
 AppManager* g_appManager;
 StringManager*  g_stringManager;
 GUIManager*     g_guiManager;
@@ -28,12 +32,33 @@ int Main(void) {
 	g_inputManager = new InputManager();
 	g_menuManager = new MenuManager();
 	g_appManager =  new AppManager();
-	g_appManager->switchMode(MODE_MENU);
+	g_appManager->switchMode(AppMode::EMENU);
+
+	Text* fps = new Text("", 1, vmake(600, 10));
+	g_graphicsEngine->addGfxEntity(fps);
 	
+	double deltaTime = 0;
+	int frameCount = 0;
+	/* initialize random seed: */
+	clock_t beginTime = clock();
+	srand(beginTime);
+	clock_t endTime;
+	int i = 30;
+
 	while (!SYS_GottaQuit()) {
+		--i;
+		endTime = clock();
+		float deltaTime = endTime - beginTime;
+		int sleepTime = 17 - deltaTime;
+		beginTime = endTime;
+		if (i == 0) {
+			i = 30;
+			fps->setText(std::to_string((int)(1.0f / (deltaTime / 1000))));
+		}
+
 		g_appManager->applyMode();
 		g_appManager->processInput();
-		g_appManager->run();
+		g_appManager->run(deltaTime);
 		g_appManager->render();
 
 		// Keep system running
