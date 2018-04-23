@@ -848,7 +848,7 @@ void ComponentWeaponPickup::receiveMessage(Message* message) {
 		return;
 
 	MessageCollision *msgCollision = dynamic_cast<MessageCollision*>(message);
-	if (msgCollision && g_world->getPlayer() == msgCollision->other) {
+	if (msgCollision && (msgCollision->other->getType() == Entity::EPlayer)) {
 		MessageWeaponChange msgWeapon;
 		msgWeapon.weapon = m_weapon;
 		msgCollision->other->receiveMessage(&msgWeapon);

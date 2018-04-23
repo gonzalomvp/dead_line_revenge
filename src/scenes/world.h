@@ -28,11 +28,11 @@ public:
 	void         run          (float deltaTime);
 	void         addEntity    (Entity* entity);
 	void         removeEntity (Entity* entity);
-	virtual bool onEvent      (const IInputManager::Event& event);
 	uint16_t     getScore     () const { return m_score; }
 	Entity*      getPlayer    () const { return m_player; }
 	Entity*      getHUDMessage() const { return m_hudMessage; }
 	void         addPoints    (uint16_t points)    { m_score += points; }
+	virtual bool onEvent      (const IInputManager::Event& event);
 private:
 	bool loadLevel            (const char* fileName);
 	void checkCollisions      ();

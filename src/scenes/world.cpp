@@ -352,13 +352,13 @@ void World::spawnEnemy() {
 		if (enemyType <= m_enemyData[i].spawnProbability) {
 			switch (m_enemyData[i].type) {
 				case EMelee:
-					enemy = Entity::createEnemy(spawnLocation.x, spawnLocation.y, g_world->getPlayer(), m_enemyData[i].speed, m_enemyData[i].life, m_enemyData[i].damage);
+					enemy = Entity::createEnemy(spawnLocation.x, spawnLocation.y, m_player, m_enemyData[i].speed, m_enemyData[i].life, m_enemyData[i].damage);
 					break;
 				case EBig:
-					enemy = Entity::createBigEnemy(spawnLocation.x, spawnLocation.y, g_world->getPlayer(), m_enemyData[i].speed, m_enemyData[i].life, m_enemyData[i].damage);
+					enemy = Entity::createBigEnemy(spawnLocation.x, spawnLocation.y, m_player, m_enemyData[i].speed, m_enemyData[i].life, m_enemyData[i].damage);
 					break;
 				case ERange:
-					enemy = Entity::createRangeEnemy(spawnLocation.x, spawnLocation.y, g_world->getPlayer());
+					enemy = Entity::createRangeEnemy(spawnLocation.x, spawnLocation.y, m_player);
 					break;
 			}
 			break;
