@@ -1,14 +1,9 @@
 #include "../common/stdafx.h"
-#include "../common/sys.h"
-#include "../common/core.h"
-#include "../common/font.h"
-#include "../gui/gui.h"
 #include "../scenes/world.h"
+
 #include "../entities/entity.h"
 #include "../entities/components/component.h"
 #include "../entities/message.h"
-#include "../globals.h"
-#include "app_manager.h"
 #include "../gui/string_manager.h"
 #include "../gui/menu.h"
 
@@ -18,106 +13,25 @@
 
 using namespace rapidjson;
 
-struct Ball
-{
-	vec2   pos;
-	vec2   vel;
-	GLuint gfx;
-	float  radius;
-};
-
-struct Bullet
-{
-	vec2   pos;
-	vec2   vel;
-	GLuint gfx;
-};
-
-struct Enemy
-{
-	vec2   pos;
-	vec2   vel;
-	GLuint gfx;
-};
-
-#define NUM_BALLS 20
-Ball balls[NUM_BALLS];
-
-#define MAX_BALL_SPEED 8.f
-
-//-----------------------------------------------------------------------------
-
-
-
-// Init game state
-vec2 playerPos = vmake(100, 100);
-vec2 targetPos = vadd(playerPos, vmake(50, 50));
-vec2 targetDir = vsub(targetPos, playerPos);
-vec2 bulletPos = vmake(-1, -1);
-ivec2 mousePos = SYS_MousePos();
-vec2 oldMousePos = vmake(mousePos.x, mousePos.y);
-vec2 newMousePos = oldMousePos;
-
-Bullet bullet;
-Bullet enemybullet;
-Enemy enemy;
-
-// Load textures
-GLuint texbkg;
-GLuint texlargeball;
-GLuint texsmallball;
-GLuint targetTexture;
-GLuint playerTexture;
-GLuint bulletTexture;
-GLuint enemyTexture;
-
-
-World::World(uint16_t level) {
-	m_level       = level;
-	m_player      = nullptr;
-	m_isGameOver  = false;
-	m_isPaused    = false;
-	
-
-	//sacar de aqui
-	m_spawnData.push_back(vmake(SCR_WIDTH / 2.0f, SCR_HEIGHT));
-	m_spawnData.push_back(vmake(SCR_WIDTH, SCR_HEIGHT / 2.0f));
-	m_spawnData.push_back(vmake(0.0f, SCR_HEIGHT / 2.0f));
-	m_spawnData.push_back(vmake(SCR_WIDTH / 2.0f, 0.0f));
-
-	//revisar
-	//m_pickupSpawnTimer = 0;
-	m_enemySpawnTimer = 0;
-}
-
 World::~World() {
-	CORE_UnloadPNG(texbkg);
-	CORE_UnloadPNG(texlargeball);
-	CORE_UnloadPNG(texsmallball);
-	CORE_UnloadPNG(targetTexture);
-	for (size_t i = 0; i < m_entities.size(); ++i) {
-		delete m_entities[i];
-	}
-	g_inputManager->unregisterEvent(this, IInputManager::TEvent::EPause);
+	destroy();
 }
 
 void World::init() {
-	m_isGameOver = false;
-	m_isPaused = false;
-	m_score = 0;
-	m_currentEnemies = 0;
-	m_pickupSpawnTimer = m_pickupSpawnWait;
-	g_inputManager->unregisterEvent(this, IInputManager::TEvent::EPause);
-	g_inputManager->registerEvent(this, IInputManager::TEvent::EPause, 0);
-	//borrar lo anterior
-	for (size_t i = 0; i < m_entities.size(); ++i) {
-		if (m_entities[i]) {
-			delete m_entities[i];
-		}
-	}
-	m_entities.clear();
+	m_player           = nullptr;
+	m_hudMessage       = nullptr;
+	m_isGameOver       = false;
+	m_isPaused         = false;
+	m_score            = 0;
+	m_currentEnemies   = 0;
+	m_pickupSpawnTimer = 0;
+	m_enemySpawnTimer  = 0;
 
-	char *fileName = nullptr;
+	// Registration in InputManager
+	g_inputManager->registerEvent(this, IInputManager::TEvent::EPause, 0);
+
+	// Load level details from file
+	char* fileName = nullptr;
 	switch (m_level)
 	{
 		case 1:
@@ -130,30 +44,36 @@ void World::init() {
 			fileName = "data/level3.json";
 			break;
 	}
-
 	loadLevel(fileName);
 
-	m_player = Entity::createPlayer(vmake(SCR_WIDTH * 0.5f, SCR_HEIGHT * 0.5f));
-	addEntity(m_player);
-
-	//HUD
-	//createHUD(m_player);
-
-	//addEntity(createRangeEnemy(300, 300, m_player));
-	bullet.pos = vmake(-1000, -1000);
-	bullet.vel = vmake(0, 0);
-	bullet.pos = vmake(-1000, -1000);
-	bullet.vel = vmake(0, 0);
-	enemy.pos = vmake(0, 0);
-
-	addEntity(Entity::createTurretEnemy(100, SCR_HEIGHT - 100, vmake(0, -1), m_player));
-	addEntity(Entity::createTurretEnemy(SCR_WIDTH - 100, 100, vmake(-1, 0), m_player));
-
-	//borrar
-	//addEntity(createEnemy(200, 200, m_player, 0, 1, -1));
-	//addEntity(createEnemy(205, 200, m_player, 0, 1, -1));
+	// Create player and first pickup
+	addEntity(Entity::createPlayer(vmake(SCR_WIDTH * 0.5f, SCR_HEIGHT * 0.5f)));
 	addEntity(Entity::createWeaponPickup());
-	//addEntity(createWeaponPickup(vmake(400, 400), Component::ERevolver));
+
+	//Cargar de fichero
+	addEntity(Entity::createTurretEnemy(100, SCR_HEIGHT - 100, vmake(0, -1), m_player));
+	addEntity(Entity::createTurretEnemy(SCR_WIDTH - 100, 100, vmake(-1, 0), m_player));	
+}
+
+void World::destroy() {
+	// Destroy all entities and clear vectors
+	for (size_t i = 0; i < m_entities.size(); ++i) {
+		delete m_entities[i];
+	}
+	m_entities.clear();
+
+	for (size_t i = 0; i < m_entitiesToRemove.size(); ++i) {
+		delete m_entitiesToRemove[i];
+	}
+	m_entitiesToRemove.clear();
+
+	for (size_t i = 0; i < m_entitiesToAdd.size(); ++i) {
+		delete m_entitiesToAdd[i];
+	}
+	m_entitiesToAdd.clear();
+
+	// Unregister from the InputManager
+	g_inputManager->unregisterEvent(this, IInputManager::TEvent::EPause);
 }
 
 void World::addEntity(Entity* entity) {
@@ -169,14 +89,11 @@ void World::removeEntity(Entity* entity) {
 
 void World::run(float deltaTime) {
 	if (!m_isPaused && !m_isGameOver) {
-		// Render
-		glClear(GL_COLOR_BUFFER_BIT);
-
-		//m_player->run();
-
+		
 		for (size_t i = 0; i < m_entities.size(); ++i) {
 			m_entities[i]->run();
 		}
+
 		checkCollisions();
 		removePendingEntities();
 		addPendingEntities();
@@ -197,11 +114,6 @@ void World::run(float deltaTime) {
 			m_enemySpawnTimer = 0;
 		}
 	}
-}
-
-
-Entity* World::getPlayer() {
-	return m_player;
 }
 
 void World::checkCollisions() {
@@ -285,8 +197,7 @@ void World::removePendingEntities() {
 	for (auto it = m_entitiesToRemove.begin(); it != m_entitiesToRemove.end(); ++it)
 	{
 		Entity::TType type = (*it)->getType();
-		switch (type)
-		{
+		switch (type) {
 			case Entity::EPlayer: {
 				m_isGameOver = true;
 				std::string scoreMessage = g_stringManager->getText("LTEXT_GUI_SCORE_MESSAGE") + std::to_string(m_score);
@@ -308,6 +219,7 @@ void World::removePendingEntities() {
 				break;
 			}
 			case Entity::EHUD:
+				m_hudMessage = nullptr;
 				break;
 		}
 		auto it2 = m_entities.begin();
@@ -330,6 +242,14 @@ void World::removePendingEntities() {
 void World::addPendingEntities() {
 	for (size_t i = 0; i < m_entitiesToAdd.size(); ++i) {
 		m_entities.push_back(m_entitiesToAdd[i]);
+		switch (m_entitiesToAdd[i]->getType()){
+			case Entity::EPlayer: 
+				m_player = m_entitiesToAdd[i];
+				break;
+			case Entity::EHUD:
+				m_hudMessage = m_entitiesToAdd[i];
+				break;
+		}
 	}
 	m_entitiesToAdd.clear();
 }
@@ -373,7 +293,7 @@ bool World::loadLevel(const char* fileName) {
 	doc.ParseStream(is);
 
 	//leer de fichero
-	m_pickupSpawnWait = 300;
+	m_pickupSpawnWait = 10;
 	m_pickupSpawnTimer = m_pickupSpawnWait;
 	float totalProbability = 0.0f;
 	int spawnPoints = doc["spawnPoints"].GetInt();
@@ -413,6 +333,13 @@ bool World::loadLevel(const char* fileName) {
 	m_enemyData.push_back(rangeEnemy);
 
 	fclose(file);
+
+	m_spawnData.clear();
+	m_spawnData.push_back(vmake(SCR_WIDTH / 2.0f, SCR_HEIGHT));
+	m_spawnData.push_back(vmake(SCR_WIDTH, SCR_HEIGHT / 2.0f));
+	m_spawnData.push_back(vmake(0.0f, SCR_HEIGHT / 2.0f));
+	m_spawnData.push_back(vmake(SCR_WIDTH / 2.0f, 0.0f));
+
 	return true;
 }
 

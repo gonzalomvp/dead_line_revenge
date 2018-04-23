@@ -285,12 +285,9 @@ Entity* Entity::createHUDMessage(std::string message, vec2 pos, int displayTime)
 	hudMessageComponent->init();
 	ComponentLife* life = new ComponentLife(hudMessage, 0, displayTime, 0);
 	life->init();
-	//if (g_world->m_hudMessage) {
-
-	//	//mal puede apuntar a otro sitio
-	//	g_world->removeEntity(g_world->m_hudMessage);
-	//}
-	//g_world->m_hudMessage = hudMessage;
+	if (g_world->getHUDMessage()) {
+		g_world->removeEntity(g_world->getHUDMessage());
+	}
 	g_world->addEntity(hudMessage);
 	return hudMessage;
 }

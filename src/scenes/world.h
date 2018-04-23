@@ -3,7 +3,6 @@
 #include "../input/input_manager.h"
 
 class Entity;
-class Level;
 
 class World : public IInputManager::IListener {
 public:
@@ -15,39 +14,35 @@ public:
 
 	struct TEnemyData {
 		TEnemyType type;
-		int speed;
-		int life;
-		int damage;
-		float spawnProbability;
+		int        speed;
+		int        life;
+		int        damage;
+		float      spawnProbability;
 	};
 
-	World(uint16_t level);
+	World(uint16_t level) : m_level(level) {}
 	~World();
 
-	void init();
-	void run (float deltaTime);
-
-	void addEntity   (Entity* entity);
-	void removeEntity(Entity* entity);
-	
-	virtual bool onEvent(const IInputManager::Event& event);
-
-	void addPoints(uint16_t points) { m_score += points; }
-	uint16_t getScore() const { return m_score; }
-
-	Entity* getPlayer();
-	Entity* m_hudMessage;
+	void         init         ();
+	void         destroy      ();
+	void         run          (float deltaTime);
+	void         addEntity    (Entity* entity);
+	void         removeEntity (Entity* entity);
+	virtual bool onEvent      (const IInputManager::Event& event);
+	uint16_t     getScore     () const { return m_score; }
+	Entity*      getPlayer    () const { return m_player; }
+	Entity*      getHUDMessage() const { return m_hudMessage; }
+	void         addPoints    (uint16_t points)    { m_score += points; }
 private:
+	bool loadLevel            (const char* fileName);
 	void checkCollisions      ();
 	void removePendingEntities();
 	void addPendingEntities   ();
-
-	void spawnEnemy();
-
-	bool loadLevel(const char* fileName);
+	void spawnEnemy           ();
 
 	uint16_t              m_level;
 	Entity*               m_player;
+	Entity*               m_hudMessage;
 	std::vector <Entity*> m_entities;
 	std::vector <Entity*> m_entitiesToRemove;
 	std::vector <Entity*> m_entitiesToAdd;
@@ -56,11 +51,11 @@ private:
 
 	// Game rules
 	uint16_t m_score;
-	int m_pickupSpawnWait;
-	int m_enemySpawnWait;
-	int m_spawnPoints;
-	int m_currentEnemies;
-	int m_maxEnemies;
+	int      m_pickupSpawnWait;
+	int      m_enemySpawnWait;
+	int      m_spawnPoints;
+	int      m_currentEnemies;
+	int      m_maxEnemies;
 
 	std::vector<TEnemyData> m_enemyData;
 	std::vector<vec2>       m_spawnData;
