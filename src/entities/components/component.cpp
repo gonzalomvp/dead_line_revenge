@@ -38,7 +38,7 @@ void Component::deactivate() {
 //=============================================================================
 // ComponentTransform class
 //=============================================================================
-void ComponentTransform::run() {
+void ComponentTransform::run(float deltaTime) {
 	m_size = vadd(m_size, m_sizeDelta);
 }
 
@@ -103,7 +103,7 @@ ComponentLife::ComponentLife(Entity* owner, int life, int timeToLive, int invenc
 	m_hitTimer  = 0;
 }
 
-void ComponentLife::run() {
+void ComponentLife::run(float deltaTime) {
 	if (!m_isActive)
 		return;
 
@@ -152,7 +152,7 @@ void ComponentLife::receiveMessage(Message* message) {
 //=============================================================================
 // ComponentInertialMove class
 //=============================================================================
-void ComponentInertialMove::run() {
+void ComponentInertialMove::run(float deltaTime) {
 	if (!m_isActive)
 		return;
 
@@ -204,7 +204,7 @@ void ComponentRenderable::init() {
 	g_graphicsEngine->addGfxEntity(m_sprite);
 }
 
-void ComponentRenderable::run() {
+void ComponentRenderable::run(float deltaTime) {
 	if (!m_isActive)
 		return;
 
@@ -346,7 +346,7 @@ void ComponentWeapon::init() {
 	}
 }
 
-void ComponentWeapon::run() {
+void ComponentWeapon::run(float deltaTime) {
 	if (!m_isActive)
 		return;
 
@@ -474,8 +474,7 @@ void ComponentWeapon::receiveMessage(Message* message) {
 				m_fireRate = 20;
 				m_reloadTime = 40;
 				m_bullets = 2;
-				m_bulletSpeed = 5
-					;
+				m_bulletSpeed = 5;
 				m_bulletDamage = -1;
 				m_bulletRange = 0;
 				m_isAutomatic = false;
@@ -641,7 +640,7 @@ void C_Target::deactivate() {
 ComponentAIMelee::ComponentAIMelee(Entity* owner, Entity* player, float speed, float maxDistance) : Component(owner), m_player(player), m_speed(speed), m_maxDistance(maxDistance) {
 	m_offset = vmake(CORE_FRand(-20, 20), CORE_FRand(-20, 20));
 }
-void ComponentAIMelee::run() {
+void ComponentAIMelee::run(float deltaTime) {
 	if (!m_isActive)
 		return;
 
@@ -662,7 +661,7 @@ void ComponentAIMelee::run() {
 //=============================================================================
 // ComponentAIEvade class
 //=============================================================================
-void ComponentAIEvade::run() {
+void ComponentAIEvade::run(float deltaTime) {
 	if (!m_isActive)
 		return;
 
@@ -760,7 +759,7 @@ void ComponentAIFire::init() {
 	}
 }
 
-void ComponentAIFire::run() {
+void ComponentAIFire::run(float deltaTime) {
 	if (!m_isActive)
 		return;
 
@@ -794,7 +793,7 @@ void ComponentAIFire::receiveMessage(Message* message) {
 //=============================================================================
 // ComponentCollider class
 //=============================================================================
-void ComponentCollider::run() {
+void ComponentCollider::run(float deltaTime) {
 	if (!m_isActive)
 		return;
 
@@ -926,7 +925,7 @@ void ComponentHUD::init() {
 	g_graphicsEngine->addGfxEntity(m_reloadAnim);
 }
 
-void ComponentHUD::run() {
+void ComponentHUD::run(float deltaTime) {
 	MessageGetLife msgLife;
 	m_owner->receiveMessage(&msgLife);
 	m_life->setText(std::to_string(msgLife.currentLife));

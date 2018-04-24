@@ -27,13 +27,15 @@ void World::init() {
 	m_pickupSpawnTimer = 0;
 	m_enemySpawnTimer  = 0;
 
-	// Registration in InputManager
 	g_inputManager->registerEvent(this, IInputManager::TEvent::EPause, 0);
+
+	// Create player and first pickup
+	addEntity(Entity::createPlayer(vmake(SCR_WIDTH * 0.5f, SCR_HEIGHT * 0.5f)));
+	addEntity(Entity::createWeaponPickup());
 
 	// Load level details from file
 	char* fileName = nullptr;
-	switch (m_level)
-	{
+	switch (m_level) {
 		case 1:
 			fileName = "data/level1.json";
 			break;
@@ -46,17 +48,12 @@ void World::init() {
 	}
 	loadLevel(fileName);
 
-	// Create player and first pickup
-	addEntity(Entity::createPlayer(vmake(SCR_WIDTH * 0.5f, SCR_HEIGHT * 0.5f)));
-	addEntity(Entity::createWeaponPickup());
-
 	//Cargar de fichero
 	addEntity(Entity::createTurretEnemy(100, SCR_HEIGHT - 100, vmake(0, -1), m_player));
 	addEntity(Entity::createTurretEnemy(SCR_WIDTH - 100, 100, vmake(-1, 0), m_player));	
 }
 
 void World::destroy() {
-	// Destroy all entities and clear vectors
 	for (size_t i = 0; i < m_entities.size(); ++i) {
 		delete m_entities[i];
 	}
@@ -72,7 +69,6 @@ void World::destroy() {
 	}
 	m_entitiesToAdd.clear();
 
-	// Unregister from the InputManager
 	g_inputManager->unregisterEvent(this, IInputManager::TEvent::EPause);
 }
 
@@ -82,37 +78,18 @@ void World::addEntity(Entity* entity) {
 
 void World::removeEntity(Entity* entity) {
 	m_entitiesToRemove.push_back(entity);
-
-	//m_entities.erase(std::find(m_entities.begin(), m_entities.end(), entity));
-	//delete entity;
 }
 
 void World::run(float deltaTime) {
 	if (!m_isPaused && !m_isGameOver) {
 		
 		for (size_t i = 0; i < m_entities.size(); ++i) {
-			m_entities[i]->run();
+			m_entities[i]->run(deltaTime);
 		}
-
 		checkCollisions();
 		removePendingEntities();
+		spawnNewEntities();
 		addPendingEntities();
-
-		//Pick up
-		if (m_pickupSpawnTimer <= m_pickupSpawnWait) {
-			++m_pickupSpawnTimer;
-			if (m_pickupSpawnTimer == m_pickupSpawnWait) {
-				addEntity(Entity::createWeaponPickup());
-			}
-		}
-
-		//enemy
-		++m_enemySpawnTimer;
-
-		if (m_enemySpawnTimer >= m_enemySpawnWait && m_currentEnemies < m_maxEnemies) {
-			spawnEnemy();
-			m_enemySpawnTimer = 0;
-		}
 	}
 }
 
@@ -268,7 +245,6 @@ bool World::onEvent(const IInputManager::Event& event) {
 	IInputManager::TEvent eventType = event.getType();
 	if (eventType == IInputManager::TEvent::EPause) {
 		m_isPaused = !m_isPaused;
-		//ShowCursor(m_isPaused);
 		if (m_isPaused) {
 			m_player->deactivate();
 			g_menuManager->activateMenu(MenuManager::EPauseMenu);
@@ -367,4 +343,22 @@ void World::spawnEnemy() {
 
 	g_world->addEntity(enemy);
 	++m_currentEnemies;
+}
+
+void World::spawnNewEntities() {
+	//Pick up
+	if (m_pickupSpawnTimer <= m_pickupSpawnWait) {
+		++m_pickupSpawnTimer;
+		if (m_pickupSpawnTimer == m_pickupSpawnWait) {
+			addEntity(Entity::createWeaponPickup());
+		}
+	}
+
+	//enemy
+	++m_enemySpawnTimer;
+
+	if (m_enemySpawnTimer >= m_enemySpawnWait && m_currentEnemies < m_maxEnemies) {
+		spawnEnemy();
+		m_enemySpawnTimer = 0;
+	}
 }

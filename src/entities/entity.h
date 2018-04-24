@@ -37,7 +37,7 @@ public:
 	void deactivate();
 	TType getType() { return m_type; }
 
-	virtual void run();
+	void run(float deltaTime);
 	void receiveMessage(Message* message);
 	void addComponent(Component* component);
 	void removeComponent(Component* component) {}

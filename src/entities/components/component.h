@@ -41,7 +41,7 @@ public:
 	virtual void destroy       ();
 	virtual void activate      ();
 	virtual void deactivate    ();
-	virtual void run           ()                 {}
+	virtual void run           (float deltaTime)  {}
 	virtual void receiveMessage(Message* message) {}
 	//revisar esto de = 0 {} //Sirve para hacer la clase abstracta y a la vez no forzar la implementacion del destructor por los hijos
 	//virtual ~Component() = 0 {}
@@ -61,7 +61,7 @@ class ComponentTransform : public Component {
 public:
 	ComponentTransform(Entity* owner, const vec2& pos, const vec2& size, const vec2 sizeDelta = vmake(0,0)) : Component(owner), m_pos(pos), m_size(size), m_sizeDelta(sizeDelta) {}
 
-	virtual void run           ();
+	virtual void run           (float deltaTime);
 	virtual void receiveMessage(Message* message);
 private:
 	vec2 m_pos;
@@ -76,7 +76,7 @@ class ComponentLife: public Component {
 public:
 	ComponentLife(Entity* owner, int life, int timeToLive, int invencibleTime);
 
-	virtual void run           ();
+	virtual void run           (float deltaTime);
 	virtual void receiveMessage(Message* message);
 private:
 	int m_life;
@@ -95,7 +95,7 @@ class ComponentInertialMove : public Component {
 public:
 	ComponentInertialMove(Entity* owner, const vec2& direction, float speed, bool hasInertia) : Component(owner), m_direction(direction), m_speed(speed), m_hasInertia(hasInertia) {}
 	
-	virtual void run();
+	virtual void run           (float deltaTime);
 	virtual void receiveMessage(Message* message);
 private:
 	vec2  m_direction;
@@ -112,7 +112,7 @@ public:
 	~ComponentRenderable();
 
 	virtual void init          ();
-	virtual void run           ();
+	virtual void run           (float deltaTime);
 	virtual void receiveMessage(Message* message);
 private:
 	Sprite*     m_sprite;
@@ -131,13 +131,11 @@ private:
 //=============================================================================
 class ComponentPlayerController : public Component, public IInputManager::IListener {
 public:
-	ComponentPlayerController(Entity* owner, float speed) : Component(owner), m_speed(speed) {}
+	ComponentPlayerController(Entity* owner) : Component(owner) {}
 	~ComponentPlayerController();
 
 	virtual void init   ();
 	virtual bool onEvent(const IInputManager::Event&);
-private:
-	float m_speed;
 };
 
 //=============================================================================
@@ -148,7 +146,7 @@ public:
 	ComponentWeapon(Entity* owner, TWeapon type, int fireRate, int reloadTime, int bullets, int bulletSpeed, int bulletDamage, int bulletRange, bool isAutomatic, const char* soundFilename = nullptr);
 
 	virtual void init          ();
-	virtual void run           ();
+	virtual void run           (float deltaTime);
 	virtual void receiveMessage(Message* message);
 private:
 	TWeapon     m_type;
@@ -212,7 +210,7 @@ class ComponentAIMelee : public Component {
 public:
 	ComponentAIMelee(Entity* owner, Entity* player, float speed, float maxDistance);
 	
-	virtual void run();
+	virtual void run(float deltaTime);
 private:
 	Entity* m_player;
 	float   m_speed;
@@ -227,7 +225,7 @@ class ComponentAIEvade: public Component {
 public:
 	ComponentAIEvade(Entity* owner, Entity* player, float speed, float range) : Component(owner), m_player(player), m_speed(speed), m_range(range) {}
 	
-	virtual void run();
+	virtual void run(float deltaTime);
 private:
 	vec2 calculatIntersectionWithWall(vec2 position, float angle);
 
@@ -245,7 +243,7 @@ public:
 	ComponentAIFire(Entity* owner, const std::vector<vec2> fireDirections) : Component(owner), m_fireDirections(fireDirections) {}
 	
 	virtual void init          ();
-	virtual void run           ();
+	virtual void run           (float deltaTime);
 	virtual void receiveMessage(Message* message);
 private:
 	Entity*           m_player;
@@ -260,7 +258,7 @@ class ComponentCollider : public Component {
 public:
 	ComponentCollider(Entity* owner, TColliderType type, TFaction faction, int deltaLife) : Component(owner), m_type(type), m_faction(faction), m_deltaLife(deltaLife) {}
 	
-	virtual void run           ();
+	virtual void run           (float deltaTime);
 	virtual void receiveMessage(Message* message);
 private:
 	TColliderType m_type;
@@ -318,7 +316,7 @@ public:
 	~ComponentHUD();
 
 	virtual void init();
-	virtual void run ();
+	virtual void run (float deltaTime);
 private:
 	Text*   m_life;
 	Text*   m_score;

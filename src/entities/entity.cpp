@@ -21,9 +21,9 @@ void Entity::deactivate() {
 	}
 }
 
-void Entity::run() {
+void Entity::run(float deltaTime) {
 	for (auto itComponents = m_components.begin(); itComponents != m_components.end(); ++itComponents) {
-		(*itComponents)->run();
+		(*itComponents)->run(deltaTime);
 	}
 }
 
@@ -43,7 +43,7 @@ Entity* Entity::createPlayer(vec2 pos) {
 	transform->init();
 	ComponentRenderable* renderable = new ComponentRenderable(player, "data/player.png", 2, 1.0f, "data/enemy.png", 10);
 	renderable->init();
-	ComponentPlayerController* playerControl = new ComponentPlayerController(player, 5);
+	ComponentPlayerController* playerControl = new ComponentPlayerController(player);
 	playerControl->init();
 	ComponentInertialMove* movement = new ComponentInertialMove(player, vmake(0.0f, 0.0f), 5, false);
 	movement->init();
