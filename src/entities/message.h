@@ -72,14 +72,14 @@ struct MessageCheckCollision : public Message {
 	vec2 bounceDirection = vmake(0.0f, 0.0f);
 };
 
-struct MessageGetCollider : public Message {
-	Component::TColliderType type;
-	Component::TFaction faction;
-	vec2 center;
-	vec2 size;
-	int deltaLife;
-	int collisionChannel;
-};
+//struct MessageGetCollider : public Message {
+//	Component::TColliderType type;
+//	Component::TFaction faction;
+//	vec2 center;
+//	vec2 size;
+//	int deltaLife;
+//	int collisionChannel;
+//};
 
 //struct MessageCollision: public Message {
 //	Entity* other = nullptr;

@@ -60,7 +60,7 @@ Entity* Entity::createPlayer(vec2 pos) {
 	return player;
 }
 
-Entity* Entity::createBullet(vec2 pos, vec2 direction, float speed, int damage, int range, ComponentCollider::TFaction faction) {
+Entity* Entity::createBullet(vec2 pos, vec2 direction, float speed, int damage, int range, Entity::TType type) {
 	Entity* bullet = new Entity(EWeapon);
 	ComponentTransform* transform = new ComponentTransform(bullet, pos, vmake(10, 10));
 	transform->init();
@@ -69,45 +69,45 @@ Entity* Entity::createBullet(vec2 pos, vec2 direction, float speed, int damage, 
 	ComponentInertialMove* movement = new ComponentInertialMove(bullet, direction, speed, true);
 	movement->init();
 	ComponentCollider* collider;
-	if (faction == ComponentCollider::EAllied) {
-		collider = new ComponentCollider(bullet, ComponentCollider::ECircleCollider, faction, damage, ComponentCollider::EPlayerWeapon, ComponentCollider::EEnemyC | ComponentCollider::EBoundaries);
+	if (type == Entity::EPlayer) {
+		collider = new ComponentCollider(bullet, ComponentCollider::ECircleCollider, Component::EAllied, damage, ComponentCollider::EPlayerWeapon, ComponentCollider::EEnemyC | ComponentCollider::EBoundaries);
 	}
 	else {
-		collider = new ComponentCollider(bullet, ComponentCollider::ECircleCollider, faction, damage, ComponentCollider::EEnemyWeapon, ComponentCollider::EPlayer| ComponentCollider::EBoundaries);
+		collider = new ComponentCollider(bullet, ComponentCollider::ECircleCollider, Component::EEnemy, damage, ComponentCollider::EEnemyWeapon, ComponentCollider::EPlayer| ComponentCollider::EBoundaries);
 	}
 	
 	collider->init();
-	ComponentLife* life = new ComponentLife(bullet, 2, range, 0);
+	ComponentLife* life = new ComponentLife(bullet, 1, range, 0);
 	life->init();
 	return bullet;
 }
 
-void Entity::createShotgunBullets(vec2 pos, vec2 direction, float speed, int damage, int range, ComponentCollider::TFaction faction) {
+void Entity::createShotgunBullets(vec2 pos, vec2 direction, float speed, int damage, int range, Entity::TType type) {
 	float dispersionAngle = 15.0f;
 
 	vec2 bulletDir = direction;
-	g_world->addEntity(createBullet(pos, bulletDir, speed, damage, range, faction));
+	g_world->addEntity(createBullet(pos, bulletDir, speed, damage, range, type));
 
 	float angle = vangle(direction);
 	angle += dispersionAngle;
 	bulletDir = vunit(DEG2RAD(angle));
-	g_world->addEntity(createBullet(pos, bulletDir, speed, damage, range, faction));
+	g_world->addEntity(createBullet(pos, bulletDir, speed, damage, range, type));
 
 	angle = vangle(direction);
 	angle -= dispersionAngle;
 	bulletDir = vunit(DEG2RAD(angle));
-	g_world->addEntity(createBullet(pos, bulletDir, speed, damage, range, faction));
+	g_world->addEntity(createBullet(pos, bulletDir, speed, damage, range, type));
 
 	return;
 }
 
-Entity* Entity::createMine(Component* weapon, vec2 pos, int damage, ComponentCollider::TFaction faction) {
+Entity* Entity::createMine(Component* weapon, vec2 pos, int damage, Entity::TType type) {
 	Entity* mine = new Entity(EWeapon);
 	ComponentTransform* transform = new ComponentTransform(mine, pos, vmake(10, 10));
 	transform->init();
 	ComponentRenderable* renderable = new ComponentRenderable(mine, "data/bullet.png");
 	renderable->init();
-	ComponentCollider* collider = new ComponentCollider(mine, ComponentCollider::ECircleCollider, faction, 0, ComponentCollider::EPlayerWeapon, ComponentCollider::EEnemyC);
+	ComponentCollider* collider = new ComponentCollider(mine, ComponentCollider::ECircleCollider, Component::EAllied, 0, ComponentCollider::EPlayerWeapon, ComponentCollider::EEnemyC);
 	collider->init();
 	ComponentLife* life = new ComponentLife(mine, 0, 0, 0);
 	life->init();
@@ -117,7 +117,7 @@ Entity* Entity::createMine(Component* weapon, vec2 pos, int damage, ComponentCol
 	return mine;
 }
 
-Entity* Entity::createC4(Component* weapon, vec2 pos, int damage, ComponentCollider::TFaction faction) {
+Entity* Entity::createC4(Component* weapon, vec2 pos, int damage, Entity::TType type) {
 	Entity* mine = new Entity(EWeapon);
 	ComponentTransform* transform = new ComponentTransform(mine, pos, vmake(10, 10));
 	transform->init();
@@ -131,7 +131,7 @@ Entity* Entity::createC4(Component* weapon, vec2 pos, int damage, ComponentColli
 	return mine;
 }
 
-Entity* Entity::createRocket(Component* weapon, vec2 pos, vec2 direction, float speed, int damage, int range, ComponentCollider::TFaction faction) {
+Entity* Entity::createRocket(Component* weapon, vec2 pos, vec2 direction, float speed, int damage, int range, Entity::TType type) {
 	Entity* rocket = new Entity(EWeapon);
 	ComponentTransform* transform = new ComponentTransform(rocket, pos, vmake(10, 10));
 	transform->init();
@@ -139,7 +139,7 @@ Entity* Entity::createRocket(Component* weapon, vec2 pos, vec2 direction, float 
 	renderable->init();
 	ComponentInertialMove* movement = new ComponentInertialMove(rocket, direction, speed, true);
 	movement->init();
-	ComponentCollider* collider = new ComponentCollider(rocket, ComponentCollider::ECircleCollider, faction, damage, ComponentCollider::EPlayerWeapon, ComponentCollider::EEnemyC | ComponentCollider::EBoundaries);
+	ComponentCollider* collider = new ComponentCollider(rocket, ComponentCollider::ECircleCollider, Component::EAllied, damage, ComponentCollider::EPlayerWeapon, ComponentCollider::EEnemyC | ComponentCollider::EBoundaries);
 	collider->init();
 	ComponentLife* life = new ComponentLife(rocket, 0, range, 0);
 	life->init();

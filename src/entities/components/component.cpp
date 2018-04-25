@@ -373,29 +373,29 @@ void ComponentWeapon::run(float deltaTime) {
 		
 		MessageGetTransform messageGetTranform;
 		m_owner->receiveMessage(&messageGetTranform);
-		MessageGetCollider msgGetCollider;
-		m_owner->receiveMessage(&msgGetCollider);
+		//MessageGetCollider msgGetCollider;
+		//m_owner->receiveMessage(&msgGetCollider);
 
 		switch (m_type)
 		{
 			case EShotgun:
-				Entity::createShotgunBullets(messageGetTranform.pos, m_aimDirection, m_bulletSpeed, m_bulletDamage, m_bulletRange, msgGetCollider.faction);
+				Entity::createShotgunBullets(messageGetTranform.pos, m_aimDirection, m_bulletSpeed, m_bulletDamage, m_bulletRange, m_owner->getType());
 				break;
 			case EMines:
-				Entity::createMine(this, messageGetTranform.pos, m_bulletDamage, msgGetCollider.faction);
+				Entity::createMine(this, messageGetTranform.pos, m_bulletDamage, m_owner->getType());
 				//createNuclearBomb();
 				deactivate();
 				break;
 			case EC4:
-				Entity::createC4(this, messageGetTranform.pos, m_bulletDamage, msgGetCollider.faction);
+				Entity::createC4(this, messageGetTranform.pos, m_bulletDamage, m_owner->getType());
 				deactivate();
 				break;
 			case ERocketLauncher:
-				Entity::createRocket(this, messageGetTranform.pos, m_aimDirection, m_bulletSpeed, m_bulletDamage, m_bulletRange, msgGetCollider.faction);
+				Entity::createRocket(this, messageGetTranform.pos, m_aimDirection, m_bulletSpeed, m_bulletDamage, m_bulletRange, m_owner->getType());
 				deactivate();
 				break;
 			default:
-				g_world->addEntity(Entity::createBullet(messageGetTranform.pos, m_aimDirection, m_bulletSpeed, m_bulletDamage, m_bulletRange, msgGetCollider.faction));
+				g_world->addEntity(Entity::createBullet(messageGetTranform.pos, m_aimDirection, m_bulletSpeed, m_bulletDamage, m_bulletRange, m_owner->getType()));
 				break;
 		}
 		
@@ -866,15 +866,15 @@ void ComponentCollider::receiveMessage(Message* message) {
 		}
 	}
 	
-	MessageGetCollider *msgCollider = dynamic_cast<MessageGetCollider*>(message);
-	if (msgCollider) {
-		msgCollider->type      = m_type;
-		msgCollider->faction   = m_faction;
-		msgCollider->center    = m_center;
-		msgCollider->size      = m_size;
-		msgCollider->deltaLife = m_deltaLife;
-		msgCollider->collisionChannel = m_collisionChannel;
-	}
+	//MessageGetCollider *msgCollider = dynamic_cast<MessageGetCollider*>(message);
+	//if (msgCollider) {
+	//	msgCollider->type      = m_type;
+	//	msgCollider->faction   = m_faction;
+	//	msgCollider->center    = m_center;
+	//	msgCollider->size      = m_size;
+	//	msgCollider->deltaLife = m_deltaLife;
+	//	msgCollider->collisionChannel = m_collisionChannel;
+	//}
 	//else {
 	//	MessageCollision *msgCollision = dynamic_cast<MessageCollision*>(message);
 	//	if (msgCollision && m_faction != ENeutral && msgCollision->faction != ENeutral) {

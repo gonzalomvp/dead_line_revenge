@@ -20,11 +20,11 @@ public:
 	static Entity* createBigEnemy(int x, int y, Entity* player, int speed, int lives, int damage);
 	static Entity* createRangeEnemy(int x, int y, Entity* player);
 	static Entity* createTurretEnemy(int x, int y, vec2 dir, Entity* player);
-	static Entity* createBullet(vec2 pos, vec2 direction, float speed, int damage, int range, ComponentCollider::TFaction faction);
-	static void createShotgunBullets(vec2 pos, vec2 direction, float speed, int damage, int range, ComponentCollider::TFaction faction);
-	static Entity* createMine(Component* weapon, vec2 pos, int damage, ComponentCollider::TFaction faction);
-	static Entity* createC4(Component* weapon, vec2 pos, int damage, ComponentCollider::TFaction faction);
-	static Entity* createRocket(Component* weapon, vec2 pos, vec2 direction, float speed, int damage, int range, ComponentCollider::TFaction faction);
+	static Entity* createBullet(vec2 pos, vec2 direction, float speed, int damage, int range, Entity::TType type);
+	static void createShotgunBullets(vec2 pos, vec2 direction, float speed, int damage, int range, Entity::TType type);
+	static Entity* createMine(Component* weapon, vec2 pos, int damage, Entity::TType type);
+	static Entity* createC4(Component* weapon, vec2 pos, int damage, Entity::TType type);
+	static Entity* createRocket(Component* weapon, vec2 pos, vec2 direction, float speed, int damage, int range, Entity::TType type);
 	static Entity* createNuclearBomb();
 	static Entity* createWeaponPickup();
 	static void createExplossion(vec2 pos, vec2 size);
