@@ -60,12 +60,22 @@ struct MessageAmmoInfo : public Message {
 //	vec2 pos;
 //};
 
+struct MessageCheckCollision : public Message {
+	Component::TColliderType type;
+	vec2 center;
+	vec2 size;
+	int deltaLife;
+	int collisionChannel;
+	Entity* other = nullptr;
+};
+
 struct MessageGetCollider : public Message {
 	Component::TColliderType type;
 	Component::TFaction faction;
 	vec2 center;
 	vec2 size;
 	int deltaLife;
+	int collisionChannel;
 };
 
 struct MessageCollision: public Message {

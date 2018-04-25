@@ -806,6 +806,30 @@ void ComponentCollider::run(float deltaTime) {
 void ComponentCollider::receiveMessage(Message* message) {
 	if (!m_isActive)
 		return;
+
+	MessageCheckCollision *msgCheckCollision = dynamic_cast<MessageCheckCollision*>(message);
+	if (msgCheckCollision && m_collisionChannel) {
+		Entity* other = msgCheckCollision->other;
+		if (msgCheckCollision->other) {
+			msgCheckCollision->type = m_type;
+			msgCheckCollision->center = m_center;
+			msgCheckCollision->size = m_size;
+			msgCheckCollision->deltaLife = m_deltaLife;
+			msgCheckCollision->collisionChannel = m_collisionChannel;
+			msgCheckCollision->other = nullptr;
+			other->receiveMessage(msgCheckCollision);
+		}
+		
+		if (m_collisionChannelsResponse & msgCheckCollision->collisionChannel) {
+			int i = 0;
+		}
+		msgCheckCollision->type = m_type;
+		msgCheckCollision->center = m_center;
+		msgCheckCollision->size = m_size;
+		msgCheckCollision->deltaLife = m_deltaLife;
+		msgCheckCollision->collisionChannel = m_collisionChannel;
+		msgCheckCollision->other = nullptr;
+	}
 	
 	MessageGetCollider *msgCollider = dynamic_cast<MessageGetCollider*>(message);
 	if (msgCollider) {
@@ -814,6 +838,7 @@ void ComponentCollider::receiveMessage(Message* message) {
 		msgCollider->center    = m_center;
 		msgCollider->size      = m_size;
 		msgCollider->deltaLife = m_deltaLife;
+		msgCollider->collisionChannel = m_collisionChannel;
 	}
 	else {
 		MessageCollision *msgCollision = dynamic_cast<MessageCollision*>(message);

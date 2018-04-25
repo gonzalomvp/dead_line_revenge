@@ -256,13 +256,25 @@ private:
 //=============================================================================
 class ComponentCollider : public Component {
 public:
-	ComponentCollider(Entity* owner, TColliderType type, TFaction faction, int deltaLife) : Component(owner), m_type(type), m_faction(faction), m_deltaLife(deltaLife) {}
+	enum TColliderChannel {
+		EPlayer       = 1 << 0,
+		EEnemyC        = 1 << 1,
+		EPlayerWeapon = 1 << 2,
+		EEnemyWeapon  = 1 << 3,
+		EBoundaries   = 1 << 4,
+		EPickup       = 1 << 5,
+		ENone         = 0,
+	};
+
+	ComponentCollider(Entity* owner, TColliderType type, TFaction faction, int deltaLife, int collisionChannel, int collisionChannelsResponse) : Component(owner), m_type(type), m_faction(faction), m_deltaLife(deltaLife), m_collisionChannel(collisionChannel), m_collisionChannelsResponse(collisionChannelsResponse) {}
 	
 	virtual void run           (float deltaTime);
 	virtual void receiveMessage(Message* message);
 private:
 	TColliderType m_type;
 	TFaction      m_faction;
+	int m_collisionChannel;
+	int m_collisionChannelsResponse;
 	vec2          m_center;
 	vec2          m_size;
 	int           m_deltaLife;

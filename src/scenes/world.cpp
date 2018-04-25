@@ -96,76 +96,11 @@ void World::run(float deltaTime) {
 void World::checkCollisions() {
 	for (size_t i = 0; i < m_entities.size(); ++i) {
 		Entity* entityCollision = m_entities[i];
-		MessageGetCollider msg1;
-		msg1.type = Component::ENoneCollider;
-		entityCollision->receiveMessage(&msg1);
-		if (msg1.type != Component::ENoneCollider) {
-			for (size_t j = i + 1; j < m_entities.size(); ++j) {
-				Entity* entityToCheck = m_entities[j];
-				MessageGetCollider msg2;
-				msg2.type = Component::ENoneCollider;
-				entityToCheck->receiveMessage(&msg2);
-				if (msg2.type != Component::ENoneCollider && msg1.faction != msg2.faction) {
-					//collision
-					bool hit = false;
-					switch (msg1.type)
-					{
-					case ComponentCollider::ECircleCollider:
-						switch (msg2.type)
-						{
-						case ComponentCollider::ECircleCollider:
-							break;
-						case ComponentCollider::ERectCollider:
-							hit= checkCircleRect(msg1.center, msg1.size.x * 0.5f, vsub(msg2.center, vscale(msg2.size, 0.5f)), msg2.size);
-							break;
-						}
-						break;
-					case ComponentCollider::ERectCollider:
-						switch (msg2.type)
-						{
-						case ComponentCollider::ECircleCollider:
-							hit = checkCircleRect(msg2.center, msg2.size.x * 0.5f, vsub(msg1.center, vscale(msg1.size, 0.5f)), msg1.size);
-							break;
-						case ComponentCollider::ERectCollider:
-							hit = checkRectRect(vsub(msg1.center, vscale(msg1.size, 0.5f)), msg1.size, vsub(msg2.center, vscale(msg2.size, 0.5f)), msg2.size);
-							break;
-						}
-						break;
-					}
-					if (hit) {
-						MessageCollision msgCollision;
-						msgCollision.deltaLife = msg1.deltaLife;
-						msgCollision.other = entityCollision;
-						msgCollision.faction = msg1.faction;
-						entityToCheck->receiveMessage(&msgCollision);
-
-						msgCollision.deltaLife = msg2.deltaLife;
-						msgCollision.other = entityToCheck;
-						msgCollision.faction = msg2.faction;
-						entityCollision->receiveMessage(&msgCollision);
-
-						//MessageLife msgLife;
-						//msgLife.hit = true;
-
-						//msgLife.lifeDelta = msg1.damage;
-						//entityToCheck->receiveMessage(&msgLife);
-
-						//msgLife.lifeDelta = msg2.damage;
-						//entityCollision->receiveMessage(&msgLife);
-
-						//removeEntity(entityCollision);
-						//removeEntity(entityToCheck);
-						//m_level->killEnemy();
-						//if(entityCollision == m_player || entityToCheck == m_player)
-						//	g_appManager->switchMode(ModeId::MODE_MENU);
-						//else
-						//	addEntity(createEnemy(300, 300, m_player));
-						
-						//ver si arregla colisiones multiples
-						//break;
-					}
-				}
-			}
+		for (size_t j = i + 1; j < m_entities.size(); ++j) {
+			Entity* entityToCheck = m_entities[j];
+			MessageCheckCollision msgCheckCollision;
+			msgCheckCollision.other = entityToCheck;
+			entityCollision->receiveMessage(&msgCheckCollision);
 		}
 	}
 }
