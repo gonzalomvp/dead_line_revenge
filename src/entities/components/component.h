@@ -28,13 +28,6 @@ public:
 		ECircleCollider,
 	};
 
-	enum TFaction {
-		EAllied,
-		EEnemy,
-		ENeutral,
-		EBounds,
-	};
-
 	virtual ~Component() {}
 
 	virtual void init          ();
@@ -93,7 +86,7 @@ private:
 //=============================================================================
 class ComponentInertialMove : public Component {
 public:
-	ComponentInertialMove(Entity* owner, const vec2& direction, float speed, bool hasInertia) : Component(owner), m_direction(direction), m_speed(speed), m_hasInertia(hasInertia) {}
+	ComponentInertialMove(Entity* owner, const vec2& direction, float speed, bool hasInertia, bool hasBounce = false) : Component(owner), m_direction(direction), m_speed(speed), m_hasInertia(hasInertia), m_hasBounce(hasBounce) {}
 	
 	virtual void run           (float deltaTime);
 	virtual void receiveMessage(Message* message);
@@ -101,6 +94,7 @@ private:
 	vec2  m_direction;
 	float m_speed;
 	bool  m_hasInertia;
+	bool  m_hasBounce;
 };
 
 //=============================================================================
@@ -266,13 +260,12 @@ public:
 		ENone         = 0,
 	};
 
-	ComponentCollider(Entity* owner, TColliderType type, TFaction faction, int deltaLife, int collisionChannel, int collisionChannelsResponse) : Component(owner), m_type(type), m_faction(faction), m_deltaLife(deltaLife), m_collisionChannel(collisionChannel), m_collisionChannelsResponse(collisionChannelsResponse) {}
+	ComponentCollider(Entity* owner, TColliderType type, int deltaLife, int collisionChannel, int collisionChannelsResponse) : Component(owner), m_type(type), m_deltaLife(deltaLife), m_collisionChannel(collisionChannel), m_collisionChannelsResponse(collisionChannelsResponse) {}
 	
 	virtual void run           (float deltaTime);
 	virtual void receiveMessage(Message* message);
 private:
 	TColliderType m_type;
-	TFaction      m_faction;
 	int m_collisionChannel;
 	int m_collisionChannelsResponse;
 	vec2          m_center;

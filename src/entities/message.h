@@ -65,8 +65,8 @@ struct MessageCheckCollision : public Message {
 	vec2 center;
 	vec2 size;
 	int deltaLife;
-	int collisionChannel;
-	int collisionChannelsResponse;
+	int collisionChannel = 0;
+	int collisionChannelsResponse = 0;
 	Entity* other = nullptr;
 	bool overlap = false;
 	vec2 bounceDirection = vmake(0.0f, 0.0f);

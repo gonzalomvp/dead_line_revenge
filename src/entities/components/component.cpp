@@ -182,7 +182,7 @@ void ComponentInertialMove::receiveMessage(Message* message) {
 	}
 	else {
 		MessageCheckCollision *msgCheckCollision = dynamic_cast<MessageCheckCollision*>(message);
-		if (msgCheckCollision && msgCheckCollision->overlap && vlen2(msgCheckCollision->bounceDirection) > 0) {
+		if (msgCheckCollision && msgCheckCollision->overlap && m_hasBounce && vlen2(msgCheckCollision->bounceDirection) > 0) {
 			m_direction = vmake(m_direction.x * msgCheckCollision->bounceDirection.x, m_direction.y * msgCheckCollision->bounceDirection.y);
 		}
 	}
