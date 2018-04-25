@@ -51,27 +51,27 @@ void ComponentTransform::receiveMessage(Message* message) {
 		m_pos = msgSetTransform->pos;
 		m_size = msgSetTransform->size;
 		bool outOfBounds = false;
-		vec2 bounceDIrection;
+		vec2 bounceDirection;
 
 		if (m_pos.x > SCR_WIDTH) {
 			m_pos.x = SCR_WIDTH;
 			outOfBounds = true;
-			bounceDIrection = vmake(-1.0f , 1.0f);
+			bounceDirection = vmake(-1.0f , 1.0f);
 		}
 		else if (m_pos.x < 0) {
 			m_pos.x = 0;
 			outOfBounds = true;
-			bounceDIrection = vmake(-1.0f, 1.0f);
+			bounceDirection = vmake(-1.0f, 1.0f);
 		}
 		if (m_pos.y > SCR_HEIGHT) {
 			m_pos.y = SCR_HEIGHT;
 			outOfBounds = true;
-			bounceDIrection = vmake(1.0f, -1.0f);
+			bounceDirection = vmake(1.0f, -1.0f);
 		}
 		else if (m_pos.y < 0) {
 			m_pos.y = 0;
 			outOfBounds = true;
-			bounceDIrection = vmake(1.0f, -1.0f);
+			bounceDirection = vmake(1.0f, -1.0f);
 		}
 		MessageTransformChanged msgTransformChanged;
 		msgTransformChanged.pos = m_pos;
@@ -79,11 +79,12 @@ void ComponentTransform::receiveMessage(Message* message) {
 		m_owner->receiveMessage(&msgTransformChanged);
 
 		if (outOfBounds) {
-			MessageCollision msgCollision;
-			msgCollision.deltaLife = 0;
-			msgCollision.faction = EBounds;
-			msgCollision.bounceDirection = bounceDIrection;
-			m_owner->receiveMessage(&msgCollision);
+			MessageCheckCollision msgCheckCollision;
+			msgCheckCollision.overlap = true;
+			msgCheckCollision.deltaLife = -1;
+			msgCheckCollision.collisionChannel = ComponentCollider::EBoundaries;
+			msgCheckCollision.bounceDirection = bounceDirection;
+			m_owner->receiveMessage(&msgCheckCollision);
 		}
 	}
 	else {
@@ -180,9 +181,9 @@ void ComponentInertialMove::receiveMessage(Message* message) {
 		m_direction = vadd(m_direction, msgAddMovement->dir);
 	}
 	else {
-		MessageCollision *msgCollision = dynamic_cast<MessageCollision*>(message);
-		if (msgCollision && msgCollision->faction == EBounds) {
-			m_direction = vmake(m_direction.x * msgCollision->bounceDirection.x, m_direction.y * msgCollision->bounceDirection.y);
+		MessageCheckCollision *msgCheckCollision = dynamic_cast<MessageCheckCollision*>(message);
+		if (msgCheckCollision && msgCheckCollision->overlap && vlen2(msgCheckCollision->bounceDirection) > 0) {
+			m_direction = vmake(m_direction.x * msgCheckCollision->bounceDirection.x, m_direction.y * msgCheckCollision->bounceDirection.y);
 		}
 	}
 }
@@ -809,6 +810,7 @@ void ComponentCollider::receiveMessage(Message* message) {
 
 	MessageCheckCollision *msgCheckCollision = dynamic_cast<MessageCheckCollision*>(message);
 	if (msgCheckCollision && m_collisionChannel) {
+		bool overlap = false;
 		Entity* other = msgCheckCollision->other;
 		if (msgCheckCollision->other) {
 			msgCheckCollision->type = m_type;
@@ -816,19 +818,52 @@ void ComponentCollider::receiveMessage(Message* message) {
 			msgCheckCollision->size = m_size;
 			msgCheckCollision->deltaLife = m_deltaLife;
 			msgCheckCollision->collisionChannel = m_collisionChannel;
+			msgCheckCollision->collisionChannelsResponse = m_collisionChannelsResponse;
 			msgCheckCollision->other = nullptr;
 			other->receiveMessage(msgCheckCollision);
+			overlap = msgCheckCollision->overlap;
 		}
-		
-		if (m_collisionChannelsResponse & msgCheckCollision->collisionChannel) {
-			int i = 0;
+		else if ((m_collisionChannelsResponse & msgCheckCollision->collisionChannel) || (msgCheckCollision->collisionChannelsResponse & m_collisionChannel)) {
+			overlap = msgCheckCollision->overlap;
+			if (!overlap) {
+				switch (m_type) {
+				case ComponentCollider::ECircleCollider:
+					switch (msgCheckCollision->type) {
+					case ComponentCollider::ECircleCollider:
+						break;
+					case ComponentCollider::ERectCollider:
+						overlap = checkCircleRect(m_center, m_size.x * 0.5f, vsub(msgCheckCollision->center, vscale(msgCheckCollision->size, 0.5f)), msgCheckCollision->size);
+						break;
+					}
+					break;
+				case ComponentCollider::ERectCollider:
+					switch (msgCheckCollision->type) {
+					case ComponentCollider::ECircleCollider:
+						overlap = checkCircleRect(msgCheckCollision->center, msgCheckCollision->size.x * 0.5f, vsub(m_center, vscale(m_size, 0.5f)), m_size);
+						break;
+					case ComponentCollider::ERectCollider:
+						overlap = checkRectRect(vsub(m_center, vscale(m_size, 0.5f)), m_size, vsub(msgCheckCollision->center, vscale(msgCheckCollision->size, 0.5f)), msgCheckCollision->size);
+						break;
+					}
+					break;
+				}
+				if (overlap) {
+					overlap = false;
+					if (m_collisionChannelsResponse & msgCheckCollision->collisionChannel) {
+						overlap = true;
+					}
+					if (msgCheckCollision->collisionChannelsResponse & m_collisionChannel) {
+						msgCheckCollision->overlap = true;
+						msgCheckCollision->deltaLife = m_deltaLife;
+					}
+				}
+			}
 		}
-		msgCheckCollision->type = m_type;
-		msgCheckCollision->center = m_center;
-		msgCheckCollision->size = m_size;
-		msgCheckCollision->deltaLife = m_deltaLife;
-		msgCheckCollision->collisionChannel = m_collisionChannel;
-		msgCheckCollision->other = nullptr;
+		if (overlap) {
+			MessageChangeLife mgsChangeLife;
+			mgsChangeLife.deltaLife = msgCheckCollision->deltaLife;
+			m_owner->receiveMessage(&mgsChangeLife);
+		}
 	}
 	
 	MessageGetCollider *msgCollider = dynamic_cast<MessageGetCollider*>(message);
@@ -840,14 +875,14 @@ void ComponentCollider::receiveMessage(Message* message) {
 		msgCollider->deltaLife = m_deltaLife;
 		msgCollider->collisionChannel = m_collisionChannel;
 	}
-	else {
-		MessageCollision *msgCollision = dynamic_cast<MessageCollision*>(message);
-		if (msgCollision && m_faction != ENeutral && msgCollision->faction != ENeutral) {
-			MessageChangeLife mgsChangeLife;
-			mgsChangeLife.deltaLife = msgCollision->deltaLife;
-			m_owner->receiveMessage(&mgsChangeLife);
-		}
-	}
+	//else {
+	//	MessageCollision *msgCollision = dynamic_cast<MessageCollision*>(message);
+	//	if (msgCollision && m_faction != ENeutral && msgCollision->faction != ENeutral) {
+	//		MessageChangeLife mgsChangeLife;
+	//		mgsChangeLife.deltaLife = msgCollision->deltaLife;
+	//		m_owner->receiveMessage(&mgsChangeLife);
+	//	}
+	//}
 }
 
 //=============================================================================
@@ -871,15 +906,11 @@ void ComponentWeaponPickup::receiveMessage(Message* message) {
 	if (!m_isActive)
 		return;
 
-	MessageCollision *msgCollision = dynamic_cast<MessageCollision*>(message);
-	if (msgCollision && (msgCollision->other->getType() == Entity::EPlayer)) {
+	MessageDestroy *msgDestroy = dynamic_cast<MessageDestroy*>(message);
+	if (msgDestroy) {
 		MessageWeaponChange msgWeapon;
 		msgWeapon.weapon = m_weapon;
-		msgCollision->other->receiveMessage(&msgWeapon);
-		
-		MessageChangeLife mgsChangeLife;
-		mgsChangeLife.deltaLife = msgCollision->deltaLife;
-		m_owner->receiveMessage(&mgsChangeLife);
+		g_world->getPlayer()->receiveMessage(&msgWeapon);
 
 		std::string hudMessage = g_stringManager->getText("LTEXT_GUI_PICKUP_MESSAGE");
 		switch (m_weapon)

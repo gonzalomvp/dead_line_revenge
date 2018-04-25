@@ -66,7 +66,10 @@ struct MessageCheckCollision : public Message {
 	vec2 size;
 	int deltaLife;
 	int collisionChannel;
+	int collisionChannelsResponse;
 	Entity* other = nullptr;
+	bool overlap = false;
+	vec2 bounceDirection = vmake(0.0f, 0.0f);
 };
 
 struct MessageGetCollider : public Message {
@@ -78,12 +81,12 @@ struct MessageGetCollider : public Message {
 	int collisionChannel;
 };
 
-struct MessageCollision: public Message {
-	Entity* other = nullptr;
-	Component::TFaction faction;
-	int deltaLife;
-	vec2 bounceDirection;
-};
+//struct MessageCollision: public Message {
+//	Entity* other = nullptr;
+//	Component::TFaction faction;
+//	int deltaLife;
+//	vec2 bounceDirection;
+//};
 
 struct MessageWeaponChange : public Message {
 	Component::TWeapon weapon;

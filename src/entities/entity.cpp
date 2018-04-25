@@ -77,7 +77,7 @@ Entity* Entity::createBullet(vec2 pos, vec2 direction, float speed, int damage, 
 	}
 	
 	collider->init();
-	ComponentLife* life = new ComponentLife(bullet, 0, range, 0);
+	ComponentLife* life = new ComponentLife(bullet, 2, range, 0);
 	life->init();
 	return bullet;
 }
@@ -139,7 +139,7 @@ Entity* Entity::createRocket(Component* weapon, vec2 pos, vec2 direction, float 
 	renderable->init();
 	ComponentInertialMove* movement = new ComponentInertialMove(rocket, direction, speed, true);
 	movement->init();
-	ComponentCollider* collider = new ComponentCollider(rocket, ComponentCollider::ECircleCollider, faction, damage, ComponentCollider::ENone, ComponentCollider::ENone);
+	ComponentCollider* collider = new ComponentCollider(rocket, ComponentCollider::ECircleCollider, faction, damage, ComponentCollider::EPlayerWeapon, ComponentCollider::EEnemyC | ComponentCollider::EBoundaries);
 	collider->init();
 	ComponentLife* life = new ComponentLife(rocket, 0, range, 0);
 	life->init();
