@@ -101,23 +101,20 @@ void ComponentTransform::receiveMessage(Message* message) {
 //=============================================================================
 ComponentLife::ComponentLife(Entity* owner, int life, int timeToLive, int invencibleTime) : Component(owner), m_life(life), m_timeToLive(timeToLive), m_invencibleTime(invencibleTime) {
 	m_lifeTimer = 0;
-	m_hitTimer  = 0;
+	m_invencibleTimer = 0;
 }
 
 void ComponentLife::run(float deltaTime) {
 	if (!m_isActive)
 		return;
 
-	if (m_invencibleTime != 0) {
-		++m_hitTimer;
-		if (m_hitTimer > m_invencibleTime) {
-			m_hitTimer = m_invencibleTime;
-		}
+	if (m_invencibleTimer < m_invencibleTime) {
+		++m_invencibleTimer;
 	}
 
-	if (m_timeToLive != 0) {
+	if (m_lifeTimer < m_timeToLive) {
 		++m_lifeTimer;
-		if (m_lifeTimer >= m_timeToLive) {
+		if (m_lifeTimer == m_timeToLive) {
 			MessageDestroy msgDestroy;
 			m_owner->receiveMessage(&msgDestroy);
 			m_owner->deactivate();
@@ -137,9 +134,9 @@ void ComponentLife::receiveMessage(Message* message) {
 	}
 	else {
 		MessageChangeLife *msgChangeLife = dynamic_cast<MessageChangeLife*>(message);
-		if (msgChangeLife && (m_life != -1) && (m_hitTimer >= m_invencibleTime)) {
+		if (msgChangeLife && (m_life != -1) && (m_invencibleTimer >= m_invencibleTime)) {
 			m_life += msgChangeLife->deltaLife;
-			m_hitTimer = 0;
+			m_invencibleTimer = 0;
 			if (m_life <= 0) {
 				MessageDestroy msgDestroy;
 				m_owner->receiveMessage(&msgDestroy);
@@ -361,14 +358,14 @@ void ComponentWeapon::run(float deltaTime) {
 		}
 	}
 
-	if (m_isFiring && m_fireTimer >= m_fireRate && m_reloadTimer >= m_reloadTime && m_currentBullets != 0) {
+	if (m_isFiring && m_fireTimer >= m_fireRate && m_reloadTimer >= m_reloadTime && m_currentBullets > 0) {
 		m_fireTimer = 0;
-		if (m_currentBullets >= 0) {
-			--m_currentBullets;
-			if (m_currentBullets == 0) {
-				m_reloadTimer = 0;
-				m_isFiring = false;
-			}
+		--m_currentBullets;
+		if (m_currentBullets == 0) {
+			m_reloadTimer = 0;
+		}
+		if (!m_isAutomatic) {
+			m_isFiring = false;
 		}
 		
 		MessageGetTransform messageGetTranform;
@@ -400,9 +397,7 @@ void ComponentWeapon::run(float deltaTime) {
 		}
 		
 		
-		if (!m_isAutomatic) {
-			m_isFiring = false;
-		}
+		
 
 		//Sound (mover a un sound manager)
 		if (g_settings.sfx && m_soundId) {

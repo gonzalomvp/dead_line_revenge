@@ -78,7 +78,7 @@ private:
 
 	//Timers
 	int m_lifeTimer;
-	int m_hitTimer;
+	int m_invencibleTimer;
 };
 
 //=============================================================================

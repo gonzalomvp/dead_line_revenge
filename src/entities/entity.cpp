@@ -230,7 +230,7 @@ Entity* Entity::createTurretEnemy(int x, int y, vec2 dir, Entity* player) {
 	renderable->init();
 	ComponentInertialMove* movement = new ComponentInertialMove(enemy, vmake(1, 0), 2, true, true);
 	movement->init();
-	ComponentWeapon* gun = new ComponentWeapon(enemy, Component::ERevolver, 100, 1, -1, 6, -1, 0, true);
+	ComponentWeapon* gun = new ComponentWeapon(enemy, Component::ERevolver, 100, 1, 1, 6, -1, 0, true);
 	gun->init();
 	std::vector<vec2> aimDirections = { vmake(1,0), vmake(0,1), vmake(-1, 0), vmake(0, -1) };
 	ComponentAIFire* aiFire = new ComponentAIFire(enemy, aimDirections);
