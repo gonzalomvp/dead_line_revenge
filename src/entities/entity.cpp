@@ -107,7 +107,7 @@ Entity* Entity::createMine(Component* weapon, vec2 pos, int damage, Entity::TTyp
 	transform->init();
 	ComponentRenderable* renderable = new ComponentRenderable(mine, "data/bullet.png");
 	renderable->init();
-	ComponentCollider* collider = new ComponentCollider(mine, ComponentCollider::ECircleCollider, 0, ComponentCollider::EPlayerWeapon, ComponentCollider::EEnemyC);
+	ComponentCollider* collider = new ComponentCollider(mine, ComponentCollider::ECircleCollider, 0, ComponentCollider::ENone, ComponentCollider::EPlayer| ComponentCollider::EEnemyC | ComponentCollider::EPlayerWeapon | ComponentCollider::EEnemyWeapon, 20);
 	collider->init();
 	ComponentLife* life = new ComponentLife(mine, 0, 0, 0);
 	life->init();
@@ -300,32 +300,16 @@ Entity* Entity::createHUDMessage(std::string message, vec2 pos, int displayTime)
 }
 
 void Entity::createExplossion(vec2 pos, vec2 size) {
-	Entity* explossionFx = new Entity(EWeapon);
-	ComponentTransform* transform = new ComponentTransform(explossionFx, pos, vmake(10, 10), vmake(2, 2));
+	Entity* explossion = new Entity(EWeapon);
+	ComponentTransform* transform = new ComponentTransform(explossion, pos, vmake(10, 10), vmake(2, 2));
 	transform->init();
-	ComponentRenderable* renderable = new ComponentRenderable(explossionFx, "data/bullet.png", 2, 0.5f);
+	ComponentRenderable* renderable = new ComponentRenderable(explossion, "data/bullet.png", 2, 0.5f);
 	renderable->init();
-	ComponentLife* life = new ComponentLife(explossionFx, -1, 50, 0);
-	life->init();
-	g_world->addEntity(explossionFx);
-
-	Entity* explossionImpactToEnemies = new Entity(EWeapon);
-	transform = new ComponentTransform(explossionImpactToEnemies, pos, vmake(10, 10), vmake(2, 2));
-	transform->init();
-	ComponentCollider* colliderEnemy = new ComponentCollider(explossionImpactToEnemies, ComponentCollider::ECircleCollider, -5, ComponentCollider::EPlayerWeapon, ComponentCollider::ENone);
+	ComponentCollider* colliderEnemy = new ComponentCollider(explossion, ComponentCollider::ECircleCollider, -1, ComponentCollider::EPlayerWeapon | ComponentCollider::EEnemyWeapon | ComponentCollider::EEnemyC | ComponentCollider::EPlayer, ComponentCollider::ENone);
 	colliderEnemy->init();
-	life = new ComponentLife(explossionImpactToEnemies, -1, 50, 0);
+	ComponentLife* life = new ComponentLife(explossion, -1, 50, 0);
 	life->init();
-	g_world->addEntity(explossionImpactToEnemies);
-
-	Entity* explossionImpactToPlayer = new Entity(EWeapon);
-	transform = new ComponentTransform(explossionImpactToPlayer, pos, vmake(10, 10), vmake(2, 2));
-	transform->init();
-	ComponentCollider* colliderAllied = new ComponentCollider(explossionImpactToPlayer, ComponentCollider::ECircleCollider, -1, ComponentCollider::EEnemyWeapon, ComponentCollider::ENone);
-	colliderAllied->init();
-	life = new ComponentLife(explossionImpactToPlayer, -1, 50, 0);
-	life->init();
-	g_world->addEntity(explossionImpactToPlayer);
+	g_world->addEntity(explossion);
 
 	if (g_settings.sfx) {
 		uint m_soundId = CORE_LoadWav("data/explossion.wav");

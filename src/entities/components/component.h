@@ -260,7 +260,7 @@ public:
 		ENone         = 0,
 	};
 
-	ComponentCollider(Entity* owner, TColliderType type, int deltaLife, int collisionChannel, int collisionChannelsResponse) : Component(owner), m_type(type), m_deltaLife(deltaLife), m_collisionChannel(collisionChannel), m_collisionChannelsResponse(collisionChannelsResponse) {}
+	ComponentCollider(Entity* owner, TColliderType type, int deltaLife, int collisionChannel, int collisionChannelsResponse, int activationDelay = 0) : Component(owner), m_type(type), m_deltaLife(deltaLife), m_collisionChannel(collisionChannel), m_collisionChannelsResponse(collisionChannelsResponse), m_activationDelay(activationDelay), m_activationTimer(0) {}
 	
 	virtual void run           (float deltaTime);
 	virtual void receiveMessage(Message* message);
@@ -271,6 +271,8 @@ private:
 	vec2          m_center;
 	vec2          m_size;
 	int           m_deltaLife;
+	int           m_activationDelay;
+	int           m_activationTimer;
 };
 
 //=============================================================================

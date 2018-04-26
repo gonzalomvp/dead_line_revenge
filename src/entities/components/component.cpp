@@ -381,15 +381,12 @@ void ComponentWeapon::run(float deltaTime) {
 			case EMines:
 				Entity::createMine(this, messageGetTranform.pos, m_bulletDamage, m_owner->getType());
 				//createNuclearBomb();
-				deactivate();
 				break;
 			case EC4:
 				Entity::createC4(this, messageGetTranform.pos, m_bulletDamage, m_owner->getType());
-				deactivate();
 				break;
 			case ERocketLauncher:
 				Entity::createRocket(this, messageGetTranform.pos, m_aimDirection, m_bulletSpeed, m_bulletDamage, m_bulletRange, m_owner->getType());
-				deactivate();
 				break;
 			default:
 				g_world->addEntity(Entity::createBullet(messageGetTranform.pos, m_aimDirection, m_bulletSpeed, m_bulletDamage, m_bulletRange, m_owner->getType()));
@@ -437,7 +434,7 @@ void ComponentWeapon::receiveMessage(Message* message) {
 				m_soundFilename = "data/shot.wav";
 				break;
 			case EShotgun:
-				m_fireRate = 20;
+				m_fireRate = 0;
 				m_reloadTime = 40;
 				m_bullets = 2;
 				m_bulletSpeed = 4;
@@ -447,9 +444,9 @@ void ComponentWeapon::receiveMessage(Message* message) {
 				m_soundFilename = "data/shotgun.wav";
 				break;
 			case EMines:
-				m_fireRate = 20;
-				m_reloadTime = 40;
-				m_bullets = 2;
+				m_fireRate = 0;
+				m_reloadTime = 120;
+				m_bullets = 1;
 				m_bulletSpeed = 4;
 				m_bulletDamage = -1;
 				m_bulletRange = 30;
@@ -457,9 +454,9 @@ void ComponentWeapon::receiveMessage(Message* message) {
 				m_soundFilename = "data/mine.wav";
 				break;
 			case EC4:
-				m_fireRate = 20;
-				m_reloadTime = 40;
-				m_bullets = 2;
+				m_fireRate = 0;
+				m_reloadTime = 0;
+				m_bullets = 1;
 				m_bulletSpeed = 4;
 				m_bulletDamage = -1;
 				m_bulletRange = 30;
@@ -467,9 +464,9 @@ void ComponentWeapon::receiveMessage(Message* message) {
 				m_soundFilename = "data/mine.wav";
 				break;
 			case ERocketLauncher:
-				m_fireRate = 20;
-				m_reloadTime = 40;
-				m_bullets = 2;
+				m_fireRate = 0;
+				m_reloadTime = 100;
+				m_bullets = 1;
 				m_bulletSpeed = 5;
 				m_bulletDamage = -1;
 				m_bulletRange = 0;
@@ -511,8 +508,17 @@ void ComponentWeapon::receiveMessage(Message* message) {
 				else {
 					MessageReload *msgReload = dynamic_cast<MessageReload*>(message);
 					if (msgReload && m_currentBullets < m_bullets && m_reloadTimer >= m_reloadTime) {
-						m_reloadTimer = 0;
-						m_isFiring = false;
+						if (msgReload->instantaneous) {
+							if (m_reloadTime == 0) {
+								m_currentBullets = m_bullets;
+								m_isFiring = false;
+								m_reloadTimer = 0;
+							}
+						}
+						else {
+							m_isFiring = false;
+							m_reloadTimer = 0;
+						}
 					}
 				}
 			}
@@ -546,7 +552,9 @@ void ComponentExplossive::receiveMessage(Message* message) {
 		m_owner->receiveMessage(&messageSelfPos);
 		Entity::createExplossion(messageSelfPos.pos, vmake(100, 100));
 		if (m_weapon) {
-			m_weapon->activate();
+			MessageReload msgReload;
+			msgReload.instantaneous = true;
+			m_weapon->receiveMessage(&msgReload);
 		}
 	}
 }
@@ -793,6 +801,10 @@ void ComponentCollider::run(float deltaTime) {
 	if (!m_isActive)
 		return;
 
+	if (m_activationTimer < m_activationDelay) {
+		++m_activationTimer;
+	}
+
 	MessageGetTransform message;
 	m_owner->receiveMessage(&message);
 	m_center = message.pos;
@@ -800,11 +812,11 @@ void ComponentCollider::run(float deltaTime) {
 }
 
 void ComponentCollider::receiveMessage(Message* message) {
-	if (!m_isActive)
+	if (!m_isActive || m_activationTimer < m_activationDelay)
 		return;
 
 	MessageCheckCollision *msgCheckCollision = dynamic_cast<MessageCheckCollision*>(message);
-	if (msgCheckCollision && m_collisionChannel) {
+	if (msgCheckCollision) {
 		bool overlap = false;
 		Entity* other = msgCheckCollision->other;
 		if (msgCheckCollision->other) {
@@ -825,6 +837,7 @@ void ComponentCollider::receiveMessage(Message* message) {
 				case ComponentCollider::ECircleCollider:
 					switch (msgCheckCollision->type) {
 					case ComponentCollider::ECircleCollider:
+						overlap = checkCircleCircle(m_center, m_size.x * 0.5f, msgCheckCollision->center, msgCheckCollision->size.x * 0.5f);
 						break;
 					case ComponentCollider::ERectCollider:
 						overlap = checkCircleRect(m_center, m_size.x * 0.5f, vsub(msgCheckCollision->center, vscale(msgCheckCollision->size, 0.5f)), msgCheckCollision->size);

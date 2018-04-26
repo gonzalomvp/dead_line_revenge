@@ -166,6 +166,10 @@ void World::addPendingEntities() {
 	m_entitiesToAdd.clear();
 }
 
+bool checkCircleCircle(const vec2& pos1, float radius1, const vec2& pos2, float radius2) {
+	return vdist2(pos1, pos2) < (radius1 + radius2) * (radius1 + radius2);
+}
+
 bool checkCircleRect(const vec2& circlePos, float circleRadius, const vec2& rectPos, const vec2& rectSize) {
 	vec2 closestPoint = vmake(clamp(circlePos.x, rectPos.x, rectPos.x + rectSize.x), clamp(circlePos.y, rectPos.y, rectPos.y + rectSize.y));
 	return vdist(circlePos, closestPoint) < circleRadius;
