@@ -318,18 +318,20 @@ private:
 //=============================================================================
 // ComponentHUD class
 //=============================================================================
-class ComponentHUD : public Component {
+class ComponentHUD : public Component, public IInputManager::IListener {
 public:
 	ComponentHUD(Entity* owner) : Component(owner) {}
 	~ComponentHUD();
 
-	virtual void init();
-	virtual void run (float deltaTime);
+	virtual void init   ();
+	virtual void run    (float deltaTime);
+	virtual bool onEvent(const IInputManager::Event&);
 private:
 	Text*   m_life;
 	Text*   m_score;
 	Text*   m_ammo;
 	Text*   m_fps;
+	Sprite* m_target;
 
 	//ver si cambiar a Renderable
 	Sprite* m_reloadAnim;

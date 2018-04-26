@@ -985,6 +985,8 @@ ComponentHUD::~ComponentHUD() {
 	g_graphicsEngine->removeGfxEntity(m_ammo);
 	g_graphicsEngine->removeGfxEntity(m_fps);
 	g_graphicsEngine->removeGfxEntity(m_reloadAnim);
+
+	g_inputManager->unregisterEvent(this, IInputManager::TEvent::EMouse);
 }
 
 void ComponentHUD::init() {
@@ -1001,8 +1003,14 @@ void ComponentHUD::init() {
 	m_fps = new Text("", 1, vmake(300, 300));
 	g_graphicsEngine->addGfxEntity(m_fps);
 
+	m_target = new Sprite(g_graphicsEngine->getTexture("data/target.png"), 1);
+	m_target->setSize(vmake(50, 50));
+	g_graphicsEngine->addGfxEntity(m_target);
+
 	m_reloadAnim = new Sprite(g_graphicsEngine->getTexture("data/playerReload.png"), 1);
 	g_graphicsEngine->addGfxEntity(m_reloadAnim);
+
+	g_inputManager->registerEvent(this, IInputManager::TEvent::EMouse, 0);
 }
 
 void ComponentHUD::run(float deltaTime) {
@@ -1024,4 +1032,25 @@ void ComponentHUD::run(float deltaTime) {
 	m_owner->receiveMessage(&msgTransform);
 	m_reloadAnim->setPos(vmake(msgTransform.pos.x, msgTransform.pos.y - msgTransform.size.y * msgAmmo.reloadPercent * 0.5f));
 	m_reloadAnim->setSize(vmake(msgTransform.size.x, msgTransform.size.y * (1 - msgAmmo.reloadPercent)));
+}
+
+bool ComponentHUD::onEvent(const IInputManager::Event& event) {
+	if (m_isActive) {
+		IInputManager::TEvent eventType = event.getType();
+		if (eventType == IInputManager::TEvent::EMouse) {
+			const IInputManager::MouseEvent mouseEvent = *static_cast<const IInputManager::MouseEvent*>(&event);
+			if (mouseEvent.mouseButtonAction == mouseEvent.AMove) {
+				vec2 targetPos = vmake(mouseEvent.x, mouseEvent.y);
+				m_target->setPos(targetPos);
+
+				MessageGetTransform messagePos;
+				m_owner->receiveMessage(&messagePos);
+				MessageAimDirection messageAimDirection;
+				messageAimDirection.direction = vnorm(vsub(targetPos, messagePos.pos));
+				m_owner->receiveMessage(&messageAimDirection);
+			}
+		}
+	}
+
+	return true;
 }

@@ -49,8 +49,8 @@ Entity* Entity::createPlayer(vec2 pos) {
 	movement->init();
 	ComponentWeapon* weapon = new ComponentWeapon(player, Component::ERevolver, 20, 60, 6, 6, -2, 60, false, 0, "data/shot.wav");
 	weapon->init();
-	C_Target* target = new C_Target(player, "data/target.png");
-	target->init();
+	//C_Target* target = new C_Target(player, "data/target.png");
+	//target->init();
 	ComponentCollider* collider = new ComponentCollider(player, ComponentCollider::ERectCollider, 0, ComponentCollider::EPlayer, ComponentCollider::EEnemyC | ComponentCollider::EEnemyWeapon);
 	collider->init();
 	ComponentLife* life = new ComponentLife(player, 5, 0, 20);
