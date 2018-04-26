@@ -313,6 +313,11 @@ bool ComponentPlayerController::onEvent(const IInputManager::Event& event) {
 			}
 			m_owner->receiveMessage(&messageFire);
 		}
+		else if (mouseEvent.mouseButton == mouseEvent.BRight && mouseEvent.mouseButtonAction == mouseEvent.AButtonDown)
+		{
+			MessageReload msgReload;
+			m_owner->receiveMessage(&msgReload);
+		}
 		/*const IInputManager::MouseEvent mouseEvent = *static_cast<const IInputManager::MouseEvent*>(&event);
 		setTargetPos(vmake(mouseEvent.x, mouseEvent.y));
 		if (mouseEvent.buttonMask == 1) {

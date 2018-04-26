@@ -26,6 +26,26 @@ bool MouseInputManager::onEvent(const IInputManager::MouseEvent& mouseEvent) {
 		eventToAdd->mouseButtonAction = IInputManager::MouseEvent::AButtonUp;
 		g_inputManager->addEvent(eventToAdd);
 	}
+	if (mouseEvent.buttonMask & MOUSE_RBUTTON && !m_rButtonPressed)
+	{
+		m_rButtonPressed = true;
+		IInputManager::MouseEvent* eventToAdd = new IInputManager::MouseEvent();
+		eventToAdd->x = mouseEvent.x;
+		eventToAdd->y = mouseEvent.y;
+		eventToAdd->mouseButton = IInputManager::MouseEvent::BRight;
+		eventToAdd->mouseButtonAction = IInputManager::MouseEvent::AButtonDown;
+		g_inputManager->addEvent(eventToAdd);
+	}
+	if (!(mouseEvent.buttonMask & MOUSE_RBUTTON) && m_rButtonPressed)
+	{
+		m_rButtonPressed = false;
+		IInputManager::MouseEvent* eventToAdd = new IInputManager::MouseEvent();
+		eventToAdd->x = mouseEvent.x;
+		eventToAdd->y = mouseEvent.y;
+		eventToAdd->mouseButton = IInputManager::MouseEvent::BRight;
+		eventToAdd->mouseButtonAction = IInputManager::MouseEvent::AButtonUp;
+		g_inputManager->addEvent(eventToAdd);
+	}
 
 	IInputManager::MouseEvent* eventToAdd = new IInputManager::MouseEvent();
 	eventToAdd->x = mouseEvent.x;
