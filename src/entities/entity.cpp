@@ -305,7 +305,7 @@ void Entity::createExplossion(vec2 pos, vec2 size) {
 	transform->init();
 	ComponentRenderable* renderable = new ComponentRenderable(explossion, "data/bullet.png", 2, 0.5f);
 	renderable->init();
-	ComponentCollider* colliderEnemy = new ComponentCollider(explossion, ComponentCollider::ECircleCollider, -1, ComponentCollider::EPlayerWeapon | ComponentCollider::EEnemyWeapon | ComponentCollider::EEnemyC | ComponentCollider::EPlayer, ComponentCollider::ENone);
+	ComponentCollider* colliderEnemy = new ComponentCollider(explossion, ComponentCollider::ECircleCollider, -1, ComponentCollider::EPlayerWeapon | ComponentCollider::EEnemyWeapon | ComponentCollider::EBoundaries, ComponentCollider::ENone);
 	colliderEnemy->init();
 	ComponentLife* life = new ComponentLife(explossion, -1, 50, 0);
 	life->init();
