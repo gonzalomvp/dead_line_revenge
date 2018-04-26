@@ -7,19 +7,23 @@
 #include "../../gui/string_manager.h"
 #include "../../engine/graphics_engine.h"
 
+#include <algorithm>
+
 #define EVASION_ANGLE         45.0f
 #define EVASION_MIN_WALL_DIST 20.0f
 
 //=============================================================================
 // Component class
 //=============================================================================
-Component::Component(Entity* owner) : m_owner(owner), m_isActive(false) {
-	//m_owner->addComponent(this);
+Component::Component(Entity* owner, int activationDelay) : m_owner(owner), m_isActive(false), m_activationDelay(activationDelay), m_activationTimer(0) {
+	
 }
 
 void Component::init() {
 	m_owner->addComponent(this);
-	activate();
+	if (m_activationDelay == 0) {
+		activate();
+	}
 }
 
 void Component::destroy() {
@@ -35,10 +39,20 @@ void Component::deactivate() {
 	m_isActive = false;
 }
 
+void Component::run(float deltaTime) {
+	if (m_activationTimer < m_activationDelay) {
+		++m_activationTimer;
+		if (m_activationTimer == m_activationDelay) {
+			activate();
+		}
+	}
+}
+
 //=============================================================================
 // ComponentTransform class
 //=============================================================================
 void ComponentTransform::run(float deltaTime) {
+	Component::run(deltaTime);
 	m_size = vadd(m_size, m_sizeDelta);
 }
 
@@ -105,6 +119,7 @@ ComponentLife::ComponentLife(Entity* owner, int life, int timeToLive, int invenc
 }
 
 void ComponentLife::run(float deltaTime) {
+	Component::run(deltaTime);
 	if (!m_isActive)
 		return;
 
@@ -151,6 +166,7 @@ void ComponentLife::receiveMessage(Message* message) {
 // ComponentInertialMove class
 //=============================================================================
 void ComponentInertialMove::run(float deltaTime) {
+	Component::run(deltaTime);
 	if (!m_isActive)
 		return;
 
@@ -203,6 +219,7 @@ void ComponentRenderable::init() {
 }
 
 void ComponentRenderable::run(float deltaTime) {
+	Component::run(deltaTime);
 	if (!m_isActive)
 		return;
 
@@ -333,7 +350,7 @@ bool ComponentPlayerController::onEvent(const IInputManager::Event& event) {
 //=============================================================================
 // ComponentWeapon class
 //=============================================================================
-ComponentWeapon::ComponentWeapon(Entity* owner, TWeapon type, int fireRate, int reloadTime, int bullets, int bulletSpeed, int bulletDamage, int bulletRange, bool isAutomatic, const char* soundFilename) : Component(owner), m_type(type), m_fireRate(fireRate), m_reloadTime(reloadTime), m_bullets(bullets), m_bulletSpeed(bulletSpeed), m_bulletDamage(bulletDamage), m_bulletRange(bulletRange), m_isAutomatic(isAutomatic), m_soundFilename(soundFilename) {
+ComponentWeapon::ComponentWeapon(Entity* owner, TWeapon type, int fireRate, int reloadTime, int bullets, int bulletSpeed, int bulletDamage, int bulletRange, bool isAutomatic, int activationDelay, const char* soundFilename) : Component(owner, activationDelay), m_type(type), m_fireRate(fireRate), m_reloadTime(reloadTime), m_bullets(bullets), m_bulletSpeed(bulletSpeed), m_bulletDamage(bulletDamage), m_bulletRange(bulletRange), m_isAutomatic(isAutomatic), m_soundFilename(soundFilename) {
 	m_aimDirection   = vmake(0.0f, 0.0f);
 	m_currentBullets = m_bullets;
 	m_isFiring       = false;
@@ -350,6 +367,7 @@ void ComponentWeapon::init() {
 }
 
 void ComponentWeapon::run(float deltaTime) {
+	Component::run(deltaTime);
 	if (!m_isActive)
 		return;
 
@@ -650,6 +668,7 @@ ComponentAIMelee::ComponentAIMelee(Entity* owner, Entity* player, float speed, f
 	m_offset = vmake(CORE_FRand(-20, 20), CORE_FRand(-20, 20));
 }
 void ComponentAIMelee::run(float deltaTime) {
+	Component::run(deltaTime);
 	if (!m_isActive)
 		return;
 
@@ -671,6 +690,7 @@ void ComponentAIMelee::run(float deltaTime) {
 // ComponentAIEvade class
 //=============================================================================
 void ComponentAIEvade::run(float deltaTime) {
+	Component::run(deltaTime);
 	if (!m_isActive)
 		return;
 
@@ -747,6 +767,15 @@ vec2 ComponentAIEvade::calculatIntersectionWithWall(vec2 position, float angle) 
 //=============================================================================
 void ComponentAIFire::init() {
 	Component::init();
+	if (m_fireDirections.size() > 0 && m_shuffle) {
+		std::random_shuffle(m_fireDirections.begin(), m_fireDirections.end());
+	}
+}
+
+void ComponentAIFire::run(float deltaTime) {
+	Component::run(deltaTime);
+	if (!m_isActive)
+		return;
 
 	MessageFire msgFire;
 	msgFire.isFiring = true;
@@ -764,21 +793,6 @@ void ComponentAIFire::init() {
 	else {
 		MessageAimDirection messageAimDirection;
 		messageAimDirection.direction = m_fireDirections[m_currentFireDirection];
-		m_owner->receiveMessage(&messageAimDirection);
-	}
-}
-
-void ComponentAIFire::run(float deltaTime) {
-	if (!m_isActive)
-		return;
-
-	if (m_player) {
-		MessageGetTransform messageSelfPos;
-		m_owner->receiveMessage(&messageSelfPos);
-		MessageGetTransform messagePlayerPos;
-		m_player->receiveMessage(&messagePlayerPos);
-		MessageAimDirection messageAimDirection;
-		messageAimDirection.direction = vnorm(vsub(messagePlayerPos.pos, messageSelfPos.pos));
 		m_owner->receiveMessage(&messageAimDirection);
 	}
 }
@@ -803,12 +817,9 @@ void ComponentAIFire::receiveMessage(Message* message) {
 // ComponentCollider class
 //=============================================================================
 void ComponentCollider::run(float deltaTime) {
+	Component::run(deltaTime);
 	if (!m_isActive)
 		return;
-
-	if (m_activationTimer < m_activationDelay) {
-		++m_activationTimer;
-	}
 
 	MessageGetTransform message;
 	m_owner->receiveMessage(&message);
@@ -817,7 +828,7 @@ void ComponentCollider::run(float deltaTime) {
 }
 
 void ComponentCollider::receiveMessage(Message* message) {
-	if (!m_isActive || m_activationTimer < m_activationDelay)
+	if (!m_isActive)
 		return;
 
 	MessageCheckCollision *msgCheckCollision = dynamic_cast<MessageCheckCollision*>(message);
@@ -995,6 +1006,7 @@ void ComponentHUD::init() {
 }
 
 void ComponentHUD::run(float deltaTime) {
+	Component::run(deltaTime);
 	MessageGetLife msgLife;
 	m_owner->receiveMessage(&msgLife);
 	m_life->setText(std::to_string(msgLife.currentLife));

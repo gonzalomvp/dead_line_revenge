@@ -34,17 +34,19 @@ public:
 	virtual void destroy       ();
 	virtual void activate      ();
 	virtual void deactivate    ();
-	virtual void run           (float deltaTime)  {}
+	virtual void run           (float deltaTime);
 	virtual void receiveMessage(Message* message) {}
 	//revisar esto de = 0 {} //Sirve para hacer la clase abstracta y a la vez no forzar la implementacion del destructor por los hijos
 	//virtual ~Component() = 0 {}
 	
 	//void setOwner(Entity* owner) { m_owner = owner; }
 protected:
-	Component(Entity* owner);
+	Component(Entity* owner, int activationDelay = 0);
 
 	Entity* m_owner;
 	bool    m_isActive;
+	int     m_activationDelay;
+	int     m_activationTimer;
 };
 
 //=============================================================================
@@ -137,7 +139,7 @@ public:
 //=============================================================================
 class ComponentWeapon : public Component {
 public:
-	ComponentWeapon(Entity* owner, TWeapon type, int fireRate, int reloadTime, int bullets, int bulletSpeed, int bulletDamage, int bulletRange, bool isAutomatic, const char* soundFilename = nullptr);
+	ComponentWeapon(Entity* owner, TWeapon type, int fireRate, int reloadTime, int bullets, int bulletSpeed, int bulletDamage, int bulletRange, bool isAutomatic, int activationDelay = 0, const char* soundFilename = nullptr);
 
 	virtual void init          ();
 	virtual void run           (float deltaTime);
@@ -234,7 +236,7 @@ private:
 class ComponentAIFire : public Component {
 public:
 	ComponentAIFire(Entity* owner, Entity* player)            : Component(owner), m_player(player) {}
-	ComponentAIFire(Entity* owner, const std::vector<vec2> fireDirections) : Component(owner), m_fireDirections(fireDirections) {}
+	ComponentAIFire(Entity* owner, std::vector<vec2> fireDirections, bool shuffle) : Component(owner), m_fireDirections(fireDirections), m_shuffle(shuffle) {}
 	
 	virtual void init          ();
 	virtual void run           (float deltaTime);
@@ -243,6 +245,7 @@ private:
 	Entity*           m_player;
 	std::vector<vec2> m_fireDirections;
 	int               m_currentFireDirection;
+	bool              m_shuffle;
 };
 
 //=============================================================================
@@ -260,7 +263,7 @@ public:
 		ENone         = 0,
 	};
 
-	ComponentCollider(Entity* owner, TColliderType type, int deltaLife, int collisionChannel, int collisionChannelsResponse, int activationDelay = 0) : Component(owner), m_type(type), m_deltaLife(deltaLife), m_collisionChannel(collisionChannel), m_collisionChannelsResponse(collisionChannelsResponse), m_activationDelay(activationDelay), m_activationTimer(0) {}
+	ComponentCollider(Entity* owner, TColliderType type, int deltaLife, int collisionChannel, int collisionChannelsResponse, int activationDelay = 0) : Component(owner, activationDelay), m_type(type), m_deltaLife(deltaLife), m_collisionChannel(collisionChannel), m_collisionChannelsResponse(collisionChannelsResponse) {}
 	
 	virtual void run           (float deltaTime);
 	virtual void receiveMessage(Message* message);
@@ -271,8 +274,6 @@ private:
 	vec2          m_center;
 	vec2          m_size;
 	int           m_deltaLife;
-	int           m_activationDelay;
-	int           m_activationTimer;
 };
 
 //=============================================================================
