@@ -181,7 +181,7 @@ Entity* Entity::createEnemy(int x, int y, Entity* player, int speed, int lives, 
 	collider->init();
 	ComponentLife* life = new ComponentLife(enemy, lives, 0, 0);
 	life->init();
-	ComponentPoints* points = new ComponentPoints(enemy, 10);
+	ComponentPoints* points = new ComponentPoints(enemy, 1);
 	points->init();
 	return enemy;
 }
@@ -198,6 +198,8 @@ Entity* Entity::createBigEnemy(int x, int y, Entity* player, int speed, int live
 	collider->init();
 	ComponentLife* life = new ComponentLife(enemy, lives, 0, 0);
 	life->init();
+	ComponentPoints* points = new ComponentPoints(enemy, 2);
+	points->init();
 	return enemy;
 }
 
@@ -219,6 +221,8 @@ Entity* Entity::createRangeEnemy(int x, int y, Entity* player) {
 	collider->init();
 	ComponentLife* life = new ComponentLife(enemy, 1, 0, 0);
 	life->init();
+	ComponentPoints* points = new ComponentPoints(enemy, 4);
+	points->init();
 	return enemy;
 }
 
@@ -239,7 +243,7 @@ Entity* Entity::createTurretEnemy(int x, int y, vec2 dir, Entity* player) {
 	collider->init();
 	ComponentLife* life = new ComponentLife(enemy, 3, 0, 0);
 	life->init();
-	ComponentPoints* points = new ComponentPoints(enemy, 10);
+	ComponentPoints* points = new ComponentPoints(enemy, 3);
 	points->init();
 	return enemy;
 }
@@ -279,7 +283,7 @@ Entity* Entity::createWeaponPickup() {
 	collider->init();
 	ComponentWeaponPickup* pickup = new ComponentWeaponPickup(weaponPickup, type);
 	pickup->init();
-	ComponentPoints* points = new ComponentPoints(weaponPickup, 1);
+	ComponentPoints* points = new ComponentPoints(weaponPickup, 10);
 	points->init();
 	ComponentLife* life = new ComponentLife(weaponPickup, 0, 0, 0);
 	life->init();
