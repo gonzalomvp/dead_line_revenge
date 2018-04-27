@@ -568,67 +568,6 @@ void ComponentExplossive::receiveMessage(Message* message) {
 	}
 }
 
-//Me lo salto por si lo muevo al HUD
-//=============================================================================
-// C_Target class
-//=============================================================================
-C_Target::C_Target(Entity* owner, char* texture) : Component(owner){
-	m_sprite = new Sprite(g_graphicsEngine->getTexture(texture), 1);
-	m_sprite->setSize(vmake(50, 50));
-	g_graphicsEngine->addGfxEntity(m_sprite);
-	g_inputManager->registerEvent(this, IInputManager::TEvent::EMouse, 0);
-}
-
-C_Target::~C_Target() {
-	g_graphicsEngine->removeGfxEntity(m_sprite);
-	g_inputManager->unregisterEvent(this, IInputManager::TEvent::EMouse);
-}
-
-
-//void C_Target::receiveMessage(Message* message) {
-//	MessageGetTargetPos *msgTarget = dynamic_cast<MessageGetTargetPos*>(message);
-//	if (msgTarget) {
-//		msgTarget->pos = m_sprite->getPos();
-//	}
-//}
-
-bool C_Target::onEvent(const IInputManager::Event& event) {
-	if (m_isActive) {
-		IInputManager::TEvent eventType = event.getType();
-		if (eventType == IInputManager::TEvent::EMouse) {
-			const IInputManager::MouseEvent mouseEvent = *static_cast<const IInputManager::MouseEvent*>(&event);
-			if (mouseEvent.mouseButtonAction == mouseEvent.AMove) {
-				vec2 targetPos = vmake(mouseEvent.x, mouseEvent.y);
-				m_sprite->setPos(targetPos);
-
-				MessageGetTransform messagePos;
-				m_owner->receiveMessage(&messagePos);
-				MessageAimDirection messageAimDirection;
-				messageAimDirection.direction = vnorm(vsub(targetPos, messagePos.pos));
-				m_owner->receiveMessage(&messageAimDirection);
-			}
-		}
-	}
-	
-	return true;
-}
-
-void C_Target::activate() {
-	if (!m_isActive) {
-		Component::activate();
-		g_graphicsEngine->addGfxEntity(m_sprite);
-	}
-	
-}
-
-void C_Target::deactivate() {
-	if (m_isActive) {
-		Component::deactivate();
-		g_graphicsEngine->removeGfxEntity(m_sprite);
-	}
-	
-}
-
 //=============================================================================
 // ComponentAIMelee class
 //=============================================================================

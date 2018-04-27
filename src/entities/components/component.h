@@ -176,25 +176,6 @@ public:
 };
 
 //=============================================================================
-// C_Target class
-//=============================================================================
-//Me lo salto por si lo muevo al HUD
-//Convertir a HUD
-class C_Target : public Component, public IInputManager::IListener {
-public:
-	C_Target(Entity* owner, char* texture);
-	~C_Target();
-	//virtual void receiveMessage(Message* message);
-
-	virtual void activate();
-	virtual void deactivate();
-
-	virtual bool onEvent(const IInputManager::Event&);
-private:
-	Sprite* m_sprite;
-};
-
-//=============================================================================
 // ComponentAIMelee class
 //=============================================================================
 class ComponentAIMelee : public Component {
