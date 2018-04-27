@@ -353,6 +353,7 @@ bool ComponentPlayerController::onEvent(const IInputManager::Event& event) {
 ComponentWeapon::ComponentWeapon(Entity* owner, TWeapon type, int fireRate, int reloadTime, int bullets, int bulletSpeed, int bulletDamage, int bulletRange, bool isAutomatic, int activationDelay, const char* soundFilename) : Component(owner, activationDelay), m_type(type), m_fireRate(fireRate), m_reloadTime(reloadTime), m_bullets(bullets), m_bulletSpeed(bulletSpeed), m_bulletDamage(bulletDamage), m_bulletRange(bulletRange), m_isAutomatic(isAutomatic), m_soundFilename(soundFilename) {
 	m_aimDirection   = vmake(0.0f, 0.0f);
 	m_currentBullets = m_bullets;
+	m_remoteBullet   = nullptr;
 	m_isFiring       = false;
 	m_soundId        = 0;
 	m_fireTimer      = fireRate;
@@ -381,7 +382,16 @@ void ComponentWeapon::run(float deltaTime) {
 		}
 	}
 
-	if (m_isFiring && m_fireTimer >= m_fireRate && m_reloadTimer >= m_reloadTime && m_currentBullets > 0) {
+	if (m_isFiring && m_remoteBullet) {
+		MessageChangeLife msgChangeLife;
+		msgChangeLife.deltaLife = -1;
+		m_remoteBullet->receiveMessage(&msgChangeLife);
+		m_remoteBullet = nullptr;
+		m_isFiring = false;
+		m_currentBullets = m_bullets;
+	}
+
+	else if (m_isFiring && m_fireTimer >= m_fireRate && m_reloadTimer >= m_reloadTime && m_currentBullets > 0) {
 		m_fireTimer = 0;
 		--m_currentBullets;
 		if (m_currentBullets == 0) {
@@ -406,7 +416,7 @@ void ComponentWeapon::run(float deltaTime) {
 				//createNuclearBomb();
 				break;
 			case EC4:
-				Entity::createC4(this, messageGetTranform.pos, m_bulletDamage, m_owner->getType());
+				m_remoteBullet = Entity::createC4(this, messageGetTranform.pos, m_bulletDamage, m_owner->getType());
 				break;
 			case ERocketLauncher:
 				Entity::createRocket(this, messageGetTranform.pos, m_aimDirection, m_bulletSpeed, m_bulletDamage, m_bulletRange, m_owner->getType());
@@ -531,17 +541,8 @@ void ComponentWeapon::receiveMessage(Message* message) {
 				else {
 					MessageReload *msgReload = dynamic_cast<MessageReload*>(message);
 					if (msgReload && m_currentBullets < m_bullets && m_reloadTimer >= m_reloadTime) {
-						if (msgReload->instantaneous) {
-							if (m_reloadTime == 0) {
-								m_currentBullets = m_bullets;
-								m_isFiring = false;
-								m_reloadTimer = 0;
-							}
-						}
-						else {
-							m_isFiring = false;
-							m_reloadTimer = 0;
-						}
+						m_isFiring = false;
+						m_reloadTimer = 0;
 					}
 				}
 			}
@@ -552,19 +553,6 @@ void ComponentWeapon::receiveMessage(Message* message) {
 //=============================================================================
 // ComponentExplossive class
 //=============================================================================
-ComponentExplossive::~ComponentExplossive() {
-	if (m_isActivatedRemotely) {
-		g_inputManager->unregisterEvent(this, IInputManager::TEvent::EMouse);
-	}
-}
-
-void ComponentExplossive::init() {
-	Component::init();
-	if (m_isActivatedRemotely) {
-		g_inputManager->registerEvent(this, IInputManager::TEvent::EMouse, 0);
-	}
-}
-
 void ComponentExplossive::receiveMessage(Message* message) {
 	if (!m_isActive)
 		return;
@@ -574,30 +562,7 @@ void ComponentExplossive::receiveMessage(Message* message) {
 		MessageGetTransform messageSelfPos;
 		m_owner->receiveMessage(&messageSelfPos);
 		Entity::createExplossion(messageSelfPos.pos, vmake(100, 100));
-		if (m_weapon) {
-			MessageReload msgReload;
-			msgReload.instantaneous = true;
-			m_weapon->receiveMessage(&msgReload);
-		}
 	}
-}
-
-bool ComponentExplossive::onEvent(const IInputManager::Event& event) {
-	if (!m_isActive)
-		return false;
-
-	IInputManager::TEvent eventType = event.getType();
-
-	if (eventType == IInputManager::TEvent::EMouse) {
-		const IInputManager::MouseEvent mouseEvent = *static_cast<const IInputManager::MouseEvent*>(&event);
-		if (mouseEvent.mouseButton == mouseEvent.BLeft && mouseEvent.mouseButtonAction == mouseEvent.AButtonDown) {
-			MessageChangeLife msgChangeLife;
-			msgChangeLife.deltaLife = -1;
-			m_owner->receiveMessage(&msgChangeLife);
-		}
-	}
-
-	return true;
 }
 
 //Me lo salto por si lo muevo al HUD

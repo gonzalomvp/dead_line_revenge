@@ -33,7 +33,6 @@ struct MessageAddMovement : public Message {
 };
 
 struct MessageReload : public Message {
-	bool instantaneous = false;
 };
 
 struct MessageFire : public Message {

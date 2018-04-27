@@ -111,7 +111,7 @@ Entity* Entity::createMine(Component* weapon, vec2 pos, int damage, Entity::TTyp
 	collider->init();
 	ComponentLife* life = new ComponentLife(mine, 0, 0, 0);
 	life->init();
-	ComponentExplossive* explossion = new ComponentExplossive(mine, false, weapon);
+	ComponentExplossive* explossion = new ComponentExplossive(mine);
 	explossion->init();
 	g_world->addEntity(mine);
 	return mine;
@@ -125,7 +125,7 @@ Entity* Entity::createC4(Component* weapon, vec2 pos, int damage, Entity::TType 
 	renderable->init();
 	ComponentLife* life = new ComponentLife(mine, 0, 0, 0);
 	life->init();
-	ComponentExplossive* explossion = new ComponentExplossive(mine, true, weapon);
+	ComponentExplossive* explossion = new ComponentExplossive(mine);
 	explossion->init();
 	g_world->addEntity(mine);
 	return mine;
@@ -143,7 +143,7 @@ Entity* Entity::createRocket(Component* weapon, vec2 pos, vec2 direction, float 
 	collider->init();
 	ComponentLife* life = new ComponentLife(rocket, 0, range, 0);
 	life->init();
-	ComponentExplossive* explossive = new ComponentExplossive(rocket, false, weapon);
+	ComponentExplossive* explossive = new ComponentExplossive(rocket);
 	explossive->init();
 	g_world->addEntity(rocket);
 	return rocket;

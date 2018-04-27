@@ -153,6 +153,7 @@ private:
 	int         m_bulletDamage;
 	int         m_bulletRange;
 	bool        m_isAutomatic;
+	Entity*     m_remoteBullet;
 	const char* m_soundFilename;
 	vec2        m_aimDirection;
 	int         m_currentBullets;
@@ -167,17 +168,11 @@ private:
 //=============================================================================
 // ComponentExplossive class
 //=============================================================================
-class ComponentExplossive : public Component, public IInputManager::IListener {
+class ComponentExplossive : public Component {
 public:
-	ComponentExplossive(Entity* owner, bool isActivatedRemotely, Component* weapon = nullptr) : Component(owner), m_isActivatedRemotely(isActivatedRemotely), m_weapon(weapon) {}
-	~ComponentExplossive();
+	ComponentExplossive(Entity* owner) : Component(owner) {}
 
-	virtual void init          ();
 	virtual void receiveMessage(Message* message);
-	virtual bool onEvent       (const IInputManager::Event&);
-private:
-	bool       m_isActivatedRemotely;
-	Component* m_weapon;
 };
 
 //=============================================================================
