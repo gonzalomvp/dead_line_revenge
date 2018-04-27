@@ -11,7 +11,7 @@ public:
 		EPickup,
 		EEnemy,
 		EWeapon,
-		EHUD,
+		EHUDMessage,
 		EOther,
 	};
 

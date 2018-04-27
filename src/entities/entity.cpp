@@ -151,20 +151,15 @@ Entity* Entity::createRocket(Component* weapon, vec2 pos, vec2 direction, float 
 
 Entity* Entity::createNuclearBomb() {
 	Entity* bomb = new Entity(EWeapon);
-	ComponentTransform* transform = new ComponentTransform(bomb, vmake(SCR_WIDTH / 2.0, SCR_HEIGHT / 2.0), vmake(SCR_WIDTH, SCR_HEIGHT));
+	ComponentTransform* transform = new ComponentTransform(bomb, vmake(SCR_WIDTH / 2.0, SCR_HEIGHT / 2.0), vmake(20, 20), vmake(8, 8));
 	transform->init();
-	ComponentRenderable* renderable = new ComponentRenderable(bomb, "data/bullet.png", 0.5f);
+	ComponentRenderable* renderable = new ComponentRenderable(bomb, "data/bullet.png", 2, 0.5f);
 	renderable->init();
-	ComponentCollider* colliderEnemy = new ComponentCollider(bomb, ComponentCollider::ECircleCollider, -50, ComponentCollider::ENone, ComponentCollider::ENone);
+	ComponentCollider* colliderEnemy = new ComponentCollider(bomb, ComponentCollider::ECircleCollider, -50, ComponentCollider::EPlayerWeapon | ComponentCollider::EBoundaries, ComponentCollider::ENone);
 	colliderEnemy->init();
-	ComponentLife* life = new ComponentLife(bomb, 1, 50, 0);
+	ComponentLife* life = new ComponentLife(bomb, 1, 100, 0);
 	life->init();
 	g_world->addEntity(bomb);
-
-	if (g_settings.sfx) {
-		uint m_soundId = CORE_LoadWav("data/explossion.wav");
-		CORE_PlayMusic(m_soundId);
-	}
 
 	return bomb;
 }
@@ -249,34 +244,12 @@ Entity* Entity::createTurretEnemy(int x, int y, vec2 dir, Entity* player) {
 }
 
 Entity* Entity::createWeaponPickup() {
-	int randomType = rand() % Component::EWeaponCount;
+	Component::TWeapon type = static_cast<Component::TWeapon>(rand() % Component::EWeaponCount);
+	//type = Component::ENuclearBomb;
 	vec2 randomPos = vmake(CORE_FRand(0.0, SCR_WIDTH), CORE_FRand(0.0, SCR_HEIGHT));
 	Entity* weaponPickup = new Entity(EPickup);
 	ComponentTransform* transform = new ComponentTransform(weaponPickup, randomPos, vmake(20, 20));
 	transform->init();
-
-	Component::TWeapon type;
-	switch (randomType)
-	{
-		case 0:
-			type = Component::ERevolver;
-			break;
-		case 1:
-			type = Component::EMachinegun;
-			break;
-		case 2:
-			type = Component::EShotgun;
-			break;
-		case 3:
-			type = Component::EMines;
-			break;
-		case 4:
-			type = Component::EC4;
-			break;
-		case 5:
-			type = Component::ERocketLauncher;
-			break;
-	}
 	ComponentRenderable* renderable = new ComponentRenderable(weaponPickup, "data/SimpleCrate.png");
 	renderable->init();
 	ComponentCollider* collider = new ComponentCollider(weaponPickup, ComponentCollider::ERectCollider, 0, ComponentCollider::EPickup, ComponentCollider::EPlayer);
@@ -291,7 +264,7 @@ Entity* Entity::createWeaponPickup() {
 }
 
 Entity* Entity::createHUDMessage(std::string message, vec2 pos, int displayTime) {
-	Entity* hudMessage = new Entity(EHUD);
+	Entity* hudMessage = new Entity(EHUDMessage);
 	ComponentHUDMessage* hudMessageComponent = new ComponentHUDMessage(hudMessage, pos, message);
 	hudMessageComponent->init();
 	ComponentLife* life = new ComponentLife(hudMessage, 1, displayTime, 0);

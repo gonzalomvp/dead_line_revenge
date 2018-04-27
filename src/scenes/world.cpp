@@ -118,7 +118,7 @@ void World::removePendingEntities() {
 				--m_currentEnemies;
 				break;
 			}
-			case Entity::EHUD:
+			case Entity::EHUDMessage:
 				m_hudMessage = nullptr;
 				break;
 		}
@@ -153,7 +153,7 @@ void World::addPendingEntities() {
 			case Entity::EPlayer: 
 				m_player = m_entitiesToAdd[i];
 				break;
-			case Entity::EHUD:
+			case Entity::EHUDMessage:
 				m_hudMessage = m_entitiesToAdd[i];
 				break;
 		}

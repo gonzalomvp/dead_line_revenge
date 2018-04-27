@@ -416,13 +416,15 @@ void ComponentWeapon::run(float deltaTime) {
 				break;
 			case EMines:
 				Entity::createMine(this, messageGetTranform.pos, m_bulletDamage, m_owner->getType());
-				//createNuclearBomb();
 				break;
 			case EC4:
 				m_remoteBullet = Entity::createC4(this, messageGetTranform.pos, m_bulletDamage, m_owner->getType());
 				break;
 			case ERocketLauncher:
 				Entity::createRocket(this, messageGetTranform.pos, m_aimDirection, m_bulletSpeed, m_bulletDamage, m_bulletRange, m_owner->getType());
+				break;
+			case ENuclearBomb:
+				Entity::createNuclearBomb();
 				break;
 			default:
 				g_world->addEntity(Entity::createBullet(messageGetTranform.pos, m_aimDirection, m_bulletSpeed, m_bulletDamage, m_bulletRange, m_owner->getType()));
@@ -508,6 +510,16 @@ void ComponentWeapon::receiveMessage(Message* message) {
 				m_bulletRange = 0;
 				m_isAutomatic = false;
 				m_soundFilename = "data/rocketlauncher.wav";
+				break;
+			case ENuclearBomb:
+				m_fireRate = 0;
+				m_reloadTime = 0;
+				m_bullets = 1;
+				m_bulletSpeed = 0;
+				m_bulletDamage = -1;
+				m_bulletRange = 0;
+				m_isAutomatic = false;
+				m_soundFilename = "data/explossion.wav";
 				break;
 		}
 		m_isFiring = false;
@@ -864,6 +876,9 @@ void ComponentWeaponPickup::receiveMessage(Message* message) {
 			case ERocketLauncher:
 				hudMessage += g_stringManager->getText("LTEXT_GUI_ROCKETLAUNCHER_MESSAGE");
 				break;
+			case ENuclearBomb:
+				hudMessage += g_stringManager->getText("LTEXT_GUI_NUCLEAR_MESSAGE");
+				break;
 		}
 
 		Entity::createHUDMessage(hudMessage, vmake((SCR_WIDTH / 2) - (hudMessage.length() / 2.0f * 16), SCR_HEIGHT * 0.8f), 100);
@@ -938,8 +953,18 @@ void ComponentHUD::run(float deltaTime) {
 
 	MessageGetTransform msgTransform;
 	m_owner->receiveMessage(&msgTransform);
-	m_reloadAnim->setPos(vmake(msgTransform.pos.x, msgTransform.pos.y - msgTransform.size.y * msgAmmo.reloadPercent * 0.5f));
-	m_reloadAnim->setSize(vmake(msgTransform.size.x, msgTransform.size.y * (1 - msgAmmo.reloadPercent)));
+
+	// Full sprite reload animation
+	//m_reloadAnim->setPos(vmake(msgTransform.pos.x, msgTransform.pos.y - msgTransform.size.y * msgAmmo.reloadPercent * 0.5f));
+	//m_reloadAnim->setSize(vmake(msgTransform.size.x, msgTransform.size.y * (1 - msgAmmo.reloadPercent)));
+
+	// Right sprite reload animation
+	m_reloadAnim->setPos(vmake(msgTransform.pos.x + msgTransform.size.x * 0.5f + 5, msgTransform.pos.y - msgTransform.size.y * msgAmmo.reloadPercent * 0.5f));
+	m_reloadAnim->setSize(vmake(5, msgTransform.size.y * (1 - msgAmmo.reloadPercent)));
+
+	// Top sprite reload animation
+	//m_reloadAnim->setPos(vmake(msgTransform.pos.x - msgTransform.size.x * msgAmmo.reloadPercent * 0.5f, msgTransform.pos.y + msgTransform.size.y * 0.5f + 5));
+	//m_reloadAnim->setSize(vmake(msgTransform.size.x * (1 - msgAmmo.reloadPercent), 5));
 }
 
 bool ComponentHUD::onEvent(const IInputManager::Event& event) {
