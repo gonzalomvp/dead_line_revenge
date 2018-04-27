@@ -353,7 +353,7 @@ bool ComponentPlayerController::onEvent(const IInputManager::Event& event) {
 //=============================================================================
 // ComponentWeapon class
 //=============================================================================
-ComponentWeapon::ComponentWeapon(Entity* owner, TWeapon type, int fireRate, int reloadTime, int bullets, int bulletSpeed, int bulletDamage, int bulletRange, bool isAutomatic, int activationDelay, const char* soundFilename) : Component(owner, activationDelay), m_type(type), m_fireRate(fireRate), m_reloadTime(reloadTime), m_bullets(bullets), m_bulletSpeed(bulletSpeed), m_bulletDamage(bulletDamage), m_bulletRange(bulletRange), m_isAutomatic(isAutomatic), m_soundFilename(soundFilename) {
+ComponentWeapon::ComponentWeapon(Entity* owner, TWeapon type, int fireRate, int reloadTime, int bullets, int bulletSpeed, int bulletDamage, int bulletRange, bool isAutomatic, const char* soundFilename) : Component(owner), m_type(type), m_fireRate(fireRate), m_reloadTime(reloadTime), m_bullets(bullets), m_bulletSpeed(bulletSpeed), m_bulletDamage(bulletDamage), m_bulletRange(bulletRange), m_isAutomatic(isAutomatic), m_soundFilename(soundFilename) {
 	m_aimDirection   = vmake(0.0f, 0.0f);
 	m_currentBullets = m_bullets;
 	m_remoteBullet   = nullptr;

@@ -47,7 +47,7 @@ Entity* Entity::createPlayer(vec2 pos) {
 	playerControl->init();
 	ComponentInertialMove* movement = new ComponentInertialMove(player, vmake(0.0f, 0.0f), 5, false);
 	movement->init();
-	ComponentWeapon* weapon = new ComponentWeapon(player, Component::ERevolver, 20, 60, 6, 6, -2, 60, false, 0, "data/shot.wav");
+	ComponentWeapon* weapon = new ComponentWeapon(player, Component::ERevolver, 20, 60, 6, 6, -2, 60, false, "data/shot.wav");
 	weapon->init();
 	//C_Target* target = new C_Target(player, "data/target.png");
 	//target->init();
@@ -229,10 +229,10 @@ Entity* Entity::createTurretEnemy(int x, int y, vec2 dir, Entity* player) {
 	renderable->init();
 	ComponentInertialMove* movement = new ComponentInertialMove(enemy, vmake(1, 0), 2, true, true);
 	movement->init();
-	ComponentWeapon* gun = new ComponentWeapon(enemy, Component::ERevolver, 100, 1, 1, 6, -1, 0, true, rand() % 100);
+	ComponentWeapon* gun = new ComponentWeapon(enemy, Component::ERevolver, 100, 1, 1, 6, -1, 0, true);
 	gun->init();
 	std::vector<vec2> aimDirections = { vmake(1,0), vmake(0,1), vmake(-1, 0), vmake(0, -1) };
-	ComponentAIFire* aiFire = new ComponentAIFire(enemy, aimDirections, true);
+	ComponentAIFire* aiFire = new ComponentAIFire(enemy, aimDirections, true, rand() % 100);
 	aiFire->init();
 	ComponentCollider* collider = new ComponentCollider(enemy, ComponentCollider::ERectCollider, -1, ComponentCollider::EEnemyC, ComponentCollider::EPlayerWeapon);
 	collider->init();

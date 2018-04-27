@@ -140,7 +140,7 @@ public:
 //=============================================================================
 class ComponentWeapon : public Component {
 public:
-	ComponentWeapon(Entity* owner, TWeapon type, int fireRate, int reloadTime, int bullets, int bulletSpeed, int bulletDamage, int bulletRange, bool isAutomatic, int activationDelay = 0, const char* soundFilename = nullptr);
+	ComponentWeapon(Entity* owner, TWeapon type, int fireRate, int reloadTime, int bullets, int bulletSpeed, int bulletDamage, int bulletRange, bool isAutomatic, const char* soundFilename = nullptr);
 
 	virtual void init          ();
 	virtual void run           (float deltaTime);
@@ -213,7 +213,7 @@ private:
 class ComponentAIFire : public Component {
 public:
 	ComponentAIFire(Entity* owner, Entity* player)            : Component(owner), m_player(player) {}
-	ComponentAIFire(Entity* owner, std::vector<vec2> fireDirections, bool shuffle) : Component(owner), m_fireDirections(fireDirections), m_shuffle(shuffle) {}
+	ComponentAIFire(Entity* owner, std::vector<vec2> fireDirections, bool shuffle, int activationDelay) : Component(owner, activationDelay), m_fireDirections(fireDirections), m_shuffle(shuffle) {}
 	
 	virtual void init          ();
 	virtual void run           (float deltaTime);
