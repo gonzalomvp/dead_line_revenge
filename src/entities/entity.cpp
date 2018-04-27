@@ -51,7 +51,7 @@ Entity* Entity::createPlayer(vec2 pos) {
 	weapon->init();
 	//C_Target* target = new C_Target(player, "data/target.png");
 	//target->init();
-	ComponentCollider* collider = new ComponentCollider(player, ComponentCollider::ERectCollider, 0, ComponentCollider::EPlayer, ComponentCollider::EEnemyC | ComponentCollider::EEnemyWeapon);
+	ComponentCollider* collider = new ComponentCollider(player, ComponentCollider::ERectCollider, -1, ComponentCollider::EPlayer, ComponentCollider::EEnemyC | ComponentCollider::EEnemyWeapon);
 	collider->init();
 	ComponentLife* life = new ComponentLife(player, 5, 0, 20);
 	life->init();
@@ -109,7 +109,7 @@ Entity* Entity::createMine(Component* weapon, vec2 pos, int damage, Entity::TTyp
 	renderable->init();
 	ComponentCollider* collider = new ComponentCollider(mine, ComponentCollider::ECircleCollider, 0, ComponentCollider::ENone, ComponentCollider::EPlayer| ComponentCollider::EEnemyC | ComponentCollider::EPlayerWeapon | ComponentCollider::EEnemyWeapon, 20);
 	collider->init();
-	ComponentLife* life = new ComponentLife(mine, 0, 0, 0);
+	ComponentLife* life = new ComponentLife(mine, 1, 0, 0);
 	life->init();
 	ComponentExplossive* explossion = new ComponentExplossive(mine);
 	explossion->init();
@@ -123,7 +123,7 @@ Entity* Entity::createC4(Component* weapon, vec2 pos, int damage, Entity::TType 
 	transform->init();
 	ComponentRenderable* renderable = new ComponentRenderable(mine, "data/bullet.png");
 	renderable->init();
-	ComponentLife* life = new ComponentLife(mine, 0, 0, 0);
+	ComponentLife* life = new ComponentLife(mine, 1, 0, 0);
 	life->init();
 	ComponentExplossive* explossion = new ComponentExplossive(mine);
 	explossion->init();
@@ -141,7 +141,7 @@ Entity* Entity::createRocket(Component* weapon, vec2 pos, vec2 direction, float 
 	movement->init();
 	ComponentCollider* collider = new ComponentCollider(rocket, ComponentCollider::ECircleCollider, damage, ComponentCollider::EPlayerWeapon, ComponentCollider::EEnemyC | ComponentCollider::EBoundaries);
 	collider->init();
-	ComponentLife* life = new ComponentLife(rocket, 0, range, 0);
+	ComponentLife* life = new ComponentLife(rocket, 1, range, 0);
 	life->init();
 	ComponentExplossive* explossive = new ComponentExplossive(rocket);
 	explossive->init();
@@ -157,7 +157,7 @@ Entity* Entity::createNuclearBomb() {
 	renderable->init();
 	ComponentCollider* colliderEnemy = new ComponentCollider(bomb, ComponentCollider::ECircleCollider, -50, ComponentCollider::ENone, ComponentCollider::ENone);
 	colliderEnemy->init();
-	ComponentLife* life = new ComponentLife(bomb, -1, 50, 0);
+	ComponentLife* life = new ComponentLife(bomb, 1, 50, 0);
 	life->init();
 	g_world->addEntity(bomb);
 
@@ -209,7 +209,7 @@ Entity* Entity::createRangeEnemy(int x, int y, Entity* player) {
 	transform->init();
 	ComponentRenderable* renderable = new ComponentRenderable(enemy, "data/enemy.png", 2, 1.0f, "data/player.png", 10);
 	renderable->init();
-	ComponentWeapon* gun = new ComponentWeapon(enemy, Component::ERevolver, 40, 1, -1, 6, -1, 0, true);
+	ComponentWeapon* gun = new ComponentWeapon(enemy, Component::ERevolver, 100, 1, 1, 6, -1, 0, true);
 	gun->init();
 	ComponentAIEvade* aiLong = new ComponentAIEvade(enemy, player, 4, 250);
 	aiLong->init();
@@ -285,7 +285,7 @@ Entity* Entity::createWeaponPickup() {
 	pickup->init();
 	ComponentPoints* points = new ComponentPoints(weaponPickup, 10);
 	points->init();
-	ComponentLife* life = new ComponentLife(weaponPickup, 0, 0, 0);
+	ComponentLife* life = new ComponentLife(weaponPickup, 1, 0, 0);
 	life->init();
 	return weaponPickup;
 }
@@ -294,7 +294,7 @@ Entity* Entity::createHUDMessage(std::string message, vec2 pos, int displayTime)
 	Entity* hudMessage = new Entity(EHUD);
 	ComponentHUDMessage* hudMessageComponent = new ComponentHUDMessage(hudMessage, pos, message);
 	hudMessageComponent->init();
-	ComponentLife* life = new ComponentLife(hudMessage, 0, displayTime, 0);
+	ComponentLife* life = new ComponentLife(hudMessage, 1, displayTime, 0);
 	life->init();
 	if (g_world->getHUDMessage()) {
 		g_world->removeEntity(g_world->getHUDMessage());
@@ -311,7 +311,7 @@ void Entity::createExplossion(vec2 pos, vec2 size) {
 	renderable->init();
 	ComponentCollider* colliderEnemy = new ComponentCollider(explossion, ComponentCollider::ECircleCollider, -1, ComponentCollider::EPlayerWeapon | ComponentCollider::EEnemyWeapon | ComponentCollider::EBoundaries, ComponentCollider::ENone);
 	colliderEnemy->init();
-	ComponentLife* life = new ComponentLife(explossion, -1, 50, 0);
+	ComponentLife* life = new ComponentLife(explossion, 1, 50, 0);
 	life->init();
 	g_world->addEntity(explossion);
 

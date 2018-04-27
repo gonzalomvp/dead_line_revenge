@@ -130,11 +130,14 @@ void ComponentLife::run(float deltaTime) {
 	if (m_lifeTimer < m_timeToLive) {
 		++m_lifeTimer;
 		if (m_lifeTimer == m_timeToLive) {
-			MessageDestroy msgDestroy;
-			m_owner->receiveMessage(&msgDestroy);
-			m_owner->deactivate();
-			g_world->removeEntity(m_owner);
+			m_life = 0;
 		}
+	}
+	if (m_life <= 0) {
+		MessageDestroy msgDestroy;
+		m_owner->receiveMessage(&msgDestroy);
+		m_owner->deactivate();
+		g_world->removeEntity(m_owner);
 	}
 }
 
@@ -152,12 +155,12 @@ void ComponentLife::receiveMessage(Message* message) {
 		if (msgChangeLife && (m_life != -1) && (m_invencibleTimer >= m_invencibleTime)) {
 			m_life += msgChangeLife->deltaLife;
 			m_invencibleTimer = 0;
-			if (m_life <= 0) {
-				MessageDestroy msgDestroy;
-				m_owner->receiveMessage(&msgDestroy);
-				m_owner->deactivate();
-				g_world->removeEntity(m_owner);
-			}
+			//if (m_life <= 0) {
+			//	MessageDestroy msgDestroy;
+			//	m_owner->receiveMessage(&msgDestroy);
+			//	m_owner->deactivate();
+			//	g_world->removeEntity(m_owner);
+			//}
 		}
 	}
 }
@@ -949,6 +952,7 @@ ComponentHUD::~ComponentHUD() {
 	g_graphicsEngine->removeGfxEntity(m_score);
 	g_graphicsEngine->removeGfxEntity(m_ammo);
 	g_graphicsEngine->removeGfxEntity(m_fps);
+	g_graphicsEngine->removeGfxEntity(m_target);
 	g_graphicsEngine->removeGfxEntity(m_reloadAnim);
 
 	g_inputManager->unregisterEvent(this, IInputManager::TEvent::EMouse);

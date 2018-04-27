@@ -115,6 +115,7 @@ void World::removePendingEntities() {
 				std::string scoreMessage = g_stringManager->getText("LTEXT_GUI_SCORE_MESSAGE") + std::to_string(m_score);
 				g_menuManager->getMenu(MenuManager::EGameOverMenu)->setTitle(scoreMessage.c_str());
 				g_menuManager->activateMenu(MenuManager::EGameOverMenu);
+				//borrar tb el resto de listas (ver si se puede hacer con el destroy aqui en vez de en el retry)
 				for (size_t i = 0; i < m_entities.size(); ++i) {
 					delete m_entities[i];
 				}
