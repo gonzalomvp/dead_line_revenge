@@ -1,29 +1,38 @@
 #include "../common/stdafx.h"
 #include "string_manager.h"
+#include "rapidjson/document.h"
+#include "rapidjson/filereadstream.h"
 #include <fstream>
 
+using namespace rapidjson;
 
 bool StringManager::loadLanguage(TLanguage language) {
 	char* filename;
 	switch (language) {
 		case EEnglish:
-			filename = "data/english.txt";
+			filename = "data/english.json";
 			break;
 		case ESpanish:
-			filename = "data/spanish.txt";
+			filename = "data/spanish.json";
 			break;
 		default:
 			return false;
 	}
-	std::ifstream file(filename, std::ios::binary);
-	if(!file.is_open()) return false;
-	std::string key;
-	std::string value;
-	while (getline(file, key, ' ') && getline(file, value, '\n')) {
-		m_texts[key] = value;
-	}
-	file.close();
+	FILE* file = fopen(filename, "r");
+	if (!file) return false;
 
+	fseek(file, 0, SEEK_END);
+	std::vector<char> fileData(ftell(file));
+	fseek(file, 0, SEEK_SET);
+	FileReadStream is(file, fileData.data(), fileData.size());
+	Document doc;
+	doc.ParseStream(is);
+
+	for (Value::ConstMemberIterator itr = doc.MemberBegin(); itr != doc.MemberEnd(); ++itr) {
+		m_texts[itr->name.GetString()] = itr->value.GetString();
+	}
+
+	fclose(file);
 	return true;
 }
 

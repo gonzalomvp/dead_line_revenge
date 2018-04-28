@@ -77,7 +77,7 @@ Entity* Entity::createBullet(vec2 pos, vec2 direction, float speed, int damage, 
 	}
 	
 	collider->init();
-	ComponentLife* life = new ComponentLife(bullet, 2, range, 0);
+	ComponentLife* life = new ComponentLife(bullet, 1, range, 0);
 	life->init();
 	return bullet;
 }
@@ -221,24 +221,24 @@ Entity* Entity::createRangeEnemy(int x, int y, Entity* player) {
 	return enemy;
 }
 
-Entity* Entity::createTurretEnemy(int x, int y, vec2 dir, Entity* player) {
+Entity* Entity::createTurretEnemy(vec2 position, vec2 moveDir, std::vector<vec2> aimDirections, bool shuffleAim) {
+	World::TEnemyData enemyData = g_world->m_enemyData[World::ETurret];
 	Entity* enemy = new Entity(EOther);
-	ComponentTransform* transform = new ComponentTransform(enemy, vmake(x, y), vmake(20, 20));
+	ComponentTransform* transform = new ComponentTransform(enemy, position, vmake(20, 20));
 	transform->init();
 	ComponentRenderable* renderable = new ComponentRenderable(enemy, "data/enemy.png", 2, 1.0f, "data/player.png", 10);
 	renderable->init();
-	ComponentInertialMove* movement = new ComponentInertialMove(enemy, vmake(1, 0), 2, true, true);
+	ComponentInertialMove* movement = new ComponentInertialMove(enemy, moveDir, enemyData.speed, true, true);
 	movement->init();
-	ComponentWeapon* gun = new ComponentWeapon(enemy, Component::ERevolver, 100, 1, 1, 6, -1, 0, true);
+	ComponentWeapon* gun = new ComponentWeapon(enemy, Component::ERevolver, enemyData.fireRate, 1, 1, enemyData.bulletSpeed, enemyData.bulletDamage, enemyData.bulletRange, false);
 	gun->init();
-	std::vector<vec2> aimDirections = { vmake(1,0), vmake(0,1), vmake(-1, 0), vmake(0, -1) };
-	ComponentAIFire* aiFire = new ComponentAIFire(enemy, aimDirections, true, rand() % 100);
+	ComponentAIFire* aiFire = new ComponentAIFire(enemy, aimDirections, shuffleAim, rand() % 100);
 	aiFire->init();
-	ComponentCollider* collider = new ComponentCollider(enemy, ComponentCollider::ERectCollider, -1, ComponentCollider::EEnemyC, ComponentCollider::EPlayerWeapon);
+	ComponentCollider* collider = new ComponentCollider(enemy, ComponentCollider::ERectCollider, enemyData.collisionDamage, ComponentCollider::EEnemyC, ComponentCollider::EPlayerWeapon);
 	collider->init();
-	ComponentLife* life = new ComponentLife(enemy, 3, 0, 0);
+	ComponentLife* life = new ComponentLife(enemy, enemyData.life, 0, 0);
 	life->init();
-	ComponentPoints* points = new ComponentPoints(enemy, 3);
+	ComponentPoints* points = new ComponentPoints(enemy, enemyData.points);
 	points->init();
 	return enemy;
 }

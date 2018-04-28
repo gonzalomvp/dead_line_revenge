@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../input/input_manager.h"
+#include "../entities/components/component.h"
 
 class Entity;
 
@@ -13,15 +14,38 @@ public:
 		ETurret,
 	};
 
-	struct TEnemyData {
-		TEnemyType type;
-		int        speed;
-		int        life;
-		int        damage;
-		float      spawnProbability;
+	struct TWeaponData {
+		Component::TWeapon type;
+		int                fireRate;
+		int                reloadTime;
+		int                capacity;
+		int                bulletSpeed;
+		int                bulletDamage;
+		int                bulletLife;
+		int                bulletRange;
+		bool               isAutomatic;
+		bool               isExplossive;
+		bool               isBouncy;
+		char               soundFilename[50];
 	};
 
-	World(uint16_t level) : m_level(level) {}
+	struct TEnemyData {
+		TEnemyType type;
+		int        life;
+		int        speed;
+		int        collisionDamage;
+		int        fireRate;
+		int        bulletSpeed;
+		int        bulletDamage;
+		int        bulletLife;
+		int        bulletRange;
+		bool       isExplossive;
+		bool       isBouncy;
+		float      spawnProbability;
+		int        points;
+	};
+
+	World(uint16_t level) : m_level(level) { loadConfig(); }
 	~World();
 
 	void         init         ();
@@ -34,8 +58,13 @@ public:
 	Entity*      getHUDMessage() const          { return m_hudMessage; }
 	void         addPoints    (uint16_t points) { m_score += points; }
 	virtual bool onEvent      (const IInputManager::Event& event);
+
+	//quitar de aqui
+	std::map<Component::TWeapon, TWeaponData> m_weaponData;
+	std::map<TEnemyType, TEnemyData>  m_enemyData;
 private:
 	bool loadLevel            (const char* fileName);
+	bool loadConfig           ();
 	void checkCollisions      ();
 	void removePendingEntities();
 	void addPendingEntities   ();
@@ -53,14 +82,15 @@ private:
 
 	// Game rules
 	uint16_t m_score;
+	int      m_playerLife;
 	int      m_pickupSpawnWait;
 	int      m_enemySpawnWait;
-	int      m_spawnPoints;
 	int      m_currentEnemies;
 	int      m_maxEnemies;
 
-	std::vector<TEnemyData> m_enemyData;
-	std::vector<vec2>       m_spawnData;
+	
+	
+	std::vector<vec2>        m_spawnData;
 
 	// Timers
 	int m_pickupSpawnTimer;

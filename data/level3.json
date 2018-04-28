@@ -1,35 +1,52 @@
 {
-	"spawnPoints": 4,
-	"spawnFrecuency": 60,
-	"concurrentEnemies": 6,
-	"meleeEnemy":
-	{
-		"speed": 3,
-		"life": 1,
-		"damage": -1,
-		"spawnProbability": 0.5 
-	},
-	"bigEnemy":
-	{
-		"speed": 2,
-		"life": 4,
-		"damage": -3,
-		"spawnProbability": 0.3 
-	},
-	"rangeEnemy":
-	{
-		"speed": 2,
-		"life": 3,
-		"damage": -2,
-		"spawnProbability": 0.2
-	},
-	
+	"playerLife": 5,
+	"pickupSpawnWait": 10,
+	"enemySpawnWait": 60,
+	"maxEnemies": 4,
 	"enemies": [
 	{
 		"type": "melee",
-		"speed": 2,
-		"life": 2,
-		"spawnProbability": 1 
+		"id": 0,
+		"spawnProbability": 0.6,
+		"points": 1
+	},
+	{
+		"type": "big",
+		"id": 1,
+		"spawnProbability": 0.4,
+		"points": 2
+	},
+	{
+		"type": "range",
+		"id": 2,
+		"spawnProbability": 0,
+		"points": 4
+	},
+	{
+		"type": "turret",
+		"id": 3,
+		"spawnProbability": 0,
+		"points": 3
+	}
+	],
+	"turrets": [
+	{
+		"position": [ 600 ,440 ],
+		"moveDirection": [ -1, 0 ],
+		"aimDirections": [[ 0, -1 ]],
+		"shuffleAim": true
+	},
+	{
+		"position": [ 600 ,40 ],
+		"moveDirection": [ 0, 1 ],
+		"aimDirections": [[ -1, 0 ]],
+		"shuffleAim": true
+	},
+	{
+		"position": [ 150 ,350 ],
+		"moveDirection": [ 0, 0 ],
+		"aimDirections": [[ 1, 0 ], [ 0, -1 ]],
+		"shuffleAim": true
 	}
 	]
 }

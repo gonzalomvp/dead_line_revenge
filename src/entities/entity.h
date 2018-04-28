@@ -19,7 +19,7 @@ public:
 	static Entity* createEnemy(int x, int y, Entity* player, int speed, int lives, int damage);
 	static Entity* createBigEnemy(int x, int y, Entity* player, int speed, int lives, int damage);
 	static Entity* createRangeEnemy(int x, int y, Entity* player);
-	static Entity* createTurretEnemy(int x, int y, vec2 dir, Entity* player);
+	static Entity* createTurretEnemy(vec2 position, vec2 moveDir, std::vector<vec2> aimDirections, bool shuffleAim);
 	static Entity* createBullet(vec2 pos, vec2 direction, float speed, int damage, int range, Entity::TType type);
 	static void createShotgunBullets(vec2 pos, vec2 direction, float speed, int damage, int range, Entity::TType type);
 	static Entity* createMine(Component* weapon, vec2 pos, int damage, Entity::TType type);

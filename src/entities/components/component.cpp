@@ -353,9 +353,9 @@ bool ComponentPlayerController::onEvent(const IInputManager::Event& event) {
 //=============================================================================
 // ComponentWeapon class
 //=============================================================================
-ComponentWeapon::ComponentWeapon(Entity* owner, TWeapon type, int fireRate, int reloadTime, int bullets, int bulletSpeed, int bulletDamage, int bulletRange, bool isAutomatic, const char* soundFilename) : Component(owner), m_type(type), m_fireRate(fireRate), m_reloadTime(reloadTime), m_bullets(bullets), m_bulletSpeed(bulletSpeed), m_bulletDamage(bulletDamage), m_bulletRange(bulletRange), m_isAutomatic(isAutomatic), m_soundFilename(soundFilename) {
+ComponentWeapon::ComponentWeapon(Entity* owner, TWeapon type, int fireRate, int reloadTime, int bullets, int bulletSpeed, int bulletDamage, int bulletRange, bool isAutomatic, const char* soundFilename) : Component(owner), m_type(type), m_fireRate(fireRate), m_reloadTime(reloadTime), m_capacity(bullets), m_bulletSpeed(bulletSpeed), m_bulletDamage(bulletDamage), m_bulletRange(bulletRange), m_isAutomatic(isAutomatic), m_soundFilename(soundFilename) {
 	m_aimDirection   = vmake(0.0f, 0.0f);
-	m_currentBullets = m_bullets;
+	m_currentBullets = m_capacity;
 	m_remoteBullet   = nullptr;
 	m_isFiring       = false;
 	m_soundId        = 0;
@@ -381,7 +381,7 @@ void ComponentWeapon::run(float deltaTime) {
 	if (m_reloadTimer <= m_reloadTime) {
 		++m_reloadTimer;
 		if (m_reloadTimer == m_reloadTime) {
-			m_currentBullets = m_bullets;
+			m_currentBullets = m_capacity;
 		}
 	}
 
@@ -391,7 +391,7 @@ void ComponentWeapon::run(float deltaTime) {
 		m_remoteBullet->receiveMessage(&msgChangeLife);
 		m_remoteBullet = nullptr;
 		m_isFiring = false;
-		m_currentBullets = m_bullets;
+		m_currentBullets = m_capacity;
 	}
 
 	else if (m_isFiring && m_fireTimer >= m_fireRate && m_reloadTimer >= m_reloadTime && m_currentBullets > 0) {
@@ -450,80 +450,19 @@ void ComponentWeapon::receiveMessage(Message* message) {
 	if (msgWeaponChange) {
 		activate();
 		m_type = msgWeaponChange->weapon;
-		switch (m_type) {
-			case ERevolver:
-				m_fireRate = 20;
-				m_reloadTime = 60;
-				m_bullets = 6;
-				m_bulletSpeed = 6;
-				m_bulletDamage = -2;
-				m_bulletRange = 60;
-				m_isAutomatic = false;
-				m_soundFilename = "data/shot.wav";
-				break;
-			case EMachinegun:
-				m_fireRate = 10;
-				m_reloadTime = 80;
-				m_bullets = 20;
-				m_bulletSpeed = 8;
-				m_bulletDamage = -1;
-				m_bulletRange = 0;
-				m_isAutomatic = true;
-				m_soundFilename = "data/shot.wav";
-				break;
-			case EShotgun:
-				m_fireRate = 0;
-				m_reloadTime = 40;
-				m_bullets = 2;
-				m_bulletSpeed = 4;
-				m_bulletDamage = -1;
-				m_bulletRange = 40;
-				m_isAutomatic = false;
-				m_soundFilename = "data/shotgun.wav";
-				break;
-			case EMines:
-				m_fireRate = 0;
-				m_reloadTime = 120;
-				m_bullets = 1;
-				m_bulletSpeed = 4;
-				m_bulletDamage = -1;
-				m_bulletRange = 30;
-				m_isAutomatic = false;
-				m_soundFilename = "data/mine.wav";
-				break;
-			case EC4:
-				m_fireRate = 0;
-				m_reloadTime = 0;
-				m_bullets = 1;
-				m_bulletSpeed = 4;
-				m_bulletDamage = -1;
-				m_bulletRange = 30;
-				m_isAutomatic = false;
-				m_soundFilename = "data/mine.wav";
-				break;
-			case ERocketLauncher:
-				m_fireRate = 0;
-				m_reloadTime = 100;
-				m_bullets = 1;
-				m_bulletSpeed = 5;
-				m_bulletDamage = -1;
-				m_bulletRange = 0;
-				m_isAutomatic = false;
-				m_soundFilename = "data/rocketlauncher.wav";
-				break;
-			case ENuclearBomb:
-				m_fireRate = 0;
-				m_reloadTime = 0;
-				m_bullets = 1;
-				m_bulletSpeed = 0;
-				m_bulletDamage = -1;
-				m_bulletRange = 0;
-				m_isAutomatic = false;
-				m_soundFilename = "data/explossion.wav";
-				break;
-		}
+		m_fireRate = g_world->m_weaponData[m_type].fireRate;
+		m_reloadTime= g_world->m_weaponData[m_type].reloadTime;
+		m_capacity = g_world->m_weaponData[m_type].capacity;
+		m_bulletSpeed = g_world->m_weaponData[m_type].bulletSpeed;
+		m_bulletDamage = g_world->m_weaponData[m_type].bulletDamage;
+		m_bulletLife = g_world->m_weaponData[m_type].bulletLife;
+		m_bulletRange = g_world->m_weaponData[m_type].bulletRange;
+		m_isAutomatic = g_world->m_weaponData[m_type].isAutomatic;
+		m_isExplossive = g_world->m_weaponData[m_type].isExplossive;
+		m_isBouncy = g_world->m_weaponData[m_type].isBouncy;
+		m_soundFilename = g_world->m_weaponData[m_type].soundFilename;
 		m_isFiring = false;
-		m_currentBullets = m_bullets;
+		m_currentBullets = m_capacity;
 		m_fireTimer = m_fireRate;
 		m_reloadTimer = m_reloadTime;
 		if (m_soundFilename) {
@@ -547,7 +486,7 @@ void ComponentWeapon::receiveMessage(Message* message) {
 				MessageAmmoInfo *msgAmmoInfo = dynamic_cast<MessageAmmoInfo*>(message);
 				if (msgAmmoInfo) {
 					msgAmmoInfo->currentAmmo = m_currentBullets;
-					msgAmmoInfo->totalAmmo = m_bullets;
+					msgAmmoInfo->totalAmmo = m_capacity;
 					msgAmmoInfo->reloadPercent = m_reloadTimer * 1.0f / m_reloadTime;
 					if (msgAmmoInfo->reloadPercent > 1.0f) {
 						msgAmmoInfo->reloadPercent = 1.0f;
@@ -555,7 +494,7 @@ void ComponentWeapon::receiveMessage(Message* message) {
 				}
 				else {
 					MessageReload *msgReload = dynamic_cast<MessageReload*>(message);
-					if (msgReload && m_currentBullets < m_bullets && m_reloadTimer >= m_reloadTime) {
+					if (msgReload && m_currentBullets < m_capacity && m_reloadTimer >= m_reloadTime) {
 						m_isFiring = false;
 						m_reloadTimer = 0;
 					}

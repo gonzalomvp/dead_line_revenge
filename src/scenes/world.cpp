@@ -49,8 +49,8 @@ void World::init() {
 	loadLevel(fileName);
 
 	//Cargar de fichero
-	addEntity(Entity::createTurretEnemy(100, SCR_HEIGHT - 100, vmake(0, -1), m_player));
-	addEntity(Entity::createTurretEnemy(SCR_WIDTH - 100, 100, vmake(-1, 0), m_player));	
+	//addEntity(Entity::createTurretEnemy(100, SCR_HEIGHT - 100, vmake(0, -1), m_player));
+	//addEntity(Entity::createTurretEnemy(SCR_WIDTH - 100, 100, vmake(-1, 0), m_player));	
 }
 
 void World::destroy() {
@@ -202,49 +202,119 @@ bool World::loadLevel(const char* fileName) {
 	Document doc;
 	doc.ParseStream(is);
 
-	//leer de fichero
-	m_pickupSpawnWait = 10;
+	m_playerLife = doc["playerLife"].GetInt();
+	m_pickupSpawnWait = doc["pickupSpawnWait"].GetInt();
 	m_pickupSpawnTimer = m_pickupSpawnWait;
+	m_enemySpawnWait = doc["enemySpawnWait"].GetInt();
+	m_maxEnemies = doc["maxEnemies"].GetInt();
+
 	float totalProbability = 0.0f;
-	int spawnPoints = doc["spawnPoints"].GetInt();
-	int spawnFrecuency = doc["spawnFrecuency"].GetInt();
-	int concurrentEnemies = doc["concurrentEnemies"].GetInt();
+	const Value& enemies = doc["enemies"];
+	assert(enemies.IsArray());
+	for (SizeType i = 0; i < enemies.Size(); i++) {
+		TEnemyData enemy = m_enemyData[static_cast<TEnemyType>(enemies[i]["id"].GetInt())];
+		if (enemies[i].HasMember("spawnProbability")) {
+			totalProbability += enemies[i]["spawnProbability"].GetFloat();
+			enemy.spawnProbability = totalProbability;
+		if (enemies[i].HasMember("points"))
+			enemy.points = enemies[i]["points"].GetInt();
+		}
+		m_enemyData[enemy.type] = enemy;
+	}
 
-	TEnemyData meleeEnemy;
-	meleeEnemy.type = EMelee;
-	meleeEnemy.speed = doc["meleeEnemy"].GetObject()["speed"].GetInt();
-	meleeEnemy.life = doc["meleeEnemy"].GetObject()["life"].GetInt();
-	meleeEnemy.damage = doc["meleeEnemy"].GetObject()["damage"].GetInt();
-	totalProbability += doc["meleeEnemy"].GetObject()["spawnProbability"].GetFloat();
-	meleeEnemy.spawnProbability = totalProbability;
+	const Value& turrets = doc["turrets"];
+	assert(turrets.IsArray());
+	for (SizeType i = 0; i < turrets.Size(); i++) {
+		vec2 pos = vmake(turrets[i]["position"][0].GetInt(), turrets[i]["position"][1].GetInt());
+		vec2 moveDirection = vmake(turrets[i]["moveDirection"][0].GetInt(), turrets[i]["moveDirection"][1].GetInt());
+		
+		std::vector<vec2> aimDirections;
+		const Value& directions = turrets[i]["aimDirections"];
+		assert(directions.IsArray());
+		for (SizeType j= 0; j < directions.Size(); j++) {
+			aimDirections.push_back(vmake(directions[j][0].GetInt(), directions[j][1].GetInt()));
+		}
+		bool shuffleAim = turrets[i]["shuffleAim"].GetBool();
 
-	TEnemyData bigEnemy;
-	bigEnemy.type = EBig;
-	bigEnemy.speed = doc["bigEnemy"].GetObject()["speed"].GetInt();
-	bigEnemy.life = doc["bigEnemy"].GetObject()["life"].GetInt();
-	bigEnemy.damage = doc["bigEnemy"].GetObject()["damage"].GetInt();
-	totalProbability += doc["bigEnemy"].GetObject()["spawnProbability"].GetFloat();
-	bigEnemy.spawnProbability = totalProbability;
-
-	TEnemyData rangeEnemy;
-	rangeEnemy.type = ERange;
-	rangeEnemy.speed = doc["rangeEnemy"].GetObject()["speed"].GetInt();
-	rangeEnemy.life = doc["rangeEnemy"].GetObject()["life"].GetInt();
-	rangeEnemy.damage = doc["rangeEnemy"].GetObject()["damage"].GetInt();
-	totalProbability += doc["rangeEnemy"].GetObject()["spawnProbability"].GetFloat();
-	rangeEnemy.spawnProbability = totalProbability;
-
-	m_spawnPoints = spawnPoints;
-	m_enemySpawnWait = spawnFrecuency;
-	m_maxEnemies = concurrentEnemies;
-
-	m_enemyData.push_back(meleeEnemy);
-	m_enemyData.push_back(bigEnemy);
-	m_enemyData.push_back(rangeEnemy);
+		addEntity(Entity::createTurretEnemy(pos, moveDirection, aimDirections, shuffleAim));
+	}
 
 	fclose(file);
 
-	m_spawnData.clear();
+	return true;
+}
+
+bool World::loadConfig() {
+	FILE* file = fopen("data/config.json", "r");
+	if (!file) return false;
+
+	fseek(file, 0, SEEK_END);
+	std::vector<char> fileData(ftell(file));
+	fseek(file, 0, SEEK_SET);
+	FileReadStream is(file, fileData.data(), fileData.size());
+	Document doc;
+	doc.ParseStream(is);
+
+	const Value& weapons = doc["weapons"];
+	assert(weapons.IsArray());
+	for (SizeType i = 0; i < weapons.Size(); i++) {
+		TWeaponData weapon;
+		weapon.type = static_cast<Component::TWeapon>(weapons[i]["id"].GetInt());
+		if (weapons[i].HasMember("fireRate"))
+			weapon.fireRate = weapons[i]["fireRate"].GetInt();
+		if (weapons[i].HasMember("reloadTime"))
+			weapon.reloadTime = weapons[i]["reloadTime"].GetInt();
+		if (weapons[i].HasMember("capacity"))
+			weapon.capacity = weapons[i]["capacity"].GetInt();
+		if (weapons[i].HasMember("bulletSpeed"))
+			weapon.bulletSpeed = weapons[i]["bulletSpeed"].GetInt();
+		if (weapons[i].HasMember("bulletDamage"))
+			weapon.bulletDamage = weapons[i]["bulletDamage"].GetInt();
+		if (weapons[i].HasMember("bulletLife"))
+			weapon.bulletLife = weapons[i]["bulletLife"].GetInt();
+		if (weapons[i].HasMember("bulletRange"))
+			weapon.bulletRange = weapons[i]["bulletRange"].GetInt();
+		if (weapons[i].HasMember("isAutomatic"))
+			weapon.isAutomatic = weapons[i]["isAutomatic"].GetBool();
+		if (weapons[i].HasMember("isExplossive"))
+			weapon.isExplossive = weapons[i]["isExplossive"].GetBool();
+		if (weapons[i].HasMember("isBouncy"))
+			weapon.isBouncy = weapons[i]["isBouncy"].GetBool();
+		if (weapons[i].HasMember("soundFilename"))
+			strcpy(weapon.soundFilename, weapons[i]["soundFilename"].GetString());
+		m_weaponData[weapon.type] = weapon;
+	}
+
+	const Value& enemies = doc["enemies"];
+	assert(enemies.IsArray());
+	for (SizeType i = 0; i < enemies.Size(); i++) {
+		TEnemyData enemy;
+		enemy.type = static_cast<TEnemyType>(enemies[i]["id"].GetInt());
+		if (enemies[i].HasMember("life"))
+			enemy.life = enemies[i]["life"].GetInt();
+		if (enemies[i].HasMember("speed"))
+			enemy.speed = enemies[i]["speed"].GetInt();
+		if (enemies[i].HasMember("collisionDamage"))
+			enemy.collisionDamage = enemies[i]["collisionDamage"].GetInt();
+		if (enemies[i].HasMember("fireRate"))
+			enemy.fireRate = enemies[i]["fireRate"].GetInt();
+		if (enemies[i].HasMember("bulletSpeed"))
+			enemy.bulletSpeed = enemies[i]["bulletSpeed"].GetInt();
+		if (enemies[i].HasMember("bulletDamage"))
+			enemy.bulletDamage = enemies[i]["bulletDamage"].GetInt();
+		if (enemies[i].HasMember("bulletLife"))
+			enemy.bulletLife = enemies[i]["bulletLife"].GetInt();
+		if (enemies[i].HasMember("bulletRange"))
+			enemy.bulletRange = enemies[i]["bulletRange"].GetInt();
+		if (enemies[i].HasMember("isExplossive"))
+			enemy.isExplossive = enemies[i]["isExplossive"].GetBool();
+		if (enemies[i].HasMember("isBouncy"))
+			enemy.isBouncy = enemies[i]["isBouncy"].GetBool();
+		m_enemyData[enemy.type] = enemy;
+	}
+
+	fclose(file);
+
 	m_spawnData.push_back(vmake(SCR_WIDTH / 2.0f, SCR_HEIGHT));
 	m_spawnData.push_back(vmake(SCR_WIDTH, SCR_HEIGHT / 2.0f));
 	m_spawnData.push_back(vmake(0.0f, SCR_HEIGHT / 2.0f));
@@ -254,18 +324,17 @@ bool World::loadLevel(const char* fileName) {
 }
 
 void World::spawnEnemy() {
-	vec2 spawnLocation = m_spawnData[rand() % m_spawnPoints];
+	vec2 spawnLocation = m_spawnData[rand() % m_spawnData.size()];
 	float enemyType = CORE_FRand(0.0f, 1.0f);
 	Entity* enemy = nullptr;
-	for (size_t i = 0; i < m_enemyData.size(); i++)
-	{
-		if (enemyType <= m_enemyData[i].spawnProbability) {
-			switch (m_enemyData[i].type) {
+	for (auto itEnemyData = m_enemyData.begin(); itEnemyData != m_enemyData.end(); ++itEnemyData) {
+		if (enemyType <= itEnemyData->second.spawnProbability) {
+			switch (itEnemyData->second.type) {
 				case EMelee:
-					enemy = Entity::createEnemy(spawnLocation.x, spawnLocation.y, m_player, m_enemyData[i].speed, m_enemyData[i].life, m_enemyData[i].damage);
+					enemy = Entity::createEnemy(spawnLocation.x, spawnLocation.y, m_player, itEnemyData->second.speed, itEnemyData->second.life, itEnemyData->second.collisionDamage);
 					break;
 				case EBig:
-					enemy = Entity::createBigEnemy(spawnLocation.x, spawnLocation.y, m_player, m_enemyData[i].speed, m_enemyData[i].life, m_enemyData[i].damage);
+					enemy = Entity::createBigEnemy(spawnLocation.x, spawnLocation.y, m_player, itEnemyData->second.speed, itEnemyData->second.life, itEnemyData->second.collisionDamage);
 					break;
 				case ERange:
 					enemy = Entity::createRangeEnemy(spawnLocation.x, spawnLocation.y, m_player);
@@ -274,7 +343,6 @@ void World::spawnEnemy() {
 			break;
 		}
 	}
-
 	g_world->addEntity(enemy);
 	++m_currentEnemies;
 }

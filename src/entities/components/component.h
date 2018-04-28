@@ -149,11 +149,14 @@ private:
 	TWeapon     m_type;
 	int         m_fireRate;
 	int         m_reloadTime;
-	int         m_bullets;
+	int         m_capacity;
 	int         m_bulletSpeed;
 	int         m_bulletDamage;
+	int         m_bulletLife;
 	int         m_bulletRange;
 	bool        m_isAutomatic;
+	bool        m_isExplossive;
+	bool        m_isBouncy;
 	Entity*     m_remoteBullet;
 	const char* m_soundFilename;
 	vec2        m_aimDirection;
