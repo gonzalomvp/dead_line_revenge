@@ -39,9 +39,9 @@ void Entity::receiveMessage(Message* message) {
 
 Entity* Entity::createPlayer(vec2 pos) {
 	Entity* player = new Entity(EPlayer);
-	ComponentTransform* transform = new ComponentTransform(player, pos, vmake(20, 20));
+	ComponentTransform* transform = new ComponentTransform(player, pos, vmake(30, 25));
 	transform->init();
-	ComponentRenderable* renderable = new ComponentRenderable(player, "data/player.png", 2, 1.0f, "data/enemy.png", 10);
+	ComponentRenderable* renderable = new ComponentRenderable(player, "data/example.png", 2, 1.0f, 0, "data/enemy.png", 10);
 	renderable->init();
 	ComponentPlayerController* playerControl = new ComponentPlayerController(player);
 	playerControl->init();
@@ -64,7 +64,7 @@ Entity* Entity::createBullet(vec2 pos, vec2 direction, float speed, int damage, 
 	Entity* bullet = new Entity(EWeapon);
 	ComponentTransform* transform = new ComponentTransform(bullet, pos, vmake(10, 10));
 	transform->init();
-	ComponentRenderable* renderable = new ComponentRenderable(bullet, "data/bullet.png");
+	ComponentRenderable* renderable = new ComponentRenderable(bullet, "data/4.png", 2, 1, vangle(direction) - 90);
 	renderable->init();
 	ComponentInertialMove* movement = new ComponentInertialMove(bullet, direction, speed, true);
 	movement->init();
@@ -103,9 +103,9 @@ void Entity::createShotgunBullets(vec2 pos, vec2 direction, float speed, int dam
 
 Entity* Entity::createMine(Component* weapon, vec2 pos, int damage, Entity::TType type) {
 	Entity* mine = new Entity(EWeapon);
-	ComponentTransform* transform = new ComponentTransform(mine, pos, vmake(10, 10));
+	ComponentTransform* transform = new ComponentTransform(mine, pos, vmake(20, 20));
 	transform->init();
-	ComponentRenderable* renderable = new ComponentRenderable(mine, "data/bullet.png");
+	ComponentRenderable* renderable = new ComponentRenderable(mine, "data/bomb.png");
 	renderable->init();
 	ComponentCollider* collider = new ComponentCollider(mine, ComponentCollider::ECircleCollider, 0, ComponentCollider::ENone, ComponentCollider::EPlayer| ComponentCollider::EEnemyC | ComponentCollider::EPlayerWeapon | ComponentCollider::EEnemyWeapon, 20);
 	collider->init();
@@ -119,9 +119,9 @@ Entity* Entity::createMine(Component* weapon, vec2 pos, int damage, Entity::TTyp
 
 Entity* Entity::createC4(Component* weapon, vec2 pos, int damage, Entity::TType type) {
 	Entity* mine = new Entity(EWeapon);
-	ComponentTransform* transform = new ComponentTransform(mine, pos, vmake(10, 10));
+	ComponentTransform* transform = new ComponentTransform(mine, pos, vmake(20, 20));
 	transform->init();
-	ComponentRenderable* renderable = new ComponentRenderable(mine, "data/bullet.png");
+	ComponentRenderable* renderable = new ComponentRenderable(mine, "data/c4.png");
 	renderable->init();
 	ComponentLife* life = new ComponentLife(mine, 1, 0, 0);
 	life->init();
@@ -133,9 +133,9 @@ Entity* Entity::createC4(Component* weapon, vec2 pos, int damage, Entity::TType 
 
 Entity* Entity::createRocket(Component* weapon, vec2 pos, vec2 direction, float speed, int damage, int range, Entity::TType type) {
 	Entity* rocket = new Entity(EWeapon);
-	ComponentTransform* transform = new ComponentTransform(rocket, pos, vmake(10, 10));
+	ComponentTransform* transform = new ComponentTransform(rocket, pos, vmake(15, 15));
 	transform->init();
-	ComponentRenderable* renderable = new ComponentRenderable(rocket, "data/bullet.png");
+	ComponentRenderable* renderable = new ComponentRenderable(rocket, "data/rocket-2.png", 2, 1, vangle(direction));
 	renderable->init();
 	ComponentInertialMove* movement = new ComponentInertialMove(rocket, direction, speed, true);
 	movement->init();
@@ -153,7 +153,7 @@ Entity* Entity::createNuclearBomb() {
 	Entity* bomb = new Entity(EWeapon);
 	ComponentTransform* transform = new ComponentTransform(bomb, vmake(SCR_WIDTH / 2.0, SCR_HEIGHT / 2.0), vmake(20, 20), vmake(8, 8));
 	transform->init();
-	ComponentRenderable* renderable = new ComponentRenderable(bomb, "data/bullet.png", 2, 0.5f);
+	ComponentRenderable* renderable = new ComponentRenderable(bomb, "data/explossion2.png", 2, 0.5f);
 	renderable->init();
 	ComponentCollider* colliderEnemy = new ComponentCollider(bomb, ComponentCollider::ECircleCollider, -50, ComponentCollider::EPlayerWeapon | ComponentCollider::EBoundaries, ComponentCollider::ENone);
 	colliderEnemy->init();
@@ -166,9 +166,9 @@ Entity* Entity::createNuclearBomb() {
 
 Entity* Entity::createEnemy(int x, int y, Entity* player, int speed, int lives, int damage) {
 	Entity* enemy = new Entity(EEnemy);
-	ComponentTransform* transform = new ComponentTransform(enemy, vmake(x, y), vmake(20, 20));
+	ComponentTransform* transform = new ComponentTransform(enemy, vmake(x, y), vmake(25, 25));
 	transform->init();
-	ComponentRenderable* renderable = new ComponentRenderable(enemy, "data/enemy.png", 2, 1.0f, "data/player.png", 10);
+	ComponentRenderable* renderable = new ComponentRenderable(enemy, "data/enemy2.png", 2, 1.0f, 0, "data/player.png", 10);
 	renderable->init();
 	ComponentAIMelee* ai = new ComponentAIMelee(enemy, player, speed, 0);
 	ai->init();
@@ -183,9 +183,9 @@ Entity* Entity::createEnemy(int x, int y, Entity* player, int speed, int lives, 
 
 Entity* Entity::createBigEnemy(int x, int y, Entity* player, int speed, int lives, int damage) {
 	Entity* enemy = new Entity(EEnemy);
-	ComponentTransform* transform = new ComponentTransform(enemy, vmake(x, y), vmake(30, 30));
+	ComponentTransform* transform = new ComponentTransform(enemy, vmake(x, y), vmake(35, 35));
 	transform->init();
-	ComponentRenderable* renderable = new ComponentRenderable(enemy, "data/enemy.png", 2, 1.0f, "data/player.png", 10);
+	ComponentRenderable* renderable = new ComponentRenderable(enemy, "data/bigEnemy.png", 2, 1.0f, 0, "data/player.png", 10);
 	renderable->init();
 	ComponentAIMelee* ai = new ComponentAIMelee(enemy, player, speed, 0);
 	ai->init();
@@ -200,9 +200,9 @@ Entity* Entity::createBigEnemy(int x, int y, Entity* player, int speed, int live
 
 Entity* Entity::createRangeEnemy(int x, int y, Entity* player) {
 	Entity* enemy = new Entity(EEnemy);
-	ComponentTransform* transform = new ComponentTransform(enemy, vmake(x, y), vmake(20, 20));
+	ComponentTransform* transform = new ComponentTransform(enemy, vmake(x, y), vmake(25, 25));
 	transform->init();
-	ComponentRenderable* renderable = new ComponentRenderable(enemy, "data/enemy.png", 2, 1.0f, "data/player.png", 10);
+	ComponentRenderable* renderable = new ComponentRenderable(enemy, "data/rangeEnemy2.png", 2, 1.0f, 0, "data/player.png", 10);
 	renderable->init();
 	ComponentWeapon* gun = new ComponentWeapon(enemy, Component::ERevolver, 100, 1, 1, 6, -1, 0, true);
 	gun->init();
@@ -224,9 +224,9 @@ Entity* Entity::createRangeEnemy(int x, int y, Entity* player) {
 Entity* Entity::createTurretEnemy(vec2 position, vec2 moveDir, std::vector<vec2> aimDirections, bool shuffleAim) {
 	World::TEnemyData enemyData = g_world->m_enemyData[World::ETurret];
 	Entity* enemy = new Entity(EOther);
-	ComponentTransform* transform = new ComponentTransform(enemy, position, vmake(20, 20));
+	ComponentTransform* transform = new ComponentTransform(enemy, position, vmake(25, 25));
 	transform->init();
-	ComponentRenderable* renderable = new ComponentRenderable(enemy, "data/enemy.png", 2, 1.0f, "data/player.png", 10);
+	ComponentRenderable* renderable = new ComponentRenderable(enemy, "data/turret.png", 2, 1.0f, 0, "data/player.png", 10);
 	renderable->init();
 	ComponentInertialMove* movement = new ComponentInertialMove(enemy, moveDir, enemyData.speed, true, true);
 	movement->init();
@@ -246,11 +246,11 @@ Entity* Entity::createTurretEnemy(vec2 position, vec2 moveDir, std::vector<vec2>
 Entity* Entity::createWeaponPickup() {
 	Component::TWeapon type = static_cast<Component::TWeapon>(rand() % Component::EWeaponCount);
 	//type = Component::ENuclearBomb;
-	vec2 randomPos = vmake(CORE_FRand(0.0, SCR_WIDTH), CORE_FRand(0.0, SCR_HEIGHT));
+	vec2 randomPos = vmake(CORE_FRand(0.0, WORLD_WIDTH), CORE_FRand(0.0, WORLD_HEIGHT));
 	Entity* weaponPickup = new Entity(EPickup);
 	ComponentTransform* transform = new ComponentTransform(weaponPickup, randomPos, vmake(20, 20));
 	transform->init();
-	ComponentRenderable* renderable = new ComponentRenderable(weaponPickup, "data/SimpleCrate.png");
+	ComponentRenderable* renderable = new ComponentRenderable(weaponPickup, "data/crate-1.png");
 	renderable->init();
 	ComponentCollider* collider = new ComponentCollider(weaponPickup, ComponentCollider::ERectCollider, 0, ComponentCollider::EPickup, ComponentCollider::EPlayer);
 	collider->init();
@@ -280,7 +280,7 @@ void Entity::createExplossion(vec2 pos, vec2 size) {
 	Entity* explossion = new Entity(EWeapon);
 	ComponentTransform* transform = new ComponentTransform(explossion, pos, vmake(10, 10), vmake(2, 2));
 	transform->init();
-	ComponentRenderable* renderable = new ComponentRenderable(explossion, "data/bullet.png", 2, 0.5f);
+	ComponentRenderable* renderable = new ComponentRenderable(explossion, "data/explossion2.png", 2, 0.5f);
 	renderable->init();
 	ComponentCollider* colliderEnemy = new ComponentCollider(explossion, ComponentCollider::ECircleCollider, -1, ComponentCollider::EPlayerWeapon | ComponentCollider::EEnemyWeapon | ComponentCollider::EBoundaries, ComponentCollider::ENone);
 	colliderEnemy->init();

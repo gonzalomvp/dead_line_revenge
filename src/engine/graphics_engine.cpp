@@ -4,7 +4,9 @@
 #include <algorithm>
 
 void Sprite::render() {
-	CORE_RenderCenteredSprite(m_pos, m_size, m_texture, m_alpha);
+	//CORE_RenderCenteredSprite(m_pos, m_size, m_texture, m_alpha);
+
+	CORE_RenderCenteredRotatedSprite(m_pos, m_size, DEG2RAD(m_angle), m_texture, rgbamake(255, 255, 255, 255 * m_alpha));
 }
 
 void Text::render() {

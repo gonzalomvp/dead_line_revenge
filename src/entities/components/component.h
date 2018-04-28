@@ -105,7 +105,7 @@ private:
 //=============================================================================
 class ComponentRenderable : public Component {
 public:
-	ComponentRenderable(Entity* owner, const char* texture, int priority = 2, float alpha= 1.0f, const char* hitTexture = nullptr, int hitTime = 0);
+	ComponentRenderable(Entity* owner, const char* texture, int priority = 2, float alpha = 1.0f, float angle = 0, const char* hitTexture = nullptr, int hitTime = 0);
 	~ComponentRenderable();
 
 	virtual void init          ();
@@ -116,6 +116,7 @@ private:
 	const char* m_texture;
 	int         m_priority;
 	float       m_alpha;
+	float       m_angle;
 	const char* m_hitTexture;
 	int         m_hitTime;
 

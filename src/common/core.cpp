@@ -73,7 +73,7 @@ void CORE_RenderCenteredSprite(vec2 pos, vec2 size, GLuint texid, float alpha)
 //-----------------------------------------------------------------------------
 void CORE_RenderCenteredRotatedSprite(vec2 pos, vec2 size, float angle, GLuint texid, rgba_t color)
 {
-#if 0 // MANUAL
+#if 1 // MANUAL
   // Rotated axes
   vec2 u = vscale(vunit(angle), .5f * size.x);
   vec2 v = vscale(vunit(angle + M_PIf/2.f), .5f * size.y);

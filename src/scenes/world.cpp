@@ -1,6 +1,7 @@
 #include "../common/stdafx.h"
 #include "../scenes/world.h"
 
+#include "../engine/graphics_engine.h"
 #include "../entities/entity.h"
 #include "../entities/components/component.h"
 #include "../entities/message.h"
@@ -30,7 +31,7 @@ void World::init() {
 	g_inputManager->registerEvent(this, IInputManager::TEvent::EPause, 0);
 
 	// Create player and first pickup
-	addEntity(Entity::createPlayer(vmake(SCR_WIDTH * 0.5f, SCR_HEIGHT * 0.5f)));
+	addEntity(Entity::createPlayer(vmake(WORLD_WIDTH * 0.5f, WORLD_HEIGHT * 0.5f)));
 	addEntity(Entity::createWeaponPickup());
 
 	// Load level details from file
@@ -47,6 +48,10 @@ void World::init() {
 			break;
 	}
 	loadLevel(fileName);
+
+	Sprite* background = new Sprite(g_graphicsEngine->getTexture("data/background4.png"), 3, 1.0f, 0, vmake(SCR_WIDTH * 0.5f, SCR_HEIGHT * 0.5f));
+	background->setSize(vmake(SCR_WIDTH, SCR_HEIGHT));
+	g_graphicsEngine->addGfxEntity(background);
 
 	//Cargar de fichero
 	//addEntity(Entity::createTurretEnemy(100, SCR_HEIGHT - 100, vmake(0, -1), m_player));
@@ -315,10 +320,10 @@ bool World::loadConfig() {
 
 	fclose(file);
 
-	m_spawnData.push_back(vmake(SCR_WIDTH / 2.0f, SCR_HEIGHT));
-	m_spawnData.push_back(vmake(SCR_WIDTH, SCR_HEIGHT / 2.0f));
-	m_spawnData.push_back(vmake(0.0f, SCR_HEIGHT / 2.0f));
-	m_spawnData.push_back(vmake(SCR_WIDTH / 2.0f, 0.0f));
+	m_spawnData.push_back(vmake(WORLD_WIDTH / 2.0f, WORLD_HEIGHT));
+	m_spawnData.push_back(vmake(WORLD_WIDTH, WORLD_HEIGHT / 2.0f));
+	m_spawnData.push_back(vmake(0.0f, WORLD_HEIGHT / 2.0f));
+	m_spawnData.push_back(vmake(WORLD_WIDTH / 2.0f, 0.0f));
 
 	return true;
 }

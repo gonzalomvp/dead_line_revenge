@@ -68,7 +68,7 @@ void ComponentTransform::receiveMessage(Message* message) {
 		vec2 bounceDirection;
 
 		if (m_pos.x > SCR_WIDTH - m_size.x * 0.5) {
-			m_pos.x = SCR_WIDTH - m_size.x * 0.5;
+			m_pos.x = WORLD_WIDTH - m_size.x * 0.5;
 			outOfBounds = true;
 			bounceDirection = vmake(-1.0f , 1.0f);
 		}
@@ -77,8 +77,8 @@ void ComponentTransform::receiveMessage(Message* message) {
 			outOfBounds = true;
 			bounceDirection = vmake(-1.0f, 1.0f);
 		}
-		if (m_pos.y > SCR_HEIGHT - m_size.y * 0.5) {
-			m_pos.y = SCR_HEIGHT - m_size.y * 0.5;
+		if (m_pos.y > WORLD_HEIGHT - m_size.y * 0.5) {
+			m_pos.y = WORLD_HEIGHT - m_size.y * 0.5;
 			outOfBounds = true;
 			bounceDirection = vmake(1.0f, -1.0f);
 		}
@@ -207,7 +207,7 @@ void ComponentInertialMove::receiveMessage(Message* message) {
 //=============================================================================
 // ComponentRenderable class
 //=============================================================================
-ComponentRenderable::ComponentRenderable(Entity* owner, const char* texture, int priority, float alpha, const char* hitTexture, int hitTime) : Component(owner), m_texture(texture), m_priority(priority), m_alpha(alpha), m_hitTexture(hitTexture), m_hitTime(hitTime) {
+ComponentRenderable::ComponentRenderable(Entity* owner, const char* texture, int priority, float alpha, float angle, const char* hitTexture, int hitTime) : Component(owner), m_texture(texture), m_priority(priority), m_alpha(alpha), m_angle(angle), m_hitTexture(hitTexture), m_hitTime(hitTime) {
 	m_hitTimer = m_hitTime;
 }
 
@@ -217,7 +217,7 @@ ComponentRenderable::~ComponentRenderable() {
 
 void ComponentRenderable::init() {
 	Component::init();
-	m_sprite = new Sprite(g_graphicsEngine->getTexture(m_texture), m_priority, m_alpha);
+	m_sprite = new Sprite(g_graphicsEngine->getTexture(m_texture), m_priority, m_alpha, m_angle);
 	g_graphicsEngine->addGfxEntity(m_sprite);
 }
 
@@ -262,6 +262,12 @@ void ComponentRenderable::receiveMessage(Message* message) {
 			//m_sprite->setTexture(g_graphicsEngine->getTexture(m_hitTexture));
 			//m_sprite->deactivate();
 			m_hitTimer = 0;
+		}
+		else {
+			MessageAimDirection* messageAimDirection = dynamic_cast<MessageAimDirection*>(message);
+			if (messageAimDirection) {
+				m_sprite->setAngle(vangle(messageAimDirection->direction));
+			}
 		}
 	}
 }
@@ -595,21 +601,21 @@ void ComponentAIEvade::run(float deltaTime) {
 }
 
 vec2 ComponentAIEvade::calculatIntersectionWithWall(vec2 position, float angle) {
-	// Ver si se puede hacer simplemente analizando las coordenadas x, y de la posicion y las posiciones limites de las lineas SCR_HEIGHT, SCR_WIDTH, 0 ,0
-	// por ejemplo (SCR_HEIGHT / componente y del movimiento) = cercania
+	// Ver si se puede hacer simplemente analizando las coordenadas x, y de la posicion y las posiciones limites de las lineas WORLD_HEIGHT, WORLD_WIDTH, 0 ,0
+	// por ejemplo (WORLD_HEIGHT / componente y del movimiento) = cercania
 	vec2 moveDir = vunit(DEG2RAD(angle));
 	vec2 intersection1;
 	vec2 intersection2;
 
 	if (moveDir.y > 0)
-		LineLineIntersect(position, vadd(position, moveDir), vmake(0, SCR_HEIGHT), vmake(SCR_WIDTH, SCR_HEIGHT), intersection1);
+		LineLineIntersect(position, vadd(position, moveDir), vmake(0, WORLD_HEIGHT), vmake(WORLD_WIDTH, WORLD_HEIGHT), intersection1);
 	else
-		LineLineIntersect(position, vadd(position, moveDir), vmake(0, 0), vmake(SCR_WIDTH, 0), intersection1);
+		LineLineIntersect(position, vadd(position, moveDir), vmake(0, 0), vmake(WORLD_WIDTH, 0), intersection1);
 
 	if (moveDir.x > 0)
-		LineLineIntersect(position, vadd(position, moveDir), vmake(SCR_WIDTH, 0), vmake(SCR_WIDTH, SCR_HEIGHT), intersection2);
+		LineLineIntersect(position, vadd(position, moveDir), vmake(WORLD_WIDTH, 0), vmake(WORLD_WIDTH, WORLD_HEIGHT), intersection2);
 	else
-		LineLineIntersect(position, vadd(position, moveDir), vmake(0, 0), vmake(0, SCR_HEIGHT), intersection2);
+		LineLineIntersect(position, vadd(position, moveDir), vmake(0, 0), vmake(0, WORLD_HEIGHT), intersection2);
 
 	float distUpDownMargin = vlen(vsub(intersection1, position));
 	float distLeftRight = vlen(vsub(intersection2, position));
@@ -820,7 +826,7 @@ void ComponentWeaponPickup::receiveMessage(Message* message) {
 				break;
 		}
 
-		Entity::createHUDMessage(hudMessage, vmake((SCR_WIDTH / 2) - (hudMessage.length() / 2.0f * 16), SCR_HEIGHT * 0.8f), 100);
+		Entity::createHUDMessage(hudMessage, vmake((WORLD_WIDTH / 2) - (hudMessage.length() / 2.0f * 16), 20), 100);
 	}
 }
 
@@ -853,23 +859,27 @@ ComponentHUD::~ComponentHUD() {
 
 void ComponentHUD::init() {
 	Component::init();
-	m_life = new Text("", 1, vmake(20, 20));
+	m_life = new Text("", 1, vmake(20, 430));
 	g_graphicsEngine->addGfxEntity(m_life);
 
-	m_score = new Text("| 120", 1, vmake(40, 20));
+	g_graphicsEngine->addGfxEntity(new Text("LIFE", 1, vmake(20, 450)));
+	g_graphicsEngine->addGfxEntity(new Text("SCORE", 1, vmake(110, 450)));
+	g_graphicsEngine->addGfxEntity(new Text("AMMO", 1, vmake(210, 450)));
+
+	m_score = new Text("| 120", 1, vmake(110, 430));
 	g_graphicsEngine->addGfxEntity(m_score);
 
-	m_ammo = new Text("| 6/-", 1, vmake(120, 20));
+	m_ammo = new Text("| 6/-", 1, vmake(210, 430));
 	g_graphicsEngine->addGfxEntity(m_ammo);
 
 	m_fps = new Text("", 1, vmake(300, 300));
 	g_graphicsEngine->addGfxEntity(m_fps);
 
-	m_target = new Sprite(g_graphicsEngine->getTexture("data/target.png"), 1);
-	m_target->setSize(vmake(50, 50));
+	m_target = new Sprite(g_graphicsEngine->getTexture("data/target2.png"), 1);
+	m_target->setSize(vmake(36, 36));
 	g_graphicsEngine->addGfxEntity(m_target);
 
-	m_reloadAnim = new Sprite(g_graphicsEngine->getTexture("data/playerReload.png"), 1);
+	m_reloadAnim = new Sprite(g_graphicsEngine->getTexture("data/energy-bar-fill.png"), 1);
 	g_graphicsEngine->addGfxEntity(m_reloadAnim);
 
 	g_inputManager->registerEvent(this, IInputManager::TEvent::EMouse, 0);
@@ -881,14 +891,11 @@ void ComponentHUD::run(float deltaTime) {
 	m_owner->receiveMessage(&msgLife);
 	m_life->setText(std::to_string(msgLife.currentLife));
 	
-	m_score->setText("- " + std::to_string(g_world->getScore()));
+	m_score->setText(std::to_string(g_world->getScore()));
 
 	MessageAmmoInfo msgAmmo;
 	m_owner->receiveMessage(&msgAmmo);
-	std::string totalAmmo = "-";
-	if (msgAmmo.totalAmmo >= 0)
-		totalAmmo = std::to_string(msgAmmo.totalAmmo);
-	m_ammo->setText("- " + std::to_string(msgAmmo.currentAmmo) + "/" + totalAmmo);
+	m_ammo->setText(std::to_string(msgAmmo.currentAmmo) + "/" + std::to_string(msgAmmo.totalAmmo));
 
 	MessageGetTransform msgTransform;
 	m_owner->receiveMessage(&msgTransform);

@@ -3,6 +3,9 @@
 #include "../input/input_manager.h"
 #include "../entities/components/component.h"
 
+#define WORLD_WIDTH  640
+#define WORLD_HEIGHT 420
+
 class Entity;
 
 class World : public IInputManager::IListener {
