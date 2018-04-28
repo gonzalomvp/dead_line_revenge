@@ -25,6 +25,12 @@ int Main(void) {
 
 	GraphicsEngine gfx;
 	g_graphicsEngine = &gfx;
+
+	//Set Background
+	Sprite background(g_graphicsEngine->getTexture("data/background4.png"), 3, 1.0f, 0, vmake(SCR_WIDTH * 0.5f, SCR_HEIGHT * 0.5f));
+	background.setSize(vmake(SCR_WIDTH, SCR_HEIGHT));
+	g_graphicsEngine->addGfxEntity(&background);
+
 	StringManager stringManager;
 	g_stringManager = &stringManager;
 	g_stringManager->loadLanguage(g_settings.language);

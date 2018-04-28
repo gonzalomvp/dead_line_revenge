@@ -4,7 +4,7 @@
 #include "../entities/components/component.h"
 
 #define WORLD_WIDTH  640
-#define WORLD_HEIGHT 420
+#define WORLD_HEIGHT 480
 
 class Entity;
 

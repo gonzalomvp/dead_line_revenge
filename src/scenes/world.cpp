@@ -1,7 +1,6 @@
 #include "../common/stdafx.h"
 #include "../scenes/world.h"
 
-#include "../engine/graphics_engine.h"
 #include "../entities/entity.h"
 #include "../entities/components/component.h"
 #include "../entities/message.h"
@@ -48,10 +47,6 @@ void World::init() {
 			break;
 	}
 	loadLevel(fileName);
-
-	Sprite* background = new Sprite(g_graphicsEngine->getTexture("data/background4.png"), 3, 1.0f, 0, vmake(SCR_WIDTH * 0.5f, SCR_HEIGHT * 0.5f));
-	background->setSize(vmake(SCR_WIDTH, SCR_HEIGHT));
-	g_graphicsEngine->addGfxEntity(background);
 
 	//Cargar de fichero
 	//addEntity(Entity::createTurretEnemy(100, SCR_HEIGHT - 100, vmake(0, -1), m_player));
