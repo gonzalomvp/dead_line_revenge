@@ -32,8 +32,7 @@ int Main(void) {
 	g_soundEngine = &soundEngine;
 
 	//Set Background
-	Sprite background(g_graphicsEngine->getTexture("data/background4.png"), 3, 1.0f, 0, vmake(SCR_WIDTH * 0.5f, SCR_HEIGHT * 0.5f));
-	background.setSize(vmake(SCR_WIDTH, SCR_HEIGHT));
+	Sprite background(g_graphicsEngine->getTexture("data/background4.png"), vmake(SCR_WIDTH * 0.5f, SCR_HEIGHT * 0.5f), vmake(SCR_WIDTH, SCR_HEIGHT), 0.0f, 1.0f, 3);
 	g_graphicsEngine->addGfxEntity(&background);
 
 	StringManager stringManager;
@@ -45,7 +44,7 @@ int Main(void) {
 	g_appManager =  new AppManager();
 	g_appManager->switchMode(AppMode::EMENU);
 
-	Text* fps = new Text("", 1, vmake(600, 10));
+	Text* fps = new Text("", vmake(600, 10), 1);
 	g_graphicsEngine->addGfxEntity(fps);
 	
 	double deltaTime = 0;

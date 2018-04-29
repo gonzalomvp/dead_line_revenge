@@ -3,21 +3,12 @@
 
 #include <algorithm>
 
-void Sprite::render() {
-	//CORE_RenderCenteredSprite(m_pos, m_size, m_texture, m_alpha);
-
-	CORE_RenderCenteredRotatedSprite(m_pos, m_size, DEG2RAD(m_angle), m_texture, rgbamake(255, 255, 255, 255 * m_alpha));
-}
-
-void Text::render() {
-	FONT_DrawString(m_pos, m_text.c_str());
-}
-
+//=============================================================================
+// GraphicsEngine class
+//=============================================================================
 GraphicsEngine::GraphicsEngine() {
 	FONT_Init();
-
-	// Set up rendering
-	glViewport(0, 0, SCR_WIDTH, SCR_HEIGHT); // Sets up clipping
+	glViewport(0, 0, SCR_WIDTH, SCR_HEIGHT);
 	glClearColor(0.0f, 0.1f, 0.3f, 0.0f);
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
@@ -35,23 +26,6 @@ GraphicsEngine::~GraphicsEngine() {
 	FONT_End();
 }
 
-void GraphicsEngine::addGfxEntity(GfxEntity* gfxEntity) {
-	m_gfxEntities.push_back(gfxEntity);
-}
-
-void GraphicsEngine::removeGfxEntity(const GfxEntity* gfxEntity) {
-	for (auto itGfxEntity= m_gfxEntities.begin(); itGfxEntity != m_gfxEntities.end(); ++itGfxEntity) {
-		if (*itGfxEntity == gfxEntity) {
-			m_gfxEntities.erase(itGfxEntity);
-			break;
-		}
-	}
-}
-
-void GraphicsEngine::removeAllGfxEntities() {
-	m_gfxEntities.clear();
-}
-
 GLuint GraphicsEngine::getTexture(const char* fileName) {
 	GLuint res;
 	if (m_textures[fileName]) {
@@ -62,6 +36,19 @@ GLuint GraphicsEngine::getTexture(const char* fileName) {
 		m_textures[fileName] = res;
 	}
 	return res;
+}
+
+void GraphicsEngine::addGfxEntity(GfxEntity* gfxEntity) {
+	m_gfxEntities.push_back(gfxEntity);
+}
+
+void GraphicsEngine::removeGfxEntity(const GfxEntity* gfxEntity) {
+	for (auto itGfxEntity = m_gfxEntities.begin(); itGfxEntity != m_gfxEntities.end(); ++itGfxEntity) {
+		if (*itGfxEntity == gfxEntity) {
+			m_gfxEntities.erase(itGfxEntity);
+			break;
+		}
+	}
 }
 
 void GraphicsEngine::render() {
@@ -76,7 +63,23 @@ void GraphicsEngine::render() {
 	});
 
 	for (size_t i = 0; i < m_gfxEntities.size(); i++) {
-		m_gfxEntities[i]->render();
+		if (m_gfxEntities[i]->isActive()) {
+			m_gfxEntities[i]->render();
+		}
 	}
 	SYS_Show();
+}
+
+//=============================================================================
+// Sprite class
+//=============================================================================
+void Sprite::render() {
+	CORE_RenderCenteredRotatedSprite(m_pos, m_size, DEG2RAD(m_angle), m_texture, rgbamake(255, 255, 255, 255 * m_alpha));
+}
+
+//=============================================================================
+// Text class
+//=============================================================================
+void Text::render() {
+	FONT_DrawString(m_pos, m_text.c_str());
 }

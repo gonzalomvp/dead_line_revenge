@@ -92,7 +92,7 @@ Menu* Menu::createPauseMenu() {
 
 Menu* Menu::createGameOverMenu() {
 	Menu* menu = new Menu();
-	menu->m_title = new Text("GAME OVER", 1, vmake(SCR_WIDTH / 2, SCR_HEIGHT * 0.8));
+	menu->m_title = new Text("GAME OVER", vmake(SCR_WIDTH / 2, SCR_HEIGHT * 0.8), 1);
 	menu->m_title->activate();
 	MenuItem* menuItem;
 	menuItem = new MenuItem("RETRY", vmake(SCR_WIDTH / 2, SCR_HEIGHT * 0.6), "LTEXT_GUI_RETRY_MENU_ITEM");
@@ -191,7 +191,7 @@ void Menu::setTitle(const char* title) {
 		m_title->setText(title);
 	}
 	else {
-		m_title = new Text(title, 1, vmake(SCR_WIDTH / 2, SCR_HEIGHT * 0.8));
+		m_title = new Text(title, vmake(SCR_WIDTH / 2, SCR_HEIGHT * 0.8), 1);
 	}
 	m_title->setPos(vmake((SCR_WIDTH / 2) - (strlen(title) / 2.0f * 16), m_title->getPos().y));
 }

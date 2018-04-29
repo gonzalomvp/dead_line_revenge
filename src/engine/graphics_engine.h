@@ -2,44 +2,45 @@
 
 #include <map>
 
-class Sprite;
 class GfxEntity;
 
 //=============================================================================
 // GraphicsEngine class
+//=============================================================================
+
 class GraphicsEngine {
 public:
 	GraphicsEngine();
 	~GraphicsEngine();
 
-	void   addGfxEntity       (GfxEntity* gfxEntity);
+	GLuint getTexture     (const char* fileName);
+	void   addGfxEntity   (GfxEntity* gfxEntity);
 	void   removeGfxEntity(const GfxEntity* gfxEntity);
-	void   removeAllGfxEntities();
-	GLuint getTexture      (const char* fileName);
-	void   render          ();
-
+	void   render         ();
 private:
-	std::vector<GfxEntity*>          m_gfxEntities;
-	std::map<std::string, GLuint>    m_textures;
+	std::vector<GfxEntity*>       m_gfxEntities;
+	std::map<std::string, GLuint> m_textures;
 };
 
-//incluir un gestor de texturas
-
 //=============================================================================
-// GraphicsEntity class
+// GfxEntity class
+//=============================================================================
 class GfxEntity {
 public:
 	GfxEntity(vec2 pos, int priority) : m_pos(pos), m_priority(priority), m_isActive(true) {}
+	virtual ~GfxEntity() = 0 {}
 
-	void activate() { if (!m_isActive) { m_isActive = true; g_graphicsEngine->addGfxEntity(this); } }
-	void deactivate() { if (m_isActive) { m_isActive = false; g_graphicsEngine->removeGfxEntity(this); } }
+	void activate  ()     { m_isActive = true;  }
+	void deactivate()     { m_isActive = false; }
+	bool isActive() const { return m_isActive;  }
 
-	void setPos(vec2 pos) { m_pos = pos; }
-	vec2 getPos() { return m_pos; }
+	vec2 getPos() const   { return m_pos; }
+	void setPos(vec2 pos) { m_pos = pos;  }
 
-	int getPriority() const { return m_priority; }
+	int  getPriority() const       { return m_priority;     }
+	void setPriority(int priority) { m_priority = priority; }
+
 	virtual void render() = 0;
-
 protected:
 	vec2   m_pos;
 	int    m_priority;
@@ -48,33 +49,42 @@ protected:
 
 //=============================================================================
 // Sprite class
+//=============================================================================
 class Sprite : public GfxEntity {
 public:
-	Sprite(GLuint texture, int priority, float alpha = 1.0f, float angle = 0.0f, vec2 pos = vmake(0, 0)) : GfxEntity(pos, priority), m_alpha(alpha), m_texture(texture), m_size(vmake(0, 0)), m_angle(angle) {}
+	Sprite(GLuint texture, vec2 pos, vec2 size, float angle, float alpha, int priority) : GfxEntity(pos, priority), m_texture(texture), m_size(size), m_angle(angle), m_alpha(alpha) {}
 
-	virtual void setSize(vec2 size) { m_size = size; }
-	virtual void setAngle(float angle) { m_angle = angle; }
-	vec2 getSize() { return m_size; }
-	virtual void setTexture(GLuint texture) { m_texture = texture;  }
+	GLuint getTexture() const         { return m_texture;    }
+	void   setTexture(GLuint texture) { m_texture = texture; }
+
+	vec2 getSize() const    { return m_size; }
+	void setSize(vec2 size) { m_size = size; }
+
+	float getAngle() const      { return m_angle;  }
+	void  setAngle(float angle) { m_angle = angle; }
+
+	float getAlpha() const      { return m_alpha;  }
+	void  setAlpha(float alpha) { m_alpha = alpha; }
+
 	virtual void render();
-
 private:
-	vec2   m_size;
 	GLuint m_texture;
-	float  m_alpha;
+	vec2   m_size;
 	float  m_angle;
+	float  m_alpha;
 };
 
 //=============================================================================
 // Text class
+//=============================================================================
 class Text : public GfxEntity {
 public:
-	Text(std::string text, int priority, vec2 pos = vmake(0, 0)) : GfxEntity(pos, priority), m_text(text) {}
+	Text(std::string text, vec2 pos, int priority) : GfxEntity(pos, priority), m_text(text) {}
 
-	void setText(std::string text) { m_text = text; }
-	std::string getText() { return m_text; }
+	std::string getText() const                  { return m_text; }
+	void        setText(const std::string& text) { m_text = text; }
+	
 	virtual void render();
-
 private:
 	std::string m_text;
 };
