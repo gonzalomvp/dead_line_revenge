@@ -27,15 +27,12 @@ GraphicsEngine::~GraphicsEngine() {
 }
 
 GLuint GraphicsEngine::getTexture(const char* fileName) {
-	GLuint res;
-	if (m_textures[fileName]) {
-		res = m_textures[fileName];
+	GLuint textureId = m_textures[fileName];
+	if (!textureId) {
+		textureId = CORE_LoadPNG(fileName, false);
+		m_textures[fileName] = textureId;
 	}
-	else {
-		res = CORE_LoadPNG(fileName, false);
-		m_textures[fileName] = res;
-	}
-	return res;
+	return textureId;
 }
 
 void GraphicsEngine::addGfxEntity(GfxEntity* gfxEntity) {
@@ -57,8 +54,7 @@ void GraphicsEngine::render() {
 	//sort by priority
 	std::sort(m_gfxEntities.begin(),
 		m_gfxEntities.end(),
-		[](const GfxEntity* lhs, const GfxEntity* rhs)
-	{
+		[](const GfxEntity* lhs, const GfxEntity* rhs) {
 		return lhs->getPriority() > rhs->getPriority();
 	});
 
