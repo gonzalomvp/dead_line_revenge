@@ -438,7 +438,7 @@ void ComponentWeapon::run(float deltaTime) {
 				break;
 			}
 			case ENuclearBomb: {
-				g_world->createNuclearBomb();
+				g_world->createExplossion(messageGetTranform.pos, vmake(20.0f, 20.0f), vmake(8.0f, 8.0f), 100, Entity::ENuclearExplossion);
 				break;
 			}
 			default: {
@@ -508,7 +508,7 @@ void ComponentExplossive::receiveMessage(Message* message) {
 	if (msgDestroy) {
 		MessageGetTransform messageSelfPos;
 		m_owner->receiveMessage(&messageSelfPos);
-		g_world->createExplossion(messageSelfPos.pos, vmake(100, 100));
+		g_world->createExplossion(messageSelfPos.pos, vmake(10.0f, 10.0f), vmake(2.0f, 2.0f), 50, Entity::EExplossion);
 	}
 }
 

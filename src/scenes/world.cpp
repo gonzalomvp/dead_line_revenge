@@ -367,7 +367,7 @@ Component::TWeaponData World::getWeaponData(Component::TWeapon weaponType) {
 	return m_weaponData[weaponType];
 }
 
-void World::createPlayer(vec2 pos) {
+Entity* World::createPlayer(vec2 pos) {
 	Entity* player = new Entity(Entity::EPlayer);
 	ComponentTransform* transform = new ComponentTransform(player, pos, vmake(30, 25));
 	transform->init();
@@ -386,6 +386,7 @@ void World::createPlayer(vec2 pos) {
 	ComponentHUD* hudComponent = new ComponentHUD(player);
 	hudComponent->init();
 	addEntity(player);
+	return player;
 }
 
 Entity* World::createBullet(vec2 pos, vec2 size, vec2 direction, float speed, int damage, int life, int range, bool isExplossive, bool isBouncy, Entity::TType entityType, const char* texture) {
@@ -397,8 +398,7 @@ Entity* World::createBullet(vec2 pos, vec2 size, vec2 direction, float speed, in
 	ComponentMove* movement = new ComponentMove(bullet, direction, speed, true, isBouncy);
 	movement->init();
 	ComponentCollider* collider;
-	switch (entityType)
-	{
+	switch (entityType) {
 		case Entity::EPlayer:
 			collider = new ComponentCollider(bullet, ComponentCollider::ECircleCollider, damage, ComponentCollider::EPlayerWeapon, ComponentCollider::EEnemyC | ComponentCollider::EBoundaries);
 			break;
@@ -421,19 +421,31 @@ Entity* World::createBullet(vec2 pos, vec2 size, vec2 direction, float speed, in
 	return bullet;
 }
 
-Entity* World::createNuclearBomb() {
-	Entity* bomb = new Entity(Entity::EWeapon);
-	ComponentTransform* transform = new ComponentTransform(bomb, vmake(SCR_WIDTH / 2.0, SCR_HEIGHT / 2.0), vmake(20, 20), vmake(8, 8));
+Entity* World::createExplossion(vec2 pos, vec2 size, vec2 sizeIncrement, int duration, Entity::TType entityType) {
+	Entity* explossion = new Entity(entityType);
+	ComponentTransform* transform = new ComponentTransform(explossion, pos, size, sizeIncrement);
 	transform->init();
-	ComponentRenderable* renderable = new ComponentRenderable(bomb, "data/explossion2.png", 0.0f, 0.5f, 2);
+	ComponentRenderable* renderable = new ComponentRenderable(explossion, "data/explossion2.png", 0.0f, 0.5f, 2);
 	renderable->init();
-	ComponentCollider* colliderEnemy = new ComponentCollider(bomb, ComponentCollider::ECircleCollider, -50, ComponentCollider::EPlayerWeapon | ComponentCollider::EBoundaries, ComponentCollider::ENone);
-	colliderEnemy->init();
-	ComponentLife* life = new ComponentLife(bomb, 1, 100, 0);
+	ComponentCollider* collider;
+	switch (entityType) {
+		case Entity::ENuclearExplossion:
+			collider = new ComponentCollider(explossion, ComponentCollider::ECircleCollider, -50, ComponentCollider::EPlayerWeapon | ComponentCollider::EBoundaries, ComponentCollider::ENone);
+			break;
+		default:
+			collider = new ComponentCollider(explossion, ComponentCollider::ECircleCollider, -1, ComponentCollider::EPlayerWeapon | ComponentCollider::EEnemyWeapon | ComponentCollider::EBoundaries, ComponentCollider::ENone);
+			break;
+	}
+	collider->init();
+	ComponentLife* life = new ComponentLife(explossion, 1, duration, 0);
 	life->init();
-	g_world->addEntity(bomb);
+	g_world->addEntity(explossion);
 
-	return bomb;
+	if (g_settings.sfx) {
+		uint m_soundId = CORE_LoadWav("data/explossion.wav");
+		CORE_PlayMusic(m_soundId);
+	}
+	return explossion;
 }
 
 Entity* World::createEnemy(int x, int y, Entity* player, int speed, int lives, int damage) {
@@ -538,7 +550,7 @@ Entity* World::createTurretEnemy(vec2 position, vec2 moveDir, std::vector<vec2> 
 Entity* World::createWeaponPickup() {
 	Component::TWeapon type = static_cast<Component::TWeapon>(rand() % Component::EWeaponCount);
 	//type = Component::EMines;
-	vec2 randomPos = vmake(CORE_FRand(0.0, WORLD_WIDTH), CORE_FRand(0.0, WORLD_HEIGHT));
+	vec2 randomPos = vmake(CORE_FRand(0.0, WORLD_WIDTH), CORE_FRand(80, WORLD_HEIGHT - 80));
 	Entity* weaponPickup = new Entity(Entity::EPickup);
 	ComponentTransform* transform = new ComponentTransform(weaponPickup, randomPos, vmake(20, 20));
 	transform->init();
@@ -568,22 +580,3 @@ Entity* World::createHUDMessage(std::string message, vec2 pos, int displayTime) 
 	return hudMessage;
 }
 
-void World::createExplossion(vec2 pos, vec2 size) {
-	Entity* explossion = new Entity(Entity::EWeapon);
-	ComponentTransform* transform = new ComponentTransform(explossion, pos, vmake(10, 10), vmake(2, 2));
-	transform->init();
-	ComponentRenderable* renderable = new ComponentRenderable(explossion, "data/explossion2.png", 0.0f, 1.0f, 2);
-	renderable->init();
-	ComponentCollider* colliderEnemy = new ComponentCollider(explossion, ComponentCollider::ECircleCollider, -1, ComponentCollider::EPlayerWeapon | ComponentCollider::EEnemyWeapon | ComponentCollider::EBoundaries, ComponentCollider::ENone);
-	colliderEnemy->init();
-	ComponentLife* life = new ComponentLife(explossion, 1, 50, 0);
-	life->init();
-	g_world->addEntity(explossion);
-
-	if (g_settings.sfx) {
-		uint m_soundId = CORE_LoadWav("data/explossion.wav");
-		CORE_PlayMusic(m_soundId);
-	}
-
-	return;
-}

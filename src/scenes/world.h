@@ -51,19 +51,18 @@ public:
 	Component::TWeaponData getWeaponData(Component::TWeapon weaponType);
 	
 	// Entity creation methods
-	void createPlayer(vec2 pos);
-	Entity* createBullet(vec2 pos, vec2 size, vec2 direction, float speed, int damage, int life, int range, bool isExplossive, bool isBouncy, Entity::TType entityType, const char* texture);
+	Entity* createPlayer    (vec2 pos);
+	Entity* createBullet    (vec2 pos, vec2 size, vec2 direction, float speed, int damage, int life, int range, bool isExplossive, bool isBouncy, Entity::TType entityType, const char* texture);
+	Entity* createExplossion(vec2 pos, vec2 size, vec2 sizeIncrement, int duration, Entity::TType entityType);
+
 
 	Entity* createEnemy(int x, int y, Entity* player, int speed, int lives, int damage);
 	Entity* createBigEnemy(int x, int y, Entity* player, int speed, int lives, int damage);
 	Entity* createRangeEnemy(int x, int y, Entity* player);
 	Entity* createTurretEnemy(vec2 position, vec2 moveDir, std::vector<vec2> aimDirections, bool shuffleAim);
 
-	
-	
-	Entity* createNuclearBomb();
 	Entity* createWeaponPickup();
-	void createExplossion(vec2 pos, vec2 size);
+	
 	Entity* createHUDMessage(std::string, vec2 pos, int displayTime);
 
 	//quitar de aqui

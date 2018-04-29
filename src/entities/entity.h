@@ -13,6 +13,8 @@ public:
 		ETurret,
 		EWeapon,
 		EMine,
+		EExplossion,
+		ENuclearExplossion,
 		EHUDMessage,
 	};
 
