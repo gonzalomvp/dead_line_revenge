@@ -87,6 +87,9 @@
     <ClInclude Include="..\src\gui\menu.h">
       <Filter>src\gui</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\engine\sound_engine.h">
+      <Filter>src\engine</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\main.cpp">
@@ -145,6 +148,9 @@
     </ClCompile>
     <ClCompile Include="..\src\gui\menu.cpp">
       <Filter>src\gui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\engine\sound_engine.cpp">
+      <Filter>src\engine</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

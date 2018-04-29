@@ -1,6 +1,7 @@
 #include "./common/stdafx.h"
 #include "./scenes/app_manager.h"
 #include "./engine/graphics_engine.h"
+#include "./engine/sound_engine.h"
 #include "./input/input_manager.h"
 #include "./gui/string_manager.h"
 #include "./gui/gui.h"
@@ -10,6 +11,7 @@
 
 // Global variables
 GraphicsEngine* g_graphicsEngine;
+SoundEngine*    g_soundEngine;
 IInputManager*   g_inputManager;
 AppManager* g_appManager;
 StringManager*  g_stringManager;
@@ -18,13 +20,16 @@ MenuManager*    g_menuManager;
 Settings g_settings;
 
 int Main(void) {
-	CORE_InitSound();
+	
 	g_settings.music = true;
 	g_settings.sfx = true;
 	g_settings.language = EEnglish;
 
 	GraphicsEngine gfx;
 	g_graphicsEngine = &gfx;
+
+	SoundEngine soundEngine;
+	g_soundEngine = &soundEngine;
 
 	//Set Background
 	Sprite background(g_graphicsEngine->getTexture("data/background4.png"), 3, 1.0f, 0, vmake(SCR_WIDTH * 0.5f, SCR_HEIGHT * 0.5f));
@@ -71,7 +76,7 @@ int Main(void) {
 		SYS_Pump();
 		SYS_Sleep(17);
 	}
-	CORE_EndSound();
+	
 	//delete g_graphicsEngine;
 	return 0;
 }

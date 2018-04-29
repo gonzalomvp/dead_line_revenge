@@ -1,6 +1,7 @@
 #include "../common/stdafx.h"
 #include "../scenes/world.h"
 
+#include "../engine/sound_engine.h"
 #include "../entities/entity.h"
 #include "../entities/components/component.h"
 #include "../entities/message.h"
@@ -444,10 +445,7 @@ Entity* World::createExplossion(vec2 pos, vec2 size, vec2 sizeIncrement, int dur
 	life->init();
 	g_world->addEntity(explossion);
 
-	if (g_settings.sfx) {
-		uint m_soundId = CORE_LoadWav("data/explossion.wav");
-		CORE_PlayMusic(m_soundId);
-	}
+	g_soundEngine->playSound("data/explossion.wav");
 	return explossion;
 }
 

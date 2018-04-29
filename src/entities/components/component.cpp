@@ -4,6 +4,7 @@
 #include "../message.h"
 #include "../../scenes/world.h"
 #include "../../gui/string_manager.h"
+#include "../../engine/sound_engine.h"
 #include "../../engine/graphics_engine.h"
 
 #include <algorithm>
@@ -419,22 +420,22 @@ void ComponentWeapon::run(float deltaTime) {
 				angle -= SHOTGUN_DISP_ANGLE;
 				bulletDir = vunit(DEG2RAD(angle));
 				g_world->createBullet(messageGetTranform.pos, vmake(10.0f, 10.0f), bulletDir, m_weaponData.bulletSpeed, m_weaponData.bulletDamage, m_weaponData.bulletLife, m_weaponData.bulletRange, m_weaponData.isExplossive, m_weaponData.isBouncy, m_owner->getType(), "data/shotgunBullet.png");
-				CORE_PlayMusic(CORE_LoadWav("data/shotgun.wav"));
+				g_soundEngine->playSound("data/shotgun.wav");
 				break;
 			}
 			case EMines: {
 				g_world->createBullet(messageGetTranform.pos, vmake(20.0f, 20.0f), m_aimDirection, m_weaponData.bulletSpeed, m_weaponData.bulletDamage, m_weaponData.bulletLife, m_weaponData.bulletRange, m_weaponData.isExplossive, m_weaponData.isBouncy, Entity::EMine, "data/mine.png");
-				CORE_PlayMusic(CORE_LoadWav("data/mine.wav"));
+				g_soundEngine->playSound("data/mine.wav");
 				break;
 			}
 			case EC4: {
 				m_remoteBullet = g_world->createBullet(messageGetTranform.pos, vmake(20.0f, 20.0f), m_aimDirection, m_weaponData.bulletSpeed, m_weaponData.bulletDamage, m_weaponData.bulletLife, m_weaponData.bulletRange, m_weaponData.isExplossive, m_weaponData.isBouncy, m_owner->getType(), "data/c4.png");
-				CORE_PlayMusic(CORE_LoadWav("data/mine.wav"));
+				g_soundEngine->playSound("data/mine.wav");
 				break;
 			}
 			case ERocketLauncher: {
 				g_world->createBullet(messageGetTranform.pos, vmake(15.0f, 15.0f), m_aimDirection, m_weaponData.bulletSpeed, m_weaponData.bulletDamage, m_weaponData.bulletLife, m_weaponData.bulletRange, m_weaponData.isExplossive, m_weaponData.isBouncy, m_owner->getType(), "data/rocket.png");
-				CORE_PlayMusic(CORE_LoadWav("data/rocketlauncher.wav"));
+				g_soundEngine->playSound("data/rocketlauncher.wav");
 				break;
 			}
 			case ENuclearBomb: {
@@ -443,7 +444,7 @@ void ComponentWeapon::run(float deltaTime) {
 			}
 			default: {
 				g_world->createBullet(messageGetTranform.pos, vmake(10.0f, 10.0f), m_aimDirection, m_weaponData.bulletSpeed, m_weaponData.bulletDamage, m_weaponData.bulletLife, m_weaponData.bulletRange, m_weaponData.isExplossive, m_weaponData.isBouncy, m_owner->getType(), "data/bullet.png");
-				CORE_PlayMusic(CORE_LoadWav("data/shot.wav"));
+				g_soundEngine->playSound("data/shot.wav");
 				break;
 			}
 		}

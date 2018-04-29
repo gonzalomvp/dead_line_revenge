@@ -25,6 +25,7 @@
     <ClInclude Include="..\src\common\stdafx.h" />
     <ClInclude Include="..\src\common\sys.h" />
     <ClInclude Include="..\src\engine\graphics_engine.h" />
+    <ClInclude Include="..\src\engine\sound_engine.h" />
     <ClInclude Include="..\src\entities\components\component.h" />
     <ClInclude Include="..\src\entities\entity.h" />
     <ClInclude Include="..\src\entities\message.h" />
@@ -47,6 +48,7 @@
     <ClCompile Include="..\src\common\stdafx.cpp" />
     <ClCompile Include="..\src\common\sys_win.cpp" />
     <ClCompile Include="..\src\engine\graphics_engine.cpp" />
+    <ClCompile Include="..\src\engine\sound_engine.cpp" />
     <ClCompile Include="..\src\entities\components\component.cpp" />
     <ClCompile Include="..\src\entities\entity.cpp" />
     <ClCompile Include="..\src\gui\gui.cpp" />
