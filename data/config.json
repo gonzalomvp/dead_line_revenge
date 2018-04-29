@@ -48,7 +48,13 @@
 		"fireRate": 0,
 		"reloadTime": 120,
 		"capacity": 1,
-		"bulletLife": 1
+		"bulletSpeed": 0,
+		"bulletDamage": 0,
+		"bulletLife": 1,
+		"bulletRange": 0,
+		"isAutomatic": false,
+		"isExplossive": true,
+		"isBouncy": false
 	},
 	{
 		"type": "c4",

@@ -53,8 +53,6 @@ public:
 	// Entity creation methods
 	void createPlayer(vec2 pos);
 	Entity* createBullet(vec2 pos, vec2 size, vec2 direction, float speed, int damage, int life, int range, bool isExplossive, bool isBouncy, Entity::TType entityType, const char* texture);
-	void createMine  (vec2 pos);
-	Entity* createC4(Component* weapon, vec2 pos, int damage, Entity::TType type);
 
 	Entity* createEnemy(int x, int y, Entity* player, int speed, int lives, int damage);
 	Entity* createBigEnemy(int x, int y, Entity* player, int speed, int lives, int damage);

@@ -397,51 +397,28 @@ Entity* World::createBullet(vec2 pos, vec2 size, vec2 direction, float speed, in
 	ComponentMove* movement = new ComponentMove(bullet, direction, speed, true, isBouncy);
 	movement->init();
 	ComponentCollider* collider;
-	if (entityType == Entity::EPlayer) {
-		collider = new ComponentCollider(bullet, ComponentCollider::ECircleCollider, damage, ComponentCollider::EPlayerWeapon, ComponentCollider::EEnemyC | ComponentCollider::EBoundaries);
+	switch (entityType)
+	{
+		case Entity::EPlayer:
+			collider = new ComponentCollider(bullet, ComponentCollider::ECircleCollider, damage, ComponentCollider::EPlayerWeapon, ComponentCollider::EEnemyC | ComponentCollider::EBoundaries);
+			break;
+		case Entity::EMine:
+			collider = new ComponentCollider(bullet, ComponentCollider::ECircleCollider, 0, ComponentCollider::ENone, ComponentCollider::EPlayer | ComponentCollider::EEnemyC | ComponentCollider::EPlayerWeapon | ComponentCollider::EEnemyWeapon);
+			collider->setActivationDelay(20);
+			break;
+		default:
+			collider = new ComponentCollider(bullet, ComponentCollider::ECircleCollider, damage, ComponentCollider::EEnemyWeapon, ComponentCollider::EPlayer | ComponentCollider::EBoundaries);
+			break;
 	}
-	else {
-		collider = new ComponentCollider(bullet, ComponentCollider::ECircleCollider, damage, ComponentCollider::EEnemyWeapon, ComponentCollider::EPlayer | ComponentCollider::EBoundaries);
-	}
+	collider->init();
 	if (isExplossive) {
 		ComponentExplossive* explossive = new ComponentExplossive(bullet);
 		explossive->init();
 	}
-	collider->init();
 	ComponentLife* componentLife = new ComponentLife(bullet, life, range, 0);
 	componentLife->init();
 	addEntity(bullet);
 	return bullet;
-}
-
-void World::createMine(vec2 pos) {
-	Entity* mine = new Entity(Entity::EWeapon);
-	ComponentTransform* transform = new ComponentTransform(mine, pos, vmake(20, 20));
-	transform->init();
-	ComponentRenderable* renderable = new ComponentRenderable(mine, "data/bomb.png", 0.0f, 1.0f, 2);
-	renderable->init();
-	ComponentCollider* collider = new ComponentCollider(mine, ComponentCollider::ECircleCollider, 0, ComponentCollider::ENone, ComponentCollider::EPlayer | ComponentCollider::EEnemyC | ComponentCollider::EPlayerWeapon | ComponentCollider::EEnemyWeapon);
-	collider->setActivationDelay(20);
-	collider->init();
-	ComponentLife* life = new ComponentLife(mine, 1, 0, 0);
-	life->init();
-	ComponentExplossive* explossive = new ComponentExplossive(mine);
-	explossive->init();
-	g_world->addEntity(mine);
-}
-
-Entity* World::createC4(Component* weapon, vec2 pos, int damage, Entity::TType type) {
-	Entity* mine = new Entity(Entity::EWeapon);
-	ComponentTransform* transform = new ComponentTransform(mine, pos, vmake(20, 20));
-	transform->init();
-	ComponentRenderable* renderable = new ComponentRenderable(mine, "data/c4.png", 0.0f, 1.0f, 2);
-	renderable->init();
-	ComponentLife* life = new ComponentLife(mine, 1, 0, 0);
-	life->init();
-	ComponentExplossive* explossion = new ComponentExplossive(mine);
-	explossion->init();
-	g_world->addEntity(mine);
-	return mine;
 }
 
 Entity* World::createNuclearBomb() {
@@ -560,7 +537,7 @@ Entity* World::createTurretEnemy(vec2 position, vec2 moveDir, std::vector<vec2> 
 
 Entity* World::createWeaponPickup() {
 	Component::TWeapon type = static_cast<Component::TWeapon>(rand() % Component::EWeaponCount);
-	//type = Component::EC4;
+	//type = Component::EMines;
 	vec2 randomPos = vmake(CORE_FRand(0.0, WORLD_WIDTH), CORE_FRand(0.0, WORLD_HEIGHT));
 	Entity* weaponPickup = new Entity(Entity::EPickup);
 	ComponentTransform* transform = new ComponentTransform(weaponPickup, randomPos, vmake(20, 20));

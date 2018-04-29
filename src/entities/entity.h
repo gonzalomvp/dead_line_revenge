@@ -12,6 +12,7 @@ public:
 		EEnemy,
 		ETurret,
 		EWeapon,
+		EMine,
 		EHUDMessage,
 	};
 

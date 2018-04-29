@@ -423,7 +423,7 @@ void ComponentWeapon::run(float deltaTime) {
 				break;
 			}
 			case EMines: {
-				g_world->createMine(messageGetTranform.pos);
+				g_world->createBullet(messageGetTranform.pos, vmake(20.0f, 20.0f), m_aimDirection, m_weaponData.bulletSpeed, m_weaponData.bulletDamage, m_weaponData.bulletLife, m_weaponData.bulletRange, m_weaponData.isExplossive, m_weaponData.isBouncy, Entity::EMine, "data/mine.png");
 				CORE_PlayMusic(CORE_LoadWav("data/mine.wav"));
 				break;
 			}
