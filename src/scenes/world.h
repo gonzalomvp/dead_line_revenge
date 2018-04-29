@@ -2,11 +2,11 @@
 
 #include "../input/input_manager.h"
 #include "../entities/components/component.h"
+#include "../entities/entity.h"
 
 #define WORLD_WIDTH  640
 #define WORLD_HEIGHT 480
 
-class Entity;
 
 class World : public IInputManager::IListener {
 public:
@@ -15,21 +15,6 @@ public:
 		EBig,
 		ERange,
 		ETurret,
-	};
-
-	struct TWeaponData {
-		Component::TWeapon type;
-		int                fireRate;
-		int                reloadTime;
-		int                capacity;
-		int                bulletSpeed;
-		int                bulletDamage;
-		int                bulletLife;
-		int                bulletRange;
-		bool               isAutomatic;
-		bool               isExplossive;
-		bool               isBouncy;
-		char               soundFilename[50];
 	};
 
 	struct TEnemyData {
@@ -62,8 +47,27 @@ public:
 	void         addPoints    (uint16_t points) { m_score += points; }
 	virtual bool onEvent      (const IInputManager::Event& event);
 
+	// Data
+	Component::TWeaponData getWeaponData(Component::TWeapon weaponType);
+	
+	// Entity creation methods
+	void createPlayer(vec2 pos);
+	Entity* createEnemy(int x, int y, Entity* player, int speed, int lives, int damage);
+	Entity* createBigEnemy(int x, int y, Entity* player, int speed, int lives, int damage);
+	Entity* createRangeEnemy(int x, int y, Entity* player);
+	Entity* createTurretEnemy(vec2 position, vec2 moveDir, std::vector<vec2> aimDirections, bool shuffleAim);
+	Entity* createBullet(vec2 pos, vec2 direction, float speed, int damage, int range, Entity::TType type);
+	void createShotgunBullets(vec2 pos, vec2 direction, float speed, int damage, int range, Entity::TType type);
+	Entity* createMine(Component* weapon, vec2 pos, int damage, Entity::TType type);
+	Entity* createC4(Component* weapon, vec2 pos, int damage, Entity::TType type);
+	Entity* createRocket(Component* weapon, vec2 pos, vec2 direction, float speed, int damage, int range, Entity::TType type);
+	Entity* createNuclearBomb();
+	Entity* createWeaponPickup();
+	void createExplossion(vec2 pos, vec2 size);
+	Entity* createHUDMessage(std::string, vec2 pos, int displayTime);
+
 	//quitar de aqui
-	std::map<Component::TWeapon, TWeaponData> m_weaponData;
+	
 	std::map<TEnemyType, TEnemyData>  m_enemyData;
 private:
 	bool loadLevel            (const char* fileName);
@@ -86,12 +90,13 @@ private:
 	// Game rules
 	uint16_t m_score;
 	int      m_playerLife;
+	int      m_playerSpeed = 5; //Leer de fichero
 	int      m_pickupSpawnWait;
 	int      m_enemySpawnWait;
 	int      m_currentEnemies;
 	int      m_maxEnemies;
 
-	
+	std::map<Component::TWeapon, Component::TWeaponData> m_weaponData;
 	
 	std::vector<vec2>        m_spawnData;
 

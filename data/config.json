@@ -12,8 +12,7 @@
 		"bulletRange": 60,
 		"isAutomatic": false,
 		"isExplossive": false,
-		"isBouncy": false,
-		"soundFilename": "data/shot.wav"
+		"isBouncy": false
 	},
 	{
 		"type": "machinegun",
@@ -27,8 +26,7 @@
 		"bulletRange": 0,
 		"isAutomatic": true,
 		"isExplossive": false,
-		"isBouncy": false,
-		"soundFilename": "data/shot.wav"
+		"isBouncy": false
 	},
 	{
 		"type": "shotgun",
@@ -42,8 +40,7 @@
 		"bulletRange": 40,
 		"isAutomatic": false,
 		"isExplossive": false,
-		"isBouncy": true,
-		"soundFilename": "data/shotgun.wav"
+		"isBouncy": true
 	},
 	{
 		"type": "mines",
@@ -51,8 +48,7 @@
 		"fireRate": 0,
 		"reloadTime": 120,
 		"capacity": 1,
-		"bulletLife": 1,
-		"soundFilename": "data/mine.wav"
+		"bulletLife": 1
 	},
 	{
 		"type": "c4",
@@ -60,8 +56,7 @@
 		"fireRate": 0,
 		"reloadTime": 0,
 		"capacity": 1,
-		"bulletLife": 1,
-		"soundFilename": "data/mine.wav"
+		"bulletLife": 1
 	},
 	{
 		"type": "rocket launcher",
@@ -75,16 +70,14 @@
 		"bulletRange": 0,
 		"isAutomatic": false,
 		"isExplossive": true,
-		"isBouncy": false,
-		"soundFilename": "data/rocketlauncher.wav"
+		"isBouncy": false
 	},
 	{
 		"type": "nuclear bomb",
 		"id": 6,
 		"fireRate": 0,
 		"reloadTime": 0,
-		"capacity": 1,
-		"soundFilename": "data/mine.wav"
+		"capacity": 1
 	}
 	],
 	"enemies": [

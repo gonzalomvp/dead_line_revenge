@@ -23,6 +23,20 @@ public:
 		EWeaponCount = 7
 	};
 
+	struct TWeaponData {
+		TWeapon type;
+		int     fireRate;
+		int     reloadTime;
+		int     capacity;
+		int     bulletSpeed;
+		int     bulletDamage;
+		int     bulletLife;
+		int     bulletRange;
+		bool    isAutomatic;
+		bool    isExplossive;
+		bool    isBouncy;
+	};
+
 	enum TColliderType {
 		ENoneCollider,
 		ERectCollider,
@@ -37,12 +51,14 @@ public:
 	virtual void deactivate    ();
 	virtual void run           (float deltaTime);
 	virtual void receiveMessage(Message* message) {}
+
+	void setActivationDelay(int activationDelay) { m_activationDelay = activationDelay; }
 	//revisar esto de = 0 {} //Sirve para hacer la clase abstracta y a la vez no forzar la implementacion del destructor por los hijos
 	//virtual ~Component() = 0 {}
 	
 	//void setOwner(Entity* owner) { m_owner = owner; }
 protected:
-	Component(Entity* owner, int activationDelay = 0);
+	Component(Entity* owner) : m_owner(owner), m_isActive(false), m_activationDelay(0), m_activationTimer(0) {}
 
 	Entity* m_owner;
 	bool    m_isActive;
@@ -55,14 +71,15 @@ protected:
 //=============================================================================
 class ComponentTransform : public Component {
 public:
-	ComponentTransform(Entity* owner, const vec2& pos, const vec2& size, const vec2 sizeDelta = vmake(0,0)) : Component(owner), m_pos(pos), m_size(size), m_sizeDelta(sizeDelta) {}
+	ComponentTransform(Entity* owner, const vec2& pos, const vec2& size)                           : Component(owner), m_pos(pos), m_size(size)                                 {}
+	ComponentTransform(Entity* owner, const vec2& pos, const vec2& size, const vec2 sizeIncrement) : Component(owner), m_pos(pos), m_size(size), m_sizeIncrement(sizeIncrement) {}
 
 	virtual void run           (float deltaTime);
 	virtual void receiveMessage(Message* message);
 private:
 	vec2 m_pos;
 	vec2 m_size;
-	vec2 m_sizeDelta;
+	vec2 m_sizeIncrement;
 };
 
 //=============================================================================
@@ -85,11 +102,11 @@ private:
 };
 
 //=============================================================================
-// ComponentInertialMove class
+// ComponentMove class
 //=============================================================================
-class ComponentInertialMove : public Component {
+class ComponentMove : public Component {
 public:
-	ComponentInertialMove(Entity* owner, const vec2& direction, float speed, bool hasInertia, bool hasBounce = false) : Component(owner), m_direction(direction), m_speed(speed), m_hasInertia(hasInertia), m_hasBounce(hasBounce) {}
+	ComponentMove(Entity* owner, const vec2& direction, float speed, bool hasInertia, bool hasBounce) : Component(owner), m_direction(direction), m_speed(speed), m_hasInertia(hasInertia), m_hasBounce(hasBounce) {}
 	
 	virtual void run           (float deltaTime);
 	virtual void receiveMessage(Message* message);
@@ -105,7 +122,7 @@ private:
 //=============================================================================
 class ComponentRenderable : public Component {
 public:
-	ComponentRenderable(Entity* owner, const char* texture, int priority = 2, float alpha = 1.0f, float angle = 0, const char* hitTexture = nullptr, int hitTime = 0);
+	ComponentRenderable(Entity* owner, const char* texture, float angle, float alpha, int priority, int hitTime = 0);
 	~ComponentRenderable();
 
 	virtual void init          ();
@@ -117,7 +134,6 @@ private:
 	int         m_priority;
 	float       m_alpha;
 	float       m_angle;
-	const char* m_hitTexture;
 	int         m_hitTime;
 
 	//Timers
@@ -141,29 +157,17 @@ public:
 //=============================================================================
 class ComponentWeapon : public Component {
 public:
-	ComponentWeapon(Entity* owner, TWeapon type, int fireRate, int reloadTime, int bullets, int bulletSpeed, int bulletDamage, int bulletRange, bool isAutomatic, const char* soundFilename = nullptr);
+	ComponentWeapon(Entity* owner, TWeaponData weaponData);
 
 	virtual void init          ();
 	virtual void run           (float deltaTime);
 	virtual void receiveMessage(Message* message);
 private:
-	TWeapon     m_type;
-	int         m_fireRate;
-	int         m_reloadTime;
-	int         m_capacity;
-	int         m_bulletSpeed;
-	int         m_bulletDamage;
-	int         m_bulletLife;
-	int         m_bulletRange;
-	bool        m_isAutomatic;
-	bool        m_isExplossive;
-	bool        m_isBouncy;
-	Entity*     m_remoteBullet;
-	const char* m_soundFilename;
-	vec2        m_aimDirection;
-	int         m_currentBullets;
-	bool        m_isFiring;
-	uint        m_soundId;
+	TWeaponData m_weaponData;
+	Entity*            m_remoteBullet;
+	vec2               m_aimDirection;
+	int                m_currentBullets;
+	bool               m_isFiring;
 
 	//Timers
 	int m_fireTimer;
@@ -217,7 +221,7 @@ private:
 class ComponentAIFire : public Component {
 public:
 	ComponentAIFire(Entity* owner, Entity* player)            : Component(owner), m_player(player) {}
-	ComponentAIFire(Entity* owner, std::vector<vec2> fireDirections, bool shuffle, int activationDelay) : Component(owner, activationDelay), m_fireDirections(fireDirections), m_shuffle(shuffle) {}
+	ComponentAIFire(Entity* owner, std::vector<vec2> fireDirections, bool shuffle) : Component(owner), m_fireDirections(fireDirections), m_shuffle(shuffle) {}
 	
 	virtual void init          ();
 	virtual void run           (float deltaTime);
@@ -244,7 +248,7 @@ public:
 		ENone         = 0,
 	};
 
-	ComponentCollider(Entity* owner, TColliderType type, int deltaLife, int collisionChannel, int collisionChannelsResponse, int activationDelay = 0) : Component(owner, activationDelay), m_type(type), m_deltaLife(deltaLife), m_collisionChannel(collisionChannel), m_collisionChannelsResponse(collisionChannelsResponse) {}
+	ComponentCollider(Entity* owner, TColliderType type, int deltaLife, int collisionChannel, int collisionChannelsResponse) : Component(owner), m_type(type), m_deltaLife(deltaLife), m_collisionChannel(collisionChannel), m_collisionChannelsResponse(collisionChannelsResponse) {}
 	
 	virtual void run           (float deltaTime);
 	virtual void receiveMessage(Message* message);

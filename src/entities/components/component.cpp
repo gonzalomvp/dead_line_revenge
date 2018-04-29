@@ -3,7 +3,6 @@
 #include "../entity.h"
 #include "../message.h"
 #include "../../scenes/world.h"
-#include "../../scenes/level.h"
 #include "../../gui/string_manager.h"
 #include "../../engine/graphics_engine.h"
 
@@ -15,10 +14,6 @@
 //=============================================================================
 // Component class
 //=============================================================================
-Component::Component(Entity* owner, int activationDelay) : m_owner(owner), m_isActive(false), m_activationDelay(activationDelay), m_activationTimer(0) {
-	
-}
-
 void Component::init() {
 	m_owner->addComponent(this);
 	if (m_activationDelay == 0) {
@@ -53,7 +48,7 @@ void Component::run(float deltaTime) {
 //=============================================================================
 void ComponentTransform::run(float deltaTime) {
 	Component::run(deltaTime);
-	m_size = vadd(m_size, m_sizeDelta);
+	m_size = vadd(m_size, m_sizeIncrement);
 }
 
 void ComponentTransform::receiveMessage(Message* message) {
@@ -166,9 +161,9 @@ void ComponentLife::receiveMessage(Message* message) {
 }
 
 //=============================================================================
-// ComponentInertialMove class
+// ComponentMove class
 //=============================================================================
-void ComponentInertialMove::run(float deltaTime) {
+void ComponentMove::run(float deltaTime) {
 	Component::run(deltaTime);
 	if (!m_isActive)
 		return;
@@ -188,7 +183,7 @@ void ComponentInertialMove::run(float deltaTime) {
 	}
 }
 
-void ComponentInertialMove::receiveMessage(Message* message) {
+void ComponentMove::receiveMessage(Message* message) {
 	if (!m_isActive)
 		return;
 
@@ -207,7 +202,7 @@ void ComponentInertialMove::receiveMessage(Message* message) {
 //=============================================================================
 // ComponentRenderable class
 //=============================================================================
-ComponentRenderable::ComponentRenderable(Entity* owner, const char* texture, int priority, float alpha, float angle, const char* hitTexture, int hitTime) : Component(owner), m_texture(texture), m_priority(priority), m_alpha(alpha), m_angle(angle), m_hitTexture(hitTexture), m_hitTime(hitTime) {
+ComponentRenderable::ComponentRenderable(Entity* owner, const char* texture, float angle, float alpha, int priority, int hitTime) : Component(owner), m_texture(texture), m_angle(angle), m_alpha(alpha), m_priority(priority), m_hitTime(hitTime) {
 	m_hitTimer = m_hitTime;
 }
 
@@ -258,9 +253,7 @@ void ComponentRenderable::receiveMessage(Message* message) {
 	}
 	else {
 		MessageChangeLife *msgChangeLife = dynamic_cast<MessageChangeLife*>(message);
-		if (msgChangeLife && msgChangeLife->deltaLife < 0 && m_hitTexture) {
-			//m_sprite->setTexture(g_graphicsEngine->getTexture(m_hitTexture));
-			//m_sprite->deactivate();
+		if (msgChangeLife && msgChangeLife->deltaLife < 0) {
 			m_hitTimer = 0;
 		}
 		else {
@@ -359,21 +352,17 @@ bool ComponentPlayerController::onEvent(const IInputManager::Event& event) {
 //=============================================================================
 // ComponentWeapon class
 //=============================================================================
-ComponentWeapon::ComponentWeapon(Entity* owner, TWeapon type, int fireRate, int reloadTime, int bullets, int bulletSpeed, int bulletDamage, int bulletRange, bool isAutomatic, const char* soundFilename) : Component(owner), m_type(type), m_fireRate(fireRate), m_reloadTime(reloadTime), m_capacity(bullets), m_bulletSpeed(bulletSpeed), m_bulletDamage(bulletDamage), m_bulletRange(bulletRange), m_isAutomatic(isAutomatic), m_soundFilename(soundFilename) {
-	m_aimDirection   = vmake(0.0f, 0.0f);
-	m_currentBullets = m_capacity;
+ComponentWeapon::ComponentWeapon(Entity* owner, TWeaponData weaponData) : Component(owner), m_weaponData(weaponData) {
 	m_remoteBullet   = nullptr;
+	m_aimDirection   = vmake(0.0f, 0.0f);
 	m_isFiring       = false;
-	m_soundId        = 0;
-	m_fireTimer      = fireRate;
-	m_reloadTimer    = reloadTime;
+	m_currentBullets = m_weaponData.capacity;
+	m_fireTimer      = m_weaponData.fireRate;
+	m_reloadTimer    = m_weaponData.reloadTime;
 }
 
 void ComponentWeapon::init() {
 	Component::init();
-	if (m_soundFilename) {
-		m_soundId = CORE_LoadWav(m_soundFilename);
-	}
 }
 
 void ComponentWeapon::run(float deltaTime) {
@@ -381,13 +370,13 @@ void ComponentWeapon::run(float deltaTime) {
 	if (!m_isActive)
 		return;
 
-	if (m_fireTimer < m_fireRate) {
+	if (m_fireTimer < m_weaponData.fireRate) {
 		++m_fireTimer;
 	}
-	if (m_reloadTimer <= m_reloadTime) {
+	if (m_reloadTimer <= m_weaponData.reloadTime) {
 		++m_reloadTimer;
-		if (m_reloadTimer == m_reloadTime) {
-			m_currentBullets = m_capacity;
+		if (m_reloadTimer == m_weaponData.reloadTime) {
+			m_currentBullets = m_weaponData.capacity;
 		}
 	}
 
@@ -397,16 +386,16 @@ void ComponentWeapon::run(float deltaTime) {
 		m_remoteBullet->receiveMessage(&msgChangeLife);
 		m_remoteBullet = nullptr;
 		m_isFiring = false;
-		m_currentBullets = m_capacity;
+		m_currentBullets = m_weaponData.capacity;
 	}
 
-	else if (m_isFiring && m_fireTimer >= m_fireRate && m_reloadTimer >= m_reloadTime && m_currentBullets > 0) {
+	else if (m_isFiring && m_fireTimer >= m_weaponData.fireRate && m_reloadTimer >= m_weaponData.reloadTime && m_currentBullets > 0) {
 		m_fireTimer = 0;
 		--m_currentBullets;
 		if (m_currentBullets == 0) {
 			m_reloadTimer = 0;
 		}
-		if (!m_isAutomatic) {
+		if (!m_weaponData.isAutomatic) {
 			m_isFiring = false;
 		}
 		
@@ -415,34 +404,31 @@ void ComponentWeapon::run(float deltaTime) {
 		//MessageGetCollider msgGetCollider;
 		//m_owner->receiveMessage(&msgGetCollider);
 
-		switch (m_type)
+		switch (m_weaponData.type)
 		{
 			case EShotgun:
-				Entity::createShotgunBullets(messageGetTranform.pos, m_aimDirection, m_bulletSpeed, m_bulletDamage, m_bulletRange, m_owner->getType());
+				g_world->createShotgunBullets(messageGetTranform.pos, m_aimDirection, m_weaponData.bulletSpeed, m_weaponData.bulletDamage, m_weaponData.bulletRange, m_owner->getType());
+				CORE_PlayMusic(CORE_LoadWav("data/shotgun.wav"));
 				break;
 			case EMines:
-				Entity::createMine(this, messageGetTranform.pos, m_bulletDamage, m_owner->getType());
+				g_world->createMine(this, messageGetTranform.pos, m_weaponData.bulletDamage, m_owner->getType());
+				CORE_PlayMusic(CORE_LoadWav("data/mine.wav"));
 				break;
 			case EC4:
-				m_remoteBullet = Entity::createC4(this, messageGetTranform.pos, m_bulletDamage, m_owner->getType());
+				m_remoteBullet = g_world->createC4(this, messageGetTranform.pos, m_weaponData.bulletDamage, m_owner->getType());
+				CORE_PlayMusic(CORE_LoadWav("data/mine.wav"));
 				break;
 			case ERocketLauncher:
-				Entity::createRocket(this, messageGetTranform.pos, m_aimDirection, m_bulletSpeed, m_bulletDamage, m_bulletRange, m_owner->getType());
+				g_world->createRocket(this, messageGetTranform.pos, m_aimDirection, m_weaponData.bulletSpeed, m_weaponData.bulletDamage, m_weaponData.bulletRange, m_owner->getType());
+				CORE_PlayMusic(CORE_LoadWav("data/rocketlauncher.wav"));
 				break;
 			case ENuclearBomb:
-				Entity::createNuclearBomb();
+				g_world->createNuclearBomb();
 				break;
 			default:
-				g_world->addEntity(Entity::createBullet(messageGetTranform.pos, m_aimDirection, m_bulletSpeed, m_bulletDamage, m_bulletRange, m_owner->getType()));
+				g_world->addEntity(g_world->createBullet(messageGetTranform.pos, m_aimDirection, m_weaponData.bulletSpeed, m_weaponData.bulletDamage, m_weaponData.bulletRange, m_owner->getType()));
+				CORE_PlayMusic(CORE_LoadWav("data/shot.wav"));
 				break;
-		}
-		
-		
-		
-
-		//Sound (mover a un sound manager)
-		if (g_settings.sfx && m_soundId) {
-			CORE_PlayMusic(m_soundId);
 		}
 
 		MessageFireDone messageFireDone;
@@ -451,34 +437,18 @@ void ComponentWeapon::run(float deltaTime) {
 }
 
 void ComponentWeapon::receiveMessage(Message* message) {
+	if (!m_isActive)
+		return;
 
 	MessageWeaponChange *msgWeaponChange = dynamic_cast<MessageWeaponChange*>(message);
 	if (msgWeaponChange) {
-		activate();
-		m_type = msgWeaponChange->weapon;
-		m_fireRate = g_world->m_weaponData[m_type].fireRate;
-		m_reloadTime= g_world->m_weaponData[m_type].reloadTime;
-		m_capacity = g_world->m_weaponData[m_type].capacity;
-		m_bulletSpeed = g_world->m_weaponData[m_type].bulletSpeed;
-		m_bulletDamage = g_world->m_weaponData[m_type].bulletDamage;
-		m_bulletLife = g_world->m_weaponData[m_type].bulletLife;
-		m_bulletRange = g_world->m_weaponData[m_type].bulletRange;
-		m_isAutomatic = g_world->m_weaponData[m_type].isAutomatic;
-		m_isExplossive = g_world->m_weaponData[m_type].isExplossive;
-		m_isBouncy = g_world->m_weaponData[m_type].isBouncy;
-		m_soundFilename = g_world->m_weaponData[m_type].soundFilename;
+		m_weaponData = g_world->getWeaponData(msgWeaponChange->weapon);
 		m_isFiring = false;
-		m_currentBullets = m_capacity;
-		m_fireTimer = m_fireRate;
-		m_reloadTimer = m_reloadTime;
-		if (m_soundFilename) {
-			m_soundId = CORE_LoadWav(m_soundFilename);
-		}
+		m_currentBullets = m_weaponData.capacity;
+		m_fireTimer = m_weaponData.fireRate;
+		m_reloadTimer = m_weaponData.reloadTime;
 	}
 	else {
-		if (!m_isActive)
-			return;
-
 		MessageFire *msgFire = dynamic_cast<MessageFire*>(message);
 		if (msgFire) {
 			m_isFiring = msgFire->isFiring;
@@ -492,15 +462,15 @@ void ComponentWeapon::receiveMessage(Message* message) {
 				MessageAmmoInfo *msgAmmoInfo = dynamic_cast<MessageAmmoInfo*>(message);
 				if (msgAmmoInfo) {
 					msgAmmoInfo->currentAmmo = m_currentBullets;
-					msgAmmoInfo->totalAmmo = m_capacity;
-					msgAmmoInfo->reloadPercent = m_reloadTimer * 1.0f / m_reloadTime;
+					msgAmmoInfo->totalAmmo = m_weaponData.capacity;
+					msgAmmoInfo->reloadPercent = m_reloadTimer * 1.0f / m_weaponData.reloadTime;
 					if (msgAmmoInfo->reloadPercent > 1.0f) {
 						msgAmmoInfo->reloadPercent = 1.0f;
 					}
 				}
 				else {
 					MessageReload *msgReload = dynamic_cast<MessageReload*>(message);
-					if (msgReload && m_currentBullets < m_capacity && m_reloadTimer >= m_reloadTime) {
+					if (msgReload && m_currentBullets < m_weaponData.capacity && m_reloadTimer >= m_weaponData.reloadTime) {
 						m_isFiring = false;
 						m_reloadTimer = 0;
 					}
@@ -521,7 +491,7 @@ void ComponentExplossive::receiveMessage(Message* message) {
 	if (msgDestroy) {
 		MessageGetTransform messageSelfPos;
 		m_owner->receiveMessage(&messageSelfPos);
-		Entity::createExplossion(messageSelfPos.pos, vmake(100, 100));
+		g_world->createExplossion(messageSelfPos.pos, vmake(100, 100));
 	}
 }
 
@@ -826,7 +796,7 @@ void ComponentWeaponPickup::receiveMessage(Message* message) {
 				break;
 		}
 
-		Entity::createHUDMessage(hudMessage, vmake((WORLD_WIDTH / 2) - (hudMessage.length() / 2.0f * 16), 20), 100);
+		g_world->createHUDMessage(hudMessage, vmake((WORLD_WIDTH / 2) - (hudMessage.length() / 2.0f * 16), 20), 100);
 	}
 }
 

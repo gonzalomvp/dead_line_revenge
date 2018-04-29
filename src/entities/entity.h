@@ -10,25 +10,10 @@ public:
 		EPlayer,
 		EPickup,
 		EEnemy,
+		ETurret,
 		EWeapon,
 		EHUDMessage,
-		EOther,
 	};
-
-	static Entity* createPlayer(vec2 pos);
-	static Entity* createEnemy(int x, int y, Entity* player, int speed, int lives, int damage);
-	static Entity* createBigEnemy(int x, int y, Entity* player, int speed, int lives, int damage);
-	static Entity* createRangeEnemy(int x, int y, Entity* player);
-	static Entity* createTurretEnemy(vec2 position, vec2 moveDir, std::vector<vec2> aimDirections, bool shuffleAim);
-	static Entity* createBullet(vec2 pos, vec2 direction, float speed, int damage, int range, Entity::TType type);
-	static void createShotgunBullets(vec2 pos, vec2 direction, float speed, int damage, int range, Entity::TType type);
-	static Entity* createMine(Component* weapon, vec2 pos, int damage, Entity::TType type);
-	static Entity* createC4(Component* weapon, vec2 pos, int damage, Entity::TType type);
-	static Entity* createRocket(Component* weapon, vec2 pos, vec2 direction, float speed, int damage, int range, Entity::TType type);
-	static Entity* createNuclearBomb();
-	static Entity* createWeaponPickup();
-	static void createExplossion(vec2 pos, vec2 size);
-	static Entity* createHUDMessage(std::string, vec2 pos, int displayTime);
 
 	Entity(TType type) : m_type(type) {}
 	~Entity();
