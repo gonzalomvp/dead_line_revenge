@@ -139,7 +139,9 @@
 		"bulletLife": 1,
 		"bulletRange": 0,
 		"isExplossive": false,
-		"isBouncy": false
+		"isBouncy": false,
+		"size": [ 25 ,25 ],
+		"imageFile": "data/turret.png"
 	}
 	]
 }

@@ -7,10 +7,12 @@ struct Message;
 class Entity {
 public:
 	enum TType {
+		EEnemyMelee,
+		EEnemyBig,
+		EEnemyRange,
+		ETurret,
 		EPlayer,
 		EPickup,
-		EEnemy,
-		ETurret,
 		EWeapon,
 		EMine,
 		EExplossion,

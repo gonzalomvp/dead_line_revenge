@@ -114,7 +114,10 @@ void World::removePendingEntities() {
 				m_pickupSpawnTimer = 0;
 				break;
 			}
-			case Entity::EEnemy: {
+			case Entity::EEnemyMelee:
+			case Entity::EEnemyBig:
+			case Entity::EEnemyRange:
+			case Entity::ETurret: {
 				--m_currentEnemies;
 				break;
 			}
@@ -212,7 +215,7 @@ bool World::loadLevel(const char* fileName) {
 	const Value& enemies = doc["enemies"];
 	assert(enemies.IsArray());
 	for (SizeType i = 0; i < enemies.Size(); i++) {
-		TEnemyData enemy = m_enemyData[static_cast<TEnemyType>(enemies[i]["id"].GetInt())];
+		TEnemyData enemy = m_enemyData[static_cast<Entity::TType>(enemies[i]["id"].GetInt())];
 		if (enemies[i].HasMember("spawnProbability")) {
 			totalProbability += enemies[i]["spawnProbability"].GetFloat();
 			enemy.spawnProbability = totalProbability;
@@ -236,7 +239,8 @@ bool World::loadLevel(const char* fileName) {
 		}
 		bool shuffleAim = turrets[i]["shuffleAim"].GetBool();
 
-		addEntity(createTurretEnemy(pos, moveDirection, aimDirections, shuffleAim));
+		createEnemy(pos, m_enemyData[Entity::ETurret], moveDirection, aimDirections, shuffleAim);
+		++m_currentEnemies;
 	}
 
 	fclose(file);
@@ -287,7 +291,7 @@ bool World::loadConfig() {
 	assert(enemies.IsArray());
 	for (SizeType i = 0; i < enemies.Size(); i++) {
 		TEnemyData enemy;
-		enemy.type = static_cast<TEnemyType>(enemies[i]["id"].GetInt());
+		enemy.type = static_cast<Entity::TType>(enemies[i]["id"].GetInt());
 		if (enemies[i].HasMember("life"))
 			enemy.life = enemies[i]["life"].GetInt();
 		if (enemies[i].HasMember("speed"))
@@ -331,21 +335,10 @@ void World::spawnEnemy() {
 	Entity* enemy = nullptr;
 	for (auto itEnemyData = m_enemyData.begin(); itEnemyData != m_enemyData.end(); ++itEnemyData) {
 		if (enemyType <= itEnemyData->second.spawnProbability) {
-			switch (itEnemyData->second.type) {
-				case EMelee:
-					enemy = createEnemy(spawnLocation, m_enemyData[itEnemyData->second.type], m_player);
-					break;
-				case EBig:
-					enemy = createEnemy(spawnLocation, m_enemyData[itEnemyData->second.type], m_player);
-					break;
-				case ERange:
-					enemy = createEnemy(spawnLocation, m_enemyData[itEnemyData->second.type], m_player);
-					break;
-			}
+			createEnemy(spawnLocation, m_enemyData[itEnemyData->second.type], m_player);
 			break;
 		}
 	}
-	g_world->addEntity(enemy);
 	++m_currentEnemies;
 }
 
@@ -459,37 +452,39 @@ Entity* World::createExplossion(vec2 pos, vec2 size, vec2 sizeIncrement, int dur
 }
 
 Entity* World::createEnemy(vec2 pos, TEnemyData enemyData, Entity* player) {
-	Entity* enemy = new Entity(Entity::EEnemy); //revisar turret
+	Entity* enemy = new Entity(enemyData.type);
 	ComponentTransform* transform = new ComponentTransform(enemy, pos, enemyData.size);
 	transform->init();
 	ComponentRenderable* renderable = new ComponentRenderable(enemy, enemyData.imageFile.c_str(), 0.0f, 1.0f, 2, 10);
 	renderable->init();
 	
-	if (enemyData.type == EMelee || enemyData.type == EBig) {
+	if (enemyData.type == Entity::EEnemyMelee || enemyData.type == Entity::EEnemyBig) {
 		ComponentAIMelee* aiMelee = new ComponentAIMelee(enemy, player, enemyData.speed, 0);
 		aiMelee->init();
 	}
 
-	if (enemyData.type == ERange) {
-		ComponentAIMelee* aiMelee = new ComponentAIMelee(enemy, player, enemyData.speed, 200);
-		aiMelee->init();
+	if (enemyData.type == Entity::EEnemyRange || enemyData.type == Entity::ETurret) {
 		Component::TWeaponData weaponData;
-		weaponData.fireRate = m_enemyData[ERange].fireRate;
+		weaponData.fireRate = enemyData.fireRate;
 		weaponData.reloadTime = 1;
 		weaponData.capacity = 1;
-		weaponData.bulletSpeed = m_enemyData[ERange].bulletSpeed;
-		weaponData.bulletDamage = m_enemyData[ERange].bulletDamage;
-		weaponData.bulletLife = m_enemyData[ERange].bulletLife;
-		weaponData.bulletRange = m_enemyData[ERange].bulletRange;
-		weaponData.isExplossive = m_enemyData[ERange].isExplossive;
-		weaponData.isBouncy = m_enemyData[ERange].isBouncy;
+		weaponData.bulletSpeed = enemyData.bulletSpeed;
+		weaponData.bulletDamage = enemyData.bulletDamage;
+		weaponData.bulletLife = enemyData.bulletLife;
+		weaponData.bulletRange = enemyData.bulletRange;
+		weaponData.isExplossive = enemyData.isExplossive;
+		weaponData.isBouncy = enemyData.isBouncy;
 		weaponData.isAutomatic = true;
 		ComponentWeapon* gun = new ComponentWeapon(enemy, weaponData);
 		gun->init();
-		ComponentAIEvade* aiLong = new ComponentAIEvade(enemy, player, enemyData.speed, 150);
-		aiLong->init();
-		ComponentAIFire* aiFire = new ComponentAIFire(enemy, player);
-		aiFire->init();
+		if (player) {
+			ComponentAIFire* aiFire = new ComponentAIFire(enemy, player);
+			aiFire->init();
+			ComponentAIMelee* aiMelee = new ComponentAIMelee(enemy, player, enemyData.speed, 200);
+			aiMelee->init();
+			ComponentAIEvade* aiLong = new ComponentAIEvade(enemy, player, enemyData.speed, 150);
+			aiLong->init();
+		}
 	}
 
 	ComponentCollider* collider = new ComponentCollider(enemy, ComponentCollider::ERectCollider, enemyData.collisionDamage, ComponentCollider::EEnemyC, ComponentCollider::EPlayerWeapon);
@@ -498,40 +493,17 @@ Entity* World::createEnemy(vec2 pos, TEnemyData enemyData, Entity* player) {
 	life->init();
 	ComponentPoints* points = new ComponentPoints(enemy, enemyData.points);
 	points->init();
+	addEntity(enemy);
 	return enemy;
 }
 
-Entity* World::createTurretEnemy(vec2 position, vec2 moveDir, std::vector<vec2> aimDirections, bool shuffleAim) {
-	World::TEnemyData enemyData = g_world->m_enemyData[World::ETurret];
-	Entity* enemy = new Entity(Entity::ETurret);
-	ComponentTransform* transform = new ComponentTransform(enemy, position, vmake(25, 25));
-	transform->init();
-	ComponentRenderable* renderable = new ComponentRenderable(enemy, "data/turret.png", 0.0f, 1.0f, 2, 10);
-	renderable->init();
+Entity* World::createEnemy(vec2 pos, TEnemyData enemyData, vec2 moveDir, std::vector<vec2> aimDirections, bool shuffleAim) {
+	Entity* enemy = createEnemy(pos, enemyData, nullptr);
 	ComponentMove* movement = new ComponentMove(enemy, moveDir, enemyData.speed, true, true);
 	movement->init();
-	Component::TWeaponData weaponData;
-	weaponData.fireRate = m_enemyData[ERange].fireRate;
-	weaponData.reloadTime = 1;
-	weaponData.capacity = 1;
-	weaponData.bulletSpeed = m_enemyData[ERange].bulletSpeed;
-	weaponData.bulletDamage = m_enemyData[ERange].bulletDamage;
-	weaponData.bulletLife = 1;
-	weaponData.bulletRange = m_enemyData[ERange].bulletRange;
-	weaponData.isExplossive = false;
-	weaponData.isBouncy = false;
-	weaponData.isAutomatic = true;
-	ComponentWeapon* gun = new ComponentWeapon(enemy, weaponData);
-	gun->init();
 	ComponentAIFire* aiFire = new ComponentAIFire(enemy, aimDirections, shuffleAim);
 	aiFire->setActivationDelay(rand() % 100);
 	aiFire->init();
-	ComponentCollider* collider = new ComponentCollider(enemy, ComponentCollider::ERectCollider, enemyData.collisionDamage, ComponentCollider::EEnemyC, ComponentCollider::EPlayerWeapon);
-	collider->init();
-	ComponentLife* life = new ComponentLife(enemy, enemyData.life, 0, 0);
-	life->init();
-	ComponentPoints* points = new ComponentPoints(enemy, enemyData.points);
-	points->init();
 	return enemy;
 }
 

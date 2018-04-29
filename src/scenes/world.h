@@ -10,15 +10,15 @@
 
 class World : public IInputManager::IListener {
 public:
-	enum TEnemyType {
-		EMelee,
-		EBig,
-		ERange,
-		ETurret,
-	};
+	//enum TEnemyType {
+	//	EMelee,
+	//	EBig,
+	//	ERange,
+	//	ETurret,
+	//};
 
 	struct TEnemyData {
-		TEnemyType  type;
+		Entity::TType  type;
 		int         life;
 		int         speed;
 		int         collisionDamage;
@@ -58,15 +58,14 @@ public:
 	Entity* createExplossion(vec2 pos, vec2 size, vec2 sizeIncrement, int duration, Entity::TType entityType);
 
 	Entity* createEnemy(vec2 pos, TEnemyData enemyData, Entity* player);
-
-	Entity* createTurretEnemy(vec2 position, vec2 moveDir, std::vector<vec2> aimDirections, bool shuffleAim);
+	Entity* createEnemy(vec2 pos, TEnemyData enemyData, vec2 moveDir, std::vector<vec2> aimDirections, bool shuffleAim);
 
 	Entity* createWeaponPickup();
 	Entity* createHUDMessage(std::string, vec2 pos, int displayTime);
 
 	//quitar de aqui
 	
-	std::map<TEnemyType, TEnemyData>  m_enemyData;
+	std::map<Entity::TType, TEnemyData>  m_enemyData;
 private:
 	bool loadLevel            (const char* fileName);
 	bool loadConfig           ();

@@ -2,7 +2,7 @@
 	"playerLife": 5,
 	"pickupSpawnWait": 10,
 	"enemySpawnWait": 100,
-	"maxEnemies": 2,
+	"maxEnemies": 3,
 	"enemies": [
 	{
 		"type": "melee",
@@ -13,13 +13,13 @@
 	{
 		"type": "big",
 		"id": 1,
-		"spawnProbability": 0.4,
+		"spawnProbability": 0.3,
 		"points": 2
 	},
 	{
 		"type": "range",
 		"id": 2,
-		"spawnProbability": 0,
+		"spawnProbability": 0.1,
 		"points": 4
 	},
 	{
