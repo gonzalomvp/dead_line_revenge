@@ -274,24 +274,28 @@ void ComponentRenderable::receiveMessage(Message* message) {
 //=============================================================================
 void ComponentPlayerController::init() {
 	Component::init();
-	g_inputManager->registerEvent(this, IInputManager::TEvent::EKey, 0);
-	g_inputManager->registerEvent(this, IInputManager::TEvent::EMouse, 0);
+	g_inputManager->registerEvent(this, IInputManager::TEventType::EKeyHold);
+	g_inputManager->registerEvent(this, IInputManager::TEventType::EMouseButtonDown);
+	g_inputManager->registerEvent(this, IInputManager::TEventType::EMouseButtonUp);
+	g_inputManager->registerEvent(this, IInputManager::TEventType::EMouseButtonHold);
 }
 
 ComponentPlayerController::~ComponentPlayerController() {
-	g_inputManager->unregisterEvent(this, IInputManager::TEvent::EKey);
-	g_inputManager->unregisterEvent(this, IInputManager::TEvent::EMouse);
+	g_inputManager->unregisterEvent(this, IInputManager::TEventType::EKeyHold);
+	g_inputManager->unregisterEvent(this, IInputManager::TEventType::EMouseButtonDown);
+	g_inputManager->unregisterEvent(this, IInputManager::TEventType::EMouseButtonUp);
+	g_inputManager->unregisterEvent(this, IInputManager::TEventType::EMouseButtonHold);
 }
 
 bool ComponentPlayerController::onEvent(const IInputManager::Event& event) {
 	if (!m_isActive)
 		return false;
 	//Revisar inputmanager
-	IInputManager::TEvent eventType = event.getType();
-	if (eventType == IInputManager::TEvent::EKey) {
+	IInputManager::TEventType eventType = event.getType();
+	if (eventType == IInputManager::TEventType::EKeyHold) {
 		const IInputManager::KeyEvent keyEvent = *static_cast<const IInputManager::KeyEvent*>(&event);
 		vec2 direction = vmake(0, 0);
-		switch (keyEvent.key) {
+		switch (keyEvent.getKey()) {
 			case 'A':
 				direction = vmake(-1, 0);
 				break;
@@ -324,31 +328,22 @@ bool ComponentPlayerController::onEvent(const IInputManager::Event& event) {
 		}
 	}
 
-	if (eventType == IInputManager::TEvent::EMouse) {
+	if (eventType == IInputManager::TEventType::EMouseButtonDown || eventType == IInputManager::TEventType::EMouseButtonUp) {
 		const IInputManager::MouseEvent mouseEvent = *static_cast<const IInputManager::MouseEvent*>(&event);
-		if (mouseEvent.mouseButton == mouseEvent.BLeft) {
+		if (mouseEvent.getButton() == SYS_MB_LEFT) {
 			MessageFire messageFire;
-			if (mouseEvent.mouseButtonAction == mouseEvent.AButtonDown) {
+			if (eventType == IInputManager::TEventType::EMouseButtonDown) {
 				messageFire.isFiring = true;
 			}
-			else if (mouseEvent.mouseButtonAction == mouseEvent.AButtonUp) {
+			else if (eventType == IInputManager::TEventType::EMouseButtonUp) {
 				messageFire.isFiring = false;
 			}
 			m_owner->receiveMessage(&messageFire);
 		}
-		else if (mouseEvent.mouseButton == mouseEvent.BRight && mouseEvent.mouseButtonAction == mouseEvent.AButtonDown)
-		{
+		else if (mouseEvent.getButton() == SYS_MB_RIGHT && eventType == IInputManager::TEventType::EMouseButtonDown) {
 			MessageReload msgReload;
 			m_owner->receiveMessage(&msgReload);
 		}
-		/*const IInputManager::MouseEvent mouseEvent = *static_cast<const IInputManager::MouseEvent*>(&event);
-		setTargetPos(vmake(mouseEvent.x, mouseEvent.y));
-		if (mouseEvent.buttonMask == 1) {
-		fire();
-		}
-		if (mouseEvent.buttonMask == 2) {
-		dash();
-		}*/
 	}
 	return true;
 }
@@ -842,7 +837,7 @@ ComponentHUD::~ComponentHUD() {
 	g_graphicsEngine->removeGfxEntity(m_target);
 	g_graphicsEngine->removeGfxEntity(m_reloadAnim);
 
-	g_inputManager->unregisterEvent(this, IInputManager::TEvent::EMouse);
+	g_inputManager->unregisterEvent(this, IInputManager::TEventType::EMouseMove);
 }
 
 void ComponentHUD::init() {
@@ -870,7 +865,7 @@ void ComponentHUD::init() {
 	m_reloadAnim = new Sprite(g_graphicsEngine->getTexture("data/energy-bar-fill.png"), 1);
 	g_graphicsEngine->addGfxEntity(m_reloadAnim);
 
-	g_inputManager->registerEvent(this, IInputManager::TEvent::EMouse, 0);
+	g_inputManager->registerEvent(this, IInputManager::TEventType::EMouseMove);
 }
 
 void ComponentHUD::run(float deltaTime) {
@@ -903,19 +898,17 @@ void ComponentHUD::run(float deltaTime) {
 
 bool ComponentHUD::onEvent(const IInputManager::Event& event) {
 	if (m_isActive) {
-		IInputManager::TEvent eventType = event.getType();
-		if (eventType == IInputManager::TEvent::EMouse) {
+		IInputManager::TEventType eventType = event.getType();
+		if (eventType == IInputManager::TEventType::EMouseMove) {
 			const IInputManager::MouseEvent mouseEvent = *static_cast<const IInputManager::MouseEvent*>(&event);
-			if (mouseEvent.mouseButtonAction == mouseEvent.AMove) {
-				vec2 targetPos = vmake(mouseEvent.x, mouseEvent.y);
-				m_target->setPos(targetPos);
+			vec2 targetPos = mouseEvent.getPos();
+			m_target->setPos(targetPos);
 
-				MessageGetTransform messagePos;
-				m_owner->receiveMessage(&messagePos);
-				MessageAimDirection messageAimDirection;
-				messageAimDirection.direction = vnorm(vsub(targetPos, messagePos.pos));
-				m_owner->receiveMessage(&messageAimDirection);
-			}
+			MessageGetTransform messagePos;
+			m_owner->receiveMessage(&messagePos);
+			MessageAimDirection messageAimDirection;
+			messageAimDirection.direction = vnorm(vsub(targetPos, messagePos.pos));
+			m_owner->receiveMessage(&messageAimDirection);
 		}
 	}
 

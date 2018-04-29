@@ -28,7 +28,7 @@ void World::init() {
 	m_pickupSpawnTimer = 0;
 	m_enemySpawnTimer  = 0;
 
-	g_inputManager->registerEvent(this, IInputManager::TEvent::EPause, 0);
+	g_inputManager->registerEvent(this, IInputManager::TEventType::EPause);
 
 	// Create player and first pickup
 	createPlayer(vmake(WORLD_WIDTH * 0.5f, WORLD_HEIGHT * 0.5f));
@@ -66,7 +66,7 @@ void World::destroy() {
 	}
 	m_entitiesToAdd.clear();
 
-	g_inputManager->unregisterEvent(this, IInputManager::TEvent::EPause);
+	g_inputManager->unregisterEvent(this, IInputManager::TEventType::EPause);
 }
 
 void World::addEntity(Entity* entity) {
@@ -180,8 +180,8 @@ bool checkRectRect(const vec2& rectPos1, const vec2& rectSize1, const vec2& rect
 }
 
 bool World::onEvent(const IInputManager::Event& event) {
-	IInputManager::TEvent eventType = event.getType();
-	if (eventType == IInputManager::TEvent::EPause) {
+	IInputManager::TEventType eventType = event.getType();
+	if (eventType == IInputManager::TEventType::EPause) {
 		m_isPaused = !m_isPaused;
 		if (m_isPaused) {
 			m_player->deactivate();

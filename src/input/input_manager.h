@@ -2,90 +2,86 @@
 #include <vector>
 #include <map>
 
-#define MOUSE_LBUTTON 0x0001
-#define MOUSE_RBUTTON 0x0010
-#define MOUSE_MBUTTON 0x0100
-
+//=============================================================================
+// IInputManager interface
+//=============================================================================
 class IInputManager {
 public:
-	enum TEvent {
-		EMouse,
-		EKey,
-		EQuit,
+	enum TEventType {
+		EKeyDown,
+		EKeyUp,
+		EKeyHold,
+		EMouseButtonDown,
+		EMouseButtonUp,
+		EMouseButtonHold,
+		EMouseMove,
 		EPause,
 	};
 
 	class Event {
 	public:
-		TEvent getType() const { return m_type; };
-		void   setType(TEvent type) { m_type = type; };
+		Event(TEventType type) : m_type(type) {}
+
+		TEventType getType() const          { return m_type; };
+		void       setType(TEventType type) { m_type = type; };
 	private:
-		TEvent m_type;
-	};
-
-	class MouseEvent : public Event {
-	public:
-		enum MouseButton {
-			BNone,
-			BLeft,
-			BRight,
-			BMiddle,
-		};
-
-		enum MouseAction {
-			AMove,
-			AButtonDown,
-			AButtonUp,
-		};
-
-		int x;
-		int y;
-		int buttonMask;
-		MouseButton mouseButton;
-		MouseAction mouseButtonAction;
+		TEventType m_type;
 	};
 
 	class KeyEvent : public Event {
 	public:
-		enum KeyAction {
-			KeyPressed,
-			KeyReleased,
-			KeyDown,
-		};
-		int key;
-		KeyAction action;
+		KeyEvent(TEventType type, int key) : Event(type), m_key(key) {}
+
+		int        getKey() const  { return m_key; };
+		void       setKey(int key) { m_key = key;  };
+	private:
+		int m_key;
+	};
+
+	class MouseEvent : public Event {
+	public:
+
+		MouseEvent(TEventType type, int button, const vec2& pos) : Event(type), m_button(button), m_pos(pos) {}
+
+		vec2 getPos   () const          { return m_pos; };
+		void setPos   (const vec2& pos) { m_pos = pos; };
+		int  getButton() const          { return m_button; };
+		void setButton(int button)      { m_button = button; };
+	private:
+		vec2 m_pos;
+		int  m_button;
 	};
 
 	class IListener {
 	public:
-		virtual bool onEvent(const Event&) = 0;
+		virtual bool onEvent(const Event& event) = 0;
 	};
 
-	virtual int registerEvent(IListener*, TEvent e, int priority) = 0;
-	virtual int unregisterEvent(IListener*, TEvent event) = 0;
-	virtual void addEvent(Event* event) = 0;
-	virtual void processInput() = 0;
+	virtual void registerEvent  (IListener*, TEventType eventType) = 0;
+	virtual void unregisterEvent(IListener*, TEventType eventType) = 0;
+	virtual void addEvent       (Event* event) = 0;
+	virtual void processInput   () = 0;
 };
 
+//=============================================================================
+// InputManager class
+//=============================================================================
 class InputManager : public IInputManager {
 public:
-	InputManager();
 	~InputManager();
-	virtual int registerEvent(IListener*, TEvent e, int priority);
-	virtual int unregisterEvent(IListener*, TEvent event);
-	virtual void processInput();
-	virtual void addEvent(Event* event);
-	//void clearListeners() { m_listeners.clear(); }
+
+	virtual void registerEvent  (IListener*, TEventType eventType);
+	virtual void unregisterEvent(IListener*, TEventType eventType);
+	virtual void addEvent       (Event* event);
+	virtual void processInput   ();
 
 private:
-	void proceesKeyboard();
-	void proceesMouse();
+	void processKeyboard();
+	void processMouse();
 	void checkKeyState(int key);
-	//std::vector<IListener*> m_listeners;
-	std::vector<Event*> m_events;
-	std::map<int, bool> m_keys;
-	bool m_lButtonPressed;
-	bool m_rButtonPressed;
-	bool m_mButtonPressed;
-	std::map<TEvent, std::vector<IListener*>> m_listenersMap;
+	void checkMouseButtonState(int button, const vec2& mousePos);
+
+	std::vector<Event*>                           m_events;
+	std::map<int, bool>                           m_inputStates;
+	std::map<TEventType, std::vector<IListener*>> m_listenersMap;
 };

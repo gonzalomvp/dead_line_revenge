@@ -43,21 +43,21 @@ protected:
 	bool m_isActive;
 };
 
-class Button : public Control {
-public:
-	class IListener {
-	public:
-		virtual void onClick(Button*) = 0;
-	};
-
-	Button(std::string name, vec2 pos, vec2 size /*, Container* parent*/, const char* spriteOn, const char* spriteOff);
-	virtual bool onEvent(const IInputManager::Event&);
-	virtual void update(float deltaTime) {}
-	void addListener(IListener* listener) { m_listeners.push_back(listener); }
-
-private:
-	Sprite* m_spriteOn;
-	Sprite* m_spriteOff;
-	std::vector<IListener*> m_listeners;
-	bool m_pressed;
-};
+//class Button : public Control {
+//public:
+//	class IListener {
+//	public:
+//		virtual void onClick(Button*) = 0;
+//	};
+//
+//	Button(std::string name, vec2 pos, vec2 size /*, Container* parent*/, const char* spriteOn, const char* spriteOff);
+//	virtual bool onEvent(const IInputManager::Event&);
+//	virtual void update(float deltaTime) {}
+//	void addListener(IListener* listener) { m_listeners.push_back(listener); }
+//
+//private:
+//	Sprite* m_spriteOn;
+//	Sprite* m_spriteOff;
+//	std::vector<IListener*> m_listeners;
+//	bool m_pressed;
+//};

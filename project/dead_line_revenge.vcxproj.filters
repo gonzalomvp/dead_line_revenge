@@ -45,9 +45,6 @@
     <ClInclude Include="..\src\input\input_manager.h">
       <Filter>src\input</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\input\mouse_input_manager.h">
-      <Filter>src\input</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\gui\gui.h">
       <Filter>src\gui</Filter>
     </ClInclude>
@@ -108,9 +105,6 @@
       <Filter>src\scenes</Filter>
     </ClCompile>
     <ClCompile Include="..\src\input\input_manager.cpp">
-      <Filter>src\input</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\input\mouse_input_manager.cpp">
       <Filter>src\input</Filter>
     </ClCompile>
     <ClCompile Include="..\src\gui\gui.cpp">

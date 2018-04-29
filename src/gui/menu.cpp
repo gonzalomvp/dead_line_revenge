@@ -8,7 +8,7 @@
 #include "../engine/graphics_engine.h"
 
 Menu::~Menu() {
-	g_inputManager->unregisterEvent(this, IInputManager::TEvent::EKey);
+	g_inputManager->unregisterEvent(this, IInputManager::TEventType::EKeyDown);
 }
 
 Menu* Menu::createMainMenu() {
@@ -148,7 +148,7 @@ void Menu::activate() {
 	if (m_title) {
 		m_title->activate();
 	}
-	g_inputManager->registerEvent(this, IInputManager::TEvent::EKey, 0);
+	g_inputManager->registerEvent(this, IInputManager::TEventType::EKeyDown);
 }
 
 void Menu::deactivate() {
@@ -159,30 +159,27 @@ void Menu::deactivate() {
 	if (m_title) {
 		m_title->deactivate();
 	}
-	g_inputManager->unregisterEvent(this, IInputManager::TEvent::EKey);
+	g_inputManager->unregisterEvent(this, IInputManager::TEventType::EKeyDown);
 }
 
 bool Menu::onEvent(const IInputManager::Event& event) {
-	IInputManager::TEvent eventType = event.getType();
+	IInputManager::TEventType eventType = event.getType();
 
-	if (eventType == IInputManager::TEvent::EKey) {
+	if (eventType == IInputManager::TEventType::EKeyDown) {
 		const IInputManager::KeyEvent keyEvent = *static_cast<const IInputManager::KeyEvent*>(&event);
-		if (keyEvent.action == keyEvent.KeyPressed) {
-			switch (keyEvent.key)
-			{
-				case VK_UP:
-					selectPrevious();
-					break;
-				case VK_DOWN:
-					selectNext();
-					break;
-				case VK_RETURN:
-					m_menuItems[m_seletedItem]->nextOption();
-					for (auto itListener = m_listeners.begin(); itListener != m_listeners.end(); ++itListener) {
-						(*itListener)->onSelected(m_menuItems[m_seletedItem]);
-					}
-					break;
-			}
+		switch (keyEvent.getKey()) {
+			case VK_UP:
+				selectPrevious();
+				break;
+			case VK_DOWN:
+				selectNext();
+				break;
+			case VK_RETURN:
+				m_menuItems[m_seletedItem]->nextOption();
+				for (auto itListener = m_listeners.begin(); itListener != m_listeners.end(); ++itListener) {
+					(*itListener)->onSelected(m_menuItems[m_seletedItem]);
+				}
+				break;
 		}
 	}
 
@@ -297,7 +294,7 @@ void MenuManager::onSelected(MenuItem* menuItem) {
 		g_stringManager->loadLanguage(g_settings.language);
 	}
 	else if (menuItem->getName() == "RESUME") {
-		IInputManager::KeyEvent* pauseEvent = new IInputManager::KeyEvent();
+		IInputManager::Event* pauseEvent = new IInputManager::Event(IInputManager::TEventType::EPause);
 		pauseEvent->setType(IInputManager::EPause);
 		g_inputManager->addEvent(pauseEvent);
 	}

@@ -7,86 +7,51 @@
 #include "../scenes/app_manager.h"
 #include "../scenes/world.h"
 
-void InputManager::processInput() {
-	proceesKeyboard();
-	proceesMouse();
-
-	// Notify to the listeners
+//=============================================================================
+// InputManager class
+//=============================================================================
+InputManager::~InputManager() {
 	for (size_t i = 0; i < m_events.size(); ++i) {
-		for (size_t j = 0; j < m_listenersMap[m_events[i]->getType()].size(); ++j) {
-			m_listenersMap[m_events[i]->getType()][j]->onEvent(*m_events[i]);
-		}
-		//hacer delete tb en el destructor
 		delete m_events[i];
 	}
 	m_events.clear();
 }
 
-int InputManager::registerEvent(IListener* listener, TEvent event, int priority) {
-	//m_listeners.push_back(listener);
-	m_listenersMap[event].push_back(listener);
-	return 0;
+void InputManager::registerEvent(IListener* listener, TEventType eventType) {
+	m_listenersMap[eventType].push_back(listener);
 }
 
-int InputManager::unregisterEvent(IListener* listener, TEvent event) {
-	for (auto itListener = m_listenersMap[event].begin(); itListener != m_listenersMap[event].end(); ++itListener) {
+void InputManager::unregisterEvent(IListener* listener, TEventType eventType) {
+	//chequear
+	//if (m_listenersMap[eventType].size()>=0) {
+	//	m_listenersMap[eventType].erase(std::find(m_listenersMap[eventType].begin(), m_listenersMap[eventType].end(), listener));
+	//}
+	for (auto itListener = m_listenersMap[eventType].begin(); itListener != m_listenersMap[eventType].end(); ++itListener) {
 		if (*itListener == listener) {
-			m_listenersMap[event].erase(itListener);
+			m_listenersMap[eventType].erase(itListener);
 			break;
 		}
 	}
-	return 0;
 }
 
 void InputManager::addEvent(Event* event) {
 	m_events.push_back(event);
 }
 
-InputManager::InputManager() {
-	
-}
-
-InputManager::~InputManager() {
-	
-}
-
-void InputManager::checkKeyState(int key) {
-	if (SYS_KeyPressed(key)) {
-		if (m_keys[key] == false) {
-			m_keys[key] = true;
-			KeyEvent* event = new KeyEvent();
-			event->setType(EKey);
-			event->key = key;
-			event->action = KeyEvent::KeyPressed;
-			g_inputManager->addEvent(event);
-
-			if (key == VK_ESCAPE) {
-				event = new KeyEvent();
-				event->setType(EPause);
-				g_inputManager->addEvent(event);
-			}
+void InputManager::processInput() {
+	processKeyboard();
+	processMouse();
+	// Notify to the listeners
+	for (size_t i = 0; i < m_events.size(); ++i) {
+		for (size_t j = 0; j < m_listenersMap[m_events[i]->getType()].size(); ++j) {
+			m_listenersMap[m_events[i]->getType()][j]->onEvent(*m_events[i]);
 		}
-		else {
-			KeyEvent* event = new KeyEvent();
-			event = new KeyEvent();
-			event->setType(EKey);
-			event->key = key;
-			event->action = KeyEvent::KeyDown;
-			g_inputManager->addEvent(event);
-		}
+		delete m_events[i];
 	}
-	else if (!SYS_KeyPressed(key) && m_keys[key] == true) {
-		m_keys[key] = false;
-		KeyEvent* event = new KeyEvent();
-		event->setType(EKey);
-		event->key = key;
-		event->action = KeyEvent::KeyReleased;
-		g_inputManager->addEvent(event);
-	}
-	
+	m_events.clear();
 }
 
-void InputManager::proceesKeyboard() {
+void InputManager::processKeyboard() {
 	checkKeyState('W');
 	checkKeyState('A');
 	checkKeyState('S');
@@ -98,61 +63,50 @@ void InputManager::proceesKeyboard() {
 	checkKeyState(VK_ESCAPE);
 }
 
-void InputManager::proceesMouse() {
-	ivec2 mousePos = SYS_MousePos();
-	MouseEvent event;
-	event.setType(EMouse);
-	event.x = mousePos.x;
-	event.y = mousePos.y;
-	if (SYS_MouseButonPressed(SYS_MB_LEFT)) {
-		event.buttonMask = event.buttonMask | MOUSE_LBUTTON;
-	}
-	if (SYS_MouseButonPressed(SYS_MB_RIGHT)) {
-		event.buttonMask = event.buttonMask | MOUSE_RBUTTON;
-	}
+void InputManager::processMouse() {
+	ivec2 sysMousePos = SYS_MousePos();
+	vec2 mousePos = vmake(sysMousePos.x, sysMousePos.y);
+	checkMouseButtonState(SYS_MB_LEFT, mousePos);
+	checkMouseButtonState(SYS_MB_RIGHT, mousePos);
+	MouseEvent* mouseEvent = new MouseEvent(EMouseMove, 0, mousePos);
+	g_inputManager->addEvent(mouseEvent);
+}
 
-	if (event.buttonMask & MOUSE_LBUTTON && !m_lButtonPressed) {
-		m_lButtonPressed = true;
-		IInputManager::MouseEvent* eventToAdd = new IInputManager::MouseEvent();
-		eventToAdd->x = event.x;
-		eventToAdd->y = event.y;
-		eventToAdd->mouseButton = IInputManager::MouseEvent::BLeft;
-		eventToAdd->mouseButtonAction = IInputManager::MouseEvent::AButtonDown;
-		g_inputManager->addEvent(eventToAdd);
-	}
-	if (!(event.buttonMask & MOUSE_LBUTTON) && m_lButtonPressed) {
-		m_lButtonPressed = false;
-		IInputManager::MouseEvent* eventToAdd = new IInputManager::MouseEvent();
-		eventToAdd->x = event.x;
-		eventToAdd->y = event.y;
-		eventToAdd->mouseButton = IInputManager::MouseEvent::BLeft;
-		eventToAdd->mouseButtonAction = IInputManager::MouseEvent::AButtonUp;
-		g_inputManager->addEvent(eventToAdd);
-	}
-	if (event.buttonMask & MOUSE_RBUTTON && !m_rButtonPressed)
-	{
-		m_rButtonPressed = true;
-		IInputManager::MouseEvent* eventToAdd = new IInputManager::MouseEvent();
-		eventToAdd->x = event.x;
-		eventToAdd->y = event.y;
-		eventToAdd->mouseButton = IInputManager::MouseEvent::BRight;
-		eventToAdd->mouseButtonAction = IInputManager::MouseEvent::AButtonDown;
-		g_inputManager->addEvent(eventToAdd);
-	}
-	if (!(event.buttonMask & MOUSE_RBUTTON) && m_rButtonPressed)
-	{
-		m_rButtonPressed = false;
-		IInputManager::MouseEvent* eventToAdd = new IInputManager::MouseEvent();
-		eventToAdd->x = event.x;
-		eventToAdd->y = event.y;
-		eventToAdd->mouseButton = IInputManager::MouseEvent::BRight;
-		eventToAdd->mouseButtonAction = IInputManager::MouseEvent::AButtonUp;
-		g_inputManager->addEvent(eventToAdd);
-	}
+void InputManager::checkKeyState(int key) {
+	if (SYS_KeyPressed(key)) {
+		if (m_inputStates[key] == false) {
+			m_inputStates[key] = true;
+			KeyEvent* keyEvent = new KeyEvent(TEventType::EKeyDown, key);
+			g_inputManager->addEvent(keyEvent);
 
-	IInputManager::MouseEvent* eventToAdd = new IInputManager::MouseEvent();
-	eventToAdd->x = event.x;
-	eventToAdd->y = event.y;
-	eventToAdd->mouseButtonAction = IInputManager::MouseEvent::AMove;
-	g_inputManager->addEvent(eventToAdd);
+			if (key == VK_ESCAPE) {
+				Event* pauseEvent = new Event(TEventType::EPause);
+				g_inputManager->addEvent(pauseEvent);
+			}
+		}
+		KeyEvent* keyEvent = new KeyEvent(TEventType::EKeyHold, key);
+		g_inputManager->addEvent(keyEvent);
+	}
+	else if (!SYS_KeyPressed(key) && m_inputStates[key] == true) {
+		m_inputStates[key] = false;
+		KeyEvent* keyEvent = new KeyEvent(TEventType::EKeyUp, key);
+		g_inputManager->addEvent(keyEvent);
+	}
+}
+
+void InputManager::checkMouseButtonState(int button, const vec2& mousePos) {
+	if (SYS_MouseButonPressed(button)) {
+		if (m_inputStates[button] == false) {
+			m_inputStates[button] = true;
+			MouseEvent* mouseEvent = new MouseEvent(EMouseButtonDown, button, mousePos);
+			g_inputManager->addEvent(mouseEvent);
+		}
+		MouseEvent* mouseEvent = new MouseEvent(EMouseButtonHold, button, mousePos);
+		g_inputManager->addEvent(mouseEvent);
+	}
+	else if (m_inputStates[button] == true) {
+		m_inputStates[button] = false;
+		MouseEvent* mouseEvent = new MouseEvent(EMouseButtonUp, button, mousePos);
+		g_inputManager->addEvent(mouseEvent);
+	}
 }

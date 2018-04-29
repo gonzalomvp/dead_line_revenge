@@ -35,7 +35,6 @@
     <ClInclude Include="..\src\gui\menu_item.h" />
     <ClInclude Include="..\src\gui\string_manager.h" />
     <ClInclude Include="..\src\input\input_manager.h" />
-    <ClInclude Include="..\src\input\mouse_input_manager.h" />
     <ClInclude Include="..\src\scenes\app_manager.h" />
     <ClInclude Include="..\src\scenes\app_mode.h" />
     <ClInclude Include="..\src\scenes\level.h" />
@@ -56,7 +55,6 @@
     <ClCompile Include="..\src\gui\menu_item.cpp" />
     <ClCompile Include="..\src\gui\string_manager.cpp" />
     <ClCompile Include="..\src\input\input_manager.cpp" />
-    <ClCompile Include="..\src\input\mouse_input_manager.cpp" />
     <ClCompile Include="..\src\main.cpp" />
     <ClCompile Include="..\src\scenes\app_manager.cpp" />
     <ClCompile Include="..\src\scenes\app_mode.cpp" />
