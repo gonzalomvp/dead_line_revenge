@@ -7,6 +7,9 @@
 class MenuItem;
 class Text;
 
+//=============================================================================
+// Component Menu
+//=============================================================================
 class Menu : public Control {
 
 public:
@@ -15,35 +18,34 @@ public:
 		virtual void onSelected(MenuItem* menuItem) = 0;
 	};
 
+	Menu(std::string name, const vec2& pos, const vec2& size, bool isActive) : Control(name, pos, size, isActive), m_seletedItem(0), m_title(nullptr) {}
 	~Menu();
 
-	static Menu* createMainMenu();
-	static Menu* createPlayMenu();
-	static Menu* createOptionsMenu();
-	static Menu* createPauseMenu();
-	static Menu* createGameOverMenu();
-
-	void run();
-	void selectPrevious();
-	void selectNext();
-	virtual void activate();
+	virtual void activate  ();
 	virtual void deactivate();
-	void setSelectedItem(size_t newOption);
-	int  getSelectedItem() { return m_seletedItem; }
-	void addListener(IListener* listener) { m_listeners.push_back(listener); }
-	virtual bool onEvent(const IInputManager::Event&);
-	void setTitle(const char* title);
+	virtual void run       ();
 
-	std::vector<MenuItem*> m_menuItems;
+	virtual bool onEvent     (const IInputManager::Event& event);
+
+	void         addListener (IListener* listener) { m_listeners.push_back(listener); }
+	void         addMenuItem(MenuItem* menuItem)   { m_menuItems.push_back(menuItem); }
+
+	MenuItem* getSelectedItem() const { return m_menuItems[m_seletedItem]; }
+	void      setSelectedItem(int newOption);
+	void      setTitle(const char* title);
 private:
-	Menu() : Control(std::string(""), vmake(0,0), vmake(0, 0)), m_title(nullptr) {}
+	void selectPreviousItem();
+	void selectNextItem    ();
 
-	size_t m_seletedItem;
-
+	int                     m_seletedItem;
+	Text*                   m_title;
+	std::vector<MenuItem*>  m_menuItems;
 	std::vector<IListener*> m_listeners;
-	Text* m_title;
 };
 
+//=============================================================================
+// Component MenuManager
+//=============================================================================
 class MenuManager : public Menu::IListener {
 public:
 	enum TMenu {
@@ -54,19 +56,21 @@ public:
 		EGameOverMenu,
 	};
 
-	MenuManager();
-	~MenuManager() {}
-	void run();
+	~MenuManager();
+
+	void init();
+	void run ();
 	void activateMenu(TMenu menu);
 	void deactivateMenu();
 	virtual void onSelected(MenuItem* menuItem);
 	Menu* getMenu(TMenu menu);
 private:
-	std::map<TMenu, Menu*> m_menus;
-	//Menu* m_mainMenu;
-	//Menu* m_playMenu;
-	//Menu* m_optionsMenu;
-	//Menu* m_pauseMenu;
+	void createMainMenu    ();
+	void createPlayMenu    ();
+	void createOptionsMenu ();
+	void createPauseMenu   ();
+	void createGameOverMenu();
+
 	Menu* m_activeMenu;
-	//Menu* m_gameOverMenu;
+	std::map<TMenu, Menu*> m_menus;
 };

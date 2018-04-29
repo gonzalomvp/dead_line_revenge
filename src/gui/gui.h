@@ -27,12 +27,13 @@ private:
 
 class Control : public IInputManager::IListener {
 public:
-	Control(std::string name, vec2 pos, vec2 size /*, Container* parent*/) : m_name(name), m_pos(pos), m_size(size), m_isActive(true) {}
+	Control(std::string name, vec2 pos, vec2 size, bool isActive /*, Container* parent*/) : m_name(name), m_pos(pos), m_size(size), m_isActive(isActive) {}
 	~Control();
 	virtual bool onEvent(const IInputManager::Event&) { return false; }
 	virtual void update(float deltaTime) {}
 	virtual void activate() { m_isActive = true; }
 	virtual void deactivate() { m_isActive = false; }
+	bool isActive() const     { return m_isActive; }
 
 	std::string getName() { return m_name; }
 

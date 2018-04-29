@@ -1,110 +1,14 @@
 #include "../common/stdafx.h"
 #include "menu.h"
-#include "menu_item.h"
-#include "../globals.h"
-#include "../scenes/app_manager.h"
-#include "../gui/string_manager.h"
-#include "../scenes/world.h"
+
 #include "../engine/graphics_engine.h"
+#include "../gui/string_manager.h"
+#include "../scenes/app_manager.h"
+#include "../scenes/world.h"
+#include "menu_item.h"
 
 Menu::~Menu() {
 	g_inputManager->unregisterEvent(this, IInputManager::TEventType::EKeyDown);
-}
-
-Menu* Menu::createMainMenu() {
-	Menu* menu = new Menu();
-	MenuItem* menuItem;
-	menuItem = new MenuItem("PLAY_MENU", vmake(SCR_WIDTH / 2, SCR_HEIGHT * 0.6), "LTEXT_GUI_PLAY_MENU_ITEM");
-	menuItem->init();
-	menu->m_menuItems.push_back(menuItem);
-	menuItem = new MenuItem("OPTIONS_MENU", vmake(SCR_WIDTH / 2, SCR_HEIGHT * 0.5), "LTEXT_GUI_OPTIONS_MENU_ITEM");
-	menuItem->init();
-	menu->m_menuItems.push_back(menuItem);
-	menuItem = new MenuItem("EXIT", vmake(SCR_WIDTH / 2, SCR_HEIGHT * 0.4), "LTEXT_GUI_OPTIONS_EXIT_ITEM");
-	menuItem->init();
-	menu->m_menuItems.push_back(menuItem);
-	menu->m_seletedItem = 0;
-	menu->m_menuItems[menu->m_seletedItem]->setFocus(true);
-	menu->deactivate();
-	return menu;
-}
-
-Menu* Menu::createPlayMenu() {
-	Menu* menu = new Menu();
-	MenuItem* menuItem;
-	menuItem = new MenuItem("EASY", vmake(SCR_WIDTH / 2, SCR_HEIGHT * 0.6), "LTEXT_GUI_PLAY_EASY_ITEM");
-	menuItem->init();
-	menu->m_menuItems.push_back(menuItem);
-	menuItem = new MenuItem("MEDIUM", vmake(SCR_WIDTH / 2, SCR_HEIGHT * 0.5), "LTEXT_GUI_PLAY_MEDIUM_ITEM");
-	menuItem->init();
-	menu->m_menuItems.push_back(menuItem);
-	menuItem = new MenuItem("HARD", vmake(SCR_WIDTH / 2, SCR_HEIGHT * 0.4), "LTEXT_GUI_PLAY_HARD_ITEM");
-	menuItem->init();
-	menu->m_menuItems.push_back(menuItem);
-	menuItem = new MenuItem("MAIN_MENU", vmake(SCR_WIDTH / 2, SCR_HEIGHT * 0.3), "LTEXT_GUI_BACK_MENU_ITEM");
-	menuItem->init();
-	menu->m_menuItems.push_back(menuItem);
-	menu->m_seletedItem = 0;
-	menu->m_menuItems[menu->m_seletedItem]->setFocus(true);
-	menu->deactivate();
-	return menu;
-}
-
-Menu* Menu::createOptionsMenu() {
-	Menu* menu = new Menu();
-	MenuItem* menuItem;
-	menuItem = new MenuItem("SETTINGS_MUSIC", vmake(SCR_WIDTH / 2, SCR_HEIGHT * 0.6), "LTEXT_GUI_MUSIC_MENU_ITEM");
-	menuItem->init();
-	menuItem->addOption("LTEXT_GUI_MENU_ITEM_ON");
-	menuItem->addOption("LTEXT_GUI_MENU_ITEM_OFF");
-	menu->m_menuItems.push_back(menuItem);
-	menuItem = new MenuItem("SETTINGS_SFX", vmake(SCR_WIDTH / 2, SCR_HEIGHT * 0.5), "LTEXT_GUI_SFX_MENU_ITEM");
-	menuItem->init();
-	menuItem->addOption("LTEXT_GUI_MENU_ITEM_ON");
-	menuItem->addOption("LTEXT_GUI_MENU_ITEM_OFF");
-	menu->m_menuItems.push_back(menuItem);
-	menuItem = new MenuItem("SETTINGS_LANGUAGE", vmake(SCR_WIDTH / 2, SCR_HEIGHT * 0.4), "LTEXT_GUI_LANGUAGE_MENU_ITEM");
-	menuItem->init();
-	menu->m_menuItems.push_back(menuItem);
-	menuItem = new MenuItem("MAIN_MENU", vmake(SCR_WIDTH / 2, SCR_HEIGHT * 0.3), "LTEXT_GUI_BACK_MENU_ITEM");
-	menuItem->init();
-	menu->m_menuItems.push_back(menuItem);
-	menu->m_seletedItem = 0;
-	menu->m_menuItems[menu->m_seletedItem]->setFocus(true);
-	menu->deactivate();
-	return menu;
-}
-
-Menu* Menu::createPauseMenu() {
-	Menu* menu = new Menu();
-	MenuItem* menuItem;
-	menuItem = new MenuItem("RESUME", vmake(SCR_WIDTH / 2, SCR_HEIGHT * 0.6), "LTEXT_GUI_RESUME_MENU_ITEM");
-	menuItem->init();
-	menu->m_menuItems.push_back(menuItem);
-	menuItem = new MenuItem("ABANDON", vmake(SCR_WIDTH / 2, SCR_HEIGHT * 0.5), "LTEXT_GUI_ABANDON_MENU_ITEM");
-	menuItem->init();
-	menu->m_menuItems.push_back(menuItem);
-	menu->m_seletedItem = 0;
-	menu->m_menuItems[menu->m_seletedItem]->setFocus(true);
-	menu->deactivate();
-	return menu;
-}
-
-Menu* Menu::createGameOverMenu() {
-	Menu* menu = new Menu();
-	menu->m_title = new Text("GAME OVER", vmake(SCR_WIDTH / 2, SCR_HEIGHT * 0.8), 1);
-	g_graphicsEngine->addGfxEntity(menu->m_title);
-	MenuItem* menuItem;
-	menuItem = new MenuItem("RETRY", vmake(SCR_WIDTH / 2, SCR_HEIGHT * 0.6), "LTEXT_GUI_RETRY_MENU_ITEM");
-	menuItem->init();
-	menu->m_menuItems.push_back(menuItem);
-	menuItem = new MenuItem("MAIN_MENU", vmake(SCR_WIDTH / 2, SCR_HEIGHT * 0.5), "LTEXT_GUI_ABANDON_MENU_ITEM");
-	menuItem->init();
-	menu->m_menuItems.push_back(menuItem);
-	menu->m_seletedItem = 0;
-	menu->m_menuItems[menu->m_seletedItem]->setFocus(true);
-	menu->deactivate();
-	return menu;
 }
 
 void Menu::run() {
@@ -116,15 +20,15 @@ void Menu::run() {
 	}
 }
 
-void Menu::setSelectedItem(size_t newOption) {
-	if (newOption >= 0 && newOption < m_menuItems.size()) {
+void Menu::setSelectedItem(int newOption) {
+	if (newOption >= 0 && newOption < static_cast<int>(m_menuItems.size())) {
 		m_menuItems[m_seletedItem]->setFocus(false);
 		m_seletedItem = newOption;
 		m_menuItems[m_seletedItem]->setFocus(true);
 	}
 }
 
-void Menu::selectPrevious() {
+void Menu::selectPreviousItem() {
 	m_menuItems[m_seletedItem]->setFocus(false);
 	m_seletedItem--;
 	if (m_seletedItem < 0)
@@ -132,10 +36,10 @@ void Menu::selectPrevious() {
 	m_menuItems[m_seletedItem]->setFocus(true);
 }
 
-void Menu::selectNext() {
+void Menu::selectNextItem() {
 	m_menuItems[m_seletedItem]->setFocus(false);
 	m_seletedItem++;
-	if (m_seletedItem >= m_menuItems.size())
+	if (m_seletedItem >= static_cast<int>(m_menuItems.size()))
 		m_seletedItem = 0;
 	m_menuItems[m_seletedItem]->setFocus(true);
 }
@@ -169,10 +73,10 @@ bool Menu::onEvent(const IInputManager::Event& event) {
 		const IInputManager::KeyEvent keyEvent = *static_cast<const IInputManager::KeyEvent*>(&event);
 		switch (keyEvent.getKey()) {
 			case VK_UP:
-				selectPrevious();
+				selectPreviousItem();
 				break;
 			case VK_DOWN:
-				selectNext();
+				selectNextItem();
 				break;
 			case VK_RETURN:
 				m_menuItems[m_seletedItem]->nextOption();
@@ -192,31 +96,26 @@ void Menu::setTitle(const char* title) {
 	}
 	else {
 		m_title = new Text(title, vmake(SCR_WIDTH / 2, SCR_HEIGHT * 0.8), 1);
+		if (!m_isActive) {
+			m_title->deactivate();
+		}
 		g_graphicsEngine->addGfxEntity(m_title);
 	}
 	m_title->setPos(vmake((SCR_WIDTH / 2) - (strlen(title) / 2.0f * 16), m_title->getPos().y));
 }
 
-MenuManager::MenuManager() {
-	Menu* menu = Menu::createMainMenu();
-	menu->addListener(this);
-	m_menus[EMainMenu] = menu;
-
-	menu = Menu::createPlayMenu();
-	menu->addListener(this);
-	m_menus[EPlayMenu] = menu;
-
-	menu = Menu::createOptionsMenu();
-	menu->addListener(this);
-	m_menus[EOptionsMenu] = menu;
-
-	menu = Menu::createPauseMenu();
-	menu->addListener(this);
-	m_menus[EPauseMenu] = menu;
-
-	menu = Menu::createGameOverMenu();
-	menu->addListener(this);
-	m_menus[EGameOverMenu] = menu;
+//=============================================================================
+// Component MenuManager
+//=============================================================================
+void MenuManager::init() {
+	createMainMenu();
+	createPlayMenu();
+	createOptionsMenu();
+	createPauseMenu();
+	createGameOverMenu();
+	for (auto itMenus = m_menus.begin(); itMenus != m_menus.end(); ++itMenus) {
+		itMenus->second->addListener(this);
+	}
 }
 
 void MenuManager::run() {
@@ -313,4 +212,84 @@ void MenuManager::onSelected(MenuItem* menuItem) {
 
 Menu* MenuManager::getMenu(TMenu menu) {
 	return m_menus[menu];
+}
+
+void MenuManager::createMainMenu() {
+	Menu* menu = new Menu("MAIN_MENU", vmake(0.0f, 0.0f), vmake(0.0f, 0.0f), false);
+	MenuItem* menuItem;
+	menuItem = new MenuItem("PLAY_MENU", vmake(SCR_WIDTH / 2, SCR_HEIGHT * 0.6), "LTEXT_GUI_PLAY_MENU_ITEM");
+	menuItem->init();
+	menu->addMenuItem(menuItem);
+	menuItem = new MenuItem("OPTIONS_MENU", vmake(SCR_WIDTH / 2, SCR_HEIGHT * 0.5), "LTEXT_GUI_OPTIONS_MENU_ITEM");
+	menuItem->init();
+	menu->addMenuItem(menuItem);
+	menuItem = new MenuItem("EXIT", vmake(SCR_WIDTH / 2, SCR_HEIGHT * 0.4), "LTEXT_GUI_OPTIONS_EXIT_ITEM");
+	menuItem->init();
+	menu->addMenuItem(menuItem);
+	m_menus[EMainMenu] = menu;
+}
+
+void MenuManager::createPlayMenu() {
+	Menu* menu = new Menu("PLAY_MENU", vmake(0.0f, 0.0f), vmake(0.0f, 0.0f), false);
+	MenuItem* menuItem;
+	menuItem = new MenuItem("EASY", vmake(SCR_WIDTH / 2, SCR_HEIGHT * 0.6), "LTEXT_GUI_PLAY_EASY_ITEM");
+	menuItem->init();
+	menu->addMenuItem(menuItem);
+	menuItem = new MenuItem("MEDIUM", vmake(SCR_WIDTH / 2, SCR_HEIGHT * 0.5), "LTEXT_GUI_PLAY_MEDIUM_ITEM");
+	menuItem->init();
+	menu->addMenuItem(menuItem);
+	menuItem = new MenuItem("HARD", vmake(SCR_WIDTH / 2, SCR_HEIGHT * 0.4), "LTEXT_GUI_PLAY_HARD_ITEM");
+	menuItem->init();
+	menu->addMenuItem(menuItem);
+	menuItem = new MenuItem("MAIN_MENU", vmake(SCR_WIDTH / 2, SCR_HEIGHT * 0.3), "LTEXT_GUI_BACK_MENU_ITEM");
+	menuItem->init();
+	menu->addMenuItem(menuItem);
+	m_menus[EPlayMenu] = menu;
+}
+
+void MenuManager::createOptionsMenu() {
+	Menu* menu = new Menu("PLAY_MENU", vmake(0.0f, 0.0f), vmake(0.0f, 0.0f), false);
+	MenuItem* menuItem;
+	menuItem = new MenuItem("SETTINGS_MUSIC", vmake(SCR_WIDTH / 2, SCR_HEIGHT * 0.6), "LTEXT_GUI_MUSIC_MENU_ITEM");
+	menuItem->init();
+	menuItem->addOption("LTEXT_GUI_MENU_ITEM_ON");
+	menuItem->addOption("LTEXT_GUI_MENU_ITEM_OFF");
+	menu->addMenuItem(menuItem);
+	menuItem = new MenuItem("SETTINGS_SFX", vmake(SCR_WIDTH / 2, SCR_HEIGHT * 0.5), "LTEXT_GUI_SFX_MENU_ITEM");
+	menuItem->init();
+	menuItem->addOption("LTEXT_GUI_MENU_ITEM_ON");
+	menuItem->addOption("LTEXT_GUI_MENU_ITEM_OFF");
+	menu->addMenuItem(menuItem);
+	menuItem = new MenuItem("SETTINGS_LANGUAGE", vmake(SCR_WIDTH / 2, SCR_HEIGHT * 0.4), "LTEXT_GUI_LANGUAGE_MENU_ITEM");
+	menuItem->init();
+	menu->addMenuItem(menuItem);
+	menuItem = new MenuItem("MAIN_MENU", vmake(SCR_WIDTH / 2, SCR_HEIGHT * 0.3), "LTEXT_GUI_BACK_MENU_ITEM");
+	menuItem->init();
+	menu->addMenuItem(menuItem);
+	m_menus[EOptionsMenu] = menu;
+}
+
+void MenuManager::createPauseMenu() {
+	Menu* menu = new Menu("PAUSE_MENU", vmake(0.0f, 0.0f), vmake(0.0f, 0.0f), false);
+	MenuItem* menuItem;
+	menuItem = new MenuItem("RESUME", vmake(SCR_WIDTH / 2, SCR_HEIGHT * 0.6), "LTEXT_GUI_RESUME_MENU_ITEM");
+	menuItem->init();
+	menu->addMenuItem(menuItem);
+	menuItem = new MenuItem("ABANDON", vmake(SCR_WIDTH / 2, SCR_HEIGHT * 0.5), "LTEXT_GUI_ABANDON_MENU_ITEM");
+	menuItem->init();
+	menu->addMenuItem(menuItem);
+	m_menus[EPauseMenu] = menu;
+}
+
+void MenuManager::createGameOverMenu() {
+	Menu* menu = new Menu("GAMEOVER_MENU", vmake(0.0f, 0.0f), vmake(0.0f, 0.0f), false);
+	menu->setTitle("GAME OVER");
+	MenuItem* menuItem;
+	menuItem = new MenuItem("RETRY", vmake(SCR_WIDTH / 2, SCR_HEIGHT * 0.6), "LTEXT_GUI_RETRY_MENU_ITEM");
+	menuItem->init();
+	menu->addMenuItem(menuItem);
+	menuItem = new MenuItem("MAIN_MENU", vmake(SCR_WIDTH / 2, SCR_HEIGHT * 0.5), "LTEXT_GUI_ABANDON_MENU_ITEM");
+	menuItem->init();
+	menu->addMenuItem(menuItem);
+	m_menus[EGameOverMenu] = menu;
 }

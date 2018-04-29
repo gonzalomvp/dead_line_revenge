@@ -41,6 +41,7 @@ int Main(void) {
 	g_guiManager = GUIManager::instance();
 	g_inputManager = new InputManager();
 	g_menuManager = new MenuManager();
+	g_menuManager->init();
 	g_appManager =  new AppManager();
 	g_appManager->switchMode(AppMode::EMENU);
 
