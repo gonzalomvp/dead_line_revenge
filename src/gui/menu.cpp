@@ -116,7 +116,7 @@ void Menu::run() {
 	}
 }
 
-void Menu::setSelectedItem(int newOption) {
+void Menu::setSelectedItem(size_t newOption) {
 	if (newOption >= 0 && newOption < m_menuItems.size()) {
 		m_menuItems[m_seletedItem]->setFocus(false);
 		m_seletedItem = newOption;

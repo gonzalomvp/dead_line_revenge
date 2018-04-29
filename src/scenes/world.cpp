@@ -57,7 +57,7 @@ bool World::loadLevel() {
 
 	// Load general level rules
 	m_playerLife       = doc["playerLife"].GetInt();
-	m_playerSpeed      = doc["playerSpeed"].GetInt();
+	m_playerSpeed      = doc["playerSpeed"].GetFloat();
 	m_pickupPoints     = doc["pickupPoints"].GetInt();
 	m_pickupSpawnWait  = doc["pickupSpawnWait"].GetInt();
 	m_enemySpawnWait   = doc["enemySpawnWait"].GetInt();
@@ -79,12 +79,12 @@ bool World::loadLevel() {
 	const Value& turrets = doc["turrets"];
 	for (SizeType i = 0; i < turrets.Size(); i++) {
 		std::vector<vec2> aimDirections;
-		vec2 pos                = vmake(turrets[i]["position"][0].GetInt(), turrets[i]["position"][1].GetInt());
-		vec2 moveDirection      = vmake(turrets[i]["moveDirection"][0].GetInt(), turrets[i]["moveDirection"][1].GetInt());
+		vec2 pos                = vmake(turrets[i]["position"][0].GetFloat(), turrets[i]["position"][1].GetFloat());
+		vec2 moveDirection      = vmake(turrets[i]["moveDirection"][0].GetFloat(), turrets[i]["moveDirection"][1].GetFloat());
 		bool shuffleAim         = turrets[i]["shuffleAim"].GetBool();
 		const Value& directions = turrets[i]["aimDirections"];
 		for (SizeType j = 0; j < directions.Size(); j++) {
-			aimDirections.push_back(vmake(directions[j][0].GetInt(), directions[j][1].GetInt()));
+			aimDirections.push_back(vmake(directions[j][0].GetFloat(), directions[j][1].GetFloat()));
 		}
 		
 		// Create turrets
@@ -364,7 +364,7 @@ bool World::loadConfig() {
 		weapon.fireRate           = weapons[i]["fireRate"].GetInt();
 		weapon.reloadTime         = weapons[i]["reloadTime"].GetInt();
 		weapon.capacity           = weapons[i]["capacity"].GetInt();
-		weapon.bulletSpeed        = weapons[i]["bulletSpeed"].GetInt();
+		weapon.bulletSpeed        = weapons[i]["bulletSpeed"].GetFloat();
 		weapon.bulletDamage       = weapons[i]["bulletDamage"].GetInt();
 		weapon.bulletLife         = weapons[i]["bulletLife"].GetInt();
 		weapon.bulletRange        = weapons[i]["bulletRange"].GetInt();
@@ -380,16 +380,16 @@ bool World::loadConfig() {
 		TEnemyData enemy;
 		enemy.type              = static_cast<Entity::TType>(enemies[i]["id"].GetInt());
 		enemy.life              = enemies[i]["life"].GetInt();
-		enemy.speed             = enemies[i]["speed"].GetInt();
+		enemy.speed             = enemies[i]["speed"].GetFloat();
 		enemy.collisionDamage   = enemies[i]["collisionDamage"].GetInt();
 		enemy.fireRate          = enemies[i]["fireRate"].GetInt();
-		enemy.bulletSpeed       = enemies[i]["bulletSpeed"].GetInt();
+		enemy.bulletSpeed       = enemies[i]["bulletSpeed"].GetFloat();
 		enemy.bulletDamage      = enemies[i]["bulletDamage"].GetInt();
 		enemy.bulletLife        = enemies[i]["bulletLife"].GetInt();
 		enemy.bulletRange       = enemies[i]["bulletRange"].GetInt();
 		enemy.isExplossive      = enemies[i]["isExplossive"].GetBool();
 		enemy.isBouncy          = enemies[i]["isBouncy"].GetBool();
-		enemy.size              = vmake(enemies[i]["size"][0].GetInt(), enemies[i]["size"][1].GetInt());
+		enemy.size              = vmake(enemies[i]["size"][0].GetFloat(), enemies[i]["size"][1].GetFloat());
 		enemy.imageFile         = enemies[i]["imageFile"].GetString();
 		m_enemyData[enemy.type] = enemy;
 	}

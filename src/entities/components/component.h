@@ -30,7 +30,7 @@ public:
 		int     fireRate;
 		int     reloadTime;
 		int     capacity;
-		int     bulletSpeed;
+		float   bulletSpeed;
 		int     bulletDamage;
 		int     bulletLife;
 		int     bulletRange;
@@ -231,7 +231,7 @@ public:
 private:
 	Entity*           m_player;
 	std::vector<vec2> m_fireDirections;
-	int               m_currentFireDirection;
+	size_t            m_currentFireDirection;
 	bool              m_shuffle;
 };
 

@@ -31,5 +31,5 @@ protected:
 	bool m_hasFocus;
 	bool m_active;
 	std::vector<std::string> m_options;
-	int m_selectedOption;
+	size_t m_selectedOption;
 };

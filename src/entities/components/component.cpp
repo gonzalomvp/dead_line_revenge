@@ -63,23 +63,23 @@ void ComponentTransform::receiveMessage(Message* message) {
 		bool outOfBounds = false;
 		vec2 bounceDirection;
 
-		if (m_pos.x > SCR_WIDTH - m_size.x * 0.5) {
-			m_pos.x = WORLD_WIDTH - m_size.x * 0.5;
+		if (m_pos.x > SCR_WIDTH - m_size.x * 0.5f) {
+			m_pos.x = WORLD_WIDTH - m_size.x * 0.5f;
 			outOfBounds = true;
 			bounceDirection = vmake(-1.0f , 1.0f);
 		}
-		else if (m_pos.x < 0 + m_size.x * 0.5) {
-			m_pos.x = 0 + m_size.x * 0.5;
+		else if (m_pos.x < 0 + m_size.x * 0.5f) {
+			m_pos.x = 0 + m_size.x * 0.5f;
 			outOfBounds = true;
 			bounceDirection = vmake(-1.0f, 1.0f);
 		}
-		if (m_pos.y > WORLD_HEIGHT - m_size.y * 0.5) {
-			m_pos.y = WORLD_HEIGHT - m_size.y * 0.5;
+		if (m_pos.y > WORLD_HEIGHT - m_size.y * 0.5f) {
+			m_pos.y = WORLD_HEIGHT - m_size.y * 0.5f;
 			outOfBounds = true;
 			bounceDirection = vmake(1.0f, -1.0f);
 		}
-		else if (m_pos.y < 0 + m_size.y * 0.5) {
-			m_pos.y = 0 + m_size.y * 0.5;
+		else if (m_pos.y < 0 + m_size.y * 0.5f) {
+			m_pos.y = 0 + m_size.y * 0.5f;
 			outOfBounds = true;
 			bounceDirection = vmake(1.0f, -1.0f);
 		}

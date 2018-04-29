@@ -65,7 +65,7 @@ void InputManager::processKeyboard() {
 
 void InputManager::processMouse() {
 	ivec2 sysMousePos = SYS_MousePos();
-	vec2 mousePos = vmake(sysMousePos.x, sysMousePos.y);
+	vec2 mousePos = vmake(static_cast<float>(sysMousePos.x), static_cast<float>(sysMousePos.y));
 	checkMouseButtonState(SYS_MB_LEFT, mousePos);
 	checkMouseButtonState(SYS_MB_RIGHT, mousePos);
 	MouseEvent* mouseEvent = new MouseEvent(EMouseMove, 0, mousePos);

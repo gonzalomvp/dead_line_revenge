@@ -36,9 +36,6 @@
     <ClInclude Include="..\src\scenes\app_mode.h">
       <Filter>src\scenes</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\scenes\level.h">
-      <Filter>src\scenes</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\scenes\world.h">
       <Filter>src\scenes</Filter>
     </ClInclude>
@@ -96,9 +93,6 @@
       <Filter>src\scenes</Filter>
     </ClCompile>
     <ClCompile Include="..\src\scenes\app_mode.cpp">
-      <Filter>src\scenes</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\scenes\level.cpp">
       <Filter>src\scenes</Filter>
     </ClCompile>
     <ClCompile Include="..\src\scenes\world.cpp">

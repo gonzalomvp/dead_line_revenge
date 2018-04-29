@@ -11,10 +11,10 @@ public:
 	struct TEnemyData {
 		Entity::TType  type;
 		int            life;
-		int            speed;
+		float          speed;
 		int            collisionDamage;
 		int            fireRate;
-		int            bulletSpeed;
+		float          bulletSpeed;
 		int            bulletDamage;
 		int            bulletLife;
 		int            bulletRange;
@@ -67,7 +67,7 @@ private:
 	// Game rules
 	uint16_t m_score;
 	int      m_playerLife;
-	int      m_playerSpeed;
+	float    m_playerSpeed;
 	int      m_pickupPoints;
 	int      m_pickupSpawnWait;
 	int      m_enemySpawnWait;

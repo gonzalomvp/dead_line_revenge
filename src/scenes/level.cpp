@@ -22,8 +22,8 @@ Level* Level::loadLevel(char* fileName) {
 	doc.ParseStream(is);
 
 	float totalProbability = 0.0f;
-	int spawnPoints = doc["spawnPoints"].GetInt();
-	int spawnFrecuency = doc["spawnFrecuency"].GetInt();
+	int spawnPoints       = doc["spawnPoints"].GetInt();
+	float spawnFrecuency  = doc["spawnFrecuency"].GetFloat();
 	int concurrentEnemies = doc["concurrentEnemies"].GetInt();
 
 	TEnemyData meleeEnemy;

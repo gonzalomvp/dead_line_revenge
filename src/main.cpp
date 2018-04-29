@@ -58,8 +58,8 @@ int Main(void) {
 	while (!SYS_GottaQuit()) {
 		--i;
 		endTime = clock();
-		float deltaTime = endTime - beginTime;
-		int sleepTime = 17 - deltaTime;
+		float deltaTime = static_cast<float>(endTime - beginTime);
+		float sleepTime = 17 - deltaTime;
 		beginTime = endTime;
 		if (i == 0) {
 			i = 30;

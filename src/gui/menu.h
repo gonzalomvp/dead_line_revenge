@@ -28,7 +28,7 @@ public:
 	void selectNext();
 	virtual void activate();
 	virtual void deactivate();
-	void setSelectedItem(int newOption);
+	void setSelectedItem(size_t newOption);
 	int  getSelectedItem() { return m_seletedItem; }
 	void addListener(IListener* listener) { m_listeners.push_back(listener); }
 	virtual bool onEvent(const IInputManager::Event&);
@@ -38,7 +38,7 @@ public:
 private:
 	Menu() : Control(std::string(""), vmake(0,0), vmake(0, 0)), m_title(nullptr) {}
 
-	int m_seletedItem;
+	size_t m_seletedItem;
 
 	std::vector<IListener*> m_listeners;
 	Text* m_title;

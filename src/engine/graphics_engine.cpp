@@ -74,7 +74,7 @@ void GraphicsEngine::render() {
 // Sprite class
 //=============================================================================
 void Sprite::render() {
-	CORE_RenderCenteredRotatedSprite(m_pos, m_size, DEG2RAD(m_angle), m_texture, rgbamake(255, 255, 255, 255 * m_alpha));
+	CORE_RenderCenteredRotatedSprite(m_pos, m_size, DEG2RAD(m_angle), m_texture, rgbamake(255, 255, 255, static_cast<int>(255 * m_alpha)));
 }
 
 //=============================================================================
