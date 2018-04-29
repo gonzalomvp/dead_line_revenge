@@ -52,8 +52,9 @@ public:
 	
 	// Entity creation methods
 	void createPlayer(vec2 pos);
-	void createBullet(vec2 pos, vec2 size, vec2 direction, float speed, int damage, int life, int range, bool isExplossive, bool isBouncy, Entity::TType entityType, const char* texture);
+	Entity* createBullet(vec2 pos, vec2 size, vec2 direction, float speed, int damage, int life, int range, bool isExplossive, bool isBouncy, Entity::TType entityType, const char* texture);
 	void createMine  (vec2 pos);
+	Entity* createC4(Component* weapon, vec2 pos, int damage, Entity::TType type);
 
 	Entity* createEnemy(int x, int y, Entity* player, int speed, int lives, int damage);
 	Entity* createBigEnemy(int x, int y, Entity* player, int speed, int lives, int damage);
@@ -61,7 +62,7 @@ public:
 	Entity* createTurretEnemy(vec2 position, vec2 moveDir, std::vector<vec2> aimDirections, bool shuffleAim);
 
 	
-	Entity* createC4(Component* weapon, vec2 pos, int damage, Entity::TType type);
+	
 	Entity* createNuclearBomb();
 	Entity* createWeaponPickup();
 	void createExplossion(vec2 pos, vec2 size);

@@ -388,7 +388,7 @@ void World::createPlayer(vec2 pos) {
 	addEntity(player);
 }
 
-void World::createBullet(vec2 pos, vec2 size, vec2 direction, float speed, int damage, int life, int range, bool isExplossive, bool isBouncy, Entity::TType entityType, const char* texture) {
+Entity* World::createBullet(vec2 pos, vec2 size, vec2 direction, float speed, int damage, int life, int range, bool isExplossive, bool isBouncy, Entity::TType entityType, const char* texture) {
 	Entity* bullet = new Entity(Entity::EWeapon);
 	ComponentTransform* transform = new ComponentTransform(bullet, pos, size);
 	transform->init();
@@ -411,6 +411,7 @@ void World::createBullet(vec2 pos, vec2 size, vec2 direction, float speed, int d
 	ComponentLife* componentLife = new ComponentLife(bullet, life, range, 0);
 	componentLife->init();
 	addEntity(bullet);
+	return bullet;
 }
 
 void World::createMine(vec2 pos) {
@@ -559,7 +560,7 @@ Entity* World::createTurretEnemy(vec2 position, vec2 moveDir, std::vector<vec2> 
 
 Entity* World::createWeaponPickup() {
 	Component::TWeapon type = static_cast<Component::TWeapon>(rand() % Component::EWeaponCount);
-	//type = Component::ENuclearBomb;
+	//type = Component::EC4;
 	vec2 randomPos = vmake(CORE_FRand(0.0, WORLD_WIDTH), CORE_FRand(0.0, WORLD_HEIGHT));
 	Entity* weaponPickup = new Entity(Entity::EPickup);
 	ComponentTransform* transform = new ComponentTransform(weaponPickup, randomPos, vmake(20, 20));

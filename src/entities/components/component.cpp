@@ -128,7 +128,7 @@ void ComponentLife::run(float deltaTime) {
 			m_life = 0;
 		}
 	}
-	if (m_life <= 0) {
+	if (m_life == 0) {
 		MessageDestroy msgDestroy;
 		m_owner->receiveMessage(&msgDestroy);
 		m_owner->deactivate();
@@ -150,12 +150,15 @@ void ComponentLife::receiveMessage(Message* message) {
 		if (msgChangeLife && (m_life != -1) && (m_invencibleTimer >= m_invencibleTime)) {
 			m_life += msgChangeLife->deltaLife;
 			m_invencibleTimer = 0;
-			//if (m_life <= 0) {
-			//	MessageDestroy msgDestroy;
-			//	m_owner->receiveMessage(&msgDestroy);
-			//	m_owner->deactivate();
-			//	g_world->removeEntity(m_owner);
-			//}
+			if (m_life <= 0) {
+				m_life = 0;
+			}
+		}
+		else {
+			MessageDestroy *msgdestroy = dynamic_cast<MessageDestroy*>(message);
+			if (msgdestroy) {
+				m_life = 0;
+			}
 		}
 	}
 }
@@ -381,9 +384,8 @@ void ComponentWeapon::run(float deltaTime) {
 	}
 
 	if (m_isFiring && m_remoteBullet) {
-		MessageChangeLife msgChangeLife;
-		msgChangeLife.deltaLife = -1;
-		m_remoteBullet->receiveMessage(&msgChangeLife);
+		MessageDestroy msgDestroy;
+		m_remoteBullet->receiveMessage(&msgDestroy);
 		m_remoteBullet = nullptr;
 		m_isFiring = false;
 		m_currentBullets = m_weaponData.capacity;
@@ -426,7 +428,7 @@ void ComponentWeapon::run(float deltaTime) {
 				break;
 			}
 			case EC4: {
-				m_remoteBullet = g_world->createC4(this, messageGetTranform.pos, m_weaponData.bulletDamage, m_owner->getType());
+				m_remoteBullet = g_world->createBullet(messageGetTranform.pos, vmake(20.0f, 20.0f), m_aimDirection, m_weaponData.bulletSpeed, m_weaponData.bulletDamage, m_weaponData.bulletLife, m_weaponData.bulletRange, m_weaponData.isExplossive, m_weaponData.isBouncy, m_owner->getType(), "data/c4.png");
 				CORE_PlayMusic(CORE_LoadWav("data/mine.wav"));
 				break;
 			}
