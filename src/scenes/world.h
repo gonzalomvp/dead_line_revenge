@@ -35,9 +35,9 @@ public:
 	void         run          (float deltaTime);
 	void         addEntity    (Entity* entity);
 	void         removeEntity (Entity* entity);
-	uint16_t     getScore     () const          { return m_score; }
-	Entity*      getPlayer    () const          { return m_player; }
-	void         addPoints    (uint16_t points) { m_score += points; }
+	uint16_t     getScore     () const                             { return m_score;    }
+	Entity*      getPlayer    () const                             { return m_player;   }
+	void         addPoints    (uint16_t points)                    { m_score += points; }
 	virtual bool onEvent      (const IInputManager::Event& event);
 
 	// Entity creation methods
@@ -69,6 +69,7 @@ private:
 	uint16_t m_score;
 	int      m_playerLife;
 	int      m_playerSpeed;
+	int      m_pickupPoints;
 	int      m_pickupSpawnWait;
 	int      m_enemySpawnWait;
 	int      m_currentEnemies;

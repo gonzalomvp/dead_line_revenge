@@ -1,6 +1,7 @@
 {
 	"playerLife": 5,
 	"playerSpeed": 5,
+	"pickupPoints": 10,
 	"pickupSpawnWait": 10,
 	"enemySpawnWait": 60,
 	"maxEnemies": 5,
@@ -32,7 +33,7 @@
 	],
 	"turrets": [
 	{
-		"position": [ 600 ,440 ],
+		"position": [ 600 ,400 ],
 		"moveDirection": [ -1, 0 ],
 		"aimDirections": [[ 0, -1 ]],
 		"shuffleAim": true
@@ -44,7 +45,7 @@
 		"shuffleAim": true
 	},
 	{
-		"position": [ 150 ,350 ],
+		"position": [ 150 ,300 ],
 		"moveDirection": [ 0, 0 ],
 		"aimDirections": [[ 1, 0 ], [ 0, -1 ]],
 		"shuffleAim": true
