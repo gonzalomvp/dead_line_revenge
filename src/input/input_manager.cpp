@@ -6,43 +6,19 @@
 #include "input_manager.h"
 #include "../scenes/app_manager.h"
 #include "../scenes/world.h"
-#include "mouse_input_manager.h"
 
 void InputManager::processInput() {
-	checkKeyState('W');
-	checkKeyState('A');
-	checkKeyState('S');
-	checkKeyState('D');
-	checkKeyState(VK_UP);
-	checkKeyState(VK_DOWN);
-	checkKeyState(VK_RETURN);
-	checkKeyState(VK_SPACE);
-	checkKeyState(VK_ESCAPE);
+	proceesKeyboard();
+	proceesMouse();
 
-	ivec2 mousePos = SYS_MousePos();
-	MouseEvent event;
-	event.setType(EMouse);
-	event.x = mousePos.x;
-	event.y = mousePos.y;
-	if (SYS_MouseButonPressed(SYS_MB_LEFT)) {
-		event.buttonMask = event.buttonMask | MOUSE_LBUTTON;
-	}
-	if (SYS_MouseButonPressed(SYS_MB_RIGHT)) {
-		event.buttonMask = event.buttonMask | MOUSE_RBUTTON;
-	}
-
-	m_mouseInputManager->onEvent(event);
-
-	for (size_t i = 0; i < m_events.size(); ++i)
-	{
-		for (size_t j = 0; j < m_listenersMap[m_events[i]->getType()].size(); ++j)
-		{
+	// Notify to the listeners
+	for (size_t i = 0; i < m_events.size(); ++i) {
+		for (size_t j = 0; j < m_listenersMap[m_events[i]->getType()].size(); ++j) {
 			m_listenersMap[m_events[i]->getType()][j]->onEvent(*m_events[i]);
 		}
 		//hacer delete tb en el destructor
 		delete m_events[i];
 	}
-
 	m_events.clear();
 }
 
@@ -67,11 +43,11 @@ void InputManager::addEvent(Event* event) {
 }
 
 InputManager::InputManager() {
-	m_mouseInputManager = new MouseInputManager();
+	
 }
 
 InputManager::~InputManager() {
-	delete m_mouseInputManager;
+	
 }
 
 void InputManager::checkKeyState(int key) {
@@ -108,4 +84,75 @@ void InputManager::checkKeyState(int key) {
 		g_inputManager->addEvent(event);
 	}
 	
+}
+
+void InputManager::proceesKeyboard() {
+	checkKeyState('W');
+	checkKeyState('A');
+	checkKeyState('S');
+	checkKeyState('D');
+	checkKeyState(VK_UP);
+	checkKeyState(VK_DOWN);
+	checkKeyState(VK_RETURN);
+	checkKeyState(VK_SPACE);
+	checkKeyState(VK_ESCAPE);
+}
+
+void InputManager::proceesMouse() {
+	ivec2 mousePos = SYS_MousePos();
+	MouseEvent event;
+	event.setType(EMouse);
+	event.x = mousePos.x;
+	event.y = mousePos.y;
+	if (SYS_MouseButonPressed(SYS_MB_LEFT)) {
+		event.buttonMask = event.buttonMask | MOUSE_LBUTTON;
+	}
+	if (SYS_MouseButonPressed(SYS_MB_RIGHT)) {
+		event.buttonMask = event.buttonMask | MOUSE_RBUTTON;
+	}
+
+	if (event.buttonMask & MOUSE_LBUTTON && !m_lButtonPressed) {
+		m_lButtonPressed = true;
+		IInputManager::MouseEvent* eventToAdd = new IInputManager::MouseEvent();
+		eventToAdd->x = event.x;
+		eventToAdd->y = event.y;
+		eventToAdd->mouseButton = IInputManager::MouseEvent::BLeft;
+		eventToAdd->mouseButtonAction = IInputManager::MouseEvent::AButtonDown;
+		g_inputManager->addEvent(eventToAdd);
+	}
+	if (!(event.buttonMask & MOUSE_LBUTTON) && m_lButtonPressed) {
+		m_lButtonPressed = false;
+		IInputManager::MouseEvent* eventToAdd = new IInputManager::MouseEvent();
+		eventToAdd->x = event.x;
+		eventToAdd->y = event.y;
+		eventToAdd->mouseButton = IInputManager::MouseEvent::BLeft;
+		eventToAdd->mouseButtonAction = IInputManager::MouseEvent::AButtonUp;
+		g_inputManager->addEvent(eventToAdd);
+	}
+	if (event.buttonMask & MOUSE_RBUTTON && !m_rButtonPressed)
+	{
+		m_rButtonPressed = true;
+		IInputManager::MouseEvent* eventToAdd = new IInputManager::MouseEvent();
+		eventToAdd->x = event.x;
+		eventToAdd->y = event.y;
+		eventToAdd->mouseButton = IInputManager::MouseEvent::BRight;
+		eventToAdd->mouseButtonAction = IInputManager::MouseEvent::AButtonDown;
+		g_inputManager->addEvent(eventToAdd);
+	}
+	if (!(event.buttonMask & MOUSE_RBUTTON) && m_rButtonPressed)
+	{
+		m_rButtonPressed = false;
+		IInputManager::MouseEvent* eventToAdd = new IInputManager::MouseEvent();
+		eventToAdd->x = event.x;
+		eventToAdd->y = event.y;
+		eventToAdd->mouseButton = IInputManager::MouseEvent::BRight;
+		eventToAdd->mouseButtonAction = IInputManager::MouseEvent::AButtonUp;
+		g_inputManager->addEvent(eventToAdd);
+	}
+
+	IInputManager::MouseEvent* eventToAdd = new IInputManager::MouseEvent();
+	eventToAdd->x = event.x;
+	eventToAdd->y = event.y;
+	eventToAdd->mouseButtonAction = IInputManager::MouseEvent::AMove;
+	g_inputManager->addEvent(eventToAdd);
 }

@@ -2,7 +2,9 @@
 #include <vector>
 #include <map>
 
-class MouseInputManager;
+#define MOUSE_LBUTTON 0x0001
+#define MOUSE_RBUTTON 0x0010
+#define MOUSE_MBUTTON 0x0100
 
 class IInputManager {
 public:
@@ -76,10 +78,14 @@ public:
 	//void clearListeners() { m_listeners.clear(); }
 
 private:
+	void proceesKeyboard();
+	void proceesMouse();
 	void checkKeyState(int key);
 	//std::vector<IListener*> m_listeners;
 	std::vector<Event*> m_events;
-	MouseInputManager* m_mouseInputManager;
 	std::map<int, bool> m_keys;
+	bool m_lButtonPressed;
+	bool m_rButtonPressed;
+	bool m_mButtonPressed;
 	std::map<TEvent, std::vector<IListener*>> m_listenersMap;
 };

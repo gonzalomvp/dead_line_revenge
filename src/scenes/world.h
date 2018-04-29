@@ -64,8 +64,6 @@ public:
 	Entity* createHUDMessage(std::string, vec2 pos, int displayTime);
 
 	//quitar de aqui
-	
-	std::map<Entity::TType, TEnemyData>  m_enemyData;
 private:
 	bool loadLevel            (const char* fileName);
 	bool loadConfig           ();
@@ -94,7 +92,7 @@ private:
 	int      m_maxEnemies;
 
 	std::map<Component::TWeapon, Component::TWeaponData> m_weaponData;
-	
+	std::map<Entity::TType, TEnemyData>  m_enemyData;
 	std::vector<vec2>        m_spawnData;
 
 	// Timers
