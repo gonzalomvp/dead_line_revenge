@@ -465,7 +465,7 @@ Entity* World::createEnemy(vec2 pos, TEnemyData enemyData, Entity* player) {
 	ComponentRenderable* renderable = new ComponentRenderable(enemy, enemyData.imageFile.c_str(), 0.0f, 1.0f, 2, 10);
 	renderable->init();
 	
-	if (enemyData.type == EEnemy || enemyData.type == EBig) {
+	if (enemyData.type == EMelee || enemyData.type == EBig) {
 		ComponentAIMelee* aiMelee = new ComponentAIMelee(enemy, player, enemyData.speed, 0);
 		aiMelee->init();
 	}
