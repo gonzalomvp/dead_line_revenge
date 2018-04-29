@@ -435,9 +435,10 @@ void World::removePendingEntities() {
 				--m_currentEnemies;
 				break;
 			}
-			case Entity::EHUDMessage:
+			case Entity::EHUDMessage: {
 				m_hudMessage = nullptr;
 				break;
+			}
 		}
 		auto it2 = m_entities.begin();
 		bool bErased = false;
@@ -454,8 +455,7 @@ void World::removePendingEntities() {
 	}
 	m_entitiesToRemove.clear();
 
-	if (m_isGameOver)
-	{
+	if (m_isGameOver) {
 		g_world->unloadLevel();
 		std::string scoreMessage = g_stringManager->getText("LTEXT_GUI_SCORE_MESSAGE") + std::to_string(m_score);
 		g_menuManager->getMenu(MenuManager::EGameOverMenu)->setTitle(scoreMessage.c_str());
