@@ -406,29 +406,44 @@ void ComponentWeapon::run(float deltaTime) {
 
 		switch (m_weaponData.type)
 		{
-			case EShotgun:
-				g_world->createShotgunBullets(messageGetTranform.pos, m_aimDirection, m_weaponData.bulletSpeed, m_weaponData.bulletDamage, m_weaponData.bulletRange, m_owner->getType());
+			case EShotgun: {
+				vec2 bulletDir = m_aimDirection;
+				g_world->createBullet(messageGetTranform.pos, vmake(10.0f, 10.0f), bulletDir, m_weaponData.bulletSpeed, m_weaponData.bulletDamage, m_weaponData.bulletLife, m_weaponData.bulletRange, m_weaponData.isExplossive, m_weaponData.isBouncy, m_owner->getType(), "data/shotgunBullet.png");
+				float angle = vangle(m_aimDirection);
+				angle += SHOTGUN_DISP_ANGLE;
+				bulletDir = vunit(DEG2RAD(angle));
+				g_world->createBullet(messageGetTranform.pos, vmake(10.0f, 10.0f), bulletDir, m_weaponData.bulletSpeed, m_weaponData.bulletDamage, m_weaponData.bulletLife, m_weaponData.bulletRange, m_weaponData.isExplossive, m_weaponData.isBouncy, m_owner->getType(), "data/shotgunBullet.png");
+				angle = vangle(m_aimDirection);
+				angle -= SHOTGUN_DISP_ANGLE;
+				bulletDir = vunit(DEG2RAD(angle));
+				g_world->createBullet(messageGetTranform.pos, vmake(10.0f, 10.0f), bulletDir, m_weaponData.bulletSpeed, m_weaponData.bulletDamage, m_weaponData.bulletLife, m_weaponData.bulletRange, m_weaponData.isExplossive, m_weaponData.isBouncy, m_owner->getType(), "data/shotgunBullet.png");
 				CORE_PlayMusic(CORE_LoadWav("data/shotgun.wav"));
 				break;
-			case EMines:
-				g_world->createMine(this, messageGetTranform.pos, m_weaponData.bulletDamage, m_owner->getType());
+			}
+			case EMines: {
+				g_world->createMine(messageGetTranform.pos);
 				CORE_PlayMusic(CORE_LoadWav("data/mine.wav"));
 				break;
-			case EC4:
+			}
+			case EC4: {
 				m_remoteBullet = g_world->createC4(this, messageGetTranform.pos, m_weaponData.bulletDamage, m_owner->getType());
 				CORE_PlayMusic(CORE_LoadWav("data/mine.wav"));
 				break;
-			case ERocketLauncher:
-				g_world->createRocket(this, messageGetTranform.pos, m_aimDirection, m_weaponData.bulletSpeed, m_weaponData.bulletDamage, m_weaponData.bulletRange, m_owner->getType());
+			}
+			case ERocketLauncher: {
+				g_world->createBullet(messageGetTranform.pos, vmake(15.0f, 15.0f), m_aimDirection, m_weaponData.bulletSpeed, m_weaponData.bulletDamage, m_weaponData.bulletLife, m_weaponData.bulletRange, m_weaponData.isExplossive, m_weaponData.isBouncy, m_owner->getType(), "data/rocket.png");
 				CORE_PlayMusic(CORE_LoadWav("data/rocketlauncher.wav"));
 				break;
-			case ENuclearBomb:
+			}
+			case ENuclearBomb: {
 				g_world->createNuclearBomb();
 				break;
-			default:
-				g_world->addEntity(g_world->createBullet(messageGetTranform.pos, m_aimDirection, m_weaponData.bulletSpeed, m_weaponData.bulletDamage, m_weaponData.bulletRange, m_owner->getType()));
+			}
+			default: {
+				g_world->createBullet(messageGetTranform.pos, vmake(10.0f, 10.0f), m_aimDirection, m_weaponData.bulletSpeed, m_weaponData.bulletDamage, m_weaponData.bulletLife, m_weaponData.bulletRange, m_weaponData.isExplossive, m_weaponData.isBouncy, m_owner->getType(), "data/bullet.png");
 				CORE_PlayMusic(CORE_LoadWav("data/shot.wav"));
 				break;
+			}
 		}
 
 		MessageFireDone messageFireDone;
@@ -845,7 +860,7 @@ void ComponentHUD::init() {
 	m_fps = new Text("", 1, vmake(300, 300));
 	g_graphicsEngine->addGfxEntity(m_fps);
 
-	m_target = new Sprite(g_graphicsEngine->getTexture("data/target2.png"), 1);
+	m_target = new Sprite(g_graphicsEngine->getTexture("data/target.png"), 1);
 	m_target->setSize(vmake(36, 36));
 	g_graphicsEngine->addGfxEntity(m_target);
 

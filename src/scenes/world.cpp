@@ -371,7 +371,7 @@ void World::createPlayer(vec2 pos) {
 	Entity* player = new Entity(Entity::EPlayer);
 	ComponentTransform* transform = new ComponentTransform(player, pos, vmake(30, 25));
 	transform->init();
-	ComponentRenderable* renderable = new ComponentRenderable(player, "data/example.png", 0.0f, 1.0f, 2, 10);
+	ComponentRenderable* renderable = new ComponentRenderable(player, "data/player.png", 0.0f, 1.0f, 2, 10);
 	renderable->init();
 	ComponentPlayerController* playerControl = new ComponentPlayerController(player);
 	playerControl->init();
@@ -387,48 +387,33 @@ void World::createPlayer(vec2 pos) {
 	hudComponent->init();
 	addEntity(player);
 }
-Entity* World::createBullet(vec2 pos, vec2 direction, float speed, int damage, int range, Entity::TType type) {
+
+void World::createBullet(vec2 pos, vec2 size, vec2 direction, float speed, int damage, int life, int range, bool isExplossive, bool isBouncy, Entity::TType entityType, const char* texture) {
 	Entity* bullet = new Entity(Entity::EWeapon);
-	ComponentTransform* transform = new ComponentTransform(bullet, pos, vmake(10, 10));
+	ComponentTransform* transform = new ComponentTransform(bullet, pos, size);
 	transform->init();
-	ComponentRenderable* renderable = new ComponentRenderable(bullet, "data/4.png", vangle(direction), 1.0f, 2);
+	ComponentRenderable* renderable = new ComponentRenderable(bullet, texture, vangle(direction), 1.0f, 2);
 	renderable->init();
-	ComponentMove* movement = new ComponentMove(bullet, direction, speed, true, false);
+	ComponentMove* movement = new ComponentMove(bullet, direction, speed, true, isBouncy);
 	movement->init();
 	ComponentCollider* collider;
-	if (type == Entity::EPlayer) {
+	if (entityType == Entity::EPlayer) {
 		collider = new ComponentCollider(bullet, ComponentCollider::ECircleCollider, damage, ComponentCollider::EPlayerWeapon, ComponentCollider::EEnemyC | ComponentCollider::EBoundaries);
 	}
 	else {
 		collider = new ComponentCollider(bullet, ComponentCollider::ECircleCollider, damage, ComponentCollider::EEnemyWeapon, ComponentCollider::EPlayer | ComponentCollider::EBoundaries);
 	}
-
+	if (isExplossive) {
+		ComponentExplossive* explossive = new ComponentExplossive(bullet);
+		explossive->init();
+	}
 	collider->init();
-	ComponentLife* life = new ComponentLife(bullet, 1, range, 0);
-	life->init();
-	return bullet;
+	ComponentLife* componentLife = new ComponentLife(bullet, life, range, 0);
+	componentLife->init();
+	addEntity(bullet);
 }
 
-void World::createShotgunBullets(vec2 pos, vec2 direction, float speed, int damage, int range, Entity::TType type) {
-	float dispersionAngle = 15.0f;
-
-	vec2 bulletDir = direction;
-	g_world->addEntity(createBullet(pos, bulletDir, speed, damage, range, type));
-
-	float angle = vangle(direction);
-	angle += dispersionAngle;
-	bulletDir = vunit(DEG2RAD(angle));
-	g_world->addEntity(createBullet(pos, bulletDir, speed, damage, range, type));
-
-	angle = vangle(direction);
-	angle -= dispersionAngle;
-	bulletDir = vunit(DEG2RAD(angle));
-	g_world->addEntity(createBullet(pos, bulletDir, speed, damage, range, type));
-
-	return;
-}
-
-Entity* World::createMine(Component* weapon, vec2 pos, int damage, Entity::TType type) {
+void World::createMine(vec2 pos) {
 	Entity* mine = new Entity(Entity::EWeapon);
 	ComponentTransform* transform = new ComponentTransform(mine, pos, vmake(20, 20));
 	transform->init();
@@ -439,10 +424,9 @@ Entity* World::createMine(Component* weapon, vec2 pos, int damage, Entity::TType
 	collider->init();
 	ComponentLife* life = new ComponentLife(mine, 1, 0, 0);
 	life->init();
-	ComponentExplossive* explossion = new ComponentExplossive(mine);
-	explossion->init();
+	ComponentExplossive* explossive = new ComponentExplossive(mine);
+	explossive->init();
 	g_world->addEntity(mine);
-	return mine;
 }
 
 Entity* World::createC4(Component* weapon, vec2 pos, int damage, Entity::TType type) {
@@ -457,24 +441,6 @@ Entity* World::createC4(Component* weapon, vec2 pos, int damage, Entity::TType t
 	explossion->init();
 	g_world->addEntity(mine);
 	return mine;
-}
-
-Entity* World::createRocket(Component* weapon, vec2 pos, vec2 direction, float speed, int damage, int range, Entity::TType type) {
-	Entity* rocket = new Entity(Entity::EWeapon);
-	ComponentTransform* transform = new ComponentTransform(rocket, pos, vmake(15, 15));
-	transform->init();
-	ComponentRenderable* renderable = new ComponentRenderable(rocket, "data/rocket-2.png", vangle(direction), 1.0f, 2);
-	renderable->init();
-	ComponentMove* movement = new ComponentMove(rocket, direction, speed, true, false);
-	movement->init();
-	ComponentCollider* collider = new ComponentCollider(rocket, ComponentCollider::ECircleCollider, damage, ComponentCollider::EPlayerWeapon, ComponentCollider::EEnemyC | ComponentCollider::EBoundaries);
-	collider->init();
-	ComponentLife* life = new ComponentLife(rocket, 1, range, 0);
-	life->init();
-	ComponentExplossive* explossive = new ComponentExplossive(rocket);
-	explossive->init();
-	g_world->addEntity(rocket);
-	return rocket;
 }
 
 Entity* World::createNuclearBomb() {
@@ -572,7 +538,10 @@ Entity* World::createTurretEnemy(vec2 position, vec2 moveDir, std::vector<vec2> 
 	weaponData.capacity = 1;
 	weaponData.bulletSpeed = m_enemyData[ERange].bulletSpeed;
 	weaponData.bulletDamage = m_enemyData[ERange].bulletDamage;
+	weaponData.bulletLife = 1;
 	weaponData.bulletRange = m_enemyData[ERange].bulletRange;
+	weaponData.isExplossive = false;
+	weaponData.isBouncy = false;
 	weaponData.isAutomatic = true;
 	ComponentWeapon* gun = new ComponentWeapon(enemy, weaponData);
 	gun->init();

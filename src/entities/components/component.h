@@ -2,6 +2,8 @@
 
 #include "../../input/input_manager.h"
 
+#define SHOTGUN_DISP_ANGLE 15.0f
+
 class  Entity;
 struct Message;
 class  Sprite;
