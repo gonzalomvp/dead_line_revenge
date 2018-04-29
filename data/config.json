@@ -89,7 +89,14 @@
 		"id": 6,
 		"fireRate": 0,
 		"reloadTime": 0,
-		"capacity": 1
+		"capacity": 1,
+		"bulletSpeed": 0,
+		"bulletDamage": 0,
+		"bulletLife": 0,
+		"bulletRange": 0,
+		"isAutomatic": false,
+		"isExplossive": false,
+		"isBouncy": false
 	}
 	],
 	"enemies": [
@@ -99,6 +106,13 @@
 		"life": 1,
 		"speed": 3,
 		"collisionDamage": -1,
+		"fireRate": 0,
+		"bulletSpeed": 0,
+		"bulletDamage": 0,
+		"bulletLife": 0,
+		"bulletRange": 0,
+		"isExplossive": false,
+		"isBouncy": false,
 		"size": [ 25 ,25 ],
 		"imageFile": "data/enemy2.png"
 	},
@@ -108,6 +122,13 @@
 		"life": 4,
 		"speed": 2,
 		"collisionDamage": -2,
+		"fireRate": 0,
+		"bulletSpeed": 0,
+		"bulletDamage": 0,
+		"bulletLife": 0,
+		"bulletRange": 0,
+		"isExplossive": false,
+		"isBouncy": false,
 		"size": [ 35 ,35 ],
 		"imageFile": "data/bigEnemy.png"
 	},

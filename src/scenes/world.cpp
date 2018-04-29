@@ -64,7 +64,7 @@ bool World::loadLevel() {
 	m_maxEnemies       = doc["maxEnemies"].GetInt();
 	m_pickupSpawnTimer = m_pickupSpawnWait;
 
-	// Load enemy configuration
+	// Load enemy level configuration
 	float totalProbability = 0.0f;
 	const Value& enemies   = doc["enemies"];
 	for (SizeType i = 0; i < enemies.Size(); i++) {
@@ -75,7 +75,7 @@ bool World::loadLevel() {
 		m_enemyData[enemy.type] = enemy;
 	}
 
-	// Load turret configuration
+	// Load turret level configuration
 	const Value& turrets = doc["turrets"];
 	for (SizeType i = 0; i < turrets.Size(); i++) {
 		std::vector<vec2> aimDirections;
@@ -133,18 +133,6 @@ void World::addEntity(Entity* entity) {
 
 void World::removeEntity(Entity* entity) {
 	m_entitiesToRemove.push_back(entity);
-}
-
-void World::checkCollisions() {
-	for (size_t i = 0; i < m_entities.size(); ++i) {
-		Entity* entity1 = m_entities[i];
-		for (size_t j = i + 1; j < m_entities.size(); ++j) {
-			Entity* entity2 = m_entities[j];
-			MessageCheckCollision msgCheckCollision;
-			msgCheckCollision.other = entity2;
-			entity1->receiveMessage(&msgCheckCollision);
-		}
-	}
 }
 
 bool World::onEvent(const IInputManager::Event& event) {
@@ -357,9 +345,79 @@ Entity* World::createHUDMessage(std::string message, vec2 pos, int displayTime) 
 }
 //=============================================================================
 
+bool World::loadConfig() {
+	FILE* file = fopen("data/config.json", "r");
+	if (!file) return false;
+
+	fseek(file, 0, SEEK_END);
+	std::vector<char> fileData(ftell(file));
+	fseek(file, 0, SEEK_SET);
+	FileReadStream is(file, fileData.data(), fileData.size());
+	Document doc;
+	doc.ParseStream(is);
+
+	// Load weapons general configuration
+	const Value& weapons = doc["weapons"];
+	for (SizeType i = 0; i < weapons.Size(); i++) {
+		Component::TWeaponData weapon;
+		weapon.type               = static_cast<Component::TWeapon>(weapons[i]["id"].GetInt());
+		weapon.fireRate           = weapons[i]["fireRate"].GetInt();
+		weapon.reloadTime         = weapons[i]["reloadTime"].GetInt();
+		weapon.capacity           = weapons[i]["capacity"].GetInt();
+		weapon.bulletSpeed        = weapons[i]["bulletSpeed"].GetInt();
+		weapon.bulletDamage       = weapons[i]["bulletDamage"].GetInt();
+		weapon.bulletLife         = weapons[i]["bulletLife"].GetInt();
+		weapon.bulletRange        = weapons[i]["bulletRange"].GetInt();
+		weapon.isAutomatic        = weapons[i]["isAutomatic"].GetBool();
+		weapon.isExplossive       = weapons[i]["isExplossive"].GetBool();
+		weapon.isBouncy           = weapons[i]["isBouncy"].GetBool();
+		m_weaponData[weapon.type] = weapon;
+	}
+
+	// Load enemies general configuration
+	const Value& enemies = doc["enemies"];
+	for (SizeType i = 0; i < enemies.Size(); i++) {
+		TEnemyData enemy;
+		enemy.type              = static_cast<Entity::TType>(enemies[i]["id"].GetInt());
+		enemy.life              = enemies[i]["life"].GetInt();
+		enemy.speed             = enemies[i]["speed"].GetInt();
+		enemy.collisionDamage   = enemies[i]["collisionDamage"].GetInt();
+		enemy.fireRate          = enemies[i]["fireRate"].GetInt();
+		enemy.bulletSpeed       = enemies[i]["bulletSpeed"].GetInt();
+		enemy.bulletDamage      = enemies[i]["bulletDamage"].GetInt();
+		enemy.bulletLife        = enemies[i]["bulletLife"].GetInt();
+		enemy.bulletRange       = enemies[i]["bulletRange"].GetInt();
+		enemy.isExplossive      = enemies[i]["isExplossive"].GetBool();
+		enemy.isBouncy          = enemies[i]["isBouncy"].GetBool();
+		enemy.size              = vmake(enemies[i]["size"][0].GetInt(), enemies[i]["size"][1].GetInt());
+		enemy.imageFile         = enemies[i]["imageFile"].GetString();
+		m_enemyData[enemy.type] = enemy;
+	}
+	fclose(file);
+
+	// Generate spawn points
+	m_spawnData.push_back(vmake(WORLD_WIDTH / 2.0f, WORLD_HEIGHT));
+	m_spawnData.push_back(vmake(WORLD_WIDTH, WORLD_HEIGHT / 2.0f));
+	m_spawnData.push_back(vmake(0.0f, WORLD_HEIGHT / 2.0f));
+	m_spawnData.push_back(vmake(WORLD_WIDTH / 2.0f, 0.0f));
+
+	return true;
+}
+
+void World::checkCollisions() {
+	for (size_t i = 0; i < m_entities.size(); ++i) {
+		Entity* entity1 = m_entities[i];
+		for (size_t j = i + 1; j < m_entities.size(); ++j) {
+			Entity* entity2 = m_entities[j];
+			MessageCheckCollision msgCheckCollision;
+			msgCheckCollision.other = entity2;
+			entity1->receiveMessage(&msgCheckCollision);
+		}
+	}
+}
+
 void World::removePendingEntities() {
-	for (auto it = m_entitiesToRemove.begin(); it != m_entitiesToRemove.end(); ++it)
-	{
+	for (auto it = m_entitiesToRemove.begin(); it != m_entitiesToRemove.end(); ++it) {
 		Entity::TType type = (*it)->getType();
 		switch (type) {
 			case Entity::EPlayer: {
@@ -383,19 +441,19 @@ void World::removePendingEntities() {
 		}
 		auto it2 = m_entities.begin();
 		bool bErased = false;
-		while (!bErased && (it2 != m_entities.end()))
-		{
-			if (*it == *it2)
-			{
+		while (!bErased && (it2 != m_entities.end())) {
+			if (*it == *it2) {
 				delete *it2;
 				m_entities.erase(it2);
 				bErased = true;
 			}
-			else
+			else {
 				++it2;
+			}
 		}
 	}
 	m_entitiesToRemove.clear();
+
 	if (m_isGameOver)
 	{
 		g_world->unloadLevel();
@@ -420,120 +478,8 @@ void World::addPendingEntities() {
 	m_entitiesToAdd.clear();
 }
 
-bool checkCircleCircle(const vec2& pos1, float radius1, const vec2& pos2, float radius2) {
-	return vdist2(pos1, pos2) < (radius1 + radius2) * (radius1 + radius2);
-}
-
-bool checkCircleRect(const vec2& circlePos, float circleRadius, const vec2& rectPos, const vec2& rectSize) {
-	vec2 closestPoint = vmake(clamp(circlePos.x, rectPos.x, rectPos.x + rectSize.x), clamp(circlePos.y, rectPos.y, rectPos.y + rectSize.y));
-	return vdist(circlePos, closestPoint) < circleRadius;
-}
-
-bool checkRectRect(const vec2& rectPos1, const vec2& rectSize1, const vec2& rectPos2, const vec2& rectSize2) {
-	return ((isInBounds(rectPos1.x, rectPos2.x, rectPos2.x + rectSize2.x) || isInBounds(rectPos2.x, rectPos1.x, rectPos1.x + rectSize1.x) || rectPos1.x == rectPos2.x) &&
-		(isInBounds(rectPos1.y, rectPos2.y, rectPos2.y + rectSize2.y) || isInBounds(rectPos2.y, rectPos1.y, rectPos1.y + rectSize1.y) || rectPos1.y == rectPos2.y));
-}
-
-
-
-
-
-bool World::loadConfig() {
-	FILE* file = fopen("data/config.json", "r");
-	if (!file) return false;
-
-	fseek(file, 0, SEEK_END);
-	std::vector<char> fileData(ftell(file));
-	fseek(file, 0, SEEK_SET);
-	FileReadStream is(file, fileData.data(), fileData.size());
-	Document doc;
-	doc.ParseStream(is);
-
-	const Value& weapons = doc["weapons"];
-	assert(weapons.IsArray());
-	for (SizeType i = 0; i < weapons.Size(); i++) {
-		Component::TWeaponData weapon;
-		weapon.type = static_cast<Component::TWeapon>(weapons[i]["id"].GetInt());
-		if (weapons[i].HasMember("fireRate"))
-			weapon.fireRate = weapons[i]["fireRate"].GetInt();
-		if (weapons[i].HasMember("reloadTime"))
-			weapon.reloadTime = weapons[i]["reloadTime"].GetInt();
-		if (weapons[i].HasMember("capacity"))
-			weapon.capacity = weapons[i]["capacity"].GetInt();
-		if (weapons[i].HasMember("bulletSpeed"))
-			weapon.bulletSpeed = weapons[i]["bulletSpeed"].GetInt();
-		if (weapons[i].HasMember("bulletDamage"))
-			weapon.bulletDamage = weapons[i]["bulletDamage"].GetInt();
-		if (weapons[i].HasMember("bulletLife"))
-			weapon.bulletLife = weapons[i]["bulletLife"].GetInt();
-		if (weapons[i].HasMember("bulletRange"))
-			weapon.bulletRange = weapons[i]["bulletRange"].GetInt();
-		if (weapons[i].HasMember("isAutomatic"))
-			weapon.isAutomatic = weapons[i]["isAutomatic"].GetBool();
-		if (weapons[i].HasMember("isExplossive"))
-			weapon.isExplossive = weapons[i]["isExplossive"].GetBool();
-		if (weapons[i].HasMember("isBouncy"))
-			weapon.isBouncy = weapons[i]["isBouncy"].GetBool();
-		m_weaponData[weapon.type] = weapon;
-	}
-
-	const Value& enemies = doc["enemies"];
-	assert(enemies.IsArray());
-	for (SizeType i = 0; i < enemies.Size(); i++) {
-		TEnemyData enemy;
-		enemy.type = static_cast<Entity::TType>(enemies[i]["id"].GetInt());
-		if (enemies[i].HasMember("life"))
-			enemy.life = enemies[i]["life"].GetInt();
-		if (enemies[i].HasMember("speed"))
-			enemy.speed = enemies[i]["speed"].GetInt();
-		if (enemies[i].HasMember("collisionDamage"))
-			enemy.collisionDamage = enemies[i]["collisionDamage"].GetInt();
-		if (enemies[i].HasMember("fireRate"))
-			enemy.fireRate = enemies[i]["fireRate"].GetInt();
-		if (enemies[i].HasMember("bulletSpeed"))
-			enemy.bulletSpeed = enemies[i]["bulletSpeed"].GetInt();
-		if (enemies[i].HasMember("bulletDamage"))
-			enemy.bulletDamage = enemies[i]["bulletDamage"].GetInt();
-		if (enemies[i].HasMember("bulletLife"))
-			enemy.bulletLife = enemies[i]["bulletLife"].GetInt();
-		if (enemies[i].HasMember("bulletRange"))
-			enemy.bulletRange = enemies[i]["bulletRange"].GetInt();
-		if (enemies[i].HasMember("isExplossive"))
-			enemy.isExplossive = enemies[i]["isExplossive"].GetBool();
-		if (enemies[i].HasMember("isBouncy"))
-			enemy.isBouncy = enemies[i]["isBouncy"].GetBool();
-		if (enemies[i].HasMember("size"))
-			enemy.size = vmake(enemies[i]["size"][0].GetInt(), enemies[i]["size"][1].GetInt());
-		if (enemies[i].HasMember("imageFile"))
-			enemy.imageFile = enemies[i]["imageFile"].GetString();
-		m_enemyData[enemy.type] = enemy;
-	}
-
-	fclose(file);
-
-	m_spawnData.push_back(vmake(WORLD_WIDTH / 2.0f, WORLD_HEIGHT));
-	m_spawnData.push_back(vmake(WORLD_WIDTH, WORLD_HEIGHT / 2.0f));
-	m_spawnData.push_back(vmake(0.0f, WORLD_HEIGHT / 2.0f));
-	m_spawnData.push_back(vmake(WORLD_WIDTH / 2.0f, 0.0f));
-
-	return true;
-}
-
-void World::spawnEnemy() {
-	vec2 spawnLocation = m_spawnData[rand() % m_spawnData.size()];
-	float enemyType = CORE_FRand(0.0f, 1.0f);
-	Entity* enemy = nullptr;
-	for (auto itEnemyData = m_enemyData.begin(); itEnemyData != m_enemyData.end(); ++itEnemyData) {
-		if (enemyType <= itEnemyData->second.spawnProbability) {
-			createEnemy(spawnLocation, m_enemyData[itEnemyData->second.type], m_player);
-			break;
-		}
-	}
-	++m_currentEnemies;
-}
-
 void World::spawnNewEntities() {
-	//Pick up
+	// Spawn Pickup
 	if (m_pickupSpawnTimer <= m_pickupSpawnWait) {
 		++m_pickupSpawnTimer;
 		if (m_pickupSpawnTimer == m_pickupSpawnWait) {
@@ -541,14 +487,22 @@ void World::spawnNewEntities() {
 		}
 	}
 
-	//enemy
+	// Spawn Enemy
 	++m_enemySpawnTimer;
 
 	if (m_enemySpawnTimer >= m_enemySpawnWait && m_currentEnemies < m_maxEnemies) {
-		spawnEnemy();
+		// Pick a random spawn point from the available ones
+		vec2 spawnLocation = m_spawnData[rand() % m_spawnData.size()];
+
+		// Pick a random enemy based on the configure probability of each one
+		float enemyType = CORE_FRand(0.0f, 1.0f);
+		for (auto itEnemyData = m_enemyData.begin(); itEnemyData != m_enemyData.end(); ++itEnemyData) {
+			if (enemyType <= itEnemyData->second.spawnProbability) {
+				createEnemy(spawnLocation, m_enemyData[itEnemyData->second.type], m_player);
+				break;
+			}
+		}
+		++m_currentEnemies;
 		m_enemySpawnTimer = 0;
 	}
 }
-
-
-
