@@ -98,20 +98,24 @@
 		"id": 0,
 		"life": 1,
 		"speed": 3,
-		"collisionDamage": -1
+		"collisionDamage": -1,
+		"size": [ 25 ,25 ],
+		"imageFile": "data/enemy2.png"
 	},
 	{
 		"type": "big",
 		"id": 1,
 		"life": 4,
 		"speed": 2,
-		"collisionDamage": -2
+		"collisionDamage": -2,
+		"size": [ 35 ,35 ],
+		"imageFile": "data/bigEnemy.png"
 	},
 	{
 		"type": "range",
 		"id": 2,
 		"life": 1,
-		"speed": 1,
+		"speed": 2,
 		"collisionDamage": -1,
 		"fireRate": 100,
 		"bulletSpeed": 6,
@@ -119,7 +123,9 @@
 		"bulletLife": 1,
 		"bulletRange": 0,
 		"isExplossive": false,
-		"isBouncy": false
+		"isBouncy": false,
+		"size": [ 25 ,25 ],
+		"imageFile": "data/rangeEnemy2.png"
 	},
 	{
 		"type": "turret",

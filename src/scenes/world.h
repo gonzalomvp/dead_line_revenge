@@ -18,19 +18,21 @@ public:
 	};
 
 	struct TEnemyData {
-		TEnemyType type;
-		int        life;
-		int        speed;
-		int        collisionDamage;
-		int        fireRate;
-		int        bulletSpeed;
-		int        bulletDamage;
-		int        bulletLife;
-		int        bulletRange;
-		bool       isExplossive;
-		bool       isBouncy;
-		float      spawnProbability;
-		int        points;
+		TEnemyType  type;
+		int         life;
+		int         speed;
+		int         collisionDamage;
+		int         fireRate;
+		int         bulletSpeed;
+		int         bulletDamage;
+		int         bulletLife;
+		int         bulletRange;
+		bool        isExplossive;
+		bool        isBouncy;
+		float       spawnProbability;
+		int         points;
+		vec2        size;
+		std::string imageFile;
 	};
 
 	World(uint16_t level) : m_level(level) { loadConfig(); }
@@ -55,14 +57,11 @@ public:
 	Entity* createBullet    (vec2 pos, vec2 size, vec2 direction, float speed, int damage, int life, int range, bool isExplossive, bool isBouncy, Entity::TType entityType, const char* texture);
 	Entity* createExplossion(vec2 pos, vec2 size, vec2 sizeIncrement, int duration, Entity::TType entityType);
 
+	Entity* createEnemy(vec2 pos, TEnemyData enemyData, Entity* player);
 
-	Entity* createEnemy(int x, int y, Entity* player, int speed, int lives, int damage);
-	Entity* createBigEnemy(int x, int y, Entity* player, int speed, int lives, int damage);
-	Entity* createRangeEnemy(int x, int y, Entity* player);
 	Entity* createTurretEnemy(vec2 position, vec2 moveDir, std::vector<vec2> aimDirections, bool shuffleAim);
 
 	Entity* createWeaponPickup();
-	
 	Entity* createHUDMessage(std::string, vec2 pos, int displayTime);
 
 	//quitar de aqui
