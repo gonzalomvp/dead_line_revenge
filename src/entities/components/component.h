@@ -280,11 +280,11 @@ private:
 //=============================================================================
 class ComponentWeaponPickup : public Component {
 public:
-	ComponentWeaponPickup(Entity* owner, TWeapon weapon) : Component(owner), m_weapon(weapon) {}
+	ComponentWeaponPickup(Entity* owner, TWeaponData weaponData) : Component(owner), m_weaponData(weaponData) {}
 	
 	virtual void receiveMessage(Message* message);
 private:
-	TWeapon m_weapon;
+	TWeaponData m_weaponData;
 };
 
 //=============================================================================

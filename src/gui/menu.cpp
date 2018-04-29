@@ -304,6 +304,7 @@ void MenuManager::onSelected(MenuItem* menuItem) {
 	else if (menuItem->getName() == "RETRY") {
 		m_activeMenu->deactivate();
 		g_world->init();
+		g_world->loadLevel();
 	}
 	else if (menuItem->getName() == "EXIT") {
 		exit(0);

@@ -15,7 +15,7 @@
 using namespace rapidjson;
 
 World::~World() {
-	destroy();
+	unloadLevel();
 }
 
 void World::init() {
@@ -29,32 +29,11 @@ void World::init() {
 	m_enemySpawnTimer  = 0;
 
 	g_inputManager->registerEvent(this, IInputManager::TEventType::EPause);
-
-	// Create player and first pickup
-	createPlayer(vmake(WORLD_WIDTH * 0.5f, WORLD_HEIGHT * 0.5f));
-	addEntity(createWeaponPickup());
-
-	// Load level details from file
-	char* fileName = nullptr;
-	switch (m_level) {
-		case 1:
-			fileName = "data/level1.json";
-			break;
-		case 2:
-			fileName = "data/level2.json";
-			break;
-		case 3:
-			fileName = "data/level3.json";
-			break;
-	}
-	loadLevel(fileName);
-
-	//Cargar de fichero
-	//addEntity(Entity::createTurretEnemy(100, SCR_HEIGHT - 100, vmake(0, -1), m_player));
-	//addEntity(Entity::createTurretEnemy(SCR_WIDTH - 100, 100, vmake(-1, 0), m_player));	
+	
+	loadConfig();
 }
 
-void World::destroy() {
+void World::unloadLevel() {
 	for (size_t i = 0; i < m_entities.size(); ++i) {
 		delete m_entities[i];
 	}
@@ -143,7 +122,7 @@ void World::removePendingEntities() {
 	m_entitiesToRemove.clear();
 	if (m_isGameOver)
 	{
-		g_world->destroy();
+		g_world->unloadLevel();
 		std::string scoreMessage = g_stringManager->getText("LTEXT_GUI_SCORE_MESSAGE") + std::to_string(m_score);
 		g_menuManager->getMenu(MenuManager::EGameOverMenu)->setTitle(scoreMessage.c_str());
 		g_menuManager->activateMenu(MenuManager::EGameOverMenu);
@@ -195,7 +174,28 @@ bool World::onEvent(const IInputManager::Event& event) {
 	return true;
 }
 
-bool World::loadLevel(const char* fileName) {
+bool World::loadLevel() {
+	m_player = nullptr;
+	m_hudMessage = nullptr;
+	m_isGameOver = false;
+	m_isPaused = false;
+	m_score = 0;
+	m_currentEnemies = 0;
+	m_pickupSpawnTimer = 0;
+	m_enemySpawnTimer = 0;
+
+	char* fileName = "";
+	switch (m_level) {
+		case 1:
+			fileName = "data/level1.json";
+			break;
+		case 2:
+			fileName = "data/level2.json";
+			break;
+		case 3:
+			fileName = "data/level3.json";
+			break;
+	}
 	FILE* file = fopen(fileName, "r");
 	if (!file) return false;
 
@@ -206,11 +206,12 @@ bool World::loadLevel(const char* fileName) {
 	Document doc;
 	doc.ParseStream(is);
 
-	m_playerLife = doc["playerLife"].GetInt();
-	m_pickupSpawnWait = doc["pickupSpawnWait"].GetInt();
+	m_playerLife       = doc["playerLife"].GetInt();
+	m_playerSpeed      = doc["playerSpeed"].GetInt();
+	m_pickupSpawnWait  = doc["pickupSpawnWait"].GetInt();
+	m_enemySpawnWait   = doc["enemySpawnWait"].GetInt();
+	m_maxEnemies       = doc["maxEnemies"].GetInt();
 	m_pickupSpawnTimer = m_pickupSpawnWait;
-	m_enemySpawnWait = doc["enemySpawnWait"].GetInt();
-	m_maxEnemies = doc["maxEnemies"].GetInt();
 
 	float totalProbability = 0.0f;
 	const Value& enemies = doc["enemies"];
@@ -245,6 +246,10 @@ bool World::loadLevel(const char* fileName) {
 	}
 
 	fclose(file);
+
+	// Create player and first pickup
+	createPlayer(vmake(WORLD_WIDTH * 0.5f, WORLD_HEIGHT * 0.5f));
+	addEntity(createWeaponPickup());
 
 	return true;
 }
@@ -359,10 +364,6 @@ void World::spawnNewEntities() {
 		spawnEnemy();
 		m_enemySpawnTimer = 0;
 	}
-}
-
-Component::TWeaponData World::getWeaponData(Component::TWeapon weaponType) {
-	return m_weaponData[weaponType];
 }
 
 Entity* World::createPlayer(vec2 pos) {
@@ -516,7 +517,7 @@ Entity* World::createWeaponPickup() {
 	renderable->init();
 	ComponentCollider* collider = new ComponentCollider(weaponPickup, ComponentCollider::ERectCollider, 0, ComponentCollider::EPickup, ComponentCollider::EPlayer);
 	collider->init();
-	ComponentWeaponPickup* pickup = new ComponentWeaponPickup(weaponPickup, type);
+	ComponentWeaponPickup* pickup = new ComponentWeaponPickup(weaponPickup, m_weaponData[type]);
 	pickup->init();
 	ComponentPoints* points = new ComponentPoints(weaponPickup, 10);
 	points->init();
@@ -531,8 +532,8 @@ Entity* World::createHUDMessage(std::string message, vec2 pos, int displayTime) 
 	hudMessageComponent->init();
 	ComponentLife* life = new ComponentLife(hudMessage, 1, displayTime, 0);
 	life->init();
-	if (g_world->getHUDMessage()) {
-		g_world->removeEntity(g_world->getHUDMessage());
+	if (m_hudMessage) {
+		g_world->removeEntity(m_hudMessage);
 	}
 	g_world->addEntity(hudMessage);
 	return hudMessage;

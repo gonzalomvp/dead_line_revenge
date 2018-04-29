@@ -455,7 +455,7 @@ void ComponentWeapon::receiveMessage(Message* message) {
 
 	MessageWeaponChange *msgWeaponChange = dynamic_cast<MessageWeaponChange*>(message);
 	if (msgWeaponChange) {
-		m_weaponData = g_world->getWeaponData(msgWeaponChange->weapon);
+		m_weaponData = msgWeaponChange->weaponData;
 		m_isFiring = false;
 		m_currentBullets = m_weaponData.capacity;
 		m_fireTimer = m_weaponData.fireRate;
@@ -780,11 +780,11 @@ void ComponentWeaponPickup::receiveMessage(Message* message) {
 	MessageDestroy *msgDestroy = dynamic_cast<MessageDestroy*>(message);
 	if (msgDestroy) {
 		MessageWeaponChange msgWeapon;
-		msgWeapon.weapon = m_weapon;
+		msgWeapon.weaponData = m_weaponData;
 		g_world->getPlayer()->receiveMessage(&msgWeapon);
 
 		std::string hudMessage = g_stringManager->getText("LTEXT_GUI_PICKUP_MESSAGE");
-		switch (m_weapon)
+		switch (m_weaponData.type)
 		{
 			case ERevolver:
 				hudMessage += g_stringManager->getText("LTEXT_GUI_REVOLVER_MESSAGE");

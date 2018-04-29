@@ -89,7 +89,7 @@ struct MessageCheckCollision : public Message {
 //};
 
 struct MessageWeaponChange : public Message {
-	Component::TWeapon weapon;
+	Component::TWeaponData weaponData;
 };
 
 struct MessageDestroy : public Message {

@@ -36,6 +36,7 @@ void AppModeMenu::render() const {
 void AppModeGame::init() {
 	g_world = new World(m_level);
 	g_world->init();
+	g_world->loadLevel();
 }
 
 AppModeGame::~AppModeGame() {

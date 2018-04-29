@@ -1,5 +1,6 @@
 {
 	"playerLife": 5,
+	"playerSpeed": 5,
 	"pickupSpawnWait": 10,
 	"enemySpawnWait": 100,
 	"maxEnemies": 3,
