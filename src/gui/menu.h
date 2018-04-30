@@ -27,12 +27,12 @@ public:
 
 	virtual bool onEvent     (const IInputManager::Event& event);
 
-	void         addListener (IListener* listener) { m_listeners.push_back(listener); }
+	void         addListener(IListener* listener)  { m_listeners.push_back(listener); }
 	void         addMenuItem(MenuItem* menuItem)   { m_menuItems.push_back(menuItem); }
 
 	MenuItem* getSelectedItem() const { return m_menuItems[m_seletedItem]; }
 	void      setSelectedItem(int newOption);
-	void      setTitle(const char* title);
+	void      setTitle       (const char* title);
 private:
 	void selectPreviousItem();
 	void selectNextItem    ();
@@ -58,12 +58,12 @@ public:
 
 	~MenuManager();
 
-	void init();
-	void run ();
-	void activateMenu(TMenu menu);
-	void deactivateMenu();
-	virtual void onSelected(MenuItem* menuItem);
-	Menu* getMenu(TMenu menu);
+	void         init          ();
+	void         run           ();
+	void         activateMenu  (TMenu menu);
+	void         deactivateMenu();
+	virtual void onSelected    (MenuItem* menuItem);
+	Menu*        getMenu       (TMenu menu);
 private:
 	void createMainMenu    ();
 	void createPlayMenu    ();
@@ -71,6 +71,6 @@ private:
 	void createPauseMenu   ();
 	void createGameOverMenu();
 
-	Menu* m_activeMenu;
+	Menu*                  m_activeMenu;
 	std::map<TMenu, Menu*> m_menus;
 };

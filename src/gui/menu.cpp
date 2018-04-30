@@ -7,7 +7,39 @@
 #include "../scenes/world.h"
 #include "menu_item.h"
 
+//=============================================================================
+// Component Menu
+//=============================================================================
 Menu::~Menu() {
+	g_inputManager->unregisterEvent(this, IInputManager::TEventType::EKeyDown);
+	for (auto itMenuItems = m_menuItems.begin(); itMenuItems != m_menuItems.end(); ++itMenuItems) {
+		delete *itMenuItems;
+	}
+	if (m_title) {
+		delete m_title;
+	}
+}
+
+void Menu::activate() {
+	Control::activate();
+	for (auto itMenuItems = m_menuItems.begin(); itMenuItems != m_menuItems.end(); ++itMenuItems) {
+		(*itMenuItems)->activate();
+	}
+	if (m_title) {
+		m_title->activate();
+	}
+	setSelectedItem(0);
+	g_inputManager->registerEvent(this, IInputManager::TEventType::EKeyDown);
+}
+
+void Menu::deactivate() {
+	Control::deactivate();
+	for (auto itMenuItems = m_menuItems.begin(); itMenuItems != m_menuItems.end(); ++itMenuItems) {
+		(*itMenuItems)->deactivate();
+	}
+	if (m_title) {
+		m_title->deactivate();
+	}
 	g_inputManager->unregisterEvent(this, IInputManager::TEventType::EKeyDown);
 }
 
@@ -20,55 +52,8 @@ void Menu::run() {
 	}
 }
 
-void Menu::setSelectedItem(int newOption) {
-	if (newOption >= 0 && newOption < static_cast<int>(m_menuItems.size())) {
-		m_menuItems[m_seletedItem]->setFocus(false);
-		m_seletedItem = newOption;
-		m_menuItems[m_seletedItem]->setFocus(true);
-	}
-}
-
-void Menu::selectPreviousItem() {
-	m_menuItems[m_seletedItem]->setFocus(false);
-	m_seletedItem--;
-	if (m_seletedItem < 0)
-		m_seletedItem = m_menuItems.size() - 1;
-	m_menuItems[m_seletedItem]->setFocus(true);
-}
-
-void Menu::selectNextItem() {
-	m_menuItems[m_seletedItem]->setFocus(false);
-	m_seletedItem++;
-	if (m_seletedItem >= static_cast<int>(m_menuItems.size()))
-		m_seletedItem = 0;
-	m_menuItems[m_seletedItem]->setFocus(true);
-}
-
-void Menu::activate() {
-	Control::activate();
-	for (auto itControls = m_menuItems.begin(); itControls != m_menuItems.end(); ++itControls) {
-		(*itControls)->activate();
-	}
-	if (m_title) {
-		m_title->activate();
-	}
-	g_inputManager->registerEvent(this, IInputManager::TEventType::EKeyDown);
-}
-
-void Menu::deactivate() {
-	Control::deactivate();
-	for (auto itControls = m_menuItems.begin(); itControls != m_menuItems.end(); ++itControls) {
-		(*itControls)->deactivate();
-	}
-	if (m_title) {
-		m_title->deactivate();
-	}
-	g_inputManager->unregisterEvent(this, IInputManager::TEventType::EKeyDown);
-}
-
 bool Menu::onEvent(const IInputManager::Event& event) {
 	IInputManager::TEventType eventType = event.getType();
-
 	if (eventType == IInputManager::TEventType::EKeyDown) {
 		const IInputManager::KeyEvent keyEvent = *static_cast<const IInputManager::KeyEvent*>(&event);
 		switch (keyEvent.getKey()) {
@@ -86,8 +71,15 @@ bool Menu::onEvent(const IInputManager::Event& event) {
 				break;
 		}
 	}
-
 	return true;
+}
+
+void Menu::setSelectedItem(int newOption) {
+	if (newOption >= 0 && newOption < static_cast<int>(m_menuItems.size())) {
+		m_menuItems[m_seletedItem]->setFocus(false);
+		m_seletedItem = newOption;
+		m_menuItems[m_seletedItem]->setFocus(true);
+	}
 }
 
 void Menu::setTitle(const char* title) {
@@ -104,9 +96,33 @@ void Menu::setTitle(const char* title) {
 	m_title->setPos(vmake((SCR_WIDTH / 2) - (strlen(title) / 2.0f * 16), m_title->getPos().y));
 }
 
+void Menu::selectPreviousItem() {
+	m_menuItems[m_seletedItem]->setFocus(false);
+	m_seletedItem--;
+	if (m_seletedItem < 0) {
+		m_seletedItem = m_menuItems.size() - 1;
+	}
+	m_menuItems[m_seletedItem]->setFocus(true);
+}
+
+void Menu::selectNextItem() {
+	m_menuItems[m_seletedItem]->setFocus(false);
+	m_seletedItem++;
+	if (m_seletedItem >= static_cast<int>(m_menuItems.size())) {
+		m_seletedItem = 0;
+	}
+	m_menuItems[m_seletedItem]->setFocus(true);
+}
+
 //=============================================================================
 // Component MenuManager
 //=============================================================================
+MenuManager::~MenuManager() {
+	for (auto itMenus = m_menus.begin(); itMenus != m_menus.end(); ++itMenus) {
+		delete itMenus->second;
+	}
+}
+
 void MenuManager::init() {
 	createMainMenu();
 	createPlayMenu();
@@ -129,8 +145,7 @@ void MenuManager::activateMenu(TMenu menu) {
 		m_activeMenu->deactivate();
 		ShowCursor(false);
 	}
-	switch (menu)
-	{
+	switch (menu) {
 		case EMainMenu:
 			m_activeMenu = m_menus[EMainMenu];
 			break;
@@ -146,11 +161,8 @@ void MenuManager::activateMenu(TMenu menu) {
 		case EGameOverMenu:
 			m_activeMenu = m_menus[EGameOverMenu];
 			break;
-		default:
-			break;
 	}
 	m_activeMenu->activate();
-	m_activeMenu->setSelectedItem(0);
 	ShowCursor(true);
 }
 
@@ -168,8 +180,8 @@ void MenuManager::onSelected(MenuItem* menuItem) {
 		activateMenu(EOptionsMenu);
 	}
 	else if (menuItem->getName() == "MAIN_MENU") {
-		g_appManager->switchMode(AppMode::EMENU);
 		activateMenu(EMainMenu);
+		g_appManager->switchMode(AppMode::EMENU);
 	}
 	else if (menuItem->getName() == "EASY") {
 		g_appManager->switchMode(AppMode::EGAME, 1);
@@ -187,15 +199,16 @@ void MenuManager::onSelected(MenuItem* menuItem) {
 		g_settings.sfx = !g_settings.sfx;
 	}
 	else if (menuItem->getName() == "SETTINGS_LANGUAGE") {
-		if (g_settings.language == EEnglish)
+		if (g_settings.language == EEnglish) {
 			g_settings.language = ESpanish;
-		else if (g_settings.language == ESpanish)
+		}
+		else if (g_settings.language == ESpanish) {
 			g_settings.language = EEnglish;
+		}
 		g_stringManager->loadLanguage(g_settings.language);
 	}
 	else if (menuItem->getName() == "RESUME") {
 		IInputManager::Event* pauseEvent = new IInputManager::Event(IInputManager::TEventType::EPause);
-		pauseEvent->setType(IInputManager::EPause);
 		g_inputManager->addEvent(pauseEvent);
 	}
 	else if (menuItem->getName() == "ABANDON") {
