@@ -433,8 +433,9 @@ void ComponentWeapon::run(float deltaTime) {
 			g_soundEngine->playSound(m_weaponData.soundFile.c_str());
 		}
 
-		MessageFireDone messageFireDone;
-		m_owner->receiveMessage(&messageFireDone);
+		MessageFire messageFire;
+		messageFire.isFireDone = true;
+		m_owner->receiveMessage(&messageFire);
 	}
 }
 
@@ -637,8 +638,8 @@ void ComponentAIFire::receiveMessage(Message* message) {
 	if (!m_isActive)
 		return;
 
-	MessageFireDone *msgFireDone = dynamic_cast<MessageFireDone*>(message);
-	if (msgFireDone && ! m_player) {
+	MessageFire *msgFire = dynamic_cast<MessageFire*>(message);
+	if (msgFire && msgFire->isFireDone && ! m_player) {
 		++m_currentFireDirection;
 		if (m_currentFireDirection >= m_fireDirections.size()) {
 			m_currentFireDirection = 0;

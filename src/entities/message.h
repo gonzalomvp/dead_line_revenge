@@ -6,82 +6,56 @@ struct Message {
 };
 
 struct MessageGetTransform : public Message {
-	vec2 pos;
-	vec2 size;
+	vec2 pos  = vmake(0.0f, 0.0f);
+	vec2 size = vmake(0.0f, 0.0f);
 };
 
 struct MessageSetTransform : public Message {
-	vec2 pos;
-	vec2 size;
+	vec2 pos  = vmake(0.0f, 0.0f);
+	vec2 size = vmake(0.0f, 0.0f);
 };
 
 struct MessageGetLife : public Message {
-	int currentLife;
+	int currentLife = 0;
 };
 
 struct MessageChangeLife : public Message {
-	int deltaLife;
+	int deltaLife = 0;
 };
 
 struct MessageAddMovement : public Message {
-	vec2 dir;
+	vec2 dir = vmake(0.0f, 0.0f);
 };
 
 struct MessageReload : public Message {
 };
 
 struct MessageFire : public Message {
-	bool isFiring;
-};
-
-struct MessageFireDone : public Message {
+	bool isFiring   = false;
+	bool isFireDone = false;
 };
 
 struct MessageAimDirection : public Message {
-	vec2 direction;
+	vec2 direction = vmake(0.0f, 0.0f);
 };
 
 struct MessageAmmoInfo : public Message {
-	int currentAmmo;
-	int totalAmmo;
-	float reloadPercent = 1.0f;
+	int   currentAmmo     = 0;
+	int   totalAmmo       = 0;
+	float reloadPercent   = 1.0f;
 };
-
-
-
-
-
-//struct MessageGetTargetPos : public Message {
-//	vec2 pos;
-//};
 
 struct MessageCheckCollision : public Message {
 	Component::TColliderType type;
-	vec2 center;
-	vec2 size;
-	int deltaLife;
-	int collisionChannel = 0;
-	int collisionChannelsResponse = 0;
-	Entity* other = nullptr;
-	bool overlap = false;
-	vec2 bounceDirection = vmake(0.0f, 0.0f);
+	vec2                     center                    = vmake(0.0f, 0.0f);
+	vec2                     size                      = vmake(0.0f, 0.0f);
+	int                      deltaLife                 = 0;
+	int                      collisionChannel          = 0;
+	int                      collisionChannelsResponse = 0;
+	Entity*                  other                     = nullptr;
+	bool                     overlap                   = false;
+	vec2                     bounceDirection           = vmake(0.0f, 0.0f);
 };
-
-//struct MessageGetCollider : public Message {
-//	Component::TColliderType type;
-//	Component::TFaction faction;
-//	vec2 center;
-//	vec2 size;
-//	int deltaLife;
-//	int collisionChannel;
-//};
-
-//struct MessageCollision: public Message {
-//	Entity* other = nullptr;
-//	Component::TFaction faction;
-//	int deltaLife;
-//	vec2 bounceDirection;
-//};
 
 struct MessageWeaponChange : public Message {
 	Component::TWeaponData weaponData;
