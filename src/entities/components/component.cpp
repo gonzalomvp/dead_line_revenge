@@ -83,10 +83,6 @@ void ComponentTransform::receiveMessage(Message* message) {
 			outOfBounds = true;
 			bounceDirection = vmake(1.0f, -1.0f);
 		}
-		MessageTransformChanged msgTransformChanged;
-		msgTransformChanged.pos = m_pos;
-		msgTransformChanged.size = m_size;
-		m_owner->receiveMessage(&msgTransformChanged);
 
 		if (outOfBounds) {
 			MessageCheckCollision msgCheckCollision;
@@ -250,21 +246,14 @@ void ComponentRenderable::receiveMessage(Message* message) {
 	if (!m_isActive)
 		return;
 
-	MessageTransformChanged *msgTransformChanged = dynamic_cast<MessageTransformChanged*>(message);
-	if (msgTransformChanged) {
-		m_sprite->setPos(msgTransformChanged->pos);
-		m_sprite->setSize(msgTransformChanged->size);
+	MessageChangeLife *msgChangeLife = dynamic_cast<MessageChangeLife*>(message);
+	if (msgChangeLife && msgChangeLife->deltaLife < 0) {
+		m_hitTimer = 0;
 	}
 	else {
-		MessageChangeLife *msgChangeLife = dynamic_cast<MessageChangeLife*>(message);
-		if (msgChangeLife && msgChangeLife->deltaLife < 0) {
-			m_hitTimer = 0;
-		}
-		else {
-			MessageAimDirection* messageAimDirection = dynamic_cast<MessageAimDirection*>(message);
-			if (messageAimDirection) {
-				m_sprite->setAngle(vangle(messageAimDirection->direction));
-			}
+		MessageAimDirection* messageAimDirection = dynamic_cast<MessageAimDirection*>(message);
+		if (messageAimDirection) {
+			m_sprite->setAngle(vangle(messageAimDirection->direction));
 		}
 	}
 }

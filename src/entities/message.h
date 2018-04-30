@@ -15,11 +15,6 @@ struct MessageSetTransform : public Message {
 	vec2 size;
 };
 
-struct MessageTransformChanged : public Message {
-	vec2 pos;
-	vec2 size;
-};
-
 struct MessageGetLife : public Message {
 	int currentLife;
 };
