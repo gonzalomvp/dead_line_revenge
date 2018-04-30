@@ -37,7 +37,7 @@ int Main(void) {
 	g_appManager->switchMode(AppMode::EMENU);
 
 	//Set Background
-	Sprite background(g_graphicsEngine->getTexture("data/background4.png"), vmake(SCR_WIDTH * 0.5f, SCR_HEIGHT * 0.5f), vmake(SCR_WIDTH, SCR_HEIGHT), 0.0f, 1.0f, 3);
+	Sprite background(g_graphicsEngine->getTexture("data/background.png"), vmake(SCR_WIDTH * 0.5f, SCR_HEIGHT * 0.5f), vmake(SCR_WIDTH, SCR_HEIGHT), 0.0f, 1.0f, 3);
 	g_graphicsEngine->addGfxEntity(&background);
 	
 	clock_t beginTime = clock();

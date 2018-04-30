@@ -223,7 +223,7 @@ Entity* World::createExplossion(vec2 pos, vec2 size, vec2 sizeIncrement, int dur
 	Entity* explossion = new Entity(entityType);
 	ComponentTransform* transform = new ComponentTransform(explossion, pos, size, sizeIncrement);
 	transform->init();
-	ComponentRenderable* renderable = new ComponentRenderable(explossion, "data/explossion2.png", 0.0f, 0.5f, 2);
+	ComponentRenderable* renderable = new ComponentRenderable(explossion, "data/explossion.png", 0.0f, 0.5f, 2);
 	renderable->init();
 
 	// Nuclear explossion has different collider than standard explosssion

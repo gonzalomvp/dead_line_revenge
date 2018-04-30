@@ -808,7 +808,7 @@ void ComponentHUD::init() {
 	m_gfxEntities.push_back(m_target);
 
 	// Reload Animation
-	m_reloadAnim = new Sprite(g_graphicsEngine->getTexture("data/energy-bar-fill.png"), vmake(0.0f, 0.0f), vmake(0.0f, 0.0f), 0.0f, 1.0f, 1);
+	m_reloadAnim = new Sprite(g_graphicsEngine->getTexture("data/reload.png"), vmake(0.0f, 0.0f), vmake(0.0f, 0.0f), 0.0f, 1.0f, 1);
 	g_graphicsEngine->addGfxEntity(m_reloadAnim);
 	m_gfxEntities.push_back(m_reloadAnim);
 

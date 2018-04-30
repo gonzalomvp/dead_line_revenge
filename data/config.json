@@ -121,7 +121,7 @@
 		"isExplossive": false,
 		"isBouncy": false,
 		"size": [ 25 ,25 ],
-		"imageFile": "data/enemy2.png"
+		"imageFile": "data/enemy.png"
 	},
 	{
 		"type": "big",
@@ -153,7 +153,7 @@
 		"isExplossive": false,
 		"isBouncy": false,
 		"size": [ 25 ,25 ],
-		"imageFile": "data/rangeEnemy2.png"
+		"imageFile": "data/rangeEnemy.png"
 	},
 	{
 		"type": "turret",
