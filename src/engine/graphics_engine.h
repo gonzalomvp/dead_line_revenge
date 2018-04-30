@@ -79,7 +79,7 @@ private:
 //=============================================================================
 class Text : public GfxEntity {
 public:
-	Text(std::string text, vec2 pos, int priority) : GfxEntity(pos, priority), m_text(text) {}
+	Text(const std::string& text, vec2 pos, int priority) : GfxEntity(pos, priority), m_text(text) {}
 
 	std::string getText() const                  { return m_text; }
 	void        setText(const std::string& text) { m_text = text; }

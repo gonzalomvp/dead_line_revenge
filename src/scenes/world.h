@@ -48,7 +48,7 @@ public:
 	Entity* createEnemy       (vec2 pos, TEnemyData enemyData, Entity* player);
 	Entity* createEnemy       (vec2 pos, TEnemyData enemyData, vec2 moveDir, std::vector<vec2> aimDirections, bool shuffleAim);
 	Entity* createWeaponPickup();
-	Entity* createHUDMessage  (std::string, vec2 pos, int displayTime);
+	Entity* createHUDMessage  (const std::string&, vec2 pos, int displayTime);
 private:
 	bool loadConfig           ();
 	void checkCollisions      ();

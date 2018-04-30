@@ -293,7 +293,7 @@ private:
 //=============================================================================
 class ComponentHUDMessage : public Component {
 public:
-	ComponentHUDMessage(Entity* owner, vec2 pos, std::string messageText) : Component(owner), m_pos(pos), m_messageText(messageText), m_message(nullptr) {}
+	ComponentHUDMessage(Entity* owner, vec2 pos, const std::string& messageText) : Component(owner), m_pos(pos), m_messageText(messageText), m_message(nullptr) {}
 	~ComponentHUDMessage();
 
 	virtual void init();

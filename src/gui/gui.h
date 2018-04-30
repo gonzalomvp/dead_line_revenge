@@ -4,7 +4,7 @@
 
 class Control : public IInputManager::IListener {
 public:
-	Control(std::string name, vec2 pos, vec2 size, bool isActive) : m_name(name), m_pos(pos), m_size(size), m_isActive(isActive) {}
+	Control(const std::string& name, const vec2& pos, const vec2& size, bool isActive) : m_name(name), m_pos(pos), m_size(size), m_isActive(isActive) {}
 
 	virtual bool onEvent(const IInputManager::Event& event) = 0;
 	virtual void update(float deltaTime) {}

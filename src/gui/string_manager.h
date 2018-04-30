@@ -6,7 +6,7 @@
 class StringManager {
 public:
 	bool loadLanguage(TLanguage language);
-	std::string getText(std::string label);
+	std::string getText(const std::string& label);
 
 private:
 	std::map<std::string, std::string> m_texts;

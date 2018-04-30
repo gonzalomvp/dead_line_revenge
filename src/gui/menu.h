@@ -10,19 +10,18 @@ class Text;
 //=============================================================================
 class MenuItem {
 public:
-	MenuItem(std::string name, std::string text, const vec2& pos) : m_name(name), m_text(text), m_pos(pos), m_hasFocus(false), m_selectedOption(0) {}
+	MenuItem(const std::string& name, const std::string& text, const vec2& pos) : m_name(name), m_text(text), m_pos(pos), m_gfxText(nullptr), m_hasFocus(false), m_selectedOption(0) {}
 	~MenuItem();
 
-	void init();
-	void activate();
+	void init      ();
+	void activate  ();
 	void deactivate();
-	void run();
+	void run       ();
 	void nextOption();
 	
-	void        addOption(std::string option) { m_options.push_back(option); m_selectedOption = 0; }
-	std::string getName  () const             { return m_name; }
-	void        setFocus (bool hasFocus)      { m_hasFocus = hasFocus; }
-
+	void        addOption(const std::string& option) { m_options.push_back(option); }
+	std::string getName  () const                    { return m_name;               }
+	void        setFocus (bool hasFocus)             { m_hasFocus = hasFocus;       }
 private:
 	std::string              m_name;
 	std::string              m_text;
@@ -31,21 +30,19 @@ private:
 	bool                     m_hasFocus;
 	size_t                   m_selectedOption;
 	std::vector<std::string> m_options;
-	
 };
 
 //=============================================================================
 // Menu class
 //=============================================================================
 class Menu : public Control {
-
 public:
 	class IListener {
 	public:
 		virtual void onSelected(MenuItem* menuItem) = 0;
 	};
 
-	Menu(std::string name, const vec2& pos, const vec2& size, bool isActive) : Control(name, pos, size, isActive), m_seletedItem(0), m_title(nullptr) {}
+	Menu(const std::string& name, const vec2& pos, const vec2& size, bool isActive) : Control(name, pos, size, isActive), m_seletedItem(0), m_title(nullptr) {}
 	~Menu();
 
 	virtual void activate  ();

@@ -332,7 +332,7 @@ Entity* World::createWeaponPickup() {
 	return weaponPickup;
 }
 
-Entity* World::createHUDMessage(std::string message, vec2 pos, int displayTime) {
+Entity* World::createHUDMessage(const std::string& message, vec2 pos, int displayTime) {
 	Entity* hudMessage = new Entity(Entity::EHUDMessage);
 	ComponentHUDMessage* hudMessageComponent = new ComponentHUDMessage(hudMessage, pos, message);
 	hudMessageComponent->init();

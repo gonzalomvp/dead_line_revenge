@@ -37,7 +37,7 @@ bool StringManager::loadLanguage(TLanguage language) {
 	return true;
 }
 
-std::string StringManager::getText(std::string label) {
+std::string StringManager::getText(const std::string& label) {
 	std::string convertedText = label;
 	if (m_texts.count(label)) {
 		convertedText = m_texts[label];
