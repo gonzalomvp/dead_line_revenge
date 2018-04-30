@@ -125,7 +125,7 @@ void Menu::setSelectedItem(int newOption) {
 	}
 }
 
-void Menu::setTitle(const char* title) {
+void Menu::setTitle(const std::string& title) {
 	if (m_title) {
 		m_title->setText(title);
 	}
@@ -136,7 +136,7 @@ void Menu::setTitle(const char* title) {
 		}
 		g_graphicsEngine->addGfxEntity(m_title);
 	}
-	m_title->setPos(vmake((SCR_WIDTH / 2) - (strlen(title) / 2.0f * 16), m_title->getPos().y));
+	m_title->setPos(vmake((SCR_WIDTH / 2) - (title.length() / 2.0f * 16), m_title->getPos().y));
 }
 
 void Menu::selectPreviousItem() {
@@ -188,23 +188,7 @@ void MenuManager::activateMenu(TMenu menu) {
 		m_activeMenu->deactivate();
 		ShowCursor(false);
 	}
-	switch (menu) {
-		case EMainMenu:
-			m_activeMenu = m_menus[EMainMenu];
-			break;
-		case EOptionsMenu:
-			m_activeMenu = m_menus[EOptionsMenu];
-			break;
-		case EPlayMenu:
-			m_activeMenu = m_menus[EPlayMenu];
-			break;
-		case EPauseMenu:
-			m_activeMenu = m_menus[EPauseMenu];
-			break;
-		case EGameOverMenu:
-			m_activeMenu = m_menus[EGameOverMenu];
-			break;
-	}
+	m_activeMenu = m_menus[menu];
 	m_activeMenu->activate();
 	ShowCursor(true);
 }

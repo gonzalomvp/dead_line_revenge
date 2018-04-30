@@ -49,14 +49,13 @@ public:
 	virtual void deactivate();
 	virtual void run       ();
 
-	virtual bool onEvent     (const IInputManager::Event& event);
-
+	virtual bool onEvent    (const IInputManager::Event& event);
 	void         addListener(IListener* listener)  { m_listeners.push_back(listener); }
 	void         addMenuItem(MenuItem* menuItem)   { m_menuItems.push_back(menuItem); }
 
 	MenuItem* getSelectedItem() const { return m_menuItems[m_seletedItem]; }
 	void      setSelectedItem(int newOption);
-	void      setTitle       (const char* title);
+	void      setTitle       (const std::string& title);
 private:
 	void selectPreviousItem();
 	void selectNextItem    ();
