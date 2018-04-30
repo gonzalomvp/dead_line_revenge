@@ -1,6 +1,7 @@
 #include "../common/stdafx.h"
 #include "graphics_engine.h"
 
+#include "../gui/string_manager.h"
 #include <algorithm>
 
 //=============================================================================
@@ -86,5 +87,6 @@ void Sprite::render() {
 // Text class
 //=============================================================================
 void Text::render() {
-	FONT_DrawString(m_pos, m_text.c_str());
+	std::string textToDraw = g_stringManager->getText(m_text);
+	FONT_DrawString(m_pos, textToDraw.c_str());
 }

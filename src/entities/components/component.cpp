@@ -843,38 +843,39 @@ ComponentHUD::~ComponentHUD() {
 void ComponentHUD::init() {
 	Component::init();
 	
-	// Titles
-	Text* title = new Text("LIFE", vmake(20, 450), 1);
+	// Life HUD
+	Text* title = new Text("LTEXT_GUI_LIFE_HUD", vmake(20, 450), 1);
 	g_graphicsEngine->addGfxEntity(title);
 	m_gfxEntities.push_back(title);
-	title = new Text("SCORE", vmake(110, 450), 1);
-	g_graphicsEngine->addGfxEntity(title);
-	m_gfxEntities.push_back(title);
-	title = new Text("AMMO", vmake(210, 450), 1);
-	g_graphicsEngine->addGfxEntity(title);
-	m_gfxEntities.push_back(title);
-
-	m_life = new Text("", vmake(20, 430), 1);
+	float titleEndPos = title->getPos().x + g_stringManager->getText(title->getText()).length() * 16.0f;
+	m_life = new Text("0", vmake(title->getPos().x, 430), 1);
 	g_graphicsEngine->addGfxEntity(m_life);
 	m_gfxEntities.push_back(m_life);
 
-	m_score = new Text("| 120", vmake(110, 430), 1);
+	// Score HUD
+	title = new Text("LTEXT_GUI_SCORE_HUD", vmake(titleEndPos + 20, 450), 1);
+	g_graphicsEngine->addGfxEntity(title);
+	m_gfxEntities.push_back(title);
+	titleEndPos = title->getPos().x + g_stringManager->getText(title->getText()).length() * 16.0f;
+	m_score = new Text("0", vmake(title->getPos().x, 430), 1);
 	g_graphicsEngine->addGfxEntity(m_score);
 	m_gfxEntities.push_back(m_score);
 
-	m_ammo = new Text("| 6/-", vmake(210, 430), 1);
+	// AMMO HUD
+	title = new Text("LTEXT_GUI_AMMO_HUD", vmake(titleEndPos + 20, 450), 1);
+	g_graphicsEngine->addGfxEntity(title);
+	m_gfxEntities.push_back(title);
+	m_ammo = new Text("0/0", vmake(title->getPos().x, 430), 1);
 	g_graphicsEngine->addGfxEntity(m_ammo);
 	m_gfxEntities.push_back(m_ammo);
 
-	m_fps = new Text("", vmake(300, 300), 1);
-	g_graphicsEngine->addGfxEntity(m_fps);
-	m_gfxEntities.push_back(m_fps);
-
+	// Target HUD
 	m_target = new Sprite(g_graphicsEngine->getTexture("data/target.png"), vmake(0.0f, 0.0f), vmake(0.0f, 0.0f), 0.0f, 1.0f, 1);
 	m_target->setSize(vmake(36, 36));
 	g_graphicsEngine->addGfxEntity(m_target);
 	m_gfxEntities.push_back(m_target);
 
+	// Reload Animation
 	m_reloadAnim = new Sprite(g_graphicsEngine->getTexture("data/energy-bar-fill.png"), vmake(0.0f, 0.0f), vmake(0.0f, 0.0f), 0.0f, 1.0f, 1);
 	g_graphicsEngine->addGfxEntity(m_reloadAnim);
 	m_gfxEntities.push_back(m_reloadAnim);

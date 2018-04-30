@@ -7,6 +7,7 @@
 using namespace rapidjson;
 
 bool StringManager::loadLanguage(TLanguage language) {
+	m_texts.clear();
 	char* filename;
 	switch (language) {
 		case EEnglish:
@@ -37,5 +38,9 @@ bool StringManager::loadLanguage(TLanguage language) {
 }
 
 std::string StringManager::getText(std::string label) {
-	return m_texts[label];
+	std::string convertedText = label;
+	if (m_texts.count(label)) {
+		convertedText = m_texts[label];
+	}
+	return convertedText;
 }

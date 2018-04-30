@@ -318,7 +318,6 @@ private:
 	Text*   m_life;
 	Text*   m_score;
 	Text*   m_ammo;
-	Text*   m_fps;
 	Sprite* m_target;
 
 	//ver si cambiar a Renderable
