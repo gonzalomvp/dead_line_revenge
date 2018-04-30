@@ -30,40 +30,26 @@ int Main(void) {
 	g_settings.sfx = true;
 	g_settings.language = EEnglish;
 
-	// Init Menu Scene
-	g_appManager->switchMode(AppMode::EMENU);
-
 	// Load default language
 	g_stringManager->loadLanguage(g_settings.language);
+
+	// Init Menu Scene
+	g_appManager->switchMode(AppMode::EMENU);
 
 	//Set Background
 	Sprite background(g_graphicsEngine->getTexture("data/background4.png"), vmake(SCR_WIDTH * 0.5f, SCR_HEIGHT * 0.5f), vmake(SCR_WIDTH, SCR_HEIGHT), 0.0f, 1.0f, 3);
 	g_graphicsEngine->addGfxEntity(&background);
-
-	Text* fps = new Text("", vmake(600, 10), 1);
-	g_graphicsEngine->addGfxEntity(fps);
 	
-	double deltaTime = 0;
-	int frameCount = 0;
-	/* initialize random seed: */
 	clock_t beginTime = clock();
-	srand(beginTime);
 	clock_t endTime;
-	int i = 30;
-
 	
+	// Random seed
+	srand(beginTime);
 	while (!SYS_GottaQuit()) {
-		--i;
-		endTime = clock();
-
 		// Prepared for deltaTime but not used yet
+		endTime = clock();
 		float deltaTime = static_cast<float>(endTime - beginTime);
-		float sleepTime = 17 - deltaTime;
 		beginTime = endTime;
-		if (i == 0) {
-			i = 30;
-			fps->setText(std::to_string((int)(1.0f / (deltaTime / 1000))));
-		}
 
 		g_appManager->applyMode();
 		g_appManager->processInput();
