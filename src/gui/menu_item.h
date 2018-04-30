@@ -1,13 +1,6 @@
 #pragma once
 
-#include "../common/stdafx.h"
-#include "../common/sys.h"
-#include "../common/core.h"
-#include "../common/font.h"
-#include "../globals.h"
 #include "../engine/graphics_engine.h"
-
-#include <vector>
 
 class MenuItem {
 public:

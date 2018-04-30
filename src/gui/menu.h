@@ -1,14 +1,41 @@
 #pragma once
 
 #include "gui.h"
-#include <vector>
 #include <map>
 
-class MenuItem;
 class Text;
 
 //=============================================================================
-// Component Menu
+// MenuItem class
+//=============================================================================
+class MenuItem {
+public:
+	MenuItem(std::string name, std::string text, const vec2& pos) : m_name(name), m_text(text), m_pos(pos), m_hasFocus(false), m_selectedOption(0) {}
+	~MenuItem();
+
+	void init();
+	void activate();
+	void deactivate();
+	void run();
+	void nextOption();
+	
+	void        addOption(std::string option) { m_options.push_back(option); m_selectedOption = 0; }
+	std::string getName  () const             { return m_name; }
+	void        setFocus (bool hasFocus)      { m_hasFocus = hasFocus; }
+
+private:
+	std::string              m_name;
+	std::string              m_text;
+	vec2                     m_pos;
+	Text*                    m_gfxText;
+	bool                     m_hasFocus;
+	size_t                   m_selectedOption;
+	std::vector<std::string> m_options;
+	
+};
+
+//=============================================================================
+// Menu class
 //=============================================================================
 class Menu : public Control {
 
@@ -44,7 +71,7 @@ private:
 };
 
 //=============================================================================
-// Component MenuManager
+// MenuManager class
 //=============================================================================
 class MenuManager : public Menu::IListener {
 public:

@@ -32,7 +32,6 @@
     <ClInclude Include="..\src\globals.h" />
     <ClInclude Include="..\src\gui\gui.h" />
     <ClInclude Include="..\src\gui\menu.h" />
-    <ClInclude Include="..\src\gui\menu_item.h" />
     <ClInclude Include="..\src\gui\string_manager.h" />
     <ClInclude Include="..\src\input\input_manager.h" />
     <ClInclude Include="..\src\scenes\app_manager.h" />
@@ -51,7 +50,6 @@
     <ClCompile Include="..\src\entities\entity.cpp" />
     <ClCompile Include="..\src\gui\gui.cpp" />
     <ClCompile Include="..\src\gui\menu.cpp" />
-    <ClCompile Include="..\src\gui\menu_item.cpp" />
     <ClCompile Include="..\src\gui\string_manager.cpp" />
     <ClCompile Include="..\src\input\input_manager.cpp" />
     <ClCompile Include="..\src\main.cpp" />

@@ -45,9 +45,6 @@
     <ClInclude Include="..\src\gui\gui.h">
       <Filter>src\gui</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\gui\menu_item.h">
-      <Filter>src\gui</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\gui\string_manager.h">
       <Filter>src\gui</Filter>
     </ClInclude>
@@ -102,9 +99,6 @@
       <Filter>src\input</Filter>
     </ClCompile>
     <ClCompile Include="..\src\gui\gui.cpp">
-      <Filter>src\gui</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\gui\menu_item.cpp">
       <Filter>src\gui</Filter>
     </ClCompile>
     <ClCompile Include="..\src\gui\string_manager.cpp">

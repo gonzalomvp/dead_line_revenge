@@ -5,10 +5,52 @@
 #include "../gui/string_manager.h"
 #include "../scenes/app_manager.h"
 #include "../scenes/world.h"
-#include "menu_item.h"
+
 
 //=============================================================================
-// Component Menu
+// MenuItem class
+//=============================================================================
+MenuItem::~MenuItem() {
+	g_graphicsEngine->removeGfxEntity(m_gfxText);
+	delete m_gfxText;
+}
+
+void MenuItem::init() {
+	m_gfxText = new Text(m_text, vmake(0.0f, 0.0f), 1);
+	m_gfxText->deactivate();
+	g_graphicsEngine->addGfxEntity(m_gfxText);
+}
+
+void MenuItem::activate() {
+	m_gfxText->activate();
+}
+
+void MenuItem::deactivate() {
+	m_gfxText->deactivate();
+}
+
+void MenuItem::run() {
+	std::string textToDraw = g_stringManager->getText(m_text);
+	if (m_options.size() > 0) {
+		textToDraw += " " + g_stringManager->getText(m_options[m_selectedOption]);
+	}
+	if (m_hasFocus) {
+		textToDraw = "- " + textToDraw + " -";
+	}
+	m_gfxText->setPos(vmake(m_pos.x - (textToDraw.length() / 2.0f * 16), m_pos.y));
+	m_gfxText->setText(textToDraw.c_str());
+}
+
+void MenuItem::nextOption() {
+	if (m_options.size() > 0) {
+		++m_selectedOption;
+		if (m_selectedOption >= m_options.size())
+			m_selectedOption = 0;
+	}
+}
+
+//=============================================================================
+// Menu class
 //=============================================================================
 Menu::~Menu() {
 	g_inputManager->unregisterEvent(this, IInputManager::TEventType::EKeyDown);
@@ -115,7 +157,7 @@ void Menu::selectNextItem() {
 }
 
 //=============================================================================
-// Component MenuManager
+// MenuManager class
 //=============================================================================
 MenuManager::~MenuManager() {
 	for (auto itMenus = m_menus.begin(); itMenus != m_menus.end(); ++itMenus) {
@@ -230,13 +272,13 @@ Menu* MenuManager::getMenu(TMenu menu) {
 void MenuManager::createMainMenu() {
 	Menu* menu = new Menu("MAIN_MENU", vmake(0.0f, 0.0f), vmake(0.0f, 0.0f), false);
 	MenuItem* menuItem;
-	menuItem = new MenuItem("PLAY_MENU", vmake(SCR_WIDTH / 2, SCR_HEIGHT * 0.6), "LTEXT_GUI_PLAY_MENU_ITEM");
+	menuItem = new MenuItem("PLAY_MENU", "LTEXT_GUI_PLAY_MENU_ITEM", vmake(SCR_WIDTH / 2, SCR_HEIGHT * 0.6));
 	menuItem->init();
 	menu->addMenuItem(menuItem);
-	menuItem = new MenuItem("OPTIONS_MENU", vmake(SCR_WIDTH / 2, SCR_HEIGHT * 0.5), "LTEXT_GUI_OPTIONS_MENU_ITEM");
+	menuItem = new MenuItem("OPTIONS_MENU", "LTEXT_GUI_OPTIONS_MENU_ITEM", vmake(SCR_WIDTH / 2, SCR_HEIGHT * 0.5));
 	menuItem->init();
 	menu->addMenuItem(menuItem);
-	menuItem = new MenuItem("EXIT", vmake(SCR_WIDTH / 2, SCR_HEIGHT * 0.4), "LTEXT_GUI_OPTIONS_EXIT_ITEM");
+	menuItem = new MenuItem("EXIT", "LTEXT_GUI_OPTIONS_EXIT_ITEM", vmake(SCR_WIDTH / 2, SCR_HEIGHT * 0.4));
 	menuItem->init();
 	menu->addMenuItem(menuItem);
 	m_menus[EMainMenu] = menu;
@@ -245,16 +287,16 @@ void MenuManager::createMainMenu() {
 void MenuManager::createPlayMenu() {
 	Menu* menu = new Menu("PLAY_MENU", vmake(0.0f, 0.0f), vmake(0.0f, 0.0f), false);
 	MenuItem* menuItem;
-	menuItem = new MenuItem("EASY", vmake(SCR_WIDTH / 2, SCR_HEIGHT * 0.6), "LTEXT_GUI_PLAY_EASY_ITEM");
+	menuItem = new MenuItem("EASY", "LTEXT_GUI_PLAY_EASY_ITEM", vmake(SCR_WIDTH / 2, SCR_HEIGHT * 0.6));
 	menuItem->init();
 	menu->addMenuItem(menuItem);
-	menuItem = new MenuItem("MEDIUM", vmake(SCR_WIDTH / 2, SCR_HEIGHT * 0.5), "LTEXT_GUI_PLAY_MEDIUM_ITEM");
+	menuItem = new MenuItem("MEDIUM", "LTEXT_GUI_PLAY_MEDIUM_ITEM", vmake(SCR_WIDTH / 2, SCR_HEIGHT * 0.5));
 	menuItem->init();
 	menu->addMenuItem(menuItem);
-	menuItem = new MenuItem("HARD", vmake(SCR_WIDTH / 2, SCR_HEIGHT * 0.4), "LTEXT_GUI_PLAY_HARD_ITEM");
+	menuItem = new MenuItem("HARD", "LTEXT_GUI_PLAY_HARD_ITEM", vmake(SCR_WIDTH / 2, SCR_HEIGHT * 0.4));
 	menuItem->init();
 	menu->addMenuItem(menuItem);
-	menuItem = new MenuItem("MAIN_MENU", vmake(SCR_WIDTH / 2, SCR_HEIGHT * 0.3), "LTEXT_GUI_BACK_MENU_ITEM");
+	menuItem = new MenuItem("MAIN_MENU", "LTEXT_GUI_BACK_MENU_ITEM", vmake(SCR_WIDTH / 2, SCR_HEIGHT * 0.3));
 	menuItem->init();
 	menu->addMenuItem(menuItem);
 	m_menus[EPlayMenu] = menu;
@@ -263,20 +305,20 @@ void MenuManager::createPlayMenu() {
 void MenuManager::createOptionsMenu() {
 	Menu* menu = new Menu("PLAY_MENU", vmake(0.0f, 0.0f), vmake(0.0f, 0.0f), false);
 	MenuItem* menuItem;
-	menuItem = new MenuItem("SETTINGS_MUSIC", vmake(SCR_WIDTH / 2, SCR_HEIGHT * 0.6), "LTEXT_GUI_MUSIC_MENU_ITEM");
+	menuItem = new MenuItem("SETTINGS_MUSIC", "LTEXT_GUI_MUSIC_MENU_ITEM", vmake(SCR_WIDTH / 2, SCR_HEIGHT * 0.6));
 	menuItem->init();
 	menuItem->addOption("LTEXT_GUI_MENU_ITEM_ON");
 	menuItem->addOption("LTEXT_GUI_MENU_ITEM_OFF");
 	menu->addMenuItem(menuItem);
-	menuItem = new MenuItem("SETTINGS_SFX", vmake(SCR_WIDTH / 2, SCR_HEIGHT * 0.5), "LTEXT_GUI_SFX_MENU_ITEM");
+	menuItem = new MenuItem("SETTINGS_SFX", "LTEXT_GUI_SFX_MENU_ITEM", vmake(SCR_WIDTH / 2, SCR_HEIGHT * 0.5));
 	menuItem->init();
 	menuItem->addOption("LTEXT_GUI_MENU_ITEM_ON");
 	menuItem->addOption("LTEXT_GUI_MENU_ITEM_OFF");
 	menu->addMenuItem(menuItem);
-	menuItem = new MenuItem("SETTINGS_LANGUAGE", vmake(SCR_WIDTH / 2, SCR_HEIGHT * 0.4), "LTEXT_GUI_LANGUAGE_MENU_ITEM");
+	menuItem = new MenuItem("SETTINGS_LANGUAGE", "LTEXT_GUI_LANGUAGE_MENU_ITEM", vmake(SCR_WIDTH / 2, SCR_HEIGHT * 0.4));
 	menuItem->init();
 	menu->addMenuItem(menuItem);
-	menuItem = new MenuItem("MAIN_MENU", vmake(SCR_WIDTH / 2, SCR_HEIGHT * 0.3), "LTEXT_GUI_BACK_MENU_ITEM");
+	menuItem = new MenuItem("MAIN_MENU", "LTEXT_GUI_BACK_MENU_ITEM", vmake(SCR_WIDTH / 2, SCR_HEIGHT * 0.3));
 	menuItem->init();
 	menu->addMenuItem(menuItem);
 	m_menus[EOptionsMenu] = menu;
@@ -285,10 +327,10 @@ void MenuManager::createOptionsMenu() {
 void MenuManager::createPauseMenu() {
 	Menu* menu = new Menu("PAUSE_MENU", vmake(0.0f, 0.0f), vmake(0.0f, 0.0f), false);
 	MenuItem* menuItem;
-	menuItem = new MenuItem("RESUME", vmake(SCR_WIDTH / 2, SCR_HEIGHT * 0.6), "LTEXT_GUI_RESUME_MENU_ITEM");
+	menuItem = new MenuItem("RESUME", "LTEXT_GUI_RESUME_MENU_ITEM", vmake(SCR_WIDTH / 2, SCR_HEIGHT * 0.6));
 	menuItem->init();
 	menu->addMenuItem(menuItem);
-	menuItem = new MenuItem("ABANDON", vmake(SCR_WIDTH / 2, SCR_HEIGHT * 0.5), "LTEXT_GUI_ABANDON_MENU_ITEM");
+	menuItem = new MenuItem("ABANDON", "LTEXT_GUI_ABANDON_MENU_ITEM", vmake(SCR_WIDTH / 2, SCR_HEIGHT * 0.5));
 	menuItem->init();
 	menu->addMenuItem(menuItem);
 	m_menus[EPauseMenu] = menu;
@@ -298,10 +340,10 @@ void MenuManager::createGameOverMenu() {
 	Menu* menu = new Menu("GAMEOVER_MENU", vmake(0.0f, 0.0f), vmake(0.0f, 0.0f), false);
 	menu->setTitle("GAME OVER");
 	MenuItem* menuItem;
-	menuItem = new MenuItem("RETRY", vmake(SCR_WIDTH / 2, SCR_HEIGHT * 0.6), "LTEXT_GUI_RETRY_MENU_ITEM");
+	menuItem = new MenuItem("RETRY", "LTEXT_GUI_RETRY_MENU_ITEM", vmake(SCR_WIDTH / 2, SCR_HEIGHT * 0.6));
 	menuItem->init();
 	menu->addMenuItem(menuItem);
-	menuItem = new MenuItem("MAIN_MENU", vmake(SCR_WIDTH / 2, SCR_HEIGHT * 0.5), "LTEXT_GUI_ABANDON_MENU_ITEM");
+	menuItem = new MenuItem("MAIN_MENU", "LTEXT_GUI_ABANDON_MENU_ITEM", vmake(SCR_WIDTH / 2, SCR_HEIGHT * 0.5));
 	menuItem->init();
 	menu->addMenuItem(menuItem);
 	m_menus[EGameOverMenu] = menu;
