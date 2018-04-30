@@ -76,9 +76,9 @@ private:
 	int      m_maxEnemies;
 
 	// Config loaded from file
-	std::map<Component::TWeapon, Component::TWeaponData> m_weaponData;
-	std::map<Entity::TType, TEnemyData>                  m_enemyData;
-	std::vector<vec2>                                    m_spawnData;
+	std::map<ComponentWeapon::TWeapon, ComponentWeapon::TWeaponData> m_weaponData;
+	std::map<Entity::TType, TEnemyData>                              m_enemyData;
+	std::vector<vec2>                                                m_spawnData;
 
 	// Timers
 	int m_pickupSpawnTimer;

@@ -5,8 +5,8 @@
 #define SHOTGUN_DISP_ANGLE 15.0f
 
 class  Entity;
-struct Message;
 class  GfxEntity;
+struct Message;
 class  Sprite;
 class  Text;
 
@@ -15,37 +15,6 @@ class  Text;
 //=============================================================================
 class Component {
 public:
-	enum TWeapon {
-		ERevolver,
-		EMachinegun,
-		EShotgun,
-		EMines,
-		EC4,
-		ERocketLauncher,
-		ENuclearBomb,
-		EWeaponCount = 7
-	};
-
-	struct TWeaponData {
-		TWeapon     type;
-		int         fireRate;
-		int         reloadTime;
-		int         capacity;
-		float       bulletSpeed;
-		int         bulletDamage;
-		int         bulletLife;
-		int         bulletRange;
-		bool        isAutomatic;
-		bool        isExplossive;
-		bool        isBouncy;
-		std::string soundFile;
-	};
-
-	enum TColliderType {
-		ENoneCollider,
-		ERectCollider,
-		ECircleCollider,
-	};
 
 	virtual ~Component() {}
 
@@ -160,6 +129,32 @@ public:
 //=============================================================================
 class ComponentWeapon : public Component {
 public:
+	enum TWeapon {
+		ERevolver,
+		EMachinegun,
+		EShotgun,
+		EMines,
+		EC4,
+		ERocketLauncher,
+		ENuclearBomb,
+		EWeaponCount = 7
+	};
+
+	struct TWeaponData {
+		TWeapon     type;
+		int         fireRate;
+		int         reloadTime;
+		int         capacity;
+		float       bulletSpeed;
+		int         bulletDamage;
+		int         bulletLife;
+		int         bulletRange;
+		bool        isAutomatic;
+		bool        isExplossive;
+		bool        isBouncy;
+		std::string soundFile;
+	};
+
 	ComponentWeapon(Entity* owner, TWeaponData weaponData);
 
 	virtual void init          ();
@@ -241,9 +236,15 @@ private:
 //=============================================================================
 class ComponentCollider : public Component {
 public:
+	enum TColliderType {
+		ENoneCollider,
+		ERectCollider,
+		ECircleCollider,
+	};
+
 	enum TColliderChannel {
 		EPlayer       = 1 << 0,
-		EEnemyC        = 1 << 1,
+		EEnemyC       = 1 << 1,
 		EPlayerWeapon = 1 << 2,
 		EEnemyWeapon  = 1 << 3,
 		EBoundaries   = 1 << 4,
@@ -281,11 +282,11 @@ private:
 //=============================================================================
 class ComponentWeaponPickup : public Component {
 public:
-	ComponentWeaponPickup(Entity* owner, TWeaponData weaponData) : Component(owner), m_weaponData(weaponData) {}
+	ComponentWeaponPickup(Entity* owner, ComponentWeapon::TWeaponData weaponData) : Component(owner), m_weaponData(weaponData) {}
 	
 	virtual void receiveMessage(Message* message);
 private:
-	TWeaponData m_weaponData;
+	ComponentWeapon::TWeaponData m_weaponData;
 };
 
 //=============================================================================

@@ -169,7 +169,7 @@ Entity* World::createPlayer(vec2 pos) {
 	playerControl->init();
 	ComponentMove* movement = new ComponentMove(player, vmake(0.0f, 0.0f), m_playerSpeed, false, false);
 	movement->init();
-	ComponentWeapon* weapon = new ComponentWeapon(player, m_weaponData[Component::ERevolver]);
+	ComponentWeapon* weapon = new ComponentWeapon(player, m_weaponData[ComponentWeapon::ERevolver]);
 	weapon->init();
 	ComponentCollider* collider = new ComponentCollider(player, ComponentCollider::ERectCollider, -1, ComponentCollider::EPlayer, ComponentCollider::EEnemyC | ComponentCollider::EEnemyWeapon);
 	collider->init();
@@ -261,7 +261,7 @@ Entity* World::createEnemy(vec2 pos, TEnemyData enemyData, Entity* player) {
 
 	// Range and Turrets have a fire weapon
 	if (enemyData.type == Entity::EEnemyRange || enemyData.type == Entity::ETurret) {
-		Component::TWeaponData weaponData;
+		ComponentWeapon::TWeaponData weaponData;
 		weaponData.fireRate     = enemyData.fireRate;
 		weaponData.reloadTime   = 1;
 		weaponData.capacity     = 1;
@@ -311,7 +311,7 @@ Entity* World::createEnemy(vec2 pos, TEnemyData enemyData, vec2 moveDir, std::ve
 
 Entity* World::createWeaponPickup() {
 	// Calculate a random weapon type
-	Component::TWeapon type = static_cast<Component::TWeapon>(rand() % Component::EWeaponCount);
+	ComponentWeapon::TWeapon type = static_cast<ComponentWeapon::TWeapon>(rand() % ComponentWeapon::EWeaponCount);
 	// Calculate a random spawn position
 	vec2 randomPos = vmake(CORE_FRand(0.0, WORLD_WIDTH), CORE_FRand(80, WORLD_HEIGHT - 80));
 	
@@ -362,8 +362,8 @@ bool World::loadConfig() {
 	// Load weapons general configuration
 	const Value& weapons = doc["weapons"];
 	for (SizeType i = 0; i < weapons.Size(); i++) {
-		Component::TWeaponData weapon;
-		weapon.type               = static_cast<Component::TWeapon>(weapons[i]["id"].GetInt());
+		ComponentWeapon::TWeaponData weapon;
+		weapon.type               = static_cast<ComponentWeapon::TWeapon>(weapons[i]["id"].GetInt());
 		weapon.fireRate           = weapons[i]["fireRate"].GetInt();
 		weapon.reloadTime         = weapons[i]["reloadTime"].GetInt();
 		weapon.capacity           = weapons[i]["capacity"].GetInt();

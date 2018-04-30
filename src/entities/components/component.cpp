@@ -362,6 +362,7 @@ void ComponentWeapon::run(float deltaTime) {
 		++m_reloadTimer;
 		if (m_reloadTimer == m_weaponData.reloadTime) {
 			m_currentBullets = m_weaponData.capacity;
+			m_isFiring       = false;
 		}
 	}
 
@@ -429,6 +430,7 @@ void ComponentWeapon::run(float deltaTime) {
 		}
 
 		MessageFire messageFire;
+		messageFire.isFiring = m_isFiring;
 		messageFire.isFireDone = true;
 		m_owner->receiveMessage(&messageFire);
 	}
@@ -771,25 +773,25 @@ void ComponentWeaponPickup::receiveMessage(Message* message) {
 		std::string hudMessage = g_stringManager->getText("LTEXT_GUI_PICKUP_MESSAGE");
 		switch (m_weaponData.type)
 		{
-			case ERevolver:
+			case ComponentWeapon::ERevolver:
 				hudMessage += g_stringManager->getText("LTEXT_GUI_REVOLVER_MESSAGE");
 				break;
-			case EMachinegun:
+			case ComponentWeapon::EMachinegun:
 				hudMessage += g_stringManager->getText("LTEXT_GUI_MACHINEGUN_MESSAGE");
 				break;
-			case EShotgun:
+			case ComponentWeapon::EShotgun:
 				hudMessage += g_stringManager->getText("LTEXT_GUI_SHOTGUN_MESSAGE");
 				break;
-			case EMines:
+			case ComponentWeapon::EMines:
 				hudMessage += g_stringManager->getText("LTEXT_GUI_MINES_MESSAGE");
 				break;
-			case EC4:
+			case ComponentWeapon::EC4:
 				hudMessage += g_stringManager->getText("LTEXT_GUI_C4_MESSAGE");
 				break;
-			case ERocketLauncher:
+			case ComponentWeapon::ERocketLauncher:
 				hudMessage += g_stringManager->getText("LTEXT_GUI_ROCKETLAUNCHER_MESSAGE");
 				break;
-			case ENuclearBomb:
+			case ComponentWeapon::ENuclearBomb:
 				hudMessage += g_stringManager->getText("LTEXT_GUI_NUCLEAR_MESSAGE");
 				break;
 		}

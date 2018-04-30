@@ -46,19 +46,19 @@ struct MessageAmmoInfo : public Message {
 };
 
 struct MessageCheckCollision : public Message {
-	Component::TColliderType type;
-	vec2                     center                    = vmake(0.0f, 0.0f);
-	vec2                     size                      = vmake(0.0f, 0.0f);
-	int                      deltaLife                 = 0;
-	int                      collisionChannel          = 0;
-	int                      collisionChannelsResponse = 0;
-	Entity*                  other                     = nullptr;
-	bool                     overlap                   = false;
-	vec2                     bounceDirection           = vmake(0.0f, 0.0f);
+	ComponentCollider::TColliderType type;
+	vec2                             center                    = vmake(0.0f, 0.0f);
+	vec2                             size                      = vmake(0.0f, 0.0f);
+	int                              deltaLife                 = 0;
+	int                              collisionChannel          = 0;
+	int                              collisionChannelsResponse = 0;
+	Entity*                          other                     = nullptr;
+	bool                             overlap                   = false;
+	vec2                             bounceDirection           = vmake(0.0f, 0.0f);
 };
 
 struct MessageWeaponChange : public Message {
-	Component::TWeaponData weaponData;
+	ComponentWeapon::TWeaponData weaponData;
 };
 
 struct MessageDestroy : public Message {
