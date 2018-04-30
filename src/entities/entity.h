@@ -19,7 +19,7 @@ public:
 		EHUDMessage,
 	};
 
-	Entity(const TType& type) : m_type(type) {}
+	Entity(TType type) : m_type(type) {}
 	~Entity();
 
 	void  activate  ();

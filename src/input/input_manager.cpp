@@ -1,11 +1,5 @@
 #include "../common/stdafx.h"
-#include "../common/sys.h"
-#include "../common/core.h"
-#include "../common/font.h"
-#include "../globals.h"
 #include "input_manager.h"
-#include "../scenes/app_manager.h"
-#include "../scenes/world.h"
 
 //=============================================================================
 // InputManager class
@@ -22,10 +16,6 @@ void InputManager::registerEvent(IListener* listener, TEventType eventType) {
 }
 
 void InputManager::unregisterEvent(IListener* listener, TEventType eventType) {
-	//chequear
-	//if (m_listenersMap[eventType].size()>=0) {
-	//	m_listenersMap[eventType].erase(std::find(m_listenersMap[eventType].begin(), m_listenersMap[eventType].end(), listener));
-	//}
 	for (auto itListener = m_listenersMap[eventType].begin(); itListener != m_listenersMap[eventType].end(); ++itListener) {
 		if (*itListener == listener) {
 			m_listenersMap[eventType].erase(itListener);
@@ -41,6 +31,7 @@ void InputManager::addEvent(Event* event) {
 void InputManager::processInput() {
 	processKeyboard();
 	processMouse();
+
 	// Notify to the listeners
 	for (size_t i = 0; i < m_events.size(); ++i) {
 		for (size_t j = 0; j < m_listenersMap[m_events[i]->getType()].size(); ++j) {

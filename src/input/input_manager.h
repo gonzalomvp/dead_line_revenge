@@ -1,5 +1,5 @@
 #pragma once
-#include <vector>
+
 #include <map>
 
 //=============================================================================
@@ -40,12 +40,11 @@ public:
 
 	class MouseEvent : public Event {
 	public:
-
 		MouseEvent(TEventType type, int button, const vec2& pos) : Event(type), m_button(button), m_pos(pos) {}
 
-		vec2 getPos   () const          { return m_pos; };
-		void setPos   (const vec2& pos) { m_pos = pos; };
-		int  getButton() const          { return m_button; };
+		vec2 getPos   () const          { return m_pos;      };
+		void setPos   (const vec2& pos) { m_pos = pos;       };
+		int  getButton() const          { return m_button;   };
 		void setButton(int button)      { m_button = button; };
 	private:
 		vec2 m_pos;
@@ -59,8 +58,8 @@ public:
 
 	virtual void registerEvent  (IListener*, TEventType eventType) = 0;
 	virtual void unregisterEvent(IListener*, TEventType eventType) = 0;
-	virtual void addEvent       (Event* event) = 0;
-	virtual void processInput   () = 0;
+	virtual void addEvent       (Event* event)                     = 0;
+	virtual void processInput   ()                                 = 0;
 };
 
 //=============================================================================
@@ -74,11 +73,10 @@ public:
 	virtual void unregisterEvent(IListener*, TEventType eventType);
 	virtual void addEvent       (Event* event);
 	virtual void processInput   ();
-
 private:
-	void processKeyboard();
-	void processMouse();
-	void checkKeyState(int key);
+	void processKeyboard      ();
+	void processMouse         ();
+	void checkKeyState        (int key);
 	void checkMouseButtonState(int button, const vec2& mousePos);
 
 	std::vector<Event*>                           m_events;
