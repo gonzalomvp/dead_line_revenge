@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../input/input_manager.h"
+#include"../entities/components/component.h"
 #include "../entities/entity.h"
 
 #define WORLD_WIDTH  640

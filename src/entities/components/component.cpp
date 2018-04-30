@@ -22,11 +22,6 @@ void Component::init() {
 	}
 }
 
-void Component::destroy() {
-	deactivate();
-	m_owner->removeComponent(this);
-}
-
 void Component::activate() {
 	m_isActive = true;
 }

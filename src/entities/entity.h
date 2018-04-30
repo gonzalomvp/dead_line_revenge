@@ -1,7 +1,6 @@
 #pragma once
 
-#include "components/component.h"
-
+class  Component;
 struct Message;
 
 class Entity {
@@ -20,21 +19,17 @@ public:
 		EHUDMessage,
 	};
 
-	Entity(TType type) : m_type(type) {}
+	Entity(const TType& type) : m_type(type) {}
 	~Entity();
 
-	void activate();
-	void deactivate();
-	TType getType() { return m_type; }
+	void  activate  ();
+	void  deactivate();
+	TType getType   () const { return m_type; }
 
-	void run(float deltaTime);
-	void receiveMessage(Message* message);
-	void addComponent(Component* component);
-	void removeComponent(Component* component) {}
-
-	std::vector<Component*> m_components;
+	void run            (float deltaTime);
+	void receiveMessage (Message* message);
+	void addComponent   (Component* component);
 private:
-	TType m_type;
+	TType                   m_type;
+	std::vector<Component*> m_components;
 };
-
-// Game utils

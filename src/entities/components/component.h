@@ -50,7 +50,6 @@ public:
 	virtual ~Component() {}
 
 	virtual void init          ();
-	virtual void destroy       ();
 	virtual void activate      ();
 	virtual void deactivate    ();
 	virtual void run           (float deltaTime);
