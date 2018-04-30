@@ -14,10 +14,6 @@ void AppModeMenu::init() {
 	g_menuManager->activateMenu(MenuManager::EMainMenu);
 }
 
-AppModeMenu::~AppModeMenu() {
-	g_menuManager->deactivateMenu();
-}
-
 void AppModeMenu::processInput() const {
 	g_inputManager->processInput();
 }
@@ -34,13 +30,13 @@ void AppModeMenu::render() const {
 // AppModeGame class
 //=============================================================================
 void AppModeGame::init() {
+	g_menuManager->deactivateMenu();
 	g_world = new World(m_level);
 	g_world->init();
 	g_world->loadLevel();
 }
 
 AppModeGame::~AppModeGame() {
-	g_menuManager->deactivateMenu();
 	delete g_world;
 }
 

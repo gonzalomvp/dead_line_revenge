@@ -55,6 +55,8 @@ int Main(void) {
 	while (!SYS_GottaQuit()) {
 		--i;
 		endTime = clock();
+
+		// Prepared for deltaTime but not used yet
 		float deltaTime = static_cast<float>(endTime - beginTime);
 		float sleepTime = 17 - deltaTime;
 		beginTime = endTime;
@@ -72,12 +74,20 @@ int Main(void) {
 		SYS_Pump();
 		SYS_Sleep(17);
 	}
-	delete g_graphicsEngine;
-	delete g_soundEngine;
-	delete g_inputManager;
-	delete g_appManager;
-	delete g_stringManager;
-	delete g_menuManager;
 
+	// Free memory
+	delete g_appManager;
+	g_appManager = nullptr;
+	delete g_menuManager;
+	g_menuManager = nullptr;
+	delete g_graphicsEngine;
+	g_graphicsEngine = nullptr;
+	delete g_soundEngine;
+	g_soundEngine = nullptr;
+	delete g_inputManager;
+	g_inputManager = nullptr;
+	delete g_stringManager;
+	g_stringManager = nullptr;
+	
 	return 0;
 }

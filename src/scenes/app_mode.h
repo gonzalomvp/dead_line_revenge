@@ -25,7 +25,6 @@ public:
 //=============================================================================
 class AppModeMenu : public AppMode {
 public:
-	virtual ~AppModeMenu();
 
 	virtual void  init        ();
 	virtual void  processInput()                const;

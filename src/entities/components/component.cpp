@@ -211,7 +211,7 @@ ComponentRenderable::ComponentRenderable(Entity* owner, const char* texture, flo
 }
 
 ComponentRenderable::~ComponentRenderable() {
-	g_graphicsEngine->removeGfxEntity(m_sprite);
+	delete m_sprite;
 }
 
 void ComponentRenderable::init() {
@@ -281,10 +281,12 @@ void ComponentPlayerController::init() {
 }
 
 ComponentPlayerController::~ComponentPlayerController() {
-	g_inputManager->unregisterEvent(this, IInputManager::TEventType::EKeyHold);
-	g_inputManager->unregisterEvent(this, IInputManager::TEventType::EMouseButtonDown);
-	g_inputManager->unregisterEvent(this, IInputManager::TEventType::EMouseButtonUp);
-	g_inputManager->unregisterEvent(this, IInputManager::TEventType::EMouseButtonHold);
+	if (g_inputManager) {
+		g_inputManager->unregisterEvent(this, IInputManager::TEventType::EKeyHold);
+		g_inputManager->unregisterEvent(this, IInputManager::TEventType::EMouseButtonDown);
+		g_inputManager->unregisterEvent(this, IInputManager::TEventType::EMouseButtonUp);
+		g_inputManager->unregisterEvent(this, IInputManager::TEventType::EMouseButtonHold);
+	}
 }
 
 bool ComponentPlayerController::onEvent(const IInputManager::Event& event) {
@@ -817,7 +819,7 @@ void ComponentWeaponPickup::receiveMessage(Message* message) {
 // ComponentHUDMessage class
 //=============================================================================
 ComponentHUDMessage::~ComponentHUDMessage() {
-	g_graphicsEngine->removeGfxEntity(m_message);
+	delete m_message;
 }
 
 void ComponentHUDMessage::init() {
@@ -830,40 +832,52 @@ void ComponentHUDMessage::init() {
 // ComponentHUD class
 //=============================================================================
 ComponentHUD::~ComponentHUD() {
-	g_graphicsEngine->removeGfxEntity(m_life);
-	g_graphicsEngine->removeGfxEntity(m_score);
-	g_graphicsEngine->removeGfxEntity(m_ammo);
-	g_graphicsEngine->removeGfxEntity(m_fps);
-	g_graphicsEngine->removeGfxEntity(m_target);
-	g_graphicsEngine->removeGfxEntity(m_reloadAnim);
-
-	g_inputManager->unregisterEvent(this, IInputManager::TEventType::EMouseMove);
+	for (size_t i = 0; i < m_gfxEntities.size(); ++i) {
+		delete m_gfxEntities[i];
+	}
+	if (g_inputManager) {
+		g_inputManager->unregisterEvent(this, IInputManager::TEventType::EMouseMove);
+	}
 }
 
 void ComponentHUD::init() {
 	Component::init();
+	
+	// Titles
+	Text* title = new Text("LIFE", vmake(20, 450), 1);
+	g_graphicsEngine->addGfxEntity(title);
+	m_gfxEntities.push_back(title);
+	title = new Text("SCORE", vmake(110, 450), 1);
+	g_graphicsEngine->addGfxEntity(title);
+	m_gfxEntities.push_back(title);
+	title = new Text("AMMO", vmake(210, 450), 1);
+	g_graphicsEngine->addGfxEntity(title);
+	m_gfxEntities.push_back(title);
+
 	m_life = new Text("", vmake(20, 430), 1);
 	g_graphicsEngine->addGfxEntity(m_life);
-
-	g_graphicsEngine->addGfxEntity(new Text("LIFE", vmake(20, 450), 1));
-	g_graphicsEngine->addGfxEntity(new Text("SCORE", vmake(110, 450), 1));
-	g_graphicsEngine->addGfxEntity(new Text("AMMO", vmake(210, 450), 1));
+	m_gfxEntities.push_back(m_life);
 
 	m_score = new Text("| 120", vmake(110, 430), 1);
 	g_graphicsEngine->addGfxEntity(m_score);
+	m_gfxEntities.push_back(m_score);
 
 	m_ammo = new Text("| 6/-", vmake(210, 430), 1);
 	g_graphicsEngine->addGfxEntity(m_ammo);
+	m_gfxEntities.push_back(m_ammo);
 
 	m_fps = new Text("", vmake(300, 300), 1);
 	g_graphicsEngine->addGfxEntity(m_fps);
+	m_gfxEntities.push_back(m_fps);
 
 	m_target = new Sprite(g_graphicsEngine->getTexture("data/target.png"), vmake(0.0f, 0.0f), vmake(0.0f, 0.0f), 0.0f, 1.0f, 1);
 	m_target->setSize(vmake(36, 36));
 	g_graphicsEngine->addGfxEntity(m_target);
+	m_gfxEntities.push_back(m_target);
 
 	m_reloadAnim = new Sprite(g_graphicsEngine->getTexture("data/energy-bar-fill.png"), vmake(0.0f, 0.0f), vmake(0.0f, 0.0f), 0.0f, 1.0f, 1);
 	g_graphicsEngine->addGfxEntity(m_reloadAnim);
+	m_gfxEntities.push_back(m_reloadAnim);
 
 	g_inputManager->registerEvent(this, IInputManager::TEventType::EMouseMove);
 }

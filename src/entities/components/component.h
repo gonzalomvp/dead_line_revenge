@@ -6,6 +6,7 @@
 
 class  Entity;
 struct Message;
+class  GfxEntity;
 class  Sprite;
 class  Text;
 
@@ -322,6 +323,7 @@ private:
 
 	//ver si cambiar a Renderable
 	Sprite* m_reloadAnim;
+	std::vector<GfxEntity*> m_gfxEntities;
 };
 
 // Collision check utils

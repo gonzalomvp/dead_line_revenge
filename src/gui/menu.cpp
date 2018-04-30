@@ -11,12 +11,11 @@
 // MenuItem class
 //=============================================================================
 MenuItem::~MenuItem() {
-	g_graphicsEngine->removeGfxEntity(m_gfxText);
 	delete m_gfxText;
 }
 
 void MenuItem::init() {
-	m_gfxText = new Text(m_text, vmake(0.0f, 0.0f), 1);
+	m_gfxText = new Text(m_text, m_pos, 1);
 	m_gfxText->deactivate();
 	g_graphicsEngine->addGfxEntity(m_gfxText);
 }
@@ -53,7 +52,9 @@ void MenuItem::nextOption() {
 // Menu class
 //=============================================================================
 Menu::~Menu() {
-	g_inputManager->unregisterEvent(this, IInputManager::TEventType::EKeyDown);
+	if (g_inputManager) {
+		g_inputManager->unregisterEvent(this, IInputManager::TEventType::EKeyDown);
+	}
 	for (auto itMenuItems = m_menuItems.begin(); itMenuItems != m_menuItems.end(); ++itMenuItems) {
 		delete *itMenuItems;
 	}

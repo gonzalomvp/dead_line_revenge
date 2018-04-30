@@ -1,15 +1,5 @@
 #pragma once
 
-enum TFaction {
-	EAllied,
-	EEnemy,
-};
-
-enum TLanguage {
-	EEnglish,
-	ESpanish,
-};
-
 class AppManager;
 class World;
 class GraphicsEngine;
@@ -17,6 +7,11 @@ class SoundEngine;
 class IInputManager;
 class StringManager;
 class MenuManager;
+
+enum TLanguage {
+	EEnglish,
+	ESpanish,
+};
 
 struct Settings {
 	bool music;

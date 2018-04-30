@@ -14,7 +14,9 @@ using namespace rapidjson;
 
 World::~World() {
 	unloadLevel();
-	g_inputManager->unregisterEvent(this, IInputManager::TEventType::EPause);
+	if (g_inputManager) {
+		g_inputManager->unregisterEvent(this, IInputManager::TEventType::EPause);
+	}
 }
 
 void World::init() {

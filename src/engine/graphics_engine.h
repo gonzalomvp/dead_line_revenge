@@ -28,6 +28,7 @@ private:
 class GfxEntity {
 public:
 	GfxEntity(vec2 pos, int priority) : m_pos(pos), m_priority(priority), m_isActive(true) {}
+	~GfxEntity();
 
 	void activate  ()     { m_isActive = true;  }
 	void deactivate()     { m_isActive = false; }
