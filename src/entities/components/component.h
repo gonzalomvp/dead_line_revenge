@@ -181,7 +181,6 @@ public:
 		m_fireTimer(m_weaponData.fireRate),
 		m_reloadTimer(m_weaponData.reloadTime) {}
 
-	virtual void init          ();
 	virtual void run           (float deltaTime);
 	virtual void receiveMessage(Message* message);
 private:

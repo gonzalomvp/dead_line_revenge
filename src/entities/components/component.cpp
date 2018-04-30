@@ -1,11 +1,12 @@
 #include "../../common/stdafx.h"
 #include "component.h"
+
+#include "../../engine/graphics_engine.h"
+#include "../../engine/sound_engine.h"
+#include "../../gui/string_manager.h"
+#include "../../scenes/world.h"
 #include "../entity.h"
 #include "../message.h"
-#include "../../scenes/world.h"
-#include "../../gui/string_manager.h"
-#include "../../engine/sound_engine.h"
-#include "../../engine/graphics_engine.h"
 
 #include <algorithm>
 
@@ -266,7 +267,7 @@ ComponentPlayerController::~ComponentPlayerController() {
 bool ComponentPlayerController::onEvent(const IInputManager::Event& event) {
 	if (!m_isActive)
 		return false;
-	//Revisar inputmanager
+
 	IInputManager::TEventType eventType = event.getType();
 	if (eventType == IInputManager::TEventType::EKeyHold) {
 		const IInputManager::KeyEvent keyEvent = *static_cast<const IInputManager::KeyEvent*>(&event);
@@ -290,14 +291,6 @@ bool ComponentPlayerController::onEvent(const IInputManager::Event& event) {
 				break;
 		}
 		if (vlen2(direction) != 0) {
-			/*MessageGetTransform msgGetTransform;
-			m_owner->receiveMessage(&msgGetTransform);
-
-			MessageSetTransform msgSetTransform;
-			msgSetTransform.pos = vadd(msgGetTransform.pos, vscale(vnorm(direction), m_speed));
-			msgSetTransform.size = msgGetTransform.size;
-			m_owner->receiveMessage(&msgSetTransform);*/
-
 			MessageAddMovement msgAddMovement;
 			msgAddMovement.dir = direction;
 			m_owner->receiveMessage(&msgAddMovement);
@@ -327,10 +320,6 @@ bool ComponentPlayerController::onEvent(const IInputManager::Event& event) {
 //=============================================================================
 // ComponentWeapon class
 //=============================================================================
-void ComponentWeapon::init() {
-	Component::init();
-}
-
 void ComponentWeapon::run(float deltaTime) {
 	Component::run(deltaTime);
 	if (!m_isActive)
@@ -367,8 +356,6 @@ void ComponentWeapon::run(float deltaTime) {
 		
 		MessageGetTransform messageGetTranform;
 		m_owner->receiveMessage(&messageGetTranform);
-		//MessageGetCollider msgGetCollider;
-		//m_owner->receiveMessage(&msgGetCollider);
 
 		switch (m_weaponData.type) {
 			case EShotgun: {
@@ -552,8 +539,6 @@ void ComponentAIEvade::run(float deltaTime) {
 }
 
 vec2 ComponentAIEvade::calculatIntersectionWithWall(const vec2& position, float angle) {
-	// Ver si se puede hacer simplemente analizando las coordenadas x, y de la posicion y las posiciones limites de las lineas WORLD_HEIGHT, WORLD_WIDTH, 0 ,0
-	// por ejemplo (WORLD_HEIGHT / componente y del movimiento) = cercania
 	vec2 moveDir = vunit(DEG2RAD(angle));
 	vec2 intersection1;
 	vec2 intersection2;
@@ -704,24 +689,6 @@ void ComponentCollider::receiveMessage(Message* message) {
 			m_owner->receiveMessage(&mgsChangeLife);
 		}
 	}
-	
-	//MessageGetCollider *msgCollider = dynamic_cast<MessageGetCollider*>(message);
-	//if (msgCollider) {
-	//	msgCollider->type      = m_type;
-	//	msgCollider->faction   = m_faction;
-	//	msgCollider->center    = m_center;
-	//	msgCollider->size      = m_size;
-	//	msgCollider->deltaLife = m_deltaLife;
-	//	msgCollider->collisionChannel = m_collisionChannel;
-	//}
-	//else {
-	//	MessageCollision *msgCollision = dynamic_cast<MessageCollision*>(message);
-	//	if (msgCollision && m_faction != ENeutral && msgCollision->faction != ENeutral) {
-	//		MessageChangeLife mgsChangeLife;
-	//		mgsChangeLife.deltaLife = msgCollision->deltaLife;
-	//		m_owner->receiveMessage(&mgsChangeLife);
-	//	}
-	//}
 }
 
 //=============================================================================
@@ -737,7 +704,6 @@ void ComponentPoints::receiveMessage(Message* message) {
 	}
 }
 
-//Revisar el tema colisiones y facciones
 //=============================================================================
 // ComponentWeaponPickup class
 //=============================================================================
@@ -892,7 +858,6 @@ bool ComponentHUD::onEvent(const IInputManager::Event& event) {
 			m_owner->receiveMessage(&messageAimDirection);
 		}
 	}
-
 	return true;
 }
 
