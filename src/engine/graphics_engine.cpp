@@ -27,10 +27,10 @@ GraphicsEngine::~GraphicsEngine() {
 	FONT_End();
 }
 
-GLuint GraphicsEngine::getTexture(const char* fileName) {
+GLuint GraphicsEngine::getTexture(const std::string& fileName) {
 	GLuint textureId = m_textures[fileName];
 	if (!textureId) {
-		textureId = CORE_LoadPNG(fileName, false);
+		textureId = CORE_LoadPNG(fileName.c_str(), false);
 		m_textures[fileName] = textureId;
 	}
 	return textureId;

@@ -83,7 +83,7 @@ void ComponentTransform::receiveMessage(Message* message) {
 			MessageCheckCollision msgCheckCollision;
 			msgCheckCollision.overlap = true;
 			msgCheckCollision.deltaLife = -1;
-			msgCheckCollision.collisionChannel = ComponentCollider::EBoundaries;
+			msgCheckCollision.collisionChannel = ComponentCollider::EBoundariesCollider;
 			msgCheckCollision.bounceDirection = bounceDirection;
 			m_owner->receiveMessage(&msgCheckCollision);
 		}
@@ -100,11 +100,6 @@ void ComponentTransform::receiveMessage(Message* message) {
 //=============================================================================
 // ComponentLife class
 //=============================================================================
-ComponentLife::ComponentLife(Entity* owner, int life, int timeToLive, int invencibleTime) : Component(owner), m_life(life), m_timeToLive(timeToLive), m_invencibleTime(invencibleTime) {
-	m_lifeTimer = 0;
-	m_invencibleTimer = 0;
-}
-
 void ComponentLife::run(float deltaTime) {
 	Component::run(deltaTime);
 	if (!m_isActive)
@@ -197,10 +192,6 @@ void ComponentMove::receiveMessage(Message* message) {
 //=============================================================================
 // ComponentRenderable class
 //=============================================================================
-ComponentRenderable::ComponentRenderable(Entity* owner, const char* texture, float angle, float alpha, int priority, int hitTime) : Component(owner), m_texture(texture), m_angle(angle), m_alpha(alpha), m_priority(priority), m_hitTime(hitTime) {
-	m_hitTimer = m_hitTime;
-}
-
 ComponentRenderable::~ComponentRenderable() {
 	delete m_sprite;
 }
@@ -231,7 +222,6 @@ void ComponentRenderable::run(float deltaTime) {
 			m_sprite->activate();
 		}
 		if (m_hitTimer == m_hitTime) {
-			//m_sprite->setTexture(g_graphicsEngine->getTexture(m_texture));
 			m_sprite->activate();
 		}
 	}
@@ -337,15 +327,6 @@ bool ComponentPlayerController::onEvent(const IInputManager::Event& event) {
 //=============================================================================
 // ComponentWeapon class
 //=============================================================================
-ComponentWeapon::ComponentWeapon(Entity* owner, TWeaponData weaponData) : Component(owner), m_weaponData(weaponData) {
-	m_remoteBullet   = nullptr;
-	m_aimDirection   = vmake(0.0f, 0.0f);
-	m_isFiring       = false;
-	m_currentBullets = m_weaponData.capacity;
-	m_fireTimer      = m_weaponData.fireRate;
-	m_reloadTimer    = m_weaponData.reloadTime;
-}
-
 void ComponentWeapon::init() {
 	Component::init();
 }
@@ -570,7 +551,7 @@ void ComponentAIEvade::run(float deltaTime) {
 	}
 }
 
-vec2 ComponentAIEvade::calculatIntersectionWithWall(vec2 position, float angle) {
+vec2 ComponentAIEvade::calculatIntersectionWithWall(const vec2& position, float angle) {
 	// Ver si se puede hacer simplemente analizando las coordenadas x, y de la posicion y las posiciones limites de las lineas WORLD_HEIGHT, WORLD_WIDTH, 0 ,0
 	// por ejemplo (WORLD_HEIGHT / componente y del movimiento) = cercania
 	vec2 moveDir = vunit(DEG2RAD(angle));

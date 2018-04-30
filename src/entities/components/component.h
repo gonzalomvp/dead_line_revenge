@@ -15,7 +15,6 @@ class  Text;
 //=============================================================================
 class Component {
 public:
-
 	virtual ~Component() {}
 
 	virtual void init          ();
@@ -25,10 +24,6 @@ public:
 	virtual void receiveMessage(Message* message) {}
 
 	void setActivationDelay(int activationDelay) { m_activationDelay = activationDelay; }
-	//revisar esto de = 0 {} //Sirve para hacer la clase abstracta y a la vez no forzar la implementacion del destructor por los hijos
-	//virtual ~Component() = 0 {}
-	
-	//void setOwner(Entity* owner) { m_owner = owner; }
 protected:
 	Component(Entity* owner) : m_owner(owner), m_isActive(false), m_activationDelay(0), m_activationTimer(0) {}
 
@@ -43,8 +38,11 @@ protected:
 //=============================================================================
 class ComponentTransform : public Component {
 public:
-	ComponentTransform(Entity* owner, const vec2& pos, const vec2& size)                           : Component(owner), m_pos(pos), m_size(size)                                 {}
-	ComponentTransform(Entity* owner, const vec2& pos, const vec2& size, const vec2 sizeIncrement) : Component(owner), m_pos(pos), m_size(size), m_sizeIncrement(sizeIncrement) {}
+	ComponentTransform(Entity* owner, const vec2& pos, const vec2& size, const vec2& sizeIncrement = vmake(0.0f, 0.0f)) :
+		Component(owner),
+		m_pos(pos),
+		m_size(size),
+		m_sizeIncrement(sizeIncrement) {}
 
 	virtual void run           (float deltaTime);
 	virtual void receiveMessage(Message* message);
@@ -59,7 +57,13 @@ private:
 //=============================================================================
 class ComponentLife: public Component {
 public:
-	ComponentLife(Entity* owner, int life, int timeToLive, int invencibleTime);
+	ComponentLife(Entity* owner, int life, int timeToLive, int invencibleTime) :
+		Component(owner), 
+		m_life(life), 
+		m_timeToLive(timeToLive), 
+		m_invencibleTime(invencibleTime), 
+		m_lifeTimer(0), 
+		m_invencibleTimer(0) {}
 
 	virtual void run           (float deltaTime);
 	virtual void receiveMessage(Message* message);
@@ -78,7 +82,12 @@ private:
 //=============================================================================
 class ComponentMove : public Component {
 public:
-	ComponentMove(Entity* owner, const vec2& direction, float speed, bool hasInertia, bool hasBounce) : Component(owner), m_direction(direction), m_speed(speed), m_hasInertia(hasInertia), m_hasBounce(hasBounce) {}
+	ComponentMove(Entity* owner, const vec2& direction, float speed, bool hasInertia, bool hasBounce) :
+		Component(owner), 
+		m_direction(direction),
+		m_speed(speed),
+		m_hasInertia(hasInertia), 
+		m_hasBounce(hasBounce) {}
 	
 	virtual void run           (float deltaTime);
 	virtual void receiveMessage(Message* message);
@@ -94,7 +103,14 @@ private:
 //=============================================================================
 class ComponentRenderable : public Component {
 public:
-	ComponentRenderable(Entity* owner, const char* texture, float angle, float alpha, int priority, int hitTime = 0);
+	ComponentRenderable(Entity* owner, const std::string& texture, float angle, float alpha, int priority, int hitTime = 0) :
+		Component(owner),
+		m_texture(texture),
+		m_angle(angle),
+		m_alpha(alpha),
+		m_priority(priority),
+		m_hitTime(hitTime),
+		m_hitTimer(hitTime) {}
 	~ComponentRenderable();
 
 	virtual void init          ();
@@ -102,7 +118,7 @@ public:
 	virtual void receiveMessage(Message* message);
 private:
 	Sprite*     m_sprite;
-	const char* m_texture;
+	std::string m_texture;
 	int         m_priority;
 	float       m_alpha;
 	float       m_angle;
@@ -155,13 +171,21 @@ public:
 		std::string soundFile;
 	};
 
-	ComponentWeapon(Entity* owner, TWeaponData weaponData);
+	ComponentWeapon(Entity* owner, TWeaponData weaponData) : 
+		Component(owner),
+		m_weaponData(weaponData),
+		m_remoteBullet(nullptr),
+		m_aimDirection(vmake(0.0f, 0.0f)),
+		m_isFiring(false),
+		m_currentBullets(m_weaponData.capacity),
+		m_fireTimer(m_weaponData.fireRate),
+		m_reloadTimer(m_weaponData.reloadTime) {}
 
 	virtual void init          ();
 	virtual void run           (float deltaTime);
 	virtual void receiveMessage(Message* message);
 private:
-	TWeaponData m_weaponData;
+	TWeaponData        m_weaponData;
 	Entity*            m_remoteBullet;
 	vec2               m_aimDirection;
 	int                m_currentBullets;
@@ -206,7 +230,7 @@ public:
 	
 	virtual void run(float deltaTime);
 private:
-	vec2 calculatIntersectionWithWall(vec2 position, float angle);
+	vec2 calculatIntersectionWithWall(const vec2& position, float angle);
 
 	Entity* m_player;
 	float   m_speed;
@@ -218,8 +242,12 @@ private:
 //=============================================================================
 class ComponentAIFire : public Component {
 public:
-	ComponentAIFire(Entity* owner, Entity* player)            : Component(owner), m_player(player) {}
-	ComponentAIFire(Entity* owner, std::vector<vec2> fireDirections, bool shuffle) : Component(owner), m_fireDirections(fireDirections), m_shuffle(shuffle) {}
+	ComponentAIFire(Entity* owner, Entity* player) : Component(owner), m_player(player) {}
+	ComponentAIFire(Entity* owner, const std::vector<vec2>& fireDirections, bool shuffle) : 
+		Component(owner), 
+		m_fireDirections(fireDirections),
+		m_currentFireDirection(0),
+		m_shuffle(shuffle) {}
 	
 	virtual void init          ();
 	virtual void run           (float deltaTime);
@@ -237,29 +265,35 @@ private:
 class ComponentCollider : public Component {
 public:
 	enum TColliderType {
-		ENoneCollider,
 		ERectCollider,
 		ECircleCollider,
 	};
 
 	enum TColliderChannel {
-		EPlayer       = 1 << 0,
-		EEnemyC       = 1 << 1,
-		EPlayerWeapon = 1 << 2,
-		EEnemyWeapon  = 1 << 3,
-		EBoundaries   = 1 << 4,
-		EPickup       = 1 << 5,
-		ENone         = 0,
+		EPlayerCollider       = 1 << 0,
+		EEnemyCollider        = 1 << 1,
+		EPlayerWeaponCollider = 1 << 2,
+		EEnemyWeaponCollider  = 1 << 3,
+		EBoundariesCollider   = 1 << 4,
+		EPickupCollider       = 1 << 5,
+		ENoneCollider         = 0,
 	};
 
-	ComponentCollider(Entity* owner, TColliderType type, int deltaLife, int collisionChannel, int collisionChannelsResponse) : Component(owner), m_type(type), m_deltaLife(deltaLife), m_collisionChannel(collisionChannel), m_collisionChannelsResponse(collisionChannelsResponse) {}
+	ComponentCollider(Entity* owner, TColliderType type, int deltaLife, int collisionChannel, int collisionChannelsResponse) :
+		Component(owner),
+		m_type(type),
+		m_center(vmake(0.0f, 0.0f)),
+		m_size(vmake(0.0f, 0.0f)),
+		m_deltaLife(deltaLife), 
+		m_collisionChannel(collisionChannel),
+		m_collisionChannelsResponse(collisionChannelsResponse) {}
 	
 	virtual void run           (float deltaTime);
 	virtual void receiveMessage(Message* message);
 private:
 	TColliderType m_type;
-	int m_collisionChannel;
-	int m_collisionChannelsResponse;
+	int           m_collisionChannel;
+	int           m_collisionChannelsResponse;
 	vec2          m_center;
 	vec2          m_size;
 	int           m_deltaLife;
@@ -294,7 +328,10 @@ private:
 //=============================================================================
 class ComponentHUDMessage : public Component {
 public:
-	ComponentHUDMessage(Entity* owner, vec2 pos, const std::string& messageText) : Component(owner), m_pos(pos), m_messageText(messageText), m_message(nullptr) {}
+	ComponentHUDMessage(Entity* owner, vec2 pos, const std::string& messageText) : 
+		Component(owner), m_pos(pos),
+		m_messageText(messageText),
+		m_message(nullptr) {}
 	~ComponentHUDMessage();
 
 	virtual void init();
@@ -316,17 +353,17 @@ public:
 	virtual void run    (float deltaTime);
 	virtual bool onEvent(const IInputManager::Event&);
 private:
-	Text*   m_life;
-	Text*   m_score;
-	Text*   m_ammo;
-	Sprite* m_target;
-
-	//ver si cambiar a Renderable
-	Sprite* m_reloadAnim;
+	Text*                   m_life;
+	Text*                   m_score;
+	Text*                   m_ammo;
+	Sprite*                 m_target;
+	Sprite*                 m_reloadAnim;
 	std::vector<GfxEntity*> m_gfxEntities;
 };
 
+//=============================================================================
 // Collision check utils
+//=============================================================================
 inline float clamp(float value, float inf, float sup) { return (value <= inf) ? inf : (value >= sup) ? sup : value; };
 inline bool  isInBounds(float value, float inf, float sup) { return (value > inf) && (value < sup); };
 bool         checkCircleCircle(const vec2& pos1, float radius1, const vec2& pos2, float radius2);

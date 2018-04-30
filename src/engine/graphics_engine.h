@@ -13,7 +13,7 @@ public:
 	GraphicsEngine();
 	~GraphicsEngine();
 
-	GLuint getTexture     (const char* fileName);
+	GLuint getTexture     (const std::string& fileName);
 	void   addGfxEntity   (GfxEntity* gfxEntity);
 	void   removeGfxEntity(const GfxEntity* gfxEntity);
 	void   render         ();
