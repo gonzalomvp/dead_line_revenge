@@ -258,7 +258,7 @@ void MenuManager::onSelected(MenuItem* menuItem) {
 		g_appManager->switchMode(AppMode::EMENU);
 	}
 	else if (menuItem->getName() == "RETRY") {
-		m_activeMenu->deactivate();
+		g_menuManager->deactivateMenu();
 		g_world->loadLevel();
 	}
 	else if (menuItem->getName() == "EXIT") {

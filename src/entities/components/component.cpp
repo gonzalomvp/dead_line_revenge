@@ -404,8 +404,7 @@ void ComponentWeapon::run(float deltaTime) {
 		//MessageGetCollider msgGetCollider;
 		//m_owner->receiveMessage(&msgGetCollider);
 
-		switch (m_weaponData.type)
-		{
+		switch (m_weaponData.type) {
 			case EShotgun: {
 				vec2 bulletDir = m_aimDirection;
 				g_world->createBullet(messageGetTranform.pos, vmake(10.0f, 10.0f), bulletDir, m_weaponData.bulletSpeed, m_weaponData.bulletDamage, m_weaponData.bulletLife, m_weaponData.bulletRange, m_weaponData.isExplossive, m_weaponData.isBouncy, m_owner->getType(), "data/shotgunBullet.png");
@@ -417,22 +416,18 @@ void ComponentWeapon::run(float deltaTime) {
 				angle -= SHOTGUN_DISP_ANGLE;
 				bulletDir = vunit(DEG2RAD(angle));
 				g_world->createBullet(messageGetTranform.pos, vmake(10.0f, 10.0f), bulletDir, m_weaponData.bulletSpeed, m_weaponData.bulletDamage, m_weaponData.bulletLife, m_weaponData.bulletRange, m_weaponData.isExplossive, m_weaponData.isBouncy, m_owner->getType(), "data/shotgunBullet.png");
-				g_soundEngine->playSound("data/shotgun.wav");
 				break;
 			}
 			case EMines: {
 				g_world->createBullet(messageGetTranform.pos, vmake(20.0f, 20.0f), m_aimDirection, m_weaponData.bulletSpeed, m_weaponData.bulletDamage, m_weaponData.bulletLife, m_weaponData.bulletRange, m_weaponData.isExplossive, m_weaponData.isBouncy, Entity::EMine, "data/mine.png");
-				g_soundEngine->playSound("data/mine.wav");
 				break;
 			}
 			case EC4: {
 				m_remoteBullet = g_world->createBullet(messageGetTranform.pos, vmake(20.0f, 20.0f), m_aimDirection, m_weaponData.bulletSpeed, m_weaponData.bulletDamage, m_weaponData.bulletLife, m_weaponData.bulletRange, m_weaponData.isExplossive, m_weaponData.isBouncy, m_owner->getType(), "data/c4.png");
-				g_soundEngine->playSound("data/mine.wav");
 				break;
 			}
 			case ERocketLauncher: {
 				g_world->createBullet(messageGetTranform.pos, vmake(15.0f, 15.0f), m_aimDirection, m_weaponData.bulletSpeed, m_weaponData.bulletDamage, m_weaponData.bulletLife, m_weaponData.bulletRange, m_weaponData.isExplossive, m_weaponData.isBouncy, m_owner->getType(), "data/rocket.png");
-				g_soundEngine->playSound("data/rocketlauncher.wav");
 				break;
 			}
 			case ENuclearBomb: {
@@ -441,9 +436,12 @@ void ComponentWeapon::run(float deltaTime) {
 			}
 			default: {
 				g_world->createBullet(messageGetTranform.pos, vmake(10.0f, 10.0f), m_aimDirection, m_weaponData.bulletSpeed, m_weaponData.bulletDamage, m_weaponData.bulletLife, m_weaponData.bulletRange, m_weaponData.isExplossive, m_weaponData.isBouncy, m_owner->getType(), "data/bullet.png");
-				g_soundEngine->playSound("data/shot.wav");
 				break;
 			}
+		}
+
+		if (m_weaponData.soundFile != "") {
+			g_soundEngine->playSound(m_weaponData.soundFile.c_str());
 		}
 
 		MessageFireDone messageFireDone;

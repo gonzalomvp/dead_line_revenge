@@ -272,6 +272,7 @@ Entity* World::createEnemy(vec2 pos, TEnemyData enemyData, Entity* player) {
 		weaponData.isExplossive = enemyData.isExplossive;
 		weaponData.isBouncy     = enemyData.isBouncy;
 		weaponData.isAutomatic  = true;
+		weaponData.soundFile    = "";
 		ComponentWeapon* gun = new ComponentWeapon(enemy, weaponData);
 		gun->init();
 
@@ -373,6 +374,7 @@ bool World::loadConfig() {
 		weapon.isAutomatic        = weapons[i]["isAutomatic"].GetBool();
 		weapon.isExplossive       = weapons[i]["isExplossive"].GetBool();
 		weapon.isBouncy           = weapons[i]["isBouncy"].GetBool();
+		weapon.soundFile          = weapons[i]["soundFile"].GetString();
 		m_weaponData[weapon.type] = weapon;
 	}
 

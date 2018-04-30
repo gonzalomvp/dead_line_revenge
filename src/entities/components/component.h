@@ -27,17 +27,18 @@ public:
 	};
 
 	struct TWeaponData {
-		TWeapon type;
-		int     fireRate;
-		int     reloadTime;
-		int     capacity;
-		float   bulletSpeed;
-		int     bulletDamage;
-		int     bulletLife;
-		int     bulletRange;
-		bool    isAutomatic;
-		bool    isExplossive;
-		bool    isBouncy;
+		TWeapon     type;
+		int         fireRate;
+		int         reloadTime;
+		int         capacity;
+		float       bulletSpeed;
+		int         bulletDamage;
+		int         bulletLife;
+		int         bulletRange;
+		bool        isAutomatic;
+		bool        isExplossive;
+		bool        isBouncy;
+		std::string soundFile;
 	};
 
 	enum TColliderType {
