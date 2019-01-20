@@ -58,6 +58,9 @@ Menu::~Menu() {
 	for (auto itMenuItems = m_menuItems.begin(); itMenuItems != m_menuItems.end(); ++itMenuItems) {
 		delete *itMenuItems;
 	}
+	for (auto itControls = m_controls.begin(); itControls != m_controls.end(); ++itControls) {
+		delete *itControls;
+	}
 	if (m_title) {
 		delete m_title;
 	}
@@ -67,6 +70,9 @@ void Menu::activate() {
 	Control::activate();
 	for (auto itMenuItems = m_menuItems.begin(); itMenuItems != m_menuItems.end(); ++itMenuItems) {
 		(*itMenuItems)->activate();
+	}
+	for (auto itControls = m_controls.begin(); itControls != m_controls.end(); ++itControls) {
+		(*itControls)->activate();
 	}
 	if (m_title) {
 		m_title->activate();
@@ -80,6 +86,9 @@ void Menu::deactivate() {
 	for (auto itMenuItems = m_menuItems.begin(); itMenuItems != m_menuItems.end(); ++itMenuItems) {
 		(*itMenuItems)->deactivate();
 	}
+	for (auto itControls = m_controls.begin(); itControls != m_controls.end(); ++itControls) {
+		(*itControls)->deactivate();
+	}
 	if (m_title) {
 		m_title->deactivate();
 	}
@@ -91,6 +100,9 @@ void Menu::run() {
 		return;
 
 	for (auto itControls = m_menuItems.begin(); itControls != m_menuItems.end(); ++itControls) {
+		(*itControls)->run();
+	}
+	for (auto itControls = m_controls.begin(); itControls != m_controls.end(); ++itControls) {
 		(*itControls)->run();
 	}
 }
@@ -250,23 +262,92 @@ void MenuManager::onSelected(MenuItem* menuItem) {
 	}
 }
 
+void MenuManager::onClick(Button* button) {
+	if (button->getName() == "PLAY_MENU") {
+		activateMenu(EPlayMenu);
+	}
+	else if (button->getName() == "OPTIONS_MENU") {
+		activateMenu(EOptionsMenu);
+	}
+	else if (button->getName() == "MAIN_MENU") {
+		activateMenu(EMainMenu);
+		g_appManager->switchMode(AppMode::EMENU);
+	}
+	else if (button->getName() == "EASY") {
+		g_appManager->switchMode(AppMode::EGAME, 1);
+	}
+	else if (button->getName() == "MEDIUM") {
+		g_appManager->switchMode(AppMode::EGAME, 2);
+	}
+	else if (button->getName() == "HARD") {
+		g_appManager->switchMode(AppMode::EGAME, 3);
+	}
+	else if (button->getName() == "SETTINGS_MUSIC") {
+		g_settings.music = !g_settings.music;
+	}
+	else if (button->getName() == "SETTINGS_SFX") {
+		g_settings.sfx = !g_settings.sfx;
+	}
+	else if (button->getName() == "SETTINGS_LANGUAGE") {
+		if (g_settings.language == EEnglish) {
+			g_settings.language = ESpanish;
+		}
+		else if (g_settings.language == ESpanish) {
+			g_settings.language = EEnglish;
+		}
+		g_stringManager->loadLanguage(g_settings.language);
+	}
+	else if (button->getName() == "RESUME") {
+		IInputManager::Event* pauseEvent = new IInputManager::Event(IInputManager::TEventType::EPause);
+		g_inputManager->addEvent(pauseEvent);
+	}
+	else if (button->getName() == "ABANDON") {
+		g_appManager->switchMode(AppMode::EMENU);
+	}
+	else if (button->getName() == "RETRY") {
+		g_menuManager->deactivateMenu();
+		g_world->loadLevel();
+	}
+	else if (button->getName() == "EXIT") {
+		exit(0);
+	}
+}
+
 Menu* MenuManager::getMenu(TMenu menu) {
 	return m_menus[menu];
 }
 
 void MenuManager::createMainMenu() {
 	Menu* menu = new Menu("MAIN_MENU", vmake(0.0f, 0.0f), vmake(0.0f, 0.0f), false);
-	MenuItem* menuItem;
-	menuItem = new MenuItem("PLAY_MENU", "LTEXT_GUI_PLAY_MENU_ITEM", vmake(SCR_WIDTH / 2, SCR_HEIGHT * 0.6));
-	menuItem->init();
-	menu->addMenuItem(menuItem);
-	menuItem = new MenuItem("OPTIONS_MENU", "LTEXT_GUI_OPTIONS_MENU_ITEM", vmake(SCR_WIDTH / 2, SCR_HEIGHT * 0.5));
-	menuItem->init();
-	menu->addMenuItem(menuItem);
-	menuItem = new MenuItem("EXIT", "LTEXT_GUI_OPTIONS_EXIT_ITEM", vmake(SCR_WIDTH / 2, SCR_HEIGHT * 0.4));
-	menuItem->init();
-	menu->addMenuItem(menuItem);
+	//MenuItem* menuItem;
+	//menuItem = new MenuItem("PLAY_MENU", "LTEXT_GUI_PLAY_MENU_ITEM", vmake(SCR_WIDTH / 2, SCR_HEIGHT * 0.6));
+	//menuItem->init();
+	//menu->addMenuItem(menuItem);
+	//menuItem = new MenuItem("OPTIONS_MENU", "LTEXT_GUI_OPTIONS_MENU_ITEM", vmake(SCR_WIDTH / 2, SCR_HEIGHT * 0.5));
+	//menuItem->init();
+	//menu->addMenuItem(menuItem);
+	//menuItem = new MenuItem("EXIT", "LTEXT_GUI_OPTIONS_EXIT_ITEM", vmake(SCR_WIDTH / 2, SCR_HEIGHT * 0.4));
+	//menuItem->init();
+	//menu->addMenuItem(menuItem);
 	m_menus[EMainMenu] = menu;
+
+	Button* button = new Button("PLAY_MENU", vmake(SCR_WIDTH / 2, SCR_HEIGHT * 0.6), vmake(150, 35), "data/ui/buttonOn.png", "data/ui/buttonOff.png", "LTEXT_GUI_PLAY_MENU_ITEM");
+	button->addListener(this);
+	menu->addControl(button);
+	button = new Button("OPTIONS_MENU", vmake(SCR_WIDTH / 2, SCR_HEIGHT * 0.5), vmake(150, 35), "data/ui/buttonOn.png", "data/ui/buttonOff.png", "LTEXT_GUI_OPTIONS_MENU_ITEM");
+	button->addListener(this);
+	menu->addControl(button);
+	button = new Button("EXIT", vmake(SCR_WIDTH / 2, SCR_HEIGHT * 0.4), vmake(150, 35), "data/ui/buttonOn.png", "data/ui/buttonOff.png", "LTEXT_GUI_OPTIONS_EXIT_ITEM");
+	button->addListener(this);
+	menu->addControl(button);
+
+
+
+	Checkbox* checkbox = new Checkbox("PLAY_MENU", vmake(SCR_WIDTH / 2, SCR_HEIGHT * 0.3), vmake(35, 35), "data/ui/CheckBox_enabled.png", "data/ui/CheckBox_disabled.png", "LTEXT_GUI_PLAY_MENU_ITEM");
+	menu->addControl(checkbox);
+
+	Slider* slider = new Slider("PLAY_MENU", vmake(SCR_WIDTH / 2, SCR_HEIGHT * 0.2), vmake(100, 32), "data/ui/CheckBox_enabled.png", "data/ui/CheckBox_disabled.png", "LTEXT_GUI_PLAY_MENU_ITEM");
+	menu->addControl(slider);
 }
 
 void MenuManager::createPlayMenu() {

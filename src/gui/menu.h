@@ -1,6 +1,10 @@
 #pragma once
 
+#include "button.h"
+#include "checkbox.h"
 #include "gui.h"
+#include "slider.h"
+
 #include <map>
 
 class Text;
@@ -52,6 +56,7 @@ public:
 	virtual bool onEvent    (const IInputManager::Event& event);
 	void         addListener(IListener* listener)  { m_listeners.push_back(listener); }
 	void         addMenuItem(MenuItem* menuItem)   { m_menuItems.push_back(menuItem); }
+	void         addControl (Control* control)     { m_controls.push_back(control);   }
 
 	MenuItem* getSelectedItem() const { return m_menuItems[m_seletedItem]; }
 	void      setSelectedItem(int newOption);
@@ -63,13 +68,14 @@ private:
 	int                     m_seletedItem;
 	Text*                   m_title;
 	std::vector<MenuItem*>  m_menuItems;
+	std::vector<Control*>   m_controls;
 	std::vector<IListener*> m_listeners;
 };
 
 //=============================================================================
 // MenuManager class
 //=============================================================================
-class MenuManager : public Menu::IListener {
+class MenuManager : public Menu::IListener, Button::IListener {
 public:
 	enum TMenu {
 		EMainMenu,
@@ -86,6 +92,7 @@ public:
 	void         activateMenu  (TMenu menu);
 	void         deactivateMenu();
 	virtual void onSelected    (MenuItem* menuItem);
+	virtual void onClick       (Button* button);
 	Menu*        getMenu       (TMenu menu);
 private:
 	void createMainMenu    ();

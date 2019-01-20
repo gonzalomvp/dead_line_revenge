@@ -81,6 +81,15 @@
     <ClInclude Include="..\src\engine\sound_engine.h">
       <Filter>src\engine</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\gui\button.h">
+      <Filter>src\gui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\gui\checkbox.h">
+      <Filter>src\gui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\gui\slider.h">
+      <Filter>src\gui</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\main.cpp">
@@ -133,6 +142,15 @@
     </ClCompile>
     <ClCompile Include="..\src\engine\sound_engine.cpp">
       <Filter>src\engine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\gui\button.cpp">
+      <Filter>src\gui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\gui\checkbox.cpp">
+      <Filter>src\gui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\gui\slider.cpp">
+      <Filter>src\gui</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
