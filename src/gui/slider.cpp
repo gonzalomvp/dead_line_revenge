@@ -7,7 +7,7 @@
 //=============================================================================
 // Slider class
 //=============================================================================
-Slider::Slider(const std::string& name, const vec2& pos, const vec2& size, const char* spriteOn, const char* spriteOff, const std::string& text) : Control(name, pos, size, true) {
+Slider::Slider(const std::string& name, const vec2& pos, const vec2& size, const char* spriteOn, const char* spriteOff, const std::string& text, float value) : Control(name, pos, size, false) {
 	m_leftButton = new Button(name, vmake(pos.x - (size.x + 32) / 2, pos.y), vmake(32, 32), "data/ui/Slider_Left_Push.png", "data/ui/Slider_Left_Normal.png", "");
 	m_rightButton = new Button(name, vmake(pos.x + (size.x + 32) / 2, pos.y), vmake(32, 32), "data/ui/Slider_Right_Push.png", "data/ui/Slider_Right_Normal.png", "");
 	m_spriteBar = new Sprite(g_graphicsEngine->getTexture("data/ui/Slider_bar.png"), pos, vmake(size.x, 5), 0.f, 1.f, 2);
@@ -16,12 +16,13 @@ Slider::Slider(const std::string& name, const vec2& pos, const vec2& size, const
 	g_graphicsEngine->addGfxEntity(m_spriteBall);
 	m_ballPressed = false;
 	m_barPressed = false;
-	m_value = 0.3f;
+	m_value = value;
 	//m_text = text;
 	m_gfxText = new Text("", vmake(m_pos.x + m_size.x * 0.5f + m_rightButton->getSize().x, m_pos.y - 6), 1);
 	g_graphicsEngine->addGfxEntity(m_gfxText);
 	m_leftButton->addListener(this);
 	m_rightButton->addListener(this);
+	deactivate();
 	
 }
 
@@ -37,7 +38,7 @@ void Slider::activate() {
 	setValue(m_value);
 	g_inputManager->registerEvent(this, IInputManager::EMouseButtonDown);
 	g_inputManager->registerEvent(this, IInputManager::EMouseButtonUp);
-	g_inputManager->registerEvent(this, IInputManager::EMouseMove);
+	g_inputManager->registerEvent(this, IInputManager::EMouseButtonHold);
 }
 
 void Slider::deactivate() {
@@ -48,7 +49,7 @@ void Slider::deactivate() {
 	m_gfxText->deactivate();
 	g_inputManager->unregisterEvent(this, IInputManager::EMouseButtonDown);
 	g_inputManager->unregisterEvent(this, IInputManager::EMouseButtonUp);
-	g_inputManager->unregisterEvent(this, IInputManager::EMouseMove);
+	g_inputManager->unregisterEvent(this, IInputManager::EMouseButtonHold);
 }
 
 void Slider::run() {
@@ -58,6 +59,8 @@ void Slider::run() {
 	//vec2 currentPos = m_gfxText->getPos();
 	//currentPos.x = m_pos.x - (textToDraw.length() / 2.0f * 16);
 	//m_gfxText->setPos(currentPos);
+	m_leftButton->run();
+	m_rightButton->run();
 }
 
 bool Slider::onEvent(const IInputManager::Event& event) {
@@ -94,7 +97,7 @@ bool Slider::onEvent(const IInputManager::Event& event) {
 		}
 	}
 
-	if (mouseEvent.getType() == IInputManager::EMouseMove && m_ballPressed) {
+	if (mouseEvent.getType() == IInputManager::EMouseButtonHold && m_ballPressed) {
 		float initX = m_pos.x - m_size.x / 2.0f + 5.0f;
 		float endX = m_pos.x + m_size.x / 2.0f - 5.0f;
 		float newX = mouseEvent.getPos().x;
@@ -135,7 +138,7 @@ bool Slider::onEvent(const IInputManager::Event& event) {
 	return true;
 }
 
-void Slider::onClick(Button* button) {
+void Slider::onHold(Button* button) {
 	float increment = 0.1f; // hacer variable miembro
 	if (button == m_leftButton) {
 		increment = -increment;
@@ -170,5 +173,8 @@ void Slider::setValue(float value) {
 		float barLength = endX - initX;
 
 		m_spriteBall->setPos(vmake(initX + (barLength)* m_value, m_pos.y));
+	}
+	for (size_t i = 0; i < m_listeners.size(); ++i) {
+		m_listeners[i]->onValueChange(this);
 	}
 }

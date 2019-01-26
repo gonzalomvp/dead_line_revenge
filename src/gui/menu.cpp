@@ -2,6 +2,8 @@
 #include "menu.h"
 
 #include "../engine/graphics_engine.h"
+#include "../engine/sound_engine.h"
+#include "../gui/label.h"
 #include "../gui/string_manager.h"
 #include "../scenes/app_manager.h"
 #include "../scenes/world.h"
@@ -152,21 +154,25 @@ void Menu::setTitle(const std::string& title) {
 }
 
 void Menu::selectPreviousItem() {
-	m_menuItems[m_seletedItem]->setFocus(false);
-	m_seletedItem--;
-	if (m_seletedItem < 0) {
-		m_seletedItem = m_menuItems.size() - 1;
+	if (m_seletedItem >= 0 && m_seletedItem < m_menuItems.size()) {
+		m_menuItems[m_seletedItem]->setFocus(false);
+		m_seletedItem--;
+		if (m_seletedItem < 0) {
+			m_seletedItem = m_menuItems.size() - 1;
+		}
+		m_menuItems[m_seletedItem]->setFocus(true);
 	}
-	m_menuItems[m_seletedItem]->setFocus(true);
 }
 
 void Menu::selectNextItem() {
-	m_menuItems[m_seletedItem]->setFocus(false);
-	m_seletedItem++;
-	if (m_seletedItem >= static_cast<int>(m_menuItems.size())) {
-		m_seletedItem = 0;
+	if (m_seletedItem >= 0 && m_seletedItem < m_menuItems.size()) {
+		m_menuItems[m_seletedItem]->setFocus(false);
+		m_seletedItem++;
+		if (m_seletedItem >= static_cast<int>(m_menuItems.size())) {
+			m_seletedItem = 0;
+		}
+		m_menuItems[m_seletedItem]->setFocus(true);
 	}
-	m_menuItems[m_seletedItem]->setFocus(true);
 }
 
 //=============================================================================
@@ -233,6 +239,12 @@ void MenuManager::onSelected(MenuItem* menuItem) {
 	}
 	else if (menuItem->getName() == "SETTINGS_MUSIC") {
 		g_settings.music = !g_settings.music;
+		if (g_settings.music) {
+			g_soundEngine->playMusic("data/audio/music.wav");
+		}
+		else {
+			g_soundEngine->stopMusic();
+		}
 	}
 	else if (menuItem->getName() == "SETTINGS_SFX") {
 		g_settings.sfx = !g_settings.sfx;
@@ -284,6 +296,12 @@ void MenuManager::onClick(Button* button) {
 	}
 	else if (button->getName() == "SETTINGS_MUSIC") {
 		g_settings.music = !g_settings.music;
+		if (g_settings.music) {
+			g_soundEngine->playMusic("data/audio/menu.wav");
+		}
+		else {
+			g_soundEngine->stopMusic();
+		}
 	}
 	else if (button->getName() == "SETTINGS_SFX") {
 		g_settings.sfx = !g_settings.sfx;
@@ -310,6 +328,28 @@ void MenuManager::onClick(Button* button) {
 	}
 	else if (button->getName() == "EXIT") {
 		exit(0);
+	}
+}
+
+void MenuManager::onClick(Checkbox* checkbox) {
+	if (checkbox->getName() == "SETTINGS_SFX") {
+		g_settings.sfx = checkbox->isChecked();
+	}
+	else if (checkbox->getName() == "SETTINGS_MUSIC") {
+		g_settings.music = !g_settings.music;
+		if (g_settings.music) {
+			g_soundEngine->playMusic("data/audio/menu.wav");
+		}
+		else {
+			g_soundEngine->stopMusic();
+		}
+	}
+}
+
+void MenuManager::onValueChange(Slider* slider) {
+	if (slider->getName() == "SETTINGS_VOLUME") {
+		g_settings.volume = slider->getValue();
+		g_soundEngine->setVolume(g_settings.volume);
 	}
 }
 
@@ -343,74 +383,135 @@ void MenuManager::createMainMenu() {
 
 
 
-	Checkbox* checkbox = new Checkbox("PLAY_MENU", vmake(SCR_WIDTH / 2, SCR_HEIGHT * 0.3), vmake(35, 35), "data/ui/CheckBox_enabled.png", "data/ui/CheckBox_disabled.png", "LTEXT_GUI_PLAY_MENU_ITEM");
-	menu->addControl(checkbox);
 
-	Slider* slider = new Slider("PLAY_MENU", vmake(SCR_WIDTH / 2, SCR_HEIGHT * 0.2), vmake(100, 32), "data/ui/CheckBox_enabled.png", "data/ui/CheckBox_disabled.png", "LTEXT_GUI_PLAY_MENU_ITEM");
-	menu->addControl(slider);
 }
 
 void MenuManager::createPlayMenu() {
 	Menu* menu = new Menu("PLAY_MENU", vmake(0.0f, 0.0f), vmake(0.0f, 0.0f), false);
-	MenuItem* menuItem;
-	menuItem = new MenuItem("EASY", "LTEXT_GUI_PLAY_EASY_ITEM", vmake(SCR_WIDTH / 2, SCR_HEIGHT * 0.65));
-	menuItem->init();
-	menu->addMenuItem(menuItem);
-	menuItem = new MenuItem("MEDIUM", "LTEXT_GUI_PLAY_MEDIUM_ITEM", vmake(SCR_WIDTH / 2, SCR_HEIGHT * 0.55));
-	menuItem->init();
-	menu->addMenuItem(menuItem);
-	menuItem = new MenuItem("HARD", "LTEXT_GUI_PLAY_HARD_ITEM", vmake(SCR_WIDTH / 2, SCR_HEIGHT * 0.45));
-	menuItem->init();
-	menu->addMenuItem(menuItem);
-	menuItem = new MenuItem("MAIN_MENU", "LTEXT_GUI_BACK_MENU_ITEM", vmake(SCR_WIDTH / 2, SCR_HEIGHT * 0.35));
-	menuItem->init();
-	menu->addMenuItem(menuItem);
+	//MenuItem* menuItem;
+	//menuItem = new MenuItem("EASY", "LTEXT_GUI_PLAY_EASY_ITEM", vmake(SCR_WIDTH / 2, SCR_HEIGHT * 0.65));
+	//menuItem->init();
+	//menu->addMenuItem(menuItem);
+	//menuItem = new MenuItem("MEDIUM", "LTEXT_GUI_PLAY_MEDIUM_ITEM", vmake(SCR_WIDTH / 2, SCR_HEIGHT * 0.55));
+	//menuItem->init();
+	//menu->addMenuItem(menuItem);
+	//menuItem = new MenuItem("HARD", "LTEXT_GUI_PLAY_HARD_ITEM", vmake(SCR_WIDTH / 2, SCR_HEIGHT * 0.45));
+	//menuItem->init();
+	//menu->addMenuItem(menuItem);
+	//menuItem = new MenuItem("MAIN_MENU", "LTEXT_GUI_BACK_MENU_ITEM", vmake(SCR_WIDTH / 2, SCR_HEIGHT * 0.35));
+	//menuItem->init();
+	//menu->addMenuItem(menuItem);
 	m_menus[EPlayMenu] = menu;
+
+	Button* button = new Button("EASY", vmake(SCR_WIDTH / 2, SCR_HEIGHT * 0.65), vmake(150, 35), "data/ui/buttonOn.png", "data/ui/buttonOff.png", "LTEXT_GUI_PLAY_EASY_ITEM");
+	button->addListener(this);
+	menu->addControl(button);
+	button = new Button("MEDIUM", vmake(SCR_WIDTH / 2, SCR_HEIGHT * 0.55), vmake(150, 35), "data/ui/buttonOn.png", "data/ui/buttonOff.png", "LTEXT_GUI_PLAY_MEDIUM_ITEM");
+	button->addListener(this);
+	menu->addControl(button);
+	button = new Button("HARD", vmake(SCR_WIDTH / 2, SCR_HEIGHT * 0.45), vmake(150, 35), "data/ui/buttonOn.png", "data/ui/buttonOff.png", "LTEXT_GUI_PLAY_HARD_ITEM");
+	button->addListener(this);
+	menu->addControl(button);
+	button = new Button("MAIN_MENU", vmake(SCR_WIDTH / 2, SCR_HEIGHT * 0.35), vmake(150, 35), "data/ui/buttonOn.png", "data/ui/buttonOff.png", "LTEXT_GUI_BACK_MENU_ITEM");
+	button->addListener(this);
+	menu->addControl(button);
 }
 
 void MenuManager::createOptionsMenu() {
-	Menu* menu = new Menu("PLAY_MENU", vmake(0.0f, 0.0f), vmake(0.0f, 0.0f), false);
-	MenuItem* menuItem;
-	menuItem = new MenuItem("SETTINGS_MUSIC", "LTEXT_GUI_MUSIC_MENU_ITEM", vmake(SCR_WIDTH / 2, SCR_HEIGHT * 0.65));
-	menuItem->init();
-	menuItem->addOption("LTEXT_GUI_MENU_ITEM_ON");
-	menuItem->addOption("LTEXT_GUI_MENU_ITEM_OFF");
-	menu->addMenuItem(menuItem);
-	menuItem = new MenuItem("SETTINGS_SFX", "LTEXT_GUI_SFX_MENU_ITEM", vmake(SCR_WIDTH / 2, SCR_HEIGHT * 0.55));
-	menuItem->init();
-	menuItem->addOption("LTEXT_GUI_MENU_ITEM_ON");
-	menuItem->addOption("LTEXT_GUI_MENU_ITEM_OFF");
-	menu->addMenuItem(menuItem);
-	menuItem = new MenuItem("SETTINGS_LANGUAGE", "LTEXT_GUI_LANGUAGE_MENU_ITEM", vmake(SCR_WIDTH / 2, SCR_HEIGHT * 0.45));
-	menuItem->init();
-	menu->addMenuItem(menuItem);
-	menuItem = new MenuItem("MAIN_MENU", "LTEXT_GUI_BACK_MENU_ITEM", vmake(SCR_WIDTH / 2, SCR_HEIGHT * 0.35));
-	menuItem->init();
-	menu->addMenuItem(menuItem);
+	Menu* menu = new Menu("OPTIONS_MENU", vmake(0.0f, 0.0f), vmake(0.0f, 0.0f), false);
+	//MenuItem* menuItem;
+	//menuItem = new MenuItem("SETTINGS_MUSIC", "LTEXT_GUI_MUSIC_MENU_ITEM", vmake(SCR_WIDTH / 2, SCR_HEIGHT * 0.65));
+	//menuItem->init();
+	//menuItem->addOption("LTEXT_GUI_MENU_ITEM_ON");
+	//menuItem->addOption("LTEXT_GUI_MENU_ITEM_OFF");
+	//if (!g_settings.music) {
+	//	menuItem->nextOption();
+	//}
+	//menu->addMenuItem(menuItem);
+	//menuItem = new MenuItem("SETTINGS_SFX", "LTEXT_GUI_SFX_MENU_ITEM", vmake(SCR_WIDTH / 2, SCR_HEIGHT * 0.55));
+	//menuItem->init();
+	//menuItem->addOption("LTEXT_GUI_MENU_ITEM_ON");
+	//menuItem->addOption("LTEXT_GUI_MENU_ITEM_OFF");
+	//if (!g_settings.sfx) {
+	//	menuItem->nextOption();
+	//}
+	//menu->addMenuItem(menuItem);
+	//menuItem = new MenuItem("SETTINGS_LANGUAGE", "LTEXT_GUI_LANGUAGE_MENU_ITEM", vmake(SCR_WIDTH / 2, SCR_HEIGHT * 0.45));
+	//menuItem->init();
+	//menu->addMenuItem(menuItem);
+	//menuItem = new MenuItem("MAIN_MENU", "LTEXT_GUI_BACK_MENU_ITEM", vmake(SCR_WIDTH / 2, SCR_HEIGHT * 0.35));
+	//menuItem->init();
+	//menu->addMenuItem(menuItem);
 	m_menus[EOptionsMenu] = menu;
+
+	Label* label = new Label("SETTINGS_MUSIC_LABEL", vmake(SCR_WIDTH / 2 - 100, SCR_HEIGHT * 0.8), vmake(0.0, 0.0), "LTEXT_GUI_MUSIC_MENU_ITEM");
+	menu->addControl(label);
+
+	Checkbox* checkbox = new Checkbox("SETTINGS_MUSIC", vmake(SCR_WIDTH / 2 + 100, SCR_HEIGHT * 0.8), vmake(35, 35), "data/ui/CheckBox_enabled.png", "data/ui/CheckBox_disabled.png", "LTEXT_GUI_PLAY_MENU_ITEM", g_settings.music);
+	checkbox->addListener(this);
+	menu->addControl(checkbox);
+
+	label = new Label("SETTINGS_SFX_LABEL", vmake(SCR_WIDTH / 2 - 100, SCR_HEIGHT * 0.65), vmake(0.0, 0.0), "LTEXT_GUI_SFX_MENU_ITEM");
+	menu->addControl(label);
+
+	checkbox = new Checkbox("SETTINGS_SFX", vmake(SCR_WIDTH / 2 + 100, SCR_HEIGHT * 0.65), vmake(35, 35), "data/ui/CheckBox_enabled.png", "data/ui/CheckBox_disabled.png", "LTEXT_GUI_PLAY_MENU_ITEM", g_settings.sfx);
+	checkbox->addListener(this);
+	menu->addControl(checkbox);
+
+	label = new Label("SETTINGS_VOLUME_LABEL", vmake(SCR_WIDTH / 2 - 100, SCR_HEIGHT * 0.5), vmake(0.0, 0.0), "LTEXT_GUI_VOLUME_MENU_ITEM");
+	menu->addControl(label);
+
+	Slider* slider = new Slider("SETTINGS_VOLUME", vmake(SCR_WIDTH / 2 + 100, SCR_HEIGHT * 0.5), vmake(100, 32), "data/ui/CheckBox_enabled.png", "data/ui/CheckBox_disabled.png", "LTEXT_GUI_PLAY_MENU_ITEM", g_settings.volume);
+	slider->addListener(this);
+	menu->addControl(slider);
+
+	label = new Label("SETTINGS_LANGUAGE_LABEL", vmake(SCR_WIDTH / 2 - 100, SCR_HEIGHT * 0.35), vmake(0.0, 0.0), "LTEXT_GUI_LANGUAGE_MENU_ITEM");
+	menu->addControl(label);
+
+	Button* button = new Button("SETTINGS_LANGUAGE", vmake(SCR_WIDTH / 2 + 100, SCR_HEIGHT * 0.35), vmake(150, 35), "data/ui/buttonOn.png", "data/ui/buttonOff.png", "LTEXT_GUI_LANGUAGE_VALUE");
+	button->addListener(this);
+	menu->addControl(button);
+	
+	button = new Button("MAIN_MENU", vmake(SCR_WIDTH / 2, SCR_HEIGHT * 0.15), vmake(150, 35), "data/ui/buttonOn.png", "data/ui/buttonOff.png", "LTEXT_GUI_BACK_MENU_ITEM");
+	button->addListener(this);
+	menu->addControl(button);
 }
 
 void MenuManager::createPauseMenu() {
 	Menu* menu = new Menu("PAUSE_MENU", vmake(0.0f, 0.0f), vmake(0.0f, 0.0f), false);
-	MenuItem* menuItem;
-	menuItem = new MenuItem("RESUME", "LTEXT_GUI_RESUME_MENU_ITEM", vmake(SCR_WIDTH / 2, SCR_HEIGHT * 0.6));
-	menuItem->init();
-	menu->addMenuItem(menuItem);
-	menuItem = new MenuItem("ABANDON", "LTEXT_GUI_ABANDON_MENU_ITEM", vmake(SCR_WIDTH / 2, SCR_HEIGHT * 0.5));
-	menuItem->init();
-	menu->addMenuItem(menuItem);
+	//MenuItem* menuItem;
+	//menuItem = new MenuItem("RESUME", "LTEXT_GUI_RESUME_MENU_ITEM", vmake(SCR_WIDTH / 2, SCR_HEIGHT * 0.6));
+	//menuItem->init();
+	//menu->addMenuItem(menuItem);
+	//menuItem = new MenuItem("ABANDON", "LTEXT_GUI_ABANDON_MENU_ITEM", vmake(SCR_WIDTH / 2, SCR_HEIGHT * 0.5));
+	//menuItem->init();
+	//menu->addMenuItem(menuItem);
 	m_menus[EPauseMenu] = menu;
+
+	Button* button = new Button("RESUME", vmake(SCR_WIDTH / 2, SCR_HEIGHT * 0.6), vmake(150, 35), "data/ui/buttonOn.png", "data/ui/buttonOff.png", "LTEXT_GUI_RESUME_MENU_ITEM");
+	button->addListener(this);
+	menu->addControl(button);
+	button = new Button("ABANDON", vmake(SCR_WIDTH / 2, SCR_HEIGHT * 0.5), vmake(150, 35), "data/ui/buttonOn.png", "data/ui/buttonOff.png", "LTEXT_GUI_ABANDON_MENU_ITEM");
+	button->addListener(this);
+	menu->addControl(button);
 }
 
 void MenuManager::createGameOverMenu() {
 	Menu* menu = new Menu("GAMEOVER_MENU", vmake(0.0f, 0.0f), vmake(0.0f, 0.0f), false);
 	menu->setTitle("GAME OVER");
-	MenuItem* menuItem;
-	menuItem = new MenuItem("RETRY", "LTEXT_GUI_RETRY_MENU_ITEM", vmake(SCR_WIDTH / 2, SCR_HEIGHT * 0.6));
-	menuItem->init();
-	menu->addMenuItem(menuItem);
-	menuItem = new MenuItem("MAIN_MENU", "LTEXT_GUI_ABANDON_MENU_ITEM", vmake(SCR_WIDTH / 2, SCR_HEIGHT * 0.5));
-	menuItem->init();
-	menu->addMenuItem(menuItem);
+	//MenuItem* menuItem;
+	//menuItem = new MenuItem("RETRY", "LTEXT_GUI_RETRY_MENU_ITEM", vmake(SCR_WIDTH / 2, SCR_HEIGHT * 0.6));
+	//menuItem->init();
+	//menu->addMenuItem(menuItem);
+	//menuItem = new MenuItem("MAIN_MENU", "LTEXT_GUI_ABANDON_MENU_ITEM", vmake(SCR_WIDTH / 2, SCR_HEIGHT * 0.5));
+	//menuItem->init();
+	//menu->addMenuItem(menuItem);
 	m_menus[EGameOverMenu] = menu;
+
+	Button* button = new Button("RETRY", vmake(SCR_WIDTH / 2, SCR_HEIGHT * 0.6), vmake(150, 35), "data/ui/buttonOn.png", "data/ui/buttonOff.png", "LTEXT_GUI_RETRY_MENU_ITEM");
+	button->addListener(this);
+	menu->addControl(button);
+	button = new Button("MAIN_MENU", vmake(SCR_WIDTH / 2, SCR_HEIGHT * 0.5), vmake(150, 35), "data/ui/buttonOn.png", "data/ui/buttonOff.png", "LTEXT_GUI_ABANDON_MENU_ITEM");
+	button->addListener(this);
+	menu->addControl(button);
 }

@@ -90,6 +90,9 @@
     <ClInclude Include="..\src\gui\slider.h">
       <Filter>src\gui</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\gui\label.h">
+      <Filter>src\gui</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\main.cpp">
@@ -150,6 +153,9 @@
       <Filter>src\gui</Filter>
     </ClCompile>
     <ClCompile Include="..\src\gui\slider.cpp">
+      <Filter>src\gui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\gui\label.cpp">
       <Filter>src\gui</Filter>
     </ClCompile>
   </ItemGroup>

@@ -13,7 +13,8 @@ class Button : public Control {
 public:
 	class IListener {
 	public:
-		virtual void onClick(Button* button) = 0;
+		virtual void onClick(Button* button) {}
+		virtual void onHold(Button* button) {}
 	};
 
 	Button(const std::string& name, const vec2& pos, const vec2& size, const char* spriteOn, const char* spriteOff, const std::string& text);
@@ -34,4 +35,5 @@ private:
 	bool m_pressed;
 	std::string              m_text;
 	Text*                    m_gfxText;
+	unsigned int m_timer;
 };

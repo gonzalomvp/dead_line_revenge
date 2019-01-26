@@ -16,7 +16,7 @@ public:
 		virtual void onClick(Checkbox* button) = 0;
 	};
 
-	Checkbox(const std::string& name, const vec2& pos, const vec2& size, const char* spriteOn, const char* spriteOff, const std::string& text);
+	Checkbox(const std::string& name, const vec2& pos, const vec2& size, const char* spriteOn, const char* spriteOff, const std::string& text, bool isChecked);
 	~Checkbox() {} //Implementar
 
 	void init() {} //Implementar y mover a la clase Control
@@ -26,6 +26,8 @@ public:
 	
 	virtual bool onEvent(const IInputManager::Event&);
 	void addListener(IListener* listener) { m_listeners.push_back(listener); }
+
+	bool isChecked() { return m_checked; }
 
 private:
 	Sprite* m_spriteOn;

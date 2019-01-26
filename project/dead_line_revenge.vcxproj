@@ -33,6 +33,7 @@
     <ClInclude Include="..\src\gui\button.h" />
     <ClInclude Include="..\src\gui\checkbox.h" />
     <ClInclude Include="..\src\gui\gui.h" />
+    <ClInclude Include="..\src\gui\label.h" />
     <ClInclude Include="..\src\gui\menu.h" />
     <ClInclude Include="..\src\gui\slider.h" />
     <ClInclude Include="..\src\gui\string_manager.h" />
@@ -54,6 +55,7 @@
     <ClCompile Include="..\src\gui\button.cpp" />
     <ClCompile Include="..\src\gui\checkbox.cpp" />
     <ClCompile Include="..\src\gui\gui.cpp" />
+    <ClCompile Include="..\src\gui\label.cpp" />
     <ClCompile Include="..\src\gui\menu.cpp" />
     <ClCompile Include="..\src\gui\slider.cpp" />
     <ClCompile Include="..\src\gui\string_manager.cpp" />

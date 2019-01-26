@@ -19,6 +19,25 @@ void SoundEngine::playSound(const char* soundFile) {
 			soundId = CORE_LoadWav(soundFile);
 			m_sounds[soundFile] = soundId;
 		}
-		CORE_PlayMusic(soundId);
+		CORE_PlaySound(soundId, g_settings.volume, 1.0f);
 	}
+}
+
+void SoundEngine::playMusic(const char* soundFile) {
+	if (g_settings.music) {
+		uint soundId = m_sounds[soundFile];
+		if (!soundId) {
+			soundId = CORE_LoadWav(soundFile);
+			m_sounds[soundFile] = soundId;
+		}
+		CORE_PlayMusic(soundId, true, g_settings.volume);
+	}
+}
+
+void SoundEngine::stopMusic() {
+	CORE_StopMusic();
+}
+
+void SoundEngine::setVolume(float volume) {
+	CORE_SetMusicVolume(volume);
 }

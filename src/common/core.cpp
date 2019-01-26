@@ -278,7 +278,7 @@ void CORE_EndSound()
 }
 
 //-----------------------------------------------------------------------------
-void CORE_PlaySound(ALuint snd, float volume, float pitch)
+void CORE_PlaySound(uint snd, float volume, float pitch)
 {
   // Stop and play!
   alSourceStop(sndsources[nextsource]);
@@ -300,6 +300,12 @@ void CORE_PlayMusic (uint snd, bool loop /*= false*/, float volume /*= 1.f*/)
   alSourcef(sndsources[MAX_SND_SOURCES-1], AL_GAIN,   volume);
   alSourcei(sndsources[MAX_SND_SOURCES-1], AL_LOOPING, loop);
   alSourcePlay(sndsources[MAX_SND_SOURCES-1]);
+}
+
+//-----------------------------------------------------------------------------
+void CORE_SetMusicVolume (float volume)
+{
+	alSourcef(sndsources[MAX_SND_SOURCES - 1], AL_GAIN, volume);
 }
   
 //-----------------------------------------------------------------------------

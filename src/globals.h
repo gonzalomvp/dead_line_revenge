@@ -16,6 +16,7 @@ enum TLanguage {
 struct Settings {
 	bool music;
 	bool sfx;
+	float volume;
 	TLanguage language;
 };
 

@@ -18,6 +18,11 @@ MenuManager*    g_menuManager;
 Settings        g_settings;
 
 int Main(void) {
+	g_settings.music = true;
+	g_settings.sfx = true;
+	g_settings.volume = 0.2f;
+	g_settings.language = EEnglish;
+
 	g_graphicsEngine = new GraphicsEngine();
 	g_soundEngine    = new SoundEngine();
 	g_inputManager   = new InputManager();
@@ -26,10 +31,6 @@ int Main(void) {
 	g_menuManager    = new MenuManager();
 	g_menuManager->init();
 
-	g_settings.music = true;
-	g_settings.sfx = true;
-	g_settings.language = EEnglish;
-
 	// Load default language
 	g_stringManager->loadLanguage(g_settings.language);
 
@@ -37,8 +38,11 @@ int Main(void) {
 	g_appManager->switchMode(AppMode::EMENU);
 
 	//Set Background
-	Sprite background(g_graphicsEngine->getTexture("data/background.png"), vmake(SCR_WIDTH * 0.5f, SCR_HEIGHT * 0.5f), vmake(SCR_WIDTH, SCR_HEIGHT), 0.0f, 1.0f, 3);
+	Sprite background(g_graphicsEngine->getTexture("data/background.png"), vmake(SCR_WIDTH * 0.5f, SCR_HEIGHT * 0.5f), vmake(SCR_WIDTH, SCR_HEIGHT), 0.0f, 1.0f, 6);
 	g_graphicsEngine->addGfxEntity(&background);
+
+	//Play Music
+	g_soundEngine->playMusic("data/audio/music.wav");
 	
 	clock_t beginTime = clock();
 	clock_t endTime;

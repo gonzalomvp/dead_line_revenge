@@ -163,7 +163,7 @@ Entity* World::createPlayer(vec2 pos) {
 	Entity* player = new Entity(Entity::EPlayer);
 	ComponentTransform* transform = new ComponentTransform(player, pos, vmake(30, 25));
 	transform->init();
-	ComponentRenderable* renderable = new ComponentRenderable(player, "data/player.png", 0.0f, 1.0f, 2, 10);
+	ComponentRenderable* renderable = new ComponentRenderable(player, "data/player.png", 0.0f, 1.0f, 5, 10);
 	renderable->init();
 	ComponentPlayerController* playerControl = new ComponentPlayerController(player);
 	playerControl->init();
@@ -185,7 +185,7 @@ Entity* World::createBullet(vec2 pos, vec2 size, vec2 direction, float speed, in
 	Entity* bullet = new Entity(Entity::EWeapon);
 	ComponentTransform* transform = new ComponentTransform(bullet, pos, size);
 	transform->init();
-	ComponentRenderable* renderable = new ComponentRenderable(bullet, texture, vangle(direction), 1.0f, 2);
+	ComponentRenderable* renderable = new ComponentRenderable(bullet, texture, vangle(direction), 1.0f, 5);
 	renderable->init();
 	ComponentMove* movement = new ComponentMove(bullet, direction, speed, true, isBouncy);
 	movement->init();
@@ -223,7 +223,7 @@ Entity* World::createExplossion(vec2 pos, vec2 size, vec2 sizeIncrement, int dur
 	Entity* explossion = new Entity(entityType);
 	ComponentTransform* transform = new ComponentTransform(explossion, pos, size, sizeIncrement);
 	transform->init();
-	ComponentRenderable* renderable = new ComponentRenderable(explossion, "data/explossion.png", 0.0f, 0.5f, 2);
+	ComponentRenderable* renderable = new ComponentRenderable(explossion, "data/explossion.png", 0.0f, 0.5f, 5);
 	renderable->init();
 
 	// Nuclear explossion has different collider than standard explosssion
@@ -250,7 +250,7 @@ Entity* World::createEnemy(vec2 pos, TEnemyData enemyData, Entity* player) {
 	Entity* enemy = new Entity(enemyData.type);
 	ComponentTransform* transform = new ComponentTransform(enemy, pos, enemyData.size);
 	transform->init();
-	ComponentRenderable* renderable = new ComponentRenderable(enemy, enemyData.imageFile.c_str(), 0.0f, 1.0f, 2, 10);
+	ComponentRenderable* renderable = new ComponentRenderable(enemy, enemyData.imageFile.c_str(), 0.0f, 1.0f, 5, 10);
 	renderable->init();
 
 	// Melee and Big enemies follow player until contact
@@ -318,7 +318,7 @@ Entity* World::createWeaponPickup() {
 	Entity* weaponPickup = new Entity(Entity::EPickup);
 	ComponentTransform* transform = new ComponentTransform(weaponPickup, randomPos, vmake(20, 20));
 	transform->init();
-	ComponentRenderable* renderable = new ComponentRenderable(weaponPickup, "data/crate-1.png", 0.0f, 1.0f, 2);
+	ComponentRenderable* renderable = new ComponentRenderable(weaponPickup, "data/crate-1.png", 0.0f, 1.0f, 5);
 	renderable->init();
 	ComponentCollider* collider = new ComponentCollider(weaponPickup, ComponentCollider::ERectCollider, 0, ComponentCollider::EPickupCollider, ComponentCollider::EPlayerCollider);
 	collider->init();

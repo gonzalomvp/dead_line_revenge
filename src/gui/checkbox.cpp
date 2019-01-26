@@ -7,7 +7,7 @@
 //=============================================================================
 // Checkbox class
 //=============================================================================
-Checkbox::Checkbox(const std::string& name, const vec2& pos, const vec2& size, const char* spriteOn, const char* spriteOff, const std::string& text) : Control(name, pos, size, true) {
+Checkbox::Checkbox(const std::string& name, const vec2& pos, const vec2& size, const char* spriteOn, const char* spriteOff, const std::string& text, bool isChecked) : Control(name, pos, size, false) {
 	m_spriteOn = new Sprite(g_graphicsEngine->getTexture(spriteOn), pos, size, 0.f, 1.f, 1);
 	m_spriteOn->setPos(pos);
 	m_spriteOn->setSize(size);
@@ -17,7 +17,8 @@ Checkbox::Checkbox(const std::string& name, const vec2& pos, const vec2& size, c
 	g_graphicsEngine->addGfxEntity(m_spriteOn);
 	g_graphicsEngine->addGfxEntity(m_spriteOff);
 	m_pressed = false;
-	m_checked = false;
+	m_checked = isChecked;
+	deactivate();
 	//m_text = text;
 	//m_gfxText = new Text(m_text, vmake(m_pos.x - (m_text.length() / 2.0f * 16), m_pos.y - 6), 1);
 	//g_graphicsEngine->addGfxEntity(m_gfxText);
@@ -29,7 +30,16 @@ void Checkbox::activate() {
 	//m_gfxText->activate();
 	//m_gfxText->setPos(vmake(m_pos.x - (m_text.length() / 2.0f * 16), m_pos.y - 6));
 	m_pressed = false;
-	m_checked = false;//hay que recoger el valor
+
+	if (m_checked) {
+		m_spriteOn->activate();
+		m_spriteOff->deactivate();
+	}
+	else {
+		m_spriteOn->deactivate();
+		m_spriteOff->activate();
+	}
+
 	g_inputManager->registerEvent(this, IInputManager::EMouseButtonDown);
 	g_inputManager->registerEvent(this, IInputManager::EMouseButtonUp);
 }

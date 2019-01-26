@@ -15,10 +15,10 @@ class Slider : public Control, Button::IListener {
 public:
 	class IListener {
 	public:
-		virtual void onClick(Slider* button) = 0;
+		virtual void onValueChange(Slider* slider) = 0;
 	};
 
-	Slider(const std::string& name, const vec2& pos, const vec2& size, const char* spriteOn, const char* spriteOff, const std::string& text);
+	Slider(const std::string& name, const vec2& pos, const vec2& size, const char* spriteOn, const char* spriteOff, const std::string& text, float value);
 	~Slider() {} //Implementar
 
 	void init() {} //Implementar y mover a la clase Control
@@ -29,13 +29,13 @@ public:
 	virtual bool onEvent(const IInputManager::Event&);
 	void addListener(IListener* listener) { m_listeners.push_back(listener); }
 
-	virtual void onClick(Button* button);
+	virtual void onHold(Button* button);
+	float getValue() { return m_value; }
 
 private:
 
 	void calculateValueFromPosition();
 	void setValue(float value);
-	float getValue() { return m_value; }
 
 	Button* m_leftButton;
 	Button* m_rightButton;

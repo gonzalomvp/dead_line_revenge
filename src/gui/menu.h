@@ -65,7 +65,7 @@ private:
 	void selectPreviousItem();
 	void selectNextItem    ();
 
-	int                     m_seletedItem;
+	unsigned int            m_seletedItem;
 	Text*                   m_title;
 	std::vector<MenuItem*>  m_menuItems;
 	std::vector<Control*>   m_controls;
@@ -75,7 +75,7 @@ private:
 //=============================================================================
 // MenuManager class
 //=============================================================================
-class MenuManager : public Menu::IListener, Button::IListener {
+class MenuManager : public Menu::IListener, Button::IListener, Checkbox::IListener, Slider::IListener {
 public:
 	enum TMenu {
 		EMainMenu,
@@ -93,6 +93,8 @@ public:
 	void         deactivateMenu();
 	virtual void onSelected    (MenuItem* menuItem);
 	virtual void onClick       (Button* button);
+	virtual void onClick       (Checkbox* checkbox);
+	virtual void onValueChange (Slider* slider);
 	Menu*        getMenu       (TMenu menu);
 private:
 	void createMainMenu    ();

@@ -82,6 +82,7 @@ uint CORE_LoadWav     (const char filename[]);
 void CORE_PlaySound (uint snd, float volume, float pitch);
 void CORE_UnloadWav (uint snd);
 void CORE_PlayMusic (uint snd, bool loop = false, float volume = 1.f);
+void CORE_SetMusicVolume(float volume);
 void CORE_StopMusic ();
 #endif //SWALIB_SOUND
 
