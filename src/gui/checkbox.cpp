@@ -13,8 +13,9 @@ Checkbox::~Checkbox() {
 	delete m_spriteChecked;
 	delete m_spriteUnchecked;
 
-	g_inputManager->registerEvent(this, IInputManager::EMouseButtonDown);
-	g_inputManager->registerEvent(this, IInputManager::EMouseButtonUp);
+	g_inputManager->unregisterEvent(this, IInputManager::EMouseButtonDown);
+	g_inputManager->unregisterEvent(this, IInputManager::EMouseButtonUp);
+	g_inputManager->unregisterEvent(this, IInputManager::EMouseButtonHold);
 }
 
 
@@ -43,6 +44,7 @@ void Checkbox::activate() {
 
 	g_inputManager->registerEvent(this, IInputManager::EMouseButtonDown);
 	g_inputManager->registerEvent(this, IInputManager::EMouseButtonUp);
+	g_inputManager->registerEvent(this, IInputManager::EMouseButtonHold);
 }
 
 void Checkbox::deactivate() {
@@ -53,6 +55,7 @@ void Checkbox::deactivate() {
 
 	g_inputManager->unregisterEvent(this, IInputManager::EMouseButtonDown);
 	g_inputManager->unregisterEvent(this, IInputManager::EMouseButtonUp);
+	g_inputManager->unregisterEvent(this, IInputManager::EMouseButtonHold);
 }
 
 bool Checkbox::onEvent(const IInputManager::Event& event) {
@@ -69,8 +72,10 @@ bool Checkbox::onEvent(const IInputManager::Event& event) {
 			}
 			break;
 		case IInputManager::EMouseButtonUp:
-			if (isMouseOverButton && m_isPushed) {
+			if (m_isPushed) {
+				m_isPushed = false;
 				m_isChecked = !m_isChecked;
+				
 				if (m_isChecked) {
 					m_spriteChecked->activate();
 					m_spriteUnchecked->deactivate();
@@ -84,7 +89,12 @@ bool Checkbox::onEvent(const IInputManager::Event& event) {
 					(*itListener)->onClick(this);
 				}
 			}
-			m_isPushed = false;
+			
+			break;
+		case IInputManager::EMouseButtonHold:
+			if (!isMouseOverButton) {
+				m_isPushed = false;
+			}
 			break;
 		default:
 			break;
