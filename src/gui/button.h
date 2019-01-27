@@ -16,25 +16,28 @@ public:
 		virtual void onClick(Button* button) = 0;
 	};
 
-	Button(const std::string& name, const vec2& pos, const vec2& size, const char* spriteOn, const char* spriteOff, const std::string& text, bool notifyHold = false);
-	~Button() {} //Implementar
+	Button(const std::string& name, const vec2& pos, const vec2& size, bool isActive = true) : Control(name, pos, size, isActive) {}
+	~Button();
 
-	void init() {} //Implementar y mover a la clase Control
-	virtual void activate();
-	virtual void deactivate();
-	virtual void run();
+	void init(const char* normalImage, const char* pushImage, const std::string& text, bool notifyHold = false, unsigned int holdTimer = 10);
+
+	virtual void activate  () override;
+	virtual void deactivate() override;
+	virtual void run       () override;
 	
 	virtual bool onEvent(const IInputManager::Event&);
 	void addListener(IListener* listener) { m_listeners.push_back(listener); }
 
 private:
-	Sprite* m_spriteOn;
-	Sprite* m_spriteOff;
+	Sprite*      m_spriteNormal;
+	Sprite*      m_spritePush;
+	std::string  m_text;
+	Text*        m_buttonText;
+	bool         m_isPushed;
+	bool         m_isHold;
+	unsigned int m_holdTime;
+	unsigned int m_holdTimer;
+	bool         m_notifyHold;
+
 	std::vector<IListener*> m_listeners;
-	bool m_pressed;
-	std::string              m_text;
-	Text*                    m_gfxText;
-	unsigned int m_timer;
-	bool m_isHold;
-	bool m_notifyHold;
 };

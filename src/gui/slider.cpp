@@ -8,8 +8,11 @@
 // Slider class
 //=============================================================================
 Slider::Slider(const std::string& name, const vec2& pos, const vec2& size, const char* spriteOn, const char* spriteOff, const std::string& text, float value) : Control(name, pos, size, false) {
-	m_leftButton = new Button(name, vmake(pos.x - (size.x + 32) / 2, pos.y), vmake(32, 32), "data/ui/Slider_Left_Push.png", "data/ui/Slider_Left_Normal.png", "", true);
-	m_rightButton = new Button(name, vmake(pos.x + (size.x + 32) / 2, pos.y), vmake(32, 32), "data/ui/Slider_Right_Push.png", "data/ui/Slider_Right_Normal.png", "", true);
+	m_leftButton = new Button(name, vmake(pos.x - (size.x + 32) / 2, pos.y), vmake(32, 32));
+	m_leftButton->init("data/ui/Slider_Left_Normal.png", "data/ui/Slider_Left_Push.png", "", true);
+
+	m_rightButton = new Button(name, vmake(pos.x + (size.x + 32) / 2, pos.y), vmake(32, 32));
+	m_rightButton->init("data/ui/Slider_Right_Normal.png", "data/ui/Slider_Right_Push.png", "", true);
 	m_spriteBar = new Sprite(g_graphicsEngine->getTexture("data/ui/Slider_bar.png"), pos, vmake(size.x, 5), 0.f, 1.f, 2);
 	g_graphicsEngine->addGfxEntity(m_spriteBar);
 	m_spriteBall = new Sprite(g_graphicsEngine->getTexture("data/ui/Slider_ball.png"), pos, vmake(20, 20), 0.f, 1.f, 1);

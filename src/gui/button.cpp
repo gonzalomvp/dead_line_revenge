@@ -7,58 +7,75 @@
 //=============================================================================
 // Button class
 //=============================================================================
-Button::Button(const std::string& name, const vec2& pos, const vec2& size, const char* spriteOn, const char* spriteOff, const std::string& text, bool notifyHold) : Control(name, pos, size, false) {
-	m_spriteOn = new Sprite(g_graphicsEngine->getTexture(spriteOn), pos, size, 0.f, 1.f, 2);
-	m_spriteOn->setPos(pos);
-	m_spriteOn->setSize(size);
-	m_spriteOff = new Sprite(g_graphicsEngine->getTexture(spriteOff), pos, size, 0.f, 1.f, 2);
-	m_spriteOff->setPos(pos);
-	m_spriteOff->setSize(size);
-	g_graphicsEngine->addGfxEntity(m_spriteOn);
-	g_graphicsEngine->addGfxEntity(m_spriteOff);
-	m_pressed = false;
-	m_isHold = false;
-	m_notifyHold = notifyHold;
+
+Button::~Button() {
+	g_graphicsEngine->removeGfxEntity(m_spriteNormal);
+	g_graphicsEngine->removeGfxEntity(m_spritePush);
+	g_graphicsEngine->removeGfxEntity(m_buttonText);
+	delete m_spriteNormal;
+	delete m_spritePush;
+	delete m_buttonText;
+
+	g_inputManager->unregisterEvent(this, IInputManager::EMouseButtonDown);
+	g_inputManager->unregisterEvent(this, IInputManager::EMouseButtonUp);
+	g_inputManager->unregisterEvent(this, IInputManager::EMouseButtonHold);
+}
+
+void Button::init(const char* normalImage, const char* pushImage, const std::string& text, bool notifyHold, unsigned int holdTime) {
+	m_spriteNormal = new Sprite(g_graphicsEngine->getTexture(normalImage), m_pos, m_size, 0.f, 1.f, 2);
+	g_graphicsEngine->addGfxEntity(m_spriteNormal);
+	m_spritePush = new Sprite(g_graphicsEngine->getTexture(pushImage) , m_pos, m_size, 0.f, 1.f, 2);
+	g_graphicsEngine->addGfxEntity(m_spritePush);
 	m_text = text;
-	m_gfxText = new Text(m_text, vmake(m_pos.x - (m_text.length() / 2.0f * 16), m_pos.y - 6), 1);
-	g_graphicsEngine->addGfxEntity(m_gfxText);
-	deactivate();
+	m_buttonText = new Text(m_text, vmake(m_pos.x - (m_text.length() / 2.0f * 16), m_pos.y - 6), 1);
+	g_graphicsEngine->addGfxEntity(m_buttonText);
+	m_notifyHold = notifyHold;
+	m_holdTime = holdTime;
 }
 
 void Button::activate() {
-	m_spriteOn->deactivate();
-	m_spriteOff->activate();
-	m_gfxText->activate();
-	m_gfxText->setPos(vmake(m_pos.x - (m_text.length() / 2.0f * 16), m_pos.y - 6));
-	m_pressed = false;
+	Control::activate();
+
+	m_spriteNormal->activate();
+	m_spritePush->deactivate();
+	m_buttonText->activate();
+	m_buttonText->setPos(vmake(m_pos.x - (m_text.length() / 2.0f * 16), m_pos.y - 6));
+
+	m_isPushed = false;
 	m_isHold = false;
-	m_timer = 20;
+	m_holdTimer = 0;
+
 	g_inputManager->registerEvent(this, IInputManager::EMouseButtonDown);
 	g_inputManager->registerEvent(this, IInputManager::EMouseButtonUp);
 	g_inputManager->registerEvent(this, IInputManager::EMouseButtonHold);
 }
 
 void Button::deactivate() {
-	m_spriteOn->deactivate();
-	m_spriteOff->deactivate();
-	m_gfxText->deactivate();
+	Control::deactivate();
+
+	m_spriteNormal->deactivate();
+	m_spritePush->deactivate();
+	m_buttonText->deactivate();
+
 	g_inputManager->unregisterEvent(this, IInputManager::EMouseButtonDown);
 	g_inputManager->unregisterEvent(this, IInputManager::EMouseButtonUp);
 	g_inputManager->unregisterEvent(this, IInputManager::EMouseButtonHold);
 }
 
 void Button::run() {
-	std::string textToDraw = g_stringManager->getText(m_text);
-	m_gfxText->setText(textToDraw.c_str());
-	vec2 currentPos = m_gfxText->getPos();
-	currentPos.x = m_pos.x - (textToDraw.length() / 2.0f * 16);
-	m_gfxText->setPos(currentPos);
+	Control::run();
 
-	if (m_pressed && m_notifyHold) {
-		++m_timer;
-		if (m_timer >= 20) {
+	std::string textToDraw = g_stringManager->getText(m_text);
+	m_buttonText->setText(textToDraw.c_str());
+	vec2 currentPos = m_buttonText->getPos();
+	currentPos.x = m_pos.x - (textToDraw.length() / 2.0f * 16);
+	m_buttonText->setPos(currentPos);
+
+	if (m_isPushed && m_notifyHold) {
+		++m_holdTimer;
+		if (m_holdTimer >= m_holdTime) {
 			m_isHold = true;
-			m_timer = 0;
+			m_holdTimer = 0;
 			for (auto itListener = m_listeners.begin(); itListener != m_listeners.end(); ++itListener) {
 				(*itListener)->onClick(this);
 			}
@@ -68,64 +85,45 @@ void Button::run() {
 
 bool Button::onEvent(const IInputManager::Event& event) {
 	const IInputManager::MouseEvent mouseEvent = *static_cast<const IInputManager::MouseEvent*>(&event);
+	//assert(mouseEvent);
 
 	bool isMouseOverButton = mouseEvent.getPos().x >= m_pos.x - m_size.x * 0.5 && mouseEvent.getPos().x <= m_pos.x + m_size.x * 0.5 && mouseEvent.getPos().y >= m_pos.y - m_size.y * 0.5 && mouseEvent.getPos().y <= m_pos.y + m_size.y * 0.5;
 
 	if (mouseEvent.getButton() == SYS_MB_LEFT) {
-		if (mouseEvent.getType() == IInputManager::EMouseButtonDown) {
-			if (isMouseOverButton) {
-				m_pressed = true;
-				m_timer = 20;
-				m_spriteOff->deactivate();
-				m_spriteOn->activate();
-				m_gfxText->setPos(vmake(m_pos.x - (m_text.length() / 2.0f * 16), m_pos.y - 8));
-			}
-		}
-		else if (mouseEvent.getType() == IInputManager::EMouseButtonUp) {
-			m_spriteOn->deactivate();
-			m_spriteOff->activate();
-			m_gfxText->setPos(vmake(m_pos.x - (m_text.length() / 2.0f * 16), m_pos.y - 6));
-			if (m_pressed && !m_isHold) {
-				for (auto itListener = m_listeners.begin(); itListener != m_listeners.end(); ++itListener) {
-					(*itListener)->onClick(this);
+		switch (mouseEvent.getType()) {
+			case IInputManager::EMouseButtonDown:
+				if (isMouseOverButton) {
+					m_isPushed = true;
+					m_holdTimer = 0;
+					m_spritePush->activate();
+					m_spriteNormal->deactivate();
+					m_buttonText->setPos(vmake(m_pos.x - (m_text.length() / 2.0f * 16), m_pos.y - 8));
 				}
-			}
-			m_pressed = false;
-			m_isHold = false;
-		}
-		else {
-			if (!isMouseOverButton) {
-				m_spriteOn->deactivate();
-				m_spriteOff->activate();
-				m_gfxText->setPos(vmake(m_pos.x - (m_text.length() / 2.0f * 16), m_pos.y - 6));
-				m_pressed = false;
-			}
+				break;
+			case IInputManager::EMouseButtonUp:
+				m_spriteNormal->activate();
+				m_spritePush->deactivate();
+				m_buttonText->setPos(vmake(m_pos.x - (m_text.length() / 2.0f * 16), m_pos.y - 6));
+				if (m_isPushed && !m_isHold) {
+					for (auto itListener = m_listeners.begin(); itListener != m_listeners.end(); ++itListener) {
+						(*itListener)->onClick(this);
+					}
+				}
+				m_isPushed = false;
+				m_isHold = false;
+				break;
+			case IInputManager::EMouseButtonHold:
+				if (!isMouseOverButton) {
+					m_spriteNormal->activate();
+					m_spritePush->deactivate();
+					m_buttonText->setPos(vmake(m_pos.x - (m_text.length() / 2.0f * 16), m_pos.y - 6));
+					m_isPushed = false;
+					m_isHold = false;
+				}
+				break;
+			default:
+				break;
 		}
 	}
-
-	//if (eventType == IInputManager::TEvent::EMouse) {
-	//	const IInputManager::MouseEvent mouseEvent = *static_cast<const IInputManager::MouseEvent*>(&event);
-
-	//	if (mouseEvent.mouseButton == IInputManager::MouseEvent::BLeft && mouseEvent.mouseButtonAction == IInputManager::MouseEvent::AButtonDown
-	//		&& mouseEvent.x >= m_pos.x - m_size.x * 0.5 && mouseEvent.x <= m_pos.x + m_size.x * 0.5 && mouseEvent.y >= m_pos.y - m_size.y * 0.5 && mouseEvent.y <= m_pos.y + m_size.y * 0.5) {
-	//		m_pressed = true;
-	//		g_graphicsEngine->removeSprite(m_spriteOff);
-	//		g_graphicsEngine->addSprite(m_spriteOn);
-	//	}
-
-	//	if (mouseEvent.mouseButton == IInputManager::MouseEvent::BLeft && mouseEvent.mouseButtonAction == IInputManager::MouseEvent::AButtonUp) {
-	//		if (m_pressed && mouseEvent.x >= m_pos.x - m_size.x * 0.5 && mouseEvent.x <= m_pos.x + m_size.x * 0.5 && mouseEvent.y >= m_pos.y - m_size.y * 0.5 && mouseEvent.y <= m_pos.y + m_size.y * 0.5) {
-	//			for (size_t i = 0; i < m_listeners.size(); ++i) {
-	//				m_listeners[i]->onClick(this);
-	//				//temp
-	//				m_listeners.clear();
-	//			}
-	//		}
-	//		m_pressed = false;
-	//		g_graphicsEngine->removeSprite(m_spriteOn);
-	//		g_graphicsEngine->addSprite(m_spriteOff);
-	//	}
-	//}
-
 	return true;
 }
