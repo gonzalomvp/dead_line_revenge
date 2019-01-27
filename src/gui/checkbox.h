@@ -16,25 +16,25 @@ public:
 		virtual void onClick(Checkbox* button) = 0;
 	};
 
-	Checkbox(const std::string& name, const vec2& pos, const vec2& size, const char* spriteOn, const char* spriteOff, const std::string& text, bool isChecked);
-	~Checkbox() {} //Implementar
+	Checkbox(const std::string& name, const vec2& pos, const vec2& size, bool isActive = true) : Control(name, pos, size, isActive) {}
+	~Checkbox();
 
-	void init() {} //Implementar y mover a la clase Control
-	virtual void activate();
-	virtual void deactivate();
-	virtual void run();
+	void init(const char* spriteChecked, const char* spriteUnchecked, bool isChecked);
+
+	virtual void activate  () override;
+	virtual void deactivate() override;
 	
 	virtual bool onEvent(const IInputManager::Event&);
 	void addListener(IListener* listener) { m_listeners.push_back(listener); }
 
-	bool isChecked() { return m_checked; }
+	bool isChecked() { return m_isChecked; }
 
 private:
-	Sprite* m_spriteOn;
-	Sprite* m_spriteOff;
+	Sprite* m_spriteChecked;
+	Sprite* m_spriteUnchecked;
+	
+	bool m_isPushed;
+	bool m_isChecked;
+
 	std::vector<IListener*> m_listeners;
-	bool m_pressed;
-	bool m_checked;
-	//std::string              m_text;
-	//Text*                    m_gfxText;
 };

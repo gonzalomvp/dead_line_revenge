@@ -63,21 +63,23 @@ void Button::deactivate() {
 }
 
 void Button::run() {
-	Control::run();
+	if (m_isActive) {
+		Control::run();
 
-	std::string textToDraw = g_stringManager->getText(m_text);
-	m_buttonText->setText(textToDraw.c_str());
-	vec2 currentPos = m_buttonText->getPos();
-	currentPos.x = m_pos.x - (textToDraw.length() / 2.0f * 16);
-	m_buttonText->setPos(currentPos);
+		std::string textToDraw = g_stringManager->getText(m_text);
+		m_buttonText->setText(textToDraw.c_str());
+		vec2 currentPos = m_buttonText->getPos();
+		currentPos.x = m_pos.x - (textToDraw.length() / 2.0f * 16);
+		m_buttonText->setPos(currentPos);
 
-	if (m_isPushed && m_notifyHold) {
-		++m_holdTimer;
-		if (m_holdTimer >= m_holdTime) {
-			m_isHold = true;
-			m_holdTimer = 0;
-			for (auto itListener = m_listeners.begin(); itListener != m_listeners.end(); ++itListener) {
-				(*itListener)->onClick(this);
+		if (m_isPushed && m_notifyHold) {
+			++m_holdTimer;
+			if (m_holdTimer >= m_holdTime) {
+				m_isHold = true;
+				m_holdTimer = 0;
+				for (auto itListener = m_listeners.begin(); itListener != m_listeners.end(); ++itListener) {
+					(*itListener)->onClick(this);
+				}
 			}
 		}
 	}

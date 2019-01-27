@@ -407,28 +407,34 @@ void MenuManager::createOptionsMenu() {
 	Menu* menu = new Menu("OPTIONS_MENU", vmake(0.0f, 0.0f), vmake(0.0f, 0.0f), false);
 	m_menus[EOptionsMenu] = menu;
 
-	Label* label = new Label("SETTINGS_MUSIC_LABEL", vmake(SCR_WIDTH / 2 - 100, SCR_HEIGHT * 0.8), vmake(0.0, 0.0), "LTEXT_GUI_MUSIC_MENU_ITEM");
+	Label* label = new Label("SETTINGS_MUSIC_LABEL", vmake(SCR_WIDTH / 2 - 100, SCR_HEIGHT * 0.8), vmake(0.0, 0.0));
+	label->init("LTEXT_GUI_MUSIC_MENU_ITEM");
 	menu->addControl(label);
 
-	Checkbox* checkbox = new Checkbox("SETTINGS_MUSIC", vmake(SCR_WIDTH / 2 + 100, SCR_HEIGHT * 0.8), vmake(35, 35), "data/ui/CheckBox_enabled.png", "data/ui/CheckBox_disabled.png", "LTEXT_GUI_PLAY_MENU_ITEM", g_settings.music);
+	Checkbox* checkbox = new Checkbox("SETTINGS_MUSIC", vmake(SCR_WIDTH / 2 + 100, SCR_HEIGHT * 0.8), vmake(35, 35));
+	checkbox->init("data/ui/CheckBox_enabled.png", "data/ui/CheckBox_disabled.png", g_settings.music);
 	checkbox->addListener(this);
 	menu->addControl(checkbox);
 
-	label = new Label("SETTINGS_SFX_LABEL", vmake(SCR_WIDTH / 2 - 100, SCR_HEIGHT * 0.65), vmake(0.0, 0.0), "LTEXT_GUI_SFX_MENU_ITEM");
+	label = new Label("SETTINGS_SFX_LABEL", vmake(SCR_WIDTH / 2 - 100, SCR_HEIGHT * 0.65), vmake(0.0, 0.0));
+	label->init("LTEXT_GUI_SFX_MENU_ITEM");
 	menu->addControl(label);
 
-	checkbox = new Checkbox("SETTINGS_SFX", vmake(SCR_WIDTH / 2 + 100, SCR_HEIGHT * 0.65), vmake(35, 35), "data/ui/CheckBox_enabled.png", "data/ui/CheckBox_disabled.png", "LTEXT_GUI_PLAY_MENU_ITEM", g_settings.sfx);
+	checkbox = new Checkbox("SETTINGS_SFX", vmake(SCR_WIDTH / 2 + 100, SCR_HEIGHT * 0.65), vmake(35, 35));
+	checkbox->init("data/ui/CheckBox_enabled.png", "data/ui/CheckBox_disabled.png", g_settings.sfx);
 	checkbox->addListener(this);
 	menu->addControl(checkbox);
 
-	label = new Label("SETTINGS_VOLUME_LABEL", vmake(SCR_WIDTH / 2 - 100, SCR_HEIGHT * 0.5), vmake(0.0, 0.0), "LTEXT_GUI_VOLUME_MENU_ITEM");
+	label = new Label("SETTINGS_VOLUME_LABEL", vmake(SCR_WIDTH / 2 - 100, SCR_HEIGHT * 0.5), vmake(0.0, 0.0));
+	label->init("LTEXT_GUI_VOLUME_MENU_ITEM");
 	menu->addControl(label);
 
 	Slider* slider = new Slider("SETTINGS_VOLUME", vmake(SCR_WIDTH / 2 + 100, SCR_HEIGHT * 0.5), vmake(100, 32), "data/ui/CheckBox_enabled.png", "data/ui/CheckBox_disabled.png", "LTEXT_GUI_PLAY_MENU_ITEM", g_settings.volume);
 	slider->addListener(this);
 	menu->addControl(slider);
 
-	label = new Label("SETTINGS_LANGUAGE_LABEL", vmake(SCR_WIDTH / 2 - 100, SCR_HEIGHT * 0.35), vmake(0.0, 0.0), "LTEXT_GUI_LANGUAGE_MENU_ITEM");
+	label = new Label("SETTINGS_LANGUAGE_LABEL", vmake(SCR_WIDTH / 2 - 100, SCR_HEIGHT * 0.35), vmake(0.0, 0.0));
+	label->init("LTEXT_GUI_LANGUAGE_MENU_ITEM");
 	menu->addControl(label);
 
 	Button* button = new Button("SETTINGS_LANGUAGE", vmake(SCR_WIDTH / 2 + 100, SCR_HEIGHT * 0.35), vmake(150, 35));
