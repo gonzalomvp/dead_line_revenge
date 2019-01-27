@@ -10,10 +10,12 @@
 
 Button::~Button() {
 	g_graphicsEngine->removeGfxEntity(m_spriteNormal);
-	g_graphicsEngine->removeGfxEntity(m_spritePush);
-	g_graphicsEngine->removeGfxEntity(m_buttonText);
 	delete m_spriteNormal;
+
+	g_graphicsEngine->removeGfxEntity(m_spritePush);
 	delete m_spritePush;
+
+	g_graphicsEngine->removeGfxEntity(m_buttonText);
 	delete m_buttonText;
 
 	g_inputManager->unregisterEvent(this, IInputManager::EMouseButtonDown);

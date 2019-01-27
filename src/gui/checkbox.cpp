@@ -9,8 +9,9 @@
 //=============================================================================
 Checkbox::~Checkbox() {
 	g_graphicsEngine->removeGfxEntity(m_spriteChecked);
-	g_graphicsEngine->removeGfxEntity(m_spriteUnchecked);
 	delete m_spriteChecked;
+
+	g_graphicsEngine->removeGfxEntity(m_spriteUnchecked);
 	delete m_spriteUnchecked;
 
 	g_inputManager->unregisterEvent(this, IInputManager::EMouseButtonDown);

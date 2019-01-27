@@ -18,22 +18,24 @@ public:
 		virtual void onValueChange(Slider* slider) = 0;
 	};
 
-	Slider(const std::string& name, const vec2& pos, const vec2& size, const char* spriteOn, const char* spriteOff, const std::string& text, float value);
-	~Slider() {} //Implementar
+	Slider(const std::string& name, const vec2& pos, const vec2& size, bool isActive = true) : Control(name, pos, size, isActive) {}
+	~Slider();
 
-	void init() {} //Implementar y mover a la clase Control
-	virtual void activate();
-	virtual void deactivate();
-	virtual void run();
-	
-	virtual bool onEvent(const IInputManager::Event&);
-	void addListener(IListener* listener) { m_listeners.push_back(listener); }
+	void init(const char* spriteLeftNormal, const char* spriteLeftPush, const char* spriteRightNormal, const char* spriteRightPush, const char* spriteBar, const char* spriteBall, float value);
 
-	virtual void onClick(Button* button);
-	float getValue() { return m_value; }
+	void  addListener(IListener* listener) { m_listeners.push_back(listener); }
+	float getValue()                       { return m_value;                  }
+
+	// Control Interface
+	virtual void activate()   override;
+	virtual void deactivate() override;
+	virtual void run()        override;
+	virtual bool onEvent(const IInputManager::Event&) override;
+
+	// Button::IListener Interface
+	virtual void onClick(Button* button) override;
 
 private:
-
 	void calculateValueFromPosition();
 	void setValue(float value);
 
@@ -41,10 +43,10 @@ private:
 	Button* m_rightButton;
 	Sprite* m_spriteBar;
 	Sprite* m_spriteBall;
+	Text*   m_sliderText;
+	bool    m_isBallPushed;
+	bool    m_isBarPushed;
+	float   m_value;
+
 	std::vector<IListener*> m_listeners;
-	bool m_ballPressed;
-	bool m_barPressed;
-	//std::string m_text;
-	Text* m_gfxText;
-	float m_value;
 };

@@ -21,12 +21,13 @@ public:
 
 	void init(const char* normalImage, const char* pushImage, const std::string& text, bool notifyHold = false, unsigned int holdTimer = 10);
 
+	void addListener(IListener* listener) { m_listeners.push_back(listener); }
+
+	// Control Interface
 	virtual void activate  () override;
 	virtual void deactivate() override;
 	virtual void run       () override;
-	
-	virtual bool onEvent(const IInputManager::Event&);
-	void addListener(IListener* listener) { m_listeners.push_back(listener); }
+	virtual bool onEvent(const IInputManager::Event&) override;
 
 private:
 	Sprite*      m_spriteNormal;

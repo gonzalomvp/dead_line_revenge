@@ -21,13 +21,13 @@ public:
 
 	void init(const char* spriteChecked, const char* spriteUnchecked, bool isChecked);
 
+	void addListener(IListener* listener) { m_listeners.push_back(listener); }
+	bool isChecked() { return m_isChecked; }
+
+	// Control Interface
 	virtual void activate  () override;
 	virtual void deactivate() override;
-	
-	virtual bool onEvent(const IInputManager::Event&);
-	void addListener(IListener* listener) { m_listeners.push_back(listener); }
-
-	bool isChecked() { return m_isChecked; }
+	virtual bool onEvent(const IInputManager::Event&) override;
 
 private:
 	Sprite* m_spriteChecked;

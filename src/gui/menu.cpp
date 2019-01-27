@@ -429,7 +429,8 @@ void MenuManager::createOptionsMenu() {
 	label->init("LTEXT_GUI_VOLUME_MENU_ITEM");
 	menu->addControl(label);
 
-	Slider* slider = new Slider("SETTINGS_VOLUME", vmake(SCR_WIDTH / 2 + 100, SCR_HEIGHT * 0.5), vmake(100, 32), "data/ui/CheckBox_enabled.png", "data/ui/CheckBox_disabled.png", "LTEXT_GUI_PLAY_MENU_ITEM", g_settings.volume);
+	Slider* slider = new Slider("SETTINGS_VOLUME", vmake(SCR_WIDTH / 2 + 100, SCR_HEIGHT * 0.5), vmake(100, 32));
+	slider->init("data/ui/Slider_Left_Normal.png", "data/ui/Slider_Left_Push.png", "data/ui/Slider_Right_Normal.png", "data/ui/Slider_Right_Push.png", "data/ui/Slider_bar.png", "data/ui/Slider_ball.png", g_settings.volume);
 	slider->addListener(this);
 	menu->addControl(slider);
 
