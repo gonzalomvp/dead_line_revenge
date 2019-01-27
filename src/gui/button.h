@@ -13,11 +13,10 @@ class Button : public Control {
 public:
 	class IListener {
 	public:
-		virtual void onClick(Button* button) {}
-		virtual void onHold(Button* button) {}
+		virtual void onClick(Button* button) = 0;
 	};
 
-	Button(const std::string& name, const vec2& pos, const vec2& size, const char* spriteOn, const char* spriteOff, const std::string& text);
+	Button(const std::string& name, const vec2& pos, const vec2& size, const char* spriteOn, const char* spriteOff, const std::string& text, bool notifyHold = false);
 	~Button() {} //Implementar
 
 	void init() {} //Implementar y mover a la clase Control
@@ -36,4 +35,6 @@ private:
 	std::string              m_text;
 	Text*                    m_gfxText;
 	unsigned int m_timer;
+	bool m_isHold;
+	bool m_notifyHold;
 };

@@ -7,7 +7,7 @@
 //=============================================================================
 // Button class
 //=============================================================================
-Button::Button(const std::string& name, const vec2& pos, const vec2& size, const char* spriteOn, const char* spriteOff, const std::string& text) : Control(name, pos, size, false) {
+Button::Button(const std::string& name, const vec2& pos, const vec2& size, const char* spriteOn, const char* spriteOff, const std::string& text, bool notifyHold) : Control(name, pos, size, false) {
 	m_spriteOn = new Sprite(g_graphicsEngine->getTexture(spriteOn), pos, size, 0.f, 1.f, 2);
 	m_spriteOn->setPos(pos);
 	m_spriteOn->setSize(size);
@@ -17,6 +17,8 @@ Button::Button(const std::string& name, const vec2& pos, const vec2& size, const
 	g_graphicsEngine->addGfxEntity(m_spriteOn);
 	g_graphicsEngine->addGfxEntity(m_spriteOff);
 	m_pressed = false;
+	m_isHold = false;
+	m_notifyHold = notifyHold;
 	m_text = text;
 	m_gfxText = new Text(m_text, vmake(m_pos.x - (m_text.length() / 2.0f * 16), m_pos.y - 6), 1);
 	g_graphicsEngine->addGfxEntity(m_gfxText);
@@ -29,6 +31,7 @@ void Button::activate() {
 	m_gfxText->activate();
 	m_gfxText->setPos(vmake(m_pos.x - (m_text.length() / 2.0f * 16), m_pos.y - 6));
 	m_pressed = false;
+	m_isHold = false;
 	m_timer = 20;
 	g_inputManager->registerEvent(this, IInputManager::EMouseButtonDown);
 	g_inputManager->registerEvent(this, IInputManager::EMouseButtonUp);
@@ -51,12 +54,13 @@ void Button::run() {
 	currentPos.x = m_pos.x - (textToDraw.length() / 2.0f * 16);
 	m_gfxText->setPos(currentPos);
 
-	if (m_pressed) {
+	if (m_pressed && m_notifyHold) {
 		++m_timer;
 		if (m_timer >= 20) {
+			m_isHold = true;
 			m_timer = 0;
 			for (auto itListener = m_listeners.begin(); itListener != m_listeners.end(); ++itListener) {
-				(*itListener)->onHold(this);
+				(*itListener)->onClick(this);
 			}
 		}
 	}
@@ -81,12 +85,13 @@ bool Button::onEvent(const IInputManager::Event& event) {
 			m_spriteOn->deactivate();
 			m_spriteOff->activate();
 			m_gfxText->setPos(vmake(m_pos.x - (m_text.length() / 2.0f * 16), m_pos.y - 6));
-			if (m_pressed) {
+			if (m_pressed && !m_isHold) {
 				for (auto itListener = m_listeners.begin(); itListener != m_listeners.end(); ++itListener) {
 					(*itListener)->onClick(this);
 				}
 			}
 			m_pressed = false;
+			m_isHold = false;
 		}
 		else {
 			if (!isMouseOverButton) {

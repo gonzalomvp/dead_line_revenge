@@ -29,7 +29,7 @@ public:
 	virtual bool onEvent(const IInputManager::Event&);
 	void addListener(IListener* listener) { m_listeners.push_back(listener); }
 
-	virtual void onHold(Button* button);
+	virtual void onClick(Button* button);
 	float getValue() { return m_value; }
 
 private:
