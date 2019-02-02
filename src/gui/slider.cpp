@@ -37,7 +37,7 @@ void Slider::init(const char* spriteLeftNormal, const char* spriteLeftPush, cons
 	m_spriteBar = new Sprite(g_graphicsEngine->getTexture("data/ui/Slider_bar.png"), m_pos, vmake(m_size.x, 5), 0.f, 1.f, 2);
 	g_graphicsEngine->addGfxEntity(m_spriteBar);
 
-	m_spriteBall = new Sprite(g_graphicsEngine->getTexture("data/ui/Slider_ball.png"), m_pos, vmake(20, 20), 0.f, 1.f, 1);
+	m_spriteBall = NEW(Sprite, g_graphicsEngine->getTexture("data/ui/Slider_ball.png"), m_pos, vmake(20, 20), 0.f, 1.f, 1);
 	g_graphicsEngine->addGfxEntity(m_spriteBall);
 
 	m_sliderText = new Text("", vmake(m_pos.x + m_size.x * 0.5f + m_rightButton->getSize().x, m_pos.y - 6), 1);

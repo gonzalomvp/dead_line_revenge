@@ -2,14 +2,18 @@
 #define _CORE_H_
 
 #include <cstdarg>
+#define MEMORY_LEAKS_MONITOR
+#include "leaks.h"
 
 //-----------------------------------------------------------------------------
 template<class T>
 using ptr = T*;
 
 template<typename T, typename... Args>
-ptr<T> createPtr(Args... args) {
-	return new T(args...);
+ptr<T> createPtr(const char *fname, unsigned int lnum, Args... args) {
+	ptr<T> ptr = new T(args...);
+	AddTrack((unsigned int)ptr, sizeof(T), fname, lnum);
+	return ptr;
 }
 
 //-----------------------------------------------------------------------------

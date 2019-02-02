@@ -49,7 +49,7 @@ inline void __cdecl operator delete[](void *p)
 	free(p);
 }
 
-#define NEW new(__FILE__, __LINE__)
+#define NEW(type, ...) createPtr<type>(__FILE__, __LINE__, __VA_ARGS__)
 #define NEW_ARRAY new(__FILE__, __LINE__)
 #define DELETE delete
 #define DELETE_ARRAY delete[]

@@ -6,7 +6,7 @@
 
 ALLOC_INFO *g_LeakList;
 
-void AddTrack(unsigned int addr,  unsigned int asize,  const char *fname, unsigned int lnum)
+void AddTrack(unsigned int addr, unsigned int asize, const char *fname, unsigned int lnum)
 {
 	ALLOC_INFO *info;
 

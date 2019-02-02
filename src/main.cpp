@@ -8,9 +8,6 @@
 
 #include <ctime>
 
-#define MEMORY_LEAKS_MONITOR
-#include "./common/leaks.h"
-
 // Global variables
 GraphicsEngine* g_graphicsEngine;
 SoundEngine*    g_soundEngine;
