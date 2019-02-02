@@ -2,10 +2,23 @@
 #define _CORE_H_
 
 #include <cstdarg>
+#include <memory>
 #define MEMORY_LEAKS_MONITOR
 #include "leaks.h"
 
 //-----------------------------------------------------------------------------
+template<class T>
+using sharedptr = std::shared_ptr<T>;
+
+template<typename T, typename... Args>
+void createPtr(const char *fname, unsigned int lnum, sharedptr<T>& ptr, Args... args) {
+	ptr = std::make_shared<T>(args...);
+}
+
+template<typename T, typename... Args>
+void deletePtr(sharedptr<T>& ptr) {
+}
+
 template<class T>
 using ptr = T*;
 
