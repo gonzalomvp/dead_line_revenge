@@ -9,13 +9,13 @@
 #include <ctime>
 
 // Global variables
-GraphicsEngine* g_graphicsEngine;
-SoundEngine*    g_soundEngine;
-IInputManager*  g_inputManager;
-AppManager*     g_appManager;
-StringManager*  g_stringManager;
-MenuManager*    g_menuManager;
-Settings        g_settings;
+ptr<GraphicsEngine> g_graphicsEngine;
+ptr<SoundEngine>    g_soundEngine;
+ptr<IInputManager>  g_inputManager;
+ptr<AppManager>     g_appManager;
+ptr<StringManager>  g_stringManager;
+ptr<MenuManager>    g_menuManager;
+Settings            g_settings;
 
 int Main(void) {
 	g_settings.music = true;

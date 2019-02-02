@@ -20,11 +20,11 @@ struct Settings {
 	TLanguage language;
 };
 
-extern AppManager*     g_appManager;
-extern World*          g_world;
-extern GraphicsEngine* g_graphicsEngine;
-extern SoundEngine*    g_soundEngine;
-extern IInputManager*  g_inputManager;
-extern StringManager*  g_stringManager;
-extern MenuManager*    g_menuManager;
-extern Settings        g_settings;
+extern ptr<AppManager>     g_appManager;
+extern ptr<World>          g_world;
+extern ptr<GraphicsEngine> g_graphicsEngine;
+extern ptr<SoundEngine>    g_soundEngine;
+extern ptr<IInputManager>  g_inputManager;
+extern ptr<StringManager>  g_stringManager;
+extern ptr<MenuManager>    g_menuManager;
+extern Settings            g_settings;

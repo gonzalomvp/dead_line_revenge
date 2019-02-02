@@ -71,7 +71,7 @@ public:
 
 	virtual void registerEvent  (ptr<IListener>, TEventType eventType);
 	virtual void unregisterEvent(ptr<IListener>, TEventType eventType);
-	virtual void addEvent       (Event* event);
+	virtual void addEvent       (ptr<Event> event);
 	virtual void processInput   ();
 private:
 	void processKeyboard      ();
@@ -79,7 +79,7 @@ private:
 	void checkKeyState        (int key);
 	void checkMouseButtonState(int button, const vec2& mousePos);
 
-	std::vector<Event*>                           m_events;
-	std::map<int, bool>                           m_inputStates;
+	std::vector<ptr<Event>>                           m_events;
+	std::map<int, bool>                               m_inputStates;
 	std::map<TEventType, std::vector<ptr<IListener>>> m_listenersMap;
 };
