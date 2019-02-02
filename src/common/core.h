@@ -10,10 +10,15 @@ template<class T>
 using ptr = T*;
 
 template<typename T, typename... Args>
-ptr<T> createPtr(const char *fname, unsigned int lnum, Args... args) {
-	ptr<T> ptr = new T(args...);
+void createPtr(const char *fname, unsigned int lnum, ptr<T>& ptr, Args... args) {
+	ptr = new T(args...);
 	AddTrack((unsigned int)ptr, sizeof(T), fname, lnum);
-	return ptr;
+}
+
+template<typename T, typename... Args>
+void deletePtr(ptr<T>& ptr) {
+	RemoveTrack((unsigned int)ptr);
+	delete ptr;
 }
 
 //-----------------------------------------------------------------------------

@@ -8,17 +8,17 @@
 // Slider class
 //=============================================================================
 Slider::~Slider() {
-	delete m_leftButton;
-	delete m_rightButton;
+	DELETE(m_leftButton);
+	DELETE(m_rightButton);
 
 	g_graphicsEngine->removeGfxEntity(m_spriteBar);
-	delete m_spriteBar;
+	DELETE(m_spriteBar);
 
 	g_graphicsEngine->removeGfxEntity(m_spriteBall);
-	delete m_spriteBall;
+	DELETE(m_spriteBall);
 
 	g_graphicsEngine->removeGfxEntity(m_sliderText);
-	delete m_sliderText;
+	DELETE(m_sliderText);
 
 	g_inputManager->unregisterEvent(this, IInputManager::EMouseButtonDown);
 	g_inputManager->unregisterEvent(this, IInputManager::EMouseButtonUp);
@@ -26,21 +26,21 @@ Slider::~Slider() {
 }
 
 void Slider::init(const char* spriteLeftNormal, const char* spriteLeftPush, const char* spriteRightNormal, const char* spriteRightPush, const char* spriteBar, const char* spriteBall, float value) {
-	m_leftButton = new Button(m_name, vmake(m_pos.x - (m_size.x + 32) / 2, m_pos.y), vmake(32, 32));
+	NEW(m_leftButton, m_name, vmake(m_pos.x - (m_size.x + 32) / 2, m_pos.y), vmake(32, 32));
 	m_leftButton->init("data/ui/Slider_Left_Normal.png", "data/ui/Slider_Left_Push.png", "", true);
 	m_leftButton->addListener(this);
 
-	m_rightButton = new Button(m_name, vmake(m_pos.x + (m_size.x + 32) / 2, m_pos.y), vmake(32, 32));
+	NEW(m_rightButton, m_name, vmake(m_pos.x + (m_size.x + 32) / 2, m_pos.y), vmake(32, 32));
 	m_rightButton->init("data/ui/Slider_Right_Normal.png", "data/ui/Slider_Right_Push.png", "", true);
 	m_rightButton->addListener(this);
 
-	m_spriteBar = new Sprite(g_graphicsEngine->getTexture("data/ui/Slider_bar.png"), m_pos, vmake(m_size.x, 5), 0.f, 1.f, 2);
+	NEW(m_spriteBar, g_graphicsEngine->getTexture("data/ui/Slider_bar.png"), m_pos, vmake(m_size.x, 5), 0.f, 1.f, 2);
 	g_graphicsEngine->addGfxEntity(m_spriteBar);
 
-	m_spriteBall = NEW(Sprite, g_graphicsEngine->getTexture("data/ui/Slider_ball.png"), m_pos, vmake(20, 20), 0.f, 1.f, 1);
+	NEW(m_spriteBall, g_graphicsEngine->getTexture("data/ui/Slider_ball.png"), m_pos, vmake(20, 20), 0.f, 1.f, 1);
 	g_graphicsEngine->addGfxEntity(m_spriteBall);
 
-	m_sliderText = new Text("", vmake(m_pos.x + m_size.x * 0.5f + m_rightButton->getSize().x, m_pos.y - 6), 1);
+	NEW(m_sliderText, "", vmake(m_pos.x + m_size.x * 0.5f + m_rightButton->getSize().x, m_pos.y - 6), 1);
 	g_graphicsEngine->addGfxEntity(m_sliderText);
 
 	m_value = value;
@@ -144,7 +144,7 @@ bool Slider::onEvent(const IInputManager::Event& event) {
 	return true;
 }
 
-void Slider::onClick(Button* button) {
+void Slider::onClick(ptr<Button> button) {
 	float increment = 0.1f; // hacer variable miembro
 	if (button == m_leftButton) {
 		increment = -increment;

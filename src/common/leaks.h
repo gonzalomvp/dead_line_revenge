@@ -23,35 +23,35 @@ void DumpUnfreed();
 extern ALLOC_INFO *g_LeakList;
 
 #ifdef MEMORY_LEAKS_MONITOR
-inline void * __cdecl operator new(unsigned int  size, const char *file, int line)
-{
-	void *ptr = (void *)malloc(size);
-	AddTrack((unsigned int)ptr, size, file, line);
-	return(ptr);
-};
+//inline void * __cdecl operator new(unsigned int  size, const char *file, int line)
+//{
+//	void *ptr = (void *)malloc(size);
+//	AddTrack((unsigned int)ptr, size, file, line);
+//	return(ptr);
+//};
+//
+//inline void __cdecl operator delete(void *p)
+//{
+//	RemoveTrack((unsigned int)p);
+//	free(p);
+//};
+//
+//inline void * __cdecl operator new[](unsigned int size, const char *file, int line)
+//{
+//	void *ptr = (void *)malloc(size);
+//	AddTrack((unsigned int)ptr, size, file, line);
+//	return(ptr);
+//};
+//
+//inline void __cdecl operator delete[](void *p)
+//{
+//	RemoveTrack((unsigned int)p);
+//	free(p);
+//}
 
-inline void __cdecl operator delete(void *p)
-{
-	RemoveTrack((unsigned int)p);
-	free(p);
-};
-
-inline void * __cdecl operator new[](unsigned int size, const char *file, int line)
-{
-	void *ptr = (void *)malloc(size);
-	AddTrack((unsigned int)ptr, size, file, line);
-	return(ptr);
-};
-
-inline void __cdecl operator delete[](void *p)
-{
-	RemoveTrack((unsigned int)p);
-	free(p);
-}
-
-#define NEW(type, ...) createPtr<type>(__FILE__, __LINE__, __VA_ARGS__)
-#define NEW_ARRAY new(__FILE__, __LINE__)
-#define DELETE delete
+#define NEW(...) createPtr(__FILE__, __LINE__, __VA_ARGS__)
+//#define NEW_ARRAY new(__FILE__, __LINE__)
+#define DELETE(ptr) deletePtr(ptr)
 #define DELETE_ARRAY delete[]
 #define DUMP_UNFREED DumpUnfreed();
 
