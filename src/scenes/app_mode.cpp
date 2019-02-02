@@ -31,7 +31,7 @@ void AppModeMenu::render() const {
 //=============================================================================
 void AppModeGame::init() {
 	g_menuManager->deactivateMenu();
-	g_world = new World(m_level);
+	g_world = NEW(World, m_level);
 	g_world->init();
 	g_world->loadLevel();
 }

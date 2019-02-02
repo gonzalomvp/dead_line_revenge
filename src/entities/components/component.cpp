@@ -199,7 +199,7 @@ ComponentRenderable::~ComponentRenderable() {
 
 void ComponentRenderable::init() {
 	Component::init();
-	m_sprite = new Sprite(g_graphicsEngine->getTexture(m_texture), vmake(0.0f, 0.0f), vmake(0.0f, 0.0f), m_angle, m_alpha, m_priority);
+	m_sprite = NEW(Sprite, g_graphicsEngine->getTexture(m_texture), vmake(0.0f, 0.0f), vmake(0.0f, 0.0f), m_angle, m_alpha, m_priority);
 	g_graphicsEngine->addGfxEntity(m_sprite);
 }
 
@@ -756,7 +756,7 @@ ComponentHUDMessage::~ComponentHUDMessage() {
 
 void ComponentHUDMessage::init() {
 	Component::init();
-	m_message = new Text(m_messageText, m_pos, 1);
+	m_message = NEW(Text, m_messageText, m_pos, 1);
 	g_graphicsEngine->addGfxEntity(m_message);
 }
 
@@ -776,39 +776,39 @@ void ComponentHUD::init() {
 	Component::init();
 	
 	// Life HUD
-	ptr<Text> title = new Text("LTEXT_GUI_LIFE_HUD", vmake(20, 450), 4);
+	ptr<Text> title = NEW(Text, "LTEXT_GUI_LIFE_HUD", vmake(20, 450), 4);
 	g_graphicsEngine->addGfxEntity(title);
 	m_gfxEntities.push_back(title);
 	float titleEndPos = title->getPos().x + g_stringManager->getText(title->getText()).length() * 16.0f;
-	m_life = new Text("0", vmake(title->getPos().x, 430), 4);
+	m_life = NEW(Text, "0", vmake(title->getPos().x, 430), 4);
 	g_graphicsEngine->addGfxEntity(m_life);
 	m_gfxEntities.push_back(m_life);
 
 	// Score HUD
-	title = new Text("LTEXT_GUI_SCORE_HUD", vmake(titleEndPos + 20, 450), 4);
+	title = NEW(Text, "LTEXT_GUI_SCORE_HUD", vmake(titleEndPos + 20, 450), 4);
 	g_graphicsEngine->addGfxEntity(title);
 	m_gfxEntities.push_back(title);
 	titleEndPos = title->getPos().x + g_stringManager->getText(title->getText()).length() * 16.0f;
-	m_score = new Text("0", vmake(title->getPos().x, 430), 4);
+	m_score = NEW(Text, "0", vmake(title->getPos().x, 430), 4);
 	g_graphicsEngine->addGfxEntity(m_score);
 	m_gfxEntities.push_back(m_score);
 
 	// AMMO HUD
-	title = new Text("LTEXT_GUI_AMMO_HUD", vmake(titleEndPos + 20, 450), 4);
+	title = NEW(Text, "LTEXT_GUI_AMMO_HUD", vmake(titleEndPos + 20, 450), 4);
 	g_graphicsEngine->addGfxEntity(title);
 	m_gfxEntities.push_back(title);
-	m_ammo = new Text("0/0", vmake(title->getPos().x, 430), 4);
+	m_ammo = NEW(Text, "0/0", vmake(title->getPos().x, 430), 4);
 	g_graphicsEngine->addGfxEntity(m_ammo);
 	m_gfxEntities.push_back(m_ammo);
 
 	// Target HUD
-	m_target = new Sprite(g_graphicsEngine->getTexture("data/target.png"), vmake(0.0f, 0.0f), vmake(0.0f, 0.0f), 0.0f, 1.0f, 4);
+	m_target = NEW(Sprite, g_graphicsEngine->getTexture("data/target.png"), vmake(0.0f, 0.0f), vmake(0.0f, 0.0f), 0.0f, 1.0f, 4);
 	m_target->setSize(vmake(36, 36));
 	g_graphicsEngine->addGfxEntity(m_target);
 	m_gfxEntities.push_back(m_target);
 
 	// Reload Animation
-	m_reloadAnim = new Sprite(g_graphicsEngine->getTexture("data/reload.png"), vmake(0.0f, 0.0f), vmake(0.0f, 0.0f), 0.0f, 1.0f, 4);
+	m_reloadAnim = NEW(Sprite, g_graphicsEngine->getTexture("data/reload.png"), vmake(0.0f, 0.0f), vmake(0.0f, 0.0f), 0.0f, 1.0f, 4);
 	g_graphicsEngine->addGfxEntity(m_reloadAnim);
 	m_gfxEntities.push_back(m_reloadAnim);
 

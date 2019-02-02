@@ -4,7 +4,7 @@
 
 class MenuItem {
 public:
-	MenuItem(std::string name, vec2 pos, std::string text) : m_name(name), m_pos(pos), m_text(text), m_hasFocus(false), m_selectedOption(-1) { m_gfxText = new Text("", vmake(0.0f, 0.0f), 1); }
+	MenuItem(std::string name, vec2 pos, std::string text) : m_name(name), m_pos(pos), m_text(text), m_hasFocus(false), m_selectedOption(-1) { m_gfxText = NEW(Text, "", vmake(0.0f, 0.0f), 1); }
 	~MenuItem() { DELETE(m_gfxText); }
 
 	std::string getName() { return m_name; }

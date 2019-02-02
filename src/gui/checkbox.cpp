@@ -21,9 +21,9 @@ Checkbox::~Checkbox() {
 
 
 void Checkbox::init(const char* spriteChecked, const char* spriteUnchecked, bool isChecked) {
-	m_spriteChecked = new Sprite(g_graphicsEngine->getTexture(spriteChecked), m_pos, m_size, 0.f, 1.f, 1);
+	m_spriteChecked = NEW(Sprite, g_graphicsEngine->getTexture(spriteChecked), m_pos, m_size, 0.f, 1.f, 1);
 	g_graphicsEngine->addGfxEntity(m_spriteChecked);
-	m_spriteUnchecked = new Sprite(g_graphicsEngine->getTexture(spriteUnchecked), m_pos, m_size, 0.f, 1.f, 1);
+	m_spriteUnchecked = NEW(Sprite, g_graphicsEngine->getTexture(spriteUnchecked), m_pos, m_size, 0.f, 1.f, 1);
 	g_graphicsEngine->addGfxEntity(m_spriteUnchecked);
 	m_isChecked = isChecked;
 	deactivate();

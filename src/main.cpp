@@ -23,12 +23,12 @@ int Main(void) {
 	g_settings.volume = 0.2f;
 	g_settings.language = EEnglish;
 
-	g_graphicsEngine = new GraphicsEngine();
-	g_soundEngine    = new SoundEngine();
-	g_inputManager   = new InputManager();
-	g_appManager     = new AppManager();
-	g_stringManager  = new StringManager();
-	g_menuManager    = new MenuManager();
+	g_graphicsEngine = NEW(GraphicsEngine);
+	g_soundEngine    = NEW(SoundEngine);
+	g_inputManager   = NEW(InputManager);
+	g_appManager     = NEW(AppManager);
+	g_stringManager  = NEW(StringManager);
+	g_menuManager    = NEW(MenuManager);
 	g_menuManager->init();
 
 	// Load default language

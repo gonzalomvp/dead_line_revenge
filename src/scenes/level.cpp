@@ -50,7 +50,7 @@ Level* Level::loadLevel(char* fileName) {
 	totalProbability += doc["rangeEnemy"].GetObject()["spawnProbability"].GetFloat();
 	rangeEnemy.spawnProbability = totalProbability;
 
-	Level* level = new Level();
+	Level* level = NEW(Level);
 	level->m_spawnPoints = spawnPoints;
 	level->m_spawnFrecuency = spawnFrecuency;
 	level->m_maxEnemies = concurrentEnemies;

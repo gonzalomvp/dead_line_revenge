@@ -24,12 +24,12 @@ Button::~Button() {
 }
 
 void Button::init(const char* normalImage, const char* pushImage, const std::string& text, bool notifyHold, unsigned int holdTime) {
-	m_spriteNormal = new Sprite(g_graphicsEngine->getTexture(normalImage), m_pos, m_size, 0.f, 1.f, 2);
+	m_spriteNormal = NEW(Sprite, g_graphicsEngine->getTexture(normalImage), m_pos, m_size, 0.f, 1.f, 2);
 	g_graphicsEngine->addGfxEntity(m_spriteNormal);
-	m_spritePush = new Sprite(g_graphicsEngine->getTexture(pushImage) , m_pos, m_size, 0.f, 1.f, 2);
+	m_spritePush = NEW(Sprite, g_graphicsEngine->getTexture(pushImage) , m_pos, m_size, 0.f, 1.f, 2);
 	g_graphicsEngine->addGfxEntity(m_spritePush);
 	m_text = text;
-	m_buttonText = new Text(m_text, vmake(m_pos.x - (m_text.length() / 2.0f * 16), m_pos.y - 6), 1);
+	m_buttonText = NEW(Text, m_text, vmake(m_pos.x - (m_text.length() / 2.0f * 16), m_pos.y - 6), 1);
 	g_graphicsEngine->addGfxEntity(m_buttonText);
 	m_notifyHold = notifyHold;
 	m_holdTime = holdTime;

@@ -14,7 +14,7 @@ Label::~Label() {
 
 void Label::init(const std::string& text) {
 	m_text = text;
-	m_labelText = new Text(m_text, vmake(m_pos.x - (m_text.length() / 2.0f * 16), m_pos.y - 6), 1);
+	m_labelText = NEW(Text, m_text, vmake(m_pos.x - (m_text.length() / 2.0f * 16), m_pos.y - 6), 1);
 	g_graphicsEngine->addGfxEntity(m_labelText);
 }
 

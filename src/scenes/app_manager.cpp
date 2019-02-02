@@ -30,11 +30,11 @@ void AppManager::applyMode() {
 		}
 		switch (m_wantedMode) {
 			case AppMode::EMENU:
-				m_appMode = new AppModeMenu();
+				m_appMode = NEW(AppModeMenu);
 				m_appMode->init();
 				break;
 			case AppMode::EGAME:
-				m_appMode = new AppModeGame(m_level);
+				m_appMode = NEW(AppModeGame, m_level);
 				m_appMode->init();
 				break;
 			case AppMode::ENULL:
