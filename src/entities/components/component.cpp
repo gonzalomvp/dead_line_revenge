@@ -194,7 +194,7 @@ void ComponentMove::receiveMessage(ptr<Message> message) {
 // ComponentRenderable class
 //=============================================================================
 ComponentRenderable::~ComponentRenderable() {
-	delete m_sprite;
+	DELETE(m_sprite);
 }
 
 void ComponentRenderable::init() {
@@ -751,7 +751,7 @@ void ComponentWeaponPickup::receiveMessage(ptr<Message> message) {
 // ComponentHUDMessage class
 //=============================================================================
 ComponentHUDMessage::~ComponentHUDMessage() {
-	delete m_message;
+	DELETE(m_message);
 }
 
 void ComponentHUDMessage::init() {
@@ -765,7 +765,7 @@ void ComponentHUDMessage::init() {
 //=============================================================================
 ComponentHUD::~ComponentHUD() {
 	for (size_t i = 0; i < m_gfxEntities.size(); ++i) {
-		delete m_gfxEntities[i];
+		DELETE(m_gfxEntities[i]);
 	}
 	if (g_inputManager) {
 		g_inputManager->unregisterEvent(this, IInputManager::TEventType::EMouseMove);

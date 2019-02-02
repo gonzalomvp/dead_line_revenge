@@ -9,7 +9,7 @@
 //=============================================================================
 Label::~Label() {
 	g_graphicsEngine->removeGfxEntity(m_labelText);
-	delete m_labelText;
+	DELETE(m_labelText);
 }
 
 void Label::init(const std::string& text) {

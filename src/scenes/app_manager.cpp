@@ -3,7 +3,7 @@
 
 AppManager::~AppManager() {
 	if (m_appMode) {
-		delete m_appMode;
+		DELETE(m_appMode);
 	}
 }
 
@@ -26,7 +26,7 @@ void AppManager::applyMode() {
 	}
 	if (m_wantedMode != currentMode) {
 		if (m_appMode) {
-			delete m_appMode;
+			DELETE(m_appMode);
 		}
 		switch (m_wantedMode) {
 			case AppMode::EMENU:

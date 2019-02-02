@@ -6,7 +6,7 @@
 //=============================================================================
 InputManager::~InputManager() {
 	for (size_t i = 0; i < m_events.size(); ++i) {
-		delete m_events[i];
+		DELETE(m_events[i]);
 	}
 	m_events.clear();
 }
@@ -37,7 +37,7 @@ void InputManager::processInput() {
 		for (size_t j = 0; j < m_listenersMap[m_events[i]->getType()].size(); ++j) {
 			m_listenersMap[m_events[i]->getType()][j]->onEvent(*m_events[i]);
 		}
-		delete m_events[i];
+		DELETE(m_events[i]);
 	}
 	m_events.clear();
 }

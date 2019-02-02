@@ -49,7 +49,7 @@ extern ALLOC_INFO *g_LeakList;
 //	free(p);
 //}
 
-#define NEW(...) createPtr(__FILE__, __LINE__, __VA_ARGS__)
+#define NEW(type, ...) createPtr<type>(__FILE__, __LINE__, __VA_ARGS__)
 //#define NEW_ARRAY new(__FILE__, __LINE__)
 #define DELETE(ptr) deletePtr(ptr)
 #define DELETE_ARRAY delete[]

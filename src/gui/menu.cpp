@@ -13,7 +13,7 @@
 // MenuItem class
 //=============================================================================
 MenuItem::~MenuItem() {
-	delete m_gfxText;
+	DELETE(m_gfxText);
 }
 
 void MenuItem::init() {
@@ -58,13 +58,13 @@ Menu::~Menu() {
 		g_inputManager->unregisterEvent(this, IInputManager::TEventType::EKeyDown);
 	}
 	for (auto itMenuItems = m_menuItems.begin(); itMenuItems != m_menuItems.end(); ++itMenuItems) {
-		delete *itMenuItems;
+		DELETE(*itMenuItems);
 	}
 	for (auto itControls = m_controls.begin(); itControls != m_controls.end(); ++itControls) {
-		delete *itControls;
+		DELETE(*itControls);
 	}
 	if (m_title) {
-		delete m_title;
+		DELETE(m_title);
 	}
 }
 
@@ -180,7 +180,7 @@ void Menu::selectNextItem() {
 //=============================================================================
 MenuManager::~MenuManager() {
 	for (auto itMenus = m_menus.begin(); itMenus != m_menus.end(); ++itMenus) {
-		delete itMenus->second;
+		DELETE(itMenus->second);
 	}
 }
 

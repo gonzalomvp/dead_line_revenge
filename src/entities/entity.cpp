@@ -5,7 +5,7 @@
 
 Entity::~Entity() {
 	for (auto itComponents = m_components.begin(); itComponents != m_components.end(); ++itComponents) {
-		delete *itComponents;
+		DELETE(*itComponents);
 	}
 }
 

@@ -66,17 +66,17 @@ int Main(void) {
 	}
 
 	// Free memory
-	delete g_appManager;
+	DELETE(g_appManager);
 	g_appManager = nullptr;
-	delete g_menuManager;
+	DELETE(g_menuManager);
 	g_menuManager = nullptr;
-	delete g_graphicsEngine;
+	DELETE(g_graphicsEngine);
 	g_graphicsEngine = nullptr;
-	delete g_soundEngine;
+	DELETE(g_soundEngine);
 	g_soundEngine = nullptr;
-	delete g_inputManager;
+	DELETE(g_inputManager);
 	g_inputManager = nullptr;
-	delete g_stringManager;
+	DELETE(g_stringManager);
 	g_stringManager = nullptr;
 	
 	DUMP_UNFREED

@@ -37,7 +37,7 @@ void AppModeGame::init() {
 }
 
 AppModeGame::~AppModeGame() {
-	delete g_world;
+	DELETE(g_world);
 }
 
 void AppModeGame::processInput() const {
