@@ -260,7 +260,7 @@ void MenuManager::onSelected(ptr<MenuItem> menuItem) {
 		g_stringManager->loadLanguage(g_settings.language);
 	}
 	else if (menuItem->getName() == "RESUME") {
-		IInputManager::Event* pauseEvent = new IInputManager::Event(IInputManager::TEventType::EPause);
+		ptr<IInputManager::Event> pauseEvent = NEW(IInputManager::Event, IInputManager::TEventType::EPause);
 		g_inputManager->addEvent(pauseEvent);
 	}
 	else if (menuItem->getName() == "ABANDON") {
@@ -317,7 +317,7 @@ void MenuManager::onClick(ptr<Button> button) {
 		g_stringManager->loadLanguage(g_settings.language);
 	}
 	else if (button->getName() == "RESUME") {
-		IInputManager::Event* pauseEvent = new IInputManager::Event(IInputManager::TEventType::EPause);
+		ptr<IInputManager::Event> pauseEvent = NEW(IInputManager::Event, IInputManager::TEventType::EPause);
 		g_inputManager->addEvent(pauseEvent);
 	}
 	else if (button->getName() == "ABANDON") {
@@ -407,7 +407,7 @@ void MenuManager::createOptionsMenu() {
 	ptr<Menu> menu = NEW(Menu, "OPTIONS_MENU", vmake(0.0f, 0.0f), vmake(0.0f, 0.0f), false);
 	m_menus[EOptionsMenu] = menu;
 
-	Label* label = NEW(Label, "SETTINGS_MUSIC_LABEL", vmake(SCR_WIDTH / 2 - 100, SCR_HEIGHT * 0.8), vmake(0.0, 0.0));
+	ptr<Label> label = NEW(Label, "SETTINGS_MUSIC_LABEL", vmake(SCR_WIDTH / 2 - 100, SCR_HEIGHT * 0.8), vmake(0.0, 0.0));
 	label->init("LTEXT_GUI_MUSIC_MENU_ITEM");
 	menu->addControl(label);
 

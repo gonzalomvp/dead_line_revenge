@@ -58,8 +58,8 @@ public:
 
 	virtual void registerEvent  (ptr<IListener>, TEventType eventType) = 0;
 	virtual void unregisterEvent(ptr<IListener>, TEventType eventType) = 0;
-	virtual void addEvent       (Event* event)                     = 0;
-	virtual void processInput   ()                                 = 0;
+	virtual void addEvent       (ptr<Event> event)                     = 0;
+	virtual void processInput   ()                                     = 0;
 };
 
 //=============================================================================
