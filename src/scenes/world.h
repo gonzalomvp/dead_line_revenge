@@ -34,21 +34,21 @@ public:
 	bool         loadLevel    ();
 	void         unloadLevel  ();
 	void         run          (float deltaTime);
-	void         addEntity    (Entity* entity);
-	void         removeEntity (Entity* entity);
+	void         addEntity    (ptr<Entity> entity);
+	void         removeEntity (ptr<Entity> entity);
 	uint16_t     getScore     () const                             { return m_score;    }
-	Entity*      getPlayer    () const                             { return m_player;   }
+	ptr<Entity>      getPlayer    () const                             { return m_player;   }
 	void         addPoints    (uint16_t points)                    { m_score += points; }
 	virtual bool onEvent      (const IInputManager::Event& event);
 
 	// Entity creation methods
-	Entity* createPlayer      (vec2 pos);
-	Entity* createBullet      (vec2 pos, vec2 size, vec2 direction, float speed, int damage, int life, int range, bool isExplossive, bool isBouncy, Entity::TType entityType, const char* texture);
-	Entity* createExplossion  (vec2 pos, vec2 size, vec2 sizeIncrement, int duration, Entity::TType entityType);
-	Entity* createEnemy       (vec2 pos, TEnemyData enemyData, Entity* player);
-	Entity* createEnemy       (vec2 pos, TEnemyData enemyData, vec2 moveDir, std::vector<vec2> aimDirections, bool shuffleAim);
-	Entity* createWeaponPickup();
-	Entity* createHUDMessage  (const std::string&, vec2 pos, int displayTime);
+	ptr<Entity> createPlayer      (vec2 pos);
+	ptr<Entity> createBullet      (vec2 pos, vec2 size, vec2 direction, float speed, int damage, int life, int range, bool isExplossive, bool isBouncy, Entity::TType entityType, const char* texture);
+	ptr<Entity> createExplossion  (vec2 pos, vec2 size, vec2 sizeIncrement, int duration, Entity::TType entityType);
+	ptr<Entity> createEnemy       (vec2 pos, TEnemyData enemyData, ptr<Entity> player);
+	ptr<Entity> createEnemy       (vec2 pos, TEnemyData enemyData, vec2 moveDir, std::vector<vec2> aimDirections, bool shuffleAim);
+	ptr<Entity> createWeaponPickup();
+	ptr<Entity> createHUDMessage  (const std::string&, vec2 pos, int displayTime);
 private:
 	bool loadConfig           ();
 	void checkCollisions      ();
@@ -57,11 +57,11 @@ private:
 	void spawnNewEntities     ();
 
 	uint16_t              m_level;
-	Entity*               m_player;
-	Entity*               m_hudMessage;
-	std::vector <Entity*> m_entities;
-	std::vector <Entity*> m_entitiesToRemove;
-	std::vector <Entity*> m_entitiesToAdd;
+	ptr<Entity>               m_player;
+	ptr<Entity>               m_hudMessage;
+	std::vector <ptr<Entity>> m_entities;
+	std::vector <ptr<Entity>> m_entitiesToRemove;
+	std::vector <ptr<Entity>> m_entitiesToAdd;
 	bool                  m_isGameOver;
 	bool                  m_isPaused;
 

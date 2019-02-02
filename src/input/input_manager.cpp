@@ -11,11 +11,11 @@ InputManager::~InputManager() {
 	m_events.clear();
 }
 
-void InputManager::registerEvent(IListener* listener, TEventType eventType) {
+void InputManager::registerEvent(ptr<IListener> listener, TEventType eventType) {
 	m_listenersMap[eventType].push_back(listener);
 }
 
-void InputManager::unregisterEvent(IListener* listener, TEventType eventType) {
+void InputManager::unregisterEvent(ptr<IListener> listener, TEventType eventType) {
 	for (auto itListener = m_listenersMap[eventType].begin(); itListener != m_listenersMap[eventType].end(); ++itListener) {
 		if (*itListener == listener) {
 			m_listenersMap[eventType].erase(itListener);

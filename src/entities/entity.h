@@ -27,9 +27,9 @@ public:
 	TType getType   () const { return m_type; }
 
 	void run            (float deltaTime);
-	void receiveMessage (Message* message);
-	void addComponent   (Component* component);
+	void receiveMessage (ptr<Message> message);
+	void addComponent   (ptr<Component> component);
 private:
-	TType                   m_type;
-	std::vector<Component*> m_components;
+	TType                       m_type;
+	std::vector<ptr<Component>> m_components;
 };

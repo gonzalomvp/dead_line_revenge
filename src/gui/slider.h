@@ -24,7 +24,7 @@ public:
 	void init(const char* spriteLeftNormal, const char* spriteLeftPush, const char* spriteRightNormal, const char* spriteRightPush, const char* spriteBar, const char* spriteBall, float value);
 
 	void  addListener(ptr<IListener> listener) { m_listeners.push_back(listener); }
-	float getValue()                       { return m_value;                  }
+	float getValue()                           { return m_value;                  }
 
 	// Control Interface
 	virtual void activate()   override;

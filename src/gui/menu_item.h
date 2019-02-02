@@ -20,7 +20,7 @@ protected:
 	vec2 m_pos;
 	std::string m_name;
 	std::string m_text;
-	Text* m_gfxText;
+	ptr<Text> m_gfxText;
 	bool m_hasFocus;
 	bool m_active;
 	std::vector<std::string> m_options;

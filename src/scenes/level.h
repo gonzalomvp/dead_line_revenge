@@ -25,7 +25,7 @@ public:
 	static Level* loadLevel(char* fileName);
 	Level();
 	void run();
-	void killEnemy(Entity* entity);
+	void killEnemy(ptr<Entity> entity);
 	void addPoints(int points) { m_score += points; }
 	int m_score;
 
@@ -38,6 +38,6 @@ private:
 	int m_maxEnemies;
 	int m_numEnemies;
 	std::vector<TEnemyData> m_enemyData;
-	std::vector<Entity*> m_enemies;
+	std::vector<ptr<Entity>> m_enemies;
 	
 };

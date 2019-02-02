@@ -89,7 +89,7 @@ void Level::run() {
 void Level::spawnEnemy() {
 	//vec2 spawnLocation = m_spawnLocations[rand() % m_spawnPoints];
 	//float enemyType = CORE_FRand(0.0f, 1.0f);
-	//Entity* enemy = nullptr;
+	//ptr<Entity> enemy = nullptr;
 	//for (size_t i = 0; i < m_enemyData.size(); i++)
 	//{
 	//	if (enemyType <= m_enemyData[i].spawnProbability) {
@@ -113,7 +113,7 @@ void Level::spawnEnemy() {
 	//++m_numEnemies;
 }
 
-void Level::killEnemy(Entity* entity) {
+void Level::killEnemy(ptr<Entity> entity) {
 	for (auto itEnemy = m_enemies.begin(); itEnemy != m_enemies.end(); ++itEnemy) {
 		if (*itEnemy == entity) {
 			m_enemies.erase(itEnemy);

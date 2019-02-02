@@ -23,5 +23,5 @@ public:
 
 private:
 	std::string m_text;
-	Text*       m_labelText;
+	ptr<Text>   m_labelText;
 };

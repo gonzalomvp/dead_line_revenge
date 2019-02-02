@@ -129,11 +129,11 @@ void World::run(float deltaTime) {
 	}
 }
 
-void World::addEntity(Entity* entity) {
+void World::addEntity(ptr<Entity> entity) {
 	m_entitiesToAdd.push_back(entity);
 }
 
-void World::removeEntity(Entity* entity) {
+void World::removeEntity(ptr<Entity> entity) {
 	m_entitiesToRemove.push_back(entity);
 }
 
@@ -159,8 +159,8 @@ bool World::onEvent(const IInputManager::Event& event) {
 //=============================================================================
 // Entity creation methods
 //=============================================================================
-Entity* World::createPlayer(vec2 pos) {
-	Entity* player = new Entity(Entity::EPlayer);
+ptr<Entity> World::createPlayer(vec2 pos) {
+	ptr<Entity> player = new Entity(Entity::EPlayer);
 	ComponentTransform* transform = new ComponentTransform(player, pos, vmake(30, 25));
 	transform->init();
 	ComponentRenderable* renderable = new ComponentRenderable(player, "data/player.png", 0.0f, 1.0f, 5, 10);
@@ -181,8 +181,8 @@ Entity* World::createPlayer(vec2 pos) {
 	return player;
 }
 
-Entity* World::createBullet(vec2 pos, vec2 size, vec2 direction, float speed, int damage, int life, int range, bool isExplossive, bool isBouncy, Entity::TType entityType, const char* texture) {
-	Entity* bullet = new Entity(Entity::EWeapon);
+ptr<Entity> World::createBullet(vec2 pos, vec2 size, vec2 direction, float speed, int damage, int life, int range, bool isExplossive, bool isBouncy, Entity::TType entityType, const char* texture) {
+	ptr<Entity> bullet = new Entity(Entity::EWeapon);
 	ComponentTransform* transform = new ComponentTransform(bullet, pos, size);
 	transform->init();
 	ComponentRenderable* renderable = new ComponentRenderable(bullet, texture, vangle(direction), 1.0f, 5);
@@ -219,8 +219,8 @@ Entity* World::createBullet(vec2 pos, vec2 size, vec2 direction, float speed, in
 	return bullet;
 }
 
-Entity* World::createExplossion(vec2 pos, vec2 size, vec2 sizeIncrement, int duration, Entity::TType entityType) {
-	Entity* explossion = new Entity(entityType);
+ptr<Entity> World::createExplossion(vec2 pos, vec2 size, vec2 sizeIncrement, int duration, Entity::TType entityType) {
+	ptr<Entity> explossion = new Entity(entityType);
 	ComponentTransform* transform = new ComponentTransform(explossion, pos, size, sizeIncrement);
 	transform->init();
 	ComponentRenderable* renderable = new ComponentRenderable(explossion, "data/explossion.png", 0.0f, 0.5f, 5);
@@ -246,8 +246,8 @@ Entity* World::createExplossion(vec2 pos, vec2 size, vec2 sizeIncrement, int dur
 	return explossion;
 }
 
-Entity* World::createEnemy(vec2 pos, TEnemyData enemyData, Entity* player) {
-	Entity* enemy = new Entity(enemyData.type);
+ptr<Entity> World::createEnemy(vec2 pos, TEnemyData enemyData, ptr<Entity> player) {
+	ptr<Entity> enemy = new Entity(enemyData.type);
 	ComponentTransform* transform = new ComponentTransform(enemy, pos, enemyData.size);
 	transform->init();
 	ComponentRenderable* renderable = new ComponentRenderable(enemy, enemyData.imageFile.c_str(), 0.0f, 1.0f, 5, 10);
@@ -297,8 +297,8 @@ Entity* World::createEnemy(vec2 pos, TEnemyData enemyData, Entity* player) {
 	return enemy;
 }
 
-Entity* World::createEnemy(vec2 pos, TEnemyData enemyData, vec2 moveDir, std::vector<vec2> aimDirections, bool shuffleAim) {
-	Entity* enemy = createEnemy(pos, enemyData, nullptr);
+ptr<Entity> World::createEnemy(vec2 pos, TEnemyData enemyData, vec2 moveDir, std::vector<vec2> aimDirections, bool shuffleAim) {
+	ptr<Entity> enemy = createEnemy(pos, enemyData, nullptr);
 	ComponentMove* movement = new ComponentMove(enemy, moveDir, enemyData.speed, true, true);
 	movement->init();
 
@@ -309,13 +309,13 @@ Entity* World::createEnemy(vec2 pos, TEnemyData enemyData, vec2 moveDir, std::ve
 	return enemy;
 }
 
-Entity* World::createWeaponPickup() {
+ptr<Entity> World::createWeaponPickup() {
 	// Calculate a random weapon type
 	ComponentWeapon::TWeapon type = static_cast<ComponentWeapon::TWeapon>(rand() % ComponentWeapon::EWeaponCount);
 	// Calculate a random spawn position
 	vec2 randomPos = vmake(CORE_FRand(0.0, WORLD_WIDTH), CORE_FRand(80, WORLD_HEIGHT - 80));
 	
-	Entity* weaponPickup = new Entity(Entity::EPickup);
+	ptr<Entity> weaponPickup = new Entity(Entity::EPickup);
 	ComponentTransform* transform = new ComponentTransform(weaponPickup, randomPos, vmake(20, 20));
 	transform->init();
 	ComponentRenderable* renderable = new ComponentRenderable(weaponPickup, "data/crate-1.png", 0.0f, 1.0f, 5);
@@ -332,9 +332,9 @@ Entity* World::createWeaponPickup() {
 	return weaponPickup;
 }
 
-Entity* World::createHUDMessage(const std::string& message, vec2 pos, int displayTime) {
-	Entity* hudMessage = new Entity(Entity::EHUDMessage);
-	ComponentHUDMessage* hudMessageComponent = new ComponentHUDMessage(hudMessage, pos, message);
+ptr<Entity> World::createHUDMessage(const std::string& message, vec2 pos, int displayTime) {
+	ptr<Entity> hudMessage = new Entity(Entity::EHUDMessage);
+	ptr<ComponentHUDMessage> hudMessageComponent = new ComponentHUDMessage(hudMessage, pos, message);
 	hudMessageComponent->init();
 	ComponentLife* life = new ComponentLife(hudMessage, 1, displayTime, 0);
 	life->init();
@@ -410,9 +410,9 @@ bool World::loadConfig() {
 
 void World::checkCollisions() {
 	for (size_t i = 0; i < m_entities.size(); ++i) {
-		Entity* entity1 = m_entities[i];
+		ptr<Entity> entity1 = m_entities[i];
 		for (size_t j = i + 1; j < m_entities.size(); ++j) {
-			Entity* entity2 = m_entities[j];
+			ptr<Entity> entity2 = m_entities[j];
 			MessageCheckCollision msgCheckCollision;
 			msgCheckCollision.other = entity2;
 			entity1->receiveMessage(&msgCheckCollision);

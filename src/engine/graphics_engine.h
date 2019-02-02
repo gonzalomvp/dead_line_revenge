@@ -14,11 +14,11 @@ public:
 	~GraphicsEngine();
 
 	GLuint getTexture     (const std::string& fileName);
-	void   addGfxEntity   (GfxEntity* gfxEntity);
-	void   removeGfxEntity(const GfxEntity* gfxEntity);
+	void   addGfxEntity   (ptr<GfxEntity> gfxEntity);
+	void   removeGfxEntity(const ptr<GfxEntity> gfxEntity);
 	void   render         ();
 private:
-	std::vector<GfxEntity*>       m_gfxEntities;
+	std::vector<ptr<GfxEntity>>       m_gfxEntities;
 	std::map<std::string, GLuint> m_textures;
 };
 
