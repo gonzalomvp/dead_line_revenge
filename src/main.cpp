@@ -8,6 +8,9 @@
 
 #include <ctime>
 
+#define MEMORY_LEAKS_MONITOR
+#include "./common/leaks.h"
+
 // Global variables
 GraphicsEngine* g_graphicsEngine;
 SoundEngine*    g_soundEngine;
@@ -79,5 +82,7 @@ int Main(void) {
 	delete g_stringManager;
 	g_stringManager = nullptr;
 	
+	DUMP_UNFREED
+
 	return 0;
 }

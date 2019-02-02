@@ -21,6 +21,7 @@
   <ItemGroup>
     <ClInclude Include="..\src\common\core.h" />
     <ClInclude Include="..\src\common\font.h" />
+    <ClInclude Include="..\src\common\leaks.h" />
     <ClInclude Include="..\src\common\lodepng.h" />
     <ClInclude Include="..\src\common\stdafx.h" />
     <ClInclude Include="..\src\common\sys.h" />
@@ -45,6 +46,8 @@
   <ItemGroup>
     <ClCompile Include="..\src\common\core.cpp" />
     <ClCompile Include="..\src\common\font.cpp" />
+    <ClCompile Include="..\src\common\leaks.cpp" />
+    <ClCompile Include="..\src\common\leaks_windows.cpp" />
     <ClCompile Include="..\src\common\lodepng.cpp" />
     <ClCompile Include="..\src\common\stdafx.cpp" />
     <ClCompile Include="..\src\common\sys_win.cpp" />

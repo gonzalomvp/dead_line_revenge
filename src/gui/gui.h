@@ -5,6 +5,7 @@
 class Control : public IInputManager::IListener {
 public:
 	Control(const std::string& name, const vec2& pos, const vec2& size, bool isActive = true) : m_name(name), m_pos(pos), m_size(size), m_isActive(isActive) {}
+	virtual ~Control() {}
 
 	virtual void run       () {}
 	virtual void activate  () { m_isActive = true;  }

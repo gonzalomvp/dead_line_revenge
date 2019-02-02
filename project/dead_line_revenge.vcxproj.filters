@@ -93,6 +93,9 @@
     <ClInclude Include="..\src\gui\label.h">
       <Filter>src\gui</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\common\leaks.h">
+      <Filter>src\common</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\main.cpp">
@@ -157,6 +160,12 @@
     </ClCompile>
     <ClCompile Include="..\src\gui\label.cpp">
       <Filter>src\gui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\common\leaks_windows.cpp">
+      <Filter>src\common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\common\leaks.cpp">
+      <Filter>src\common</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

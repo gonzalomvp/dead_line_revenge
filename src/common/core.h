@@ -1,6 +1,17 @@
 #ifndef _CORE_H_
 #define _CORE_H_
 
+#include <cstdarg>
+
+//-----------------------------------------------------------------------------
+template<class T>
+using ptr = T*;
+
+template<typename T, typename... Args>
+ptr<T> createPtr(Args... args) {
+	return new T(args...);
+}
+
 //-----------------------------------------------------------------------------
 typedef unsigned       char byte;
 typedef unsigned short int  word;
