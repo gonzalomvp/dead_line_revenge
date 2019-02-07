@@ -1,7 +1,7 @@
 #include "stdafx.h"
 
 #ifdef _WIN32
-#ifdef _DEBUG
+#ifdef MEMORY_LEAKS_MONITOR
 #include <windows.h>
 #include "leaks.h"
 #include <stdio.h>

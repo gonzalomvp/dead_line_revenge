@@ -47,6 +47,12 @@
 #include "lodepng.h"
 
 //=============================================================================
+// Memory leaks
+#ifdef _DEBUG
+#define MEMORY_LEAKS_MONITOR
+#endif
+#include "leaks.h"
+//=============================================================================
 // Common includes
 
 #include <stdlib.h>

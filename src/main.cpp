@@ -79,7 +79,7 @@ int Main(void) {
 	DELETE(g_stringManager);
 	g_stringManager = nullptr;
 	
-	DUMP_UNFREED
+	DUMP_UNFREED;
 
 	return 0;
 }
