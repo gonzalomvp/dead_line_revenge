@@ -58,8 +58,8 @@ void DumpUnfreed();
 
 extern ALLOC_INFO *g_LeakList;
 
-#define NEW(type, ...) AddTrack<type>(new type(__VA_ARGS__), sizeof(type), __FILE__, __LINE__)
-#define NEW_ARRAY(type, num) AddTrack<type>(new type[num], sizeof(type) * num, __FILE__, __LINE__)
+#define NEW(type, ...) AddTrack(new type(__VA_ARGS__), sizeof(type), __FILE__, __LINE__)
+#define NEW_ARRAY(type, num) AddTrack(new type[num], sizeof(type) * num, __FILE__, __LINE__)
 #define DELETE(ptr) { RemoveTrack(ptr); delete ptr; }
 #define DELETE_ARRAY(ptr) { RemoveTrack(ptr); delete[] ptr; }
 #define DUMP_UNFREED DumpUnfreed()
