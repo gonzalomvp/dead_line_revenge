@@ -60,16 +60,16 @@ extern ALLOC_INFO *g_LeakList;
 
 #define NEW(type, ...) AddTrack(new type(__VA_ARGS__), sizeof(type), __FILE__, __LINE__)
 #define NEW_ARRAY(type, num) AddTrack(new type[num], sizeof(type) * num, __FILE__, __LINE__)
-#define DELETE(ptr) { RemoveTrack(ptr); delete ptr; }
-#define DELETE_ARRAY(ptr) { RemoveTrack(ptr); delete[] ptr; }
+#define DELETE(ptr) RemoveTrack(ptr); delete ptr
+#define DELETE_ARRAY(ptr) RemoveTrack(ptr); delete[] ptr
 #define DUMP_UNFREED DumpUnfreed()
 
 #else
 
 #define NEW(type, ...) new type(__VA_ARGS__)
 #define NEW_ARRAY(type, num) new type[num]
-#define DELETE(ptr) delete ptr;
-#define DELETE_ARRAY(ptr) delete[] ptr;
+#define DELETE(ptr) delete ptr
+#define DELETE_ARRAY(ptr) delete[] ptr
 #define DUMP_UNFREED
 
 #endif

@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\lib\ppk_assert\ppk_assert.h" />
     <ClInclude Include="..\src\common\core.h" />
     <ClInclude Include="..\src\common\font.h" />
     <ClInclude Include="..\src\common\leaks.h" />
@@ -44,6 +45,7 @@
     <ClInclude Include="..\src\scenes\world.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\lib\ppk_assert\ppk_assert.cpp" />
     <ClCompile Include="..\src\common\core.cpp" />
     <ClCompile Include="..\src\common\font.cpp" />
     <ClCompile Include="..\src\common\leaks.cpp" />

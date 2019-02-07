@@ -25,6 +25,12 @@
     <Filter Include="src\entities\components">
       <UniqueIdentifier>{659c16cb-67c8-4ca8-ba53-51fd22035e04}</UniqueIdentifier>
     </Filter>
+    <Filter Include="lib">
+      <UniqueIdentifier>{1e94ced4-2f1b-45d0-95eb-3be805a131f0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="lib\ppk_assert">
+      <UniqueIdentifier>{7d90a138-bc12-4c88-ac98-97270e52aa78}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\globals.h">
@@ -96,6 +102,9 @@
     <ClInclude Include="..\src\common\leaks.h">
       <Filter>src\common</Filter>
     </ClInclude>
+    <ClInclude Include="..\lib\ppk_assert\ppk_assert.h">
+      <Filter>lib\ppk_assert</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\main.cpp">
@@ -166,6 +175,9 @@
     </ClCompile>
     <ClCompile Include="..\src\common\leaks.cpp">
       <Filter>src\common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\lib\ppk_assert\ppk_assert.cpp">
+      <Filter>lib\ppk_assert</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

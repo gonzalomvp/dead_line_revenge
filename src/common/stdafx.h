@@ -53,6 +53,14 @@
 #endif
 #include "leaks.h"
 //=============================================================================
+// Asserts
+#ifdef _DEBUG
+#include "ppk_assert/ppk_assert.h"
+#define ASSERT PPK_ASSERT
+#else
+#define ASSERT
+#endif
+//=============================================================================
 // Common includes
 
 #include <stdlib.h>
