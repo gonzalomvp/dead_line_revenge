@@ -241,6 +241,19 @@ void ComponentRenderable::receiveMessage(ptr<Message> message) {
 		if (messageAimDirection) {
 			m_sprite->setAngle(vangle(messageAimDirection->direction));
 		}
+		else {
+			ptr<MessageChangeSprite> messageChangeSprite = dynamic_cast<ptr<MessageChangeSprite>>(message);
+			if (messageChangeSprite) {
+				DELETE(m_sprite);
+				m_texture = messageChangeSprite->texture;
+				m_sprite = NEW(Sprite, g_graphicsEngine->getTexture(m_texture), vmake(0.0f, 0.0f), vmake(0.0f, 0.0f), m_angle, m_alpha, m_priority);
+				g_graphicsEngine->addGfxEntity(m_sprite);
+				MessageGetTransform msgGetTransform;
+				m_owner->receiveMessage(&msgGetTransform);
+				m_sprite->setPos(msgGetTransform.pos);
+				m_sprite->setSize(msgGetTransform.size);
+			}
+		}
 	}
 }
 
@@ -485,6 +498,18 @@ void ComponentAIMelee::run(float deltaTime) {
 		msgSetTransform.pos = vadd(messageSelfPos.pos, vscale(vnorm(direction), m_speed));
 		msgSetTransform.size = messageSelfPos.size;
 		m_owner->receiveMessage(&msgSetTransform);
+	}
+}
+
+void ComponentAIMelee::receiveMessage(ptr<Message> message) {
+	ptr<MessageEnableAI> msgEnableAI = dynamic_cast<ptr<MessageEnableAI>>(message);
+	if (msgEnableAI) {
+		if (msgEnableAI->enable) {
+			activate();
+		}
+		else {
+			deactivate();
+		}
 	}
 }
 

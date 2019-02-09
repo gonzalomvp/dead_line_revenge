@@ -213,6 +213,7 @@ public:
 	ComponentAIMelee(ptr<Entity> owner, ptr<Entity> player, float speed, float maxDistance);
 	
 	virtual void run(float deltaTime);
+	virtual void receiveMessage(ptr<Message> message);
 private:
 	ptr<Entity> m_player;
 	float       m_speed;

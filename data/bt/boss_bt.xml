@@ -1,0 +1,23 @@
+<root>
+  <behavior type="selector">
+    <behavior type="sequence">
+      <behavior type="checkDistance">
+        <param value="50" />
+      </behavior>
+      <behavior type="changeSprite">
+        <param value="data/crate-1.png" />
+      </behavior>
+      <behavior type="idle">
+        <param value="0" />
+      </behavior>
+    </behavior>
+    <behavior type="sequence">
+      <behavior type="changeSprite">
+        <param value="data/enemy.png" />
+      </behavior>
+      <behavior type="idle">
+        <param value="1" />
+      </behavior>
+    </behavior>
+  </behavior>
+</root>

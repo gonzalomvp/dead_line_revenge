@@ -20,6 +20,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\lib\ppk_assert\ppk_assert.h" />
+    <ClInclude Include="..\lib\tinyxml\tinystr.h" />
+    <ClInclude Include="..\lib\tinyxml\tinyxml.h" />
     <ClInclude Include="..\src\common\core.h" />
     <ClInclude Include="..\src\common\font.h" />
     <ClInclude Include="..\src\common\leaks.h" />
@@ -28,6 +30,20 @@
     <ClInclude Include="..\src\common\sys.h" />
     <ClInclude Include="..\src\engine\graphics_engine.h" />
     <ClInclude Include="..\src\engine\sound_engine.h" />
+    <ClInclude Include="..\src\entities\components\behavior_tree\actions\change_sprite.h" />
+    <ClInclude Include="..\src\entities\components\behavior_tree\actions\chase.h" />
+    <ClInclude Include="..\src\entities\components\behavior_tree\actions\death.h" />
+    <ClInclude Include="..\src\entities\components\behavior_tree\actions\hit.h" />
+    <ClInclude Include="..\src\entities\components\behavior_tree\actions\idle.h" />
+    <ClInclude Include="..\src\entities\components\behavior_tree\behavior.h" />
+    <ClInclude Include="..\src\entities\components\behavior_tree\behavior_tree.h" />
+    <ClInclude Include="..\src\entities\components\behavior_tree\conditions\check_dead.h" />
+    <ClInclude Include="..\src\entities\components\behavior_tree\conditions\check_distance.h" />
+    <ClInclude Include="..\src\entities\components\behavior_tree\conditions\check_hit.h" />
+    <ClInclude Include="..\src\entities\components\behavior_tree\group.h" />
+    <ClInclude Include="..\src\entities\components\behavior_tree\selector.h" />
+    <ClInclude Include="..\src\entities\components\behavior_tree\sequence.h" />
+    <ClInclude Include="..\src\entities\components\bossIAComponent.h" />
     <ClInclude Include="..\src\entities\components\component.h" />
     <ClInclude Include="..\src\entities\entity.h" />
     <ClInclude Include="..\src\entities\message.h" />
@@ -46,6 +62,10 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\lib\ppk_assert\ppk_assert.cpp" />
+    <ClCompile Include="..\lib\tinyxml\tinystr.cpp" />
+    <ClCompile Include="..\lib\tinyxml\tinyxml.cpp" />
+    <ClCompile Include="..\lib\tinyxml\tinyxmlerror.cpp" />
+    <ClCompile Include="..\lib\tinyxml\tinyxmlparser.cpp" />
     <ClCompile Include="..\src\common\core.cpp" />
     <ClCompile Include="..\src\common\font.cpp" />
     <ClCompile Include="..\src\common\leaks.cpp" />
@@ -55,6 +75,20 @@
     <ClCompile Include="..\src\common\sys_win.cpp" />
     <ClCompile Include="..\src\engine\graphics_engine.cpp" />
     <ClCompile Include="..\src\engine\sound_engine.cpp" />
+    <ClCompile Include="..\src\entities\components\behavior_tree\actions\change_sprite.cpp" />
+    <ClCompile Include="..\src\entities\components\behavior_tree\actions\chase.cpp" />
+    <ClCompile Include="..\src\entities\components\behavior_tree\actions\death.cpp" />
+    <ClCompile Include="..\src\entities\components\behavior_tree\actions\hit.cpp" />
+    <ClCompile Include="..\src\entities\components\behavior_tree\actions\idle.cpp" />
+    <ClCompile Include="..\src\entities\components\behavior_tree\behavior.cpp" />
+    <ClCompile Include="..\src\entities\components\behavior_tree\behavior_tree.cpp" />
+    <ClCompile Include="..\src\entities\components\behavior_tree\conditions\check_dead.cpp" />
+    <ClCompile Include="..\src\entities\components\behavior_tree\conditions\check_distance.cpp" />
+    <ClCompile Include="..\src\entities\components\behavior_tree\conditions\check_hit.cpp" />
+    <ClCompile Include="..\src\entities\components\behavior_tree\group.cpp" />
+    <ClCompile Include="..\src\entities\components\behavior_tree\selector.cpp" />
+    <ClCompile Include="..\src\entities\components\behavior_tree\sequence.cpp" />
+    <ClCompile Include="..\src\entities\components\bossIAComponent.cpp" />
     <ClCompile Include="..\src\entities\components\component.cpp" />
     <ClCompile Include="..\src\entities\entity.cpp" />
     <ClCompile Include="..\src\gui\button.cpp" />
@@ -128,7 +162,7 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_WINDOWS;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>../lib</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../src;../lib</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <AdditionalDependencies>openal/OpenAL32.lib;opengl32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>

@@ -1,0 +1,50 @@
+<root>
+    <behavior type="selector">
+        <behavior type="sequence">
+            <behavior type="checkDead" />
+            <behavior type="changeSprite">
+                <param value="1" />
+            </behavior>
+            <behavior type="death" />
+        </behavior>
+        <behavior type="sequence">
+            <behavior type="checkHit" />
+            <behavior type="changeSprite">
+                <param value="4" />
+            </behavior>
+            <behavior type="hit" />
+        </behavior>
+        <behavior type="selector">
+            <behavior type="sequence">
+                <behavior type="checkDistance">
+                    <param value="80" />
+                </behavior>
+                <behavior type="changeSprite">
+                    <param value="2" />
+                </behavior>
+                <behavior type="chase">
+                    <param value="0" />
+                    <param value="80" />
+                </behavior>
+            </behavior>
+            <behavior type="sequence">
+                <behavior type="checkDistance">
+                    <param value="200" />
+                </behavior>
+                <behavior type="changeSprite">
+                    <param value="3" />
+                </behavior>
+                <behavior type="chase">
+                    <param value="80" />
+                    <param value="200" />
+                </behavior>
+            </behavior>
+        </behavior>
+        <behavior type="sequence">
+            <behavior type="changeSprite">
+                <param value="0" />
+            </behavior>
+            <behavior type="idle" />
+        </behavior>
+    </behavior>
+</root>

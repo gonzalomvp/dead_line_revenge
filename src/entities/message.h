@@ -63,3 +63,11 @@ struct MessageWeaponChange : public Message {
 
 struct MessageDestroy : public Message {
 };
+
+struct MessageChangeSprite: public Message {
+	std::string texture = "";
+};
+
+struct MessageEnableAI: public Message {
+	bool enable = true;
+};

@@ -3,6 +3,7 @@
 
 #include "../engine/sound_engine.h"
 #include "../entities/components/component.h"
+#include "entities/components/bossIAComponent.h"
 #include "../entities/message.h"
 #include "../gui/string_manager.h"
 #include "../gui/menu.h"
@@ -257,6 +258,9 @@ ptr<Entity> World::createEnemy(vec2 pos, TEnemyData enemyData, ptr<Entity> playe
 	if (enemyData.type == Entity::EEnemyMelee || enemyData.type == Entity::EEnemyBig) {
 		ptr<ComponentAIMelee> aiMelee = NEW(ComponentAIMelee, enemy, player, enemyData.speed, 0);
 		aiMelee->init();
+
+		ptr<BossIAComponent> bossAI = NEW(BossIAComponent, enemy, "data/bt/boss_bt.xml");
+		bossAI->init();
 	}
 
 	// Range and Turrets have a fire weapon
