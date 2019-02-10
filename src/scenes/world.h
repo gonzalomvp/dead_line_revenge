@@ -4,6 +4,10 @@
 #include"../entities/components/component.h"
 #include "../entities/entity.h"
 
+#include "rapidjson/document.h"
+
+using namespace rapidjson;
+
 #define WORLD_WIDTH  640
 #define WORLD_HEIGHT 480
 
@@ -25,6 +29,7 @@ public:
 		int            points;
 		vec2           size;
 		std::string    imageFile;
+		ptr<const rapidjson::Value> components;
 	};
 
 	World(uint16_t level) : m_level(level) {}
@@ -46,11 +51,11 @@ public:
 	ptr<Entity> createBullet      (vec2 pos, vec2 size, vec2 direction, float speed, int damage, int life, int range, bool isExplossive, bool isBouncy, Entity::TType entityType, const char* texture);
 	ptr<Entity> createExplossion  (vec2 pos, vec2 size, vec2 sizeIncrement, int duration, Entity::TType entityType);
 	ptr<Entity> createEnemy       (vec2 pos, TEnemyData enemyData, ptr<Entity> player);
-	ptr<Entity> createEnemy       (vec2 pos, TEnemyData enemyData, vec2 moveDir, std::vector<vec2> aimDirections, bool shuffleAim);
+	ptr<Entity> createEnemy       (TEnemyData enemyData, ptr<const rapidjson::Value> _pComponentsInfo);
 	ptr<Entity> createWeaponPickup();
 	ptr<Entity> createHUDMessage  (const std::string&, vec2 pos, int displayTime);
 private:
-	bool loadConfig           ();
+	bool loadConfig           (Document& doc_);
 	void checkCollisions      ();
 	void removePendingEntities();
 	void addPendingEntities   ();
@@ -64,6 +69,8 @@ private:
 	std::vector <ptr<Entity>> m_entitiesToAdd;
 	bool                  m_isGameOver;
 	bool                  m_isPaused;
+
+	Document m_docJSON;
 
 	// Game rules
 	uint16_t m_score;

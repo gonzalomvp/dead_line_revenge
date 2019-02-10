@@ -7,11 +7,8 @@
 #include "../entities/message.h"
 #include "../gui/string_manager.h"
 #include "../gui/menu.h"
-#include "rapidjson/document.h"
 #include "rapidjson/filereadstream.h"
 #include <fstream>
-
-using namespace rapidjson;
 
 World::~World() {
 	unloadLevel();
@@ -22,7 +19,7 @@ World::~World() {
 
 void World::init() {
 	g_inputManager->registerEvent(this, IInputManager::TEventType::EPause);
-	loadConfig();
+	loadConfig(m_docJSON);
 }
 
 bool World::loadLevel() {
@@ -81,17 +78,8 @@ bool World::loadLevel() {
 	// Load turret level configuration
 	const Value& turrets = doc["turrets"];
 	for (SizeType i = 0; i < turrets.Size(); i++) {
-		std::vector<vec2> aimDirections;
-		vec2 pos                = vmake(turrets[i]["position"][0].GetFloat(), turrets[i]["position"][1].GetFloat());
-		vec2 moveDirection      = vmake(turrets[i]["moveDirection"][0].GetFloat(), turrets[i]["moveDirection"][1].GetFloat());
-		bool shuffleAim         = turrets[i]["shuffleAim"].GetBool();
-		const Value& directions = turrets[i]["aimDirections"];
-		for (SizeType j = 0; j < directions.Size(); j++) {
-			aimDirections.push_back(vmake(directions[j][0].GetFloat(), directions[j][1].GetFloat()));
-		}
-		
 		// Create turrets
-		createEnemy(pos, m_enemyData[Entity::ETurret], moveDirection, aimDirections, shuffleAim);
+		createEnemy(m_enemyData[Entity::ETurret], &turrets[i]);
 		++m_currentEnemies;
 	}
 	fclose(file);
@@ -260,7 +248,7 @@ ptr<Entity> World::createEnemy(vec2 pos, TEnemyData enemyData, ptr<Entity> playe
 		aiMelee->init();
 
 		ptr<BossIAComponent> bossAI = NEW(BossIAComponent, enemy, "data/bt/boss_bt.xml");
-		bossAI->init();
+		//bossAI->init();
 	}
 
 	// Range and Turrets have a fire weapon
@@ -294,22 +282,40 @@ ptr<Entity> World::createEnemy(vec2 pos, TEnemyData enemyData, ptr<Entity> playe
 	ptr<ComponentCollider> collider = NEW(ComponentCollider, enemy, ComponentCollider::ERectCollider, enemyData.collisionDamage, ComponentCollider::EEnemyCollider, ComponentCollider::EPlayerWeaponCollider);
 	collider->init();
 	ptr<ComponentLife> life = NEW(ComponentLife, enemy, enemyData.life, 0, 0);
-	life->init();
+	//life->init();
 	ptr<ComponentPoints> points = NEW(ComponentPoints, enemy, enemyData.points);
 	points->init();
 	addEntity(enemy);
+
+	enemy->loadComponents(enemyData.components);
+
 	return enemy;
 }
 
-ptr<Entity> World::createEnemy(vec2 pos, TEnemyData enemyData, vec2 moveDir, std::vector<vec2> aimDirections, bool shuffleAim) {
+ptr<Entity> World::createEnemy(TEnemyData enemyData, ptr<const rapidjson::Value> _pComponentsInfo) {
+	std::vector<vec2> aimDirections;
+	vec2 pos = vmake((*_pComponentsInfo)["position"][0].GetFloat(), (*_pComponentsInfo)["position"][1].GetFloat());
+	vec2 moveDirection = vmake((*_pComponentsInfo)["moveDirection"][0].GetFloat(), (*_pComponentsInfo)["moveDirection"][1].GetFloat());
+	bool shuffleAim = (*_pComponentsInfo)["shuffleAim"].GetBool();
+	const Value& directions = (*_pComponentsInfo)["aimDirections"];
+	for (SizeType j = 0; j < directions.Size(); j++) {
+		aimDirections.push_back(vmake(directions[j][0].GetFloat(), directions[j][1].GetFloat()));
+	}
+
 	ptr<Entity> enemy = createEnemy(pos, enemyData, nullptr);
-	ptr<ComponentMove> movement = NEW(ComponentMove, enemy, moveDir, enemyData.speed, true, true);
-	movement->init();
+	ptr<ComponentMove> movement = NEW(ComponentMove, enemy, moveDirection, enemyData.speed, true, true);
+	//movement->init();
 
 	// Used by the turrets to fire in the given directions and use a delay to not shoot all at the same time
 	ptr<ComponentAIFire> aiFire = NEW(ComponentAIFire, enemy, aimDirections, shuffleAim);
 	aiFire->setActivationDelay(rand() % 100);
 	aiFire->init();
+
+	// load entity components
+	if ((*_pComponentsInfo).HasMember("components")) {
+		enemy->loadComponents(&(*_pComponentsInfo)["components"]);
+	}
+	
 	return enemy;
 }
 
@@ -352,7 +358,7 @@ ptr<Entity> World::createHUDMessage(const std::string& message, vec2 pos, int di
 }
 //=============================================================================
 
-bool World::loadConfig() {
+bool  World::loadConfig(Document& doc_) {
 	FILE* file = fopen("data/config.json", "r");
 	if (!file) return false;
 
@@ -360,11 +366,10 @@ bool World::loadConfig() {
 	std::vector<char> fileData(ftell(file));
 	fseek(file, 0, SEEK_SET);
 	FileReadStream is(file, fileData.data(), fileData.size());
-	Document doc;
-	doc.ParseStream(is);
+	doc_.ParseStream(is);
 
 	// Load weapons general configuration
-	const Value& weapons = doc["weapons"];
+	const Value& weapons = doc_["weapons"];
 	for (SizeType i = 0; i < weapons.Size(); i++) {
 		ComponentWeapon::TWeaponData weapon;
 		weapon.type               = static_cast<ComponentWeapon::TWeapon>(weapons[i]["id"].GetInt());
@@ -383,7 +388,7 @@ bool World::loadConfig() {
 	}
 
 	// Load enemies general configuration
-	const Value& enemies = doc["enemies"];
+	const Value& enemies = doc_["enemies"];
 	for (SizeType i = 0; i < enemies.Size(); i++) {
 		TEnemyData enemy;
 		enemy.type              = static_cast<Entity::TType>(enemies[i]["id"].GetInt());
@@ -399,6 +404,7 @@ bool World::loadConfig() {
 		enemy.isBouncy          = enemies[i]["isBouncy"].GetBool();
 		enemy.size              = vmake(enemies[i]["size"][0].GetFloat(), enemies[i]["size"][1].GetFloat());
 		enemy.imageFile         = enemies[i]["imageFile"].GetString();
+		enemy.components        = &enemies[i]["components"];
 		m_enemyData[enemy.type] = enemy;
 	}
 	fclose(file);

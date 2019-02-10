@@ -121,7 +121,12 @@
 		"isExplossive": false,
 		"isBouncy": false,
 		"size": [ 25 ,25 ],
-		"imageFile": "data/enemy.png"
+    "imageFile": "data/enemy.png",
+    "components": [
+      {
+         "name": "LifeComponent", "params": { "life": 1 }
+      }
+    ]
 	},
 	{
 		"type": "big",
@@ -137,7 +142,12 @@
 		"isExplossive": false,
 		"isBouncy": false,
 		"size": [ 35 ,35 ],
-		"imageFile": "data/bigEnemy.png"
+		"imageFile": "data/bigEnemy.png",
+    "components": [
+      {
+         "name": "LifeComponent", "params": { "life": 4 }
+      }
+    ]
 	},
 	{
 		"type": "range",
@@ -153,7 +163,12 @@
 		"isExplossive": false,
 		"isBouncy": false,
 		"size": [ 25 ,25 ],
-		"imageFile": "data/rangeEnemy.png"
+		"imageFile": "data/rangeEnemy.png",
+    "components": [
+      {
+         "name": "LifeComponent", "params": { "life": 1 }
+      }
+    ]
 	},
 	{
 		"type": "turret",
@@ -169,7 +184,10 @@
 		"isExplossive": false,
 		"isBouncy": false,
 		"size": [ 25 ,25 ],
-		"imageFile": "data/turret.png"
+		"imageFile": "data/turret.png",
+    "components": [
+      { "name": "LifeComponent", "params": { "life": 3 } }
+    ]
 	}
 	]
 }
