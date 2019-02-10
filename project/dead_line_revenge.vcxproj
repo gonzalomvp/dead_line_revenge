@@ -45,6 +45,8 @@
     <ClInclude Include="..\src\entities\components\behavior_tree\sequence.h" />
     <ClInclude Include="..\src\entities\components\bossIAComponent.h" />
     <ClInclude Include="..\src\entities\components\component.h" />
+    <ClInclude Include="..\src\entities\components\LifeComponent.h" />
+    <ClInclude Include="..\src\entities\components\MovementComponent.h" />
     <ClInclude Include="..\src\entities\entity.h" />
     <ClInclude Include="..\src\entities\message.h" />
     <ClInclude Include="..\src\globals.h" />
@@ -90,6 +92,8 @@
     <ClCompile Include="..\src\entities\components\behavior_tree\sequence.cpp" />
     <ClCompile Include="..\src\entities\components\bossIAComponent.cpp" />
     <ClCompile Include="..\src\entities\components\component.cpp" />
+    <ClCompile Include="..\src\entities\components\LifeComponent.cpp" />
+    <ClCompile Include="..\src\entities\components\MovementComponent.cpp" />
     <ClCompile Include="..\src\entities\entity.cpp" />
     <ClCompile Include="..\src\gui\button.cpp" />
     <ClCompile Include="..\src\gui\checkbox.cpp" />
