@@ -11,5 +11,10 @@ Status ChangeSprite::update(float step) {
 	messageChangeSprite.texture = mTexture;
 	self->receiveMessage(&messageChangeSprite);
 
+	float dist;
+	mOwner->getBlackboard().getValueFloat("distance", dist);
+	ptr<Entity> player;
+	mOwner->getBlackboard().getValueEntity("player", player);
+
 	return eSuccess;
 }

@@ -4,6 +4,7 @@
 #include "entities/components/behavior_tree/behavior_tree.h"
 #include "entities/message.h"
 #include "scenes/world.h"
+#include "entities/components/behavior_tree/blackboard.h"
 
 Status CheckDistance::update(float step) {
 	Entity* self = mOwner->getCharacter();
@@ -14,6 +15,9 @@ Status CheckDistance::update(float step) {
 	player->receiveMessage(&messagePlayerPos);
 
 	float dist2 = vdist2(messageSelfPos.pos, messagePlayerPos.pos);
+
+	mOwner->getBlackboard().setValueFloat("distance", dist2);
+	mOwner->getBlackboard().setValueEntity("player", player);
 
 	if (dist2 < (mMinDistance * mMinDistance)) {
 		return eSuccess;

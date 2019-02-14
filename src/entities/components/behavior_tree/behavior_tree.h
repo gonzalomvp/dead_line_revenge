@@ -1,6 +1,7 @@
 #pragma once
 
 #include "entities/components/component.h"
+#include "blackboard.h"
 
 class Entity;
 class Behavior;
@@ -12,6 +13,7 @@ public:
 	~BehaviorTree();
 	
 	ptr<Entity> getCharacter() const { return m_owner; }
+	CBlackboard& getBlackboard() { return m_oBlackboard; }
 	
 	bool load(const char* filename);
 	ptr<Behavior> createBehavior(ptr<TiXmlElement> behaviorElem);
@@ -19,4 +21,5 @@ public:
 
 private:
 	ptr<Behavior> mRootBehavior;
+	CBlackboard m_oBlackboard;
 };

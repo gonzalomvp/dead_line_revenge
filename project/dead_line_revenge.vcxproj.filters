@@ -171,6 +171,9 @@
     <ClInclude Include="..\src\entities\components\MovementComponent.h">
       <Filter>src\entities\components</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\entities\components\behavior_tree\blackboard.h">
+      <Filter>src\entities\components\behavior_tree</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\main.cpp">
@@ -304,6 +307,9 @@
     </ClCompile>
     <ClCompile Include="..\src\entities\components\MovementComponent.cpp">
       <Filter>src\entities\components</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\entities\components\behavior_tree\blackboard.cpp">
+      <Filter>src\entities\components\behavior_tree</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
