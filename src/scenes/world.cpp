@@ -277,7 +277,7 @@ ptr<Entity> World::createEnemy(vec2 pos, TEnemyData enemyData, ptr<Entity> playe
 		weaponData.isBouncy     = enemyData.isBouncy;
 		weaponData.isAutomatic  = true;
 		weaponData.soundFile    = "";
-		ptr<ComponentWeapon> gun = NEW(ComponentWeapon, enemy, weaponData);
+		ptr<ComponentWeapon> gun = NEW(ComponentWeapon, enemy, m_weaponData[ComponentWeapon::EBoss]);
 		gun->init();
 
 		// If a player is passed the enemy keep a distance between ComponentAIMelee and ComponentAIEvade distances and aim to it

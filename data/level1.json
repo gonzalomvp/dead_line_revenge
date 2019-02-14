@@ -34,9 +34,9 @@
 	"turrets": [
 	{
 		"position": [ 100 ,380 ],
-		"moveDirection": [ 0, 0 ],
-		"aimDirections": [[ 0, -1 ]],
-		"shuffleAim": true
+    "moveDirection": [ 0, 0 ],
+		"aimDirections": [[ 1, 0 ], [ 0, -1 ]],
+		"shuffleAim": false
 	},
 	{
 		"position": [ 540 ,100 ],

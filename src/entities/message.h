@@ -36,7 +36,7 @@ struct MessageFire : public Message {
 };
 
 struct MessageAimDirection : public Message {
-	vec2 direction = vmake(0.0f, 0.0f);
+	std::vector<vec2> directions;
 };
 
 struct MessageAmmoInfo : public Message {

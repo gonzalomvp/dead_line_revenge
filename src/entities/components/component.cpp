@@ -239,7 +239,7 @@ void ComponentRenderable::receiveMessage(ptr<Message> message) {
 	else {
 		ptr<MessageAimDirection> messageAimDirection = dynamic_cast<ptr<MessageAimDirection>>(message);
 		if (messageAimDirection) {
-			m_sprite->setAngle(vangle(messageAimDirection->direction));
+			m_sprite->setAngle(vangle(messageAimDirection->directions[0]));
 		}
 		else {
 			ptr<MessageChangeSprite> messageChangeSprite = dynamic_cast<ptr<MessageChangeSprite>>(message);
@@ -372,28 +372,28 @@ void ComponentWeapon::run(float deltaTime) {
 
 		switch (m_weaponData.type) {
 			case EShotgun: {
-				vec2 bulletDir = m_aimDirection;
+				vec2 bulletDir = m_aimDirections[0];
 				g_world->createBullet(messageGetTranform.pos, vmake(10.0f, 10.0f), bulletDir, m_weaponData.bulletSpeed, m_weaponData.bulletDamage, m_weaponData.bulletLife, m_weaponData.bulletRange, m_weaponData.isExplossive, m_weaponData.isBouncy, m_owner->getType(), "data/shotgunBullet.png");
-				float angle = vangle(m_aimDirection);
+				float angle = vangle(m_aimDirections[0]);
 				angle += SHOTGUN_DISP_ANGLE;
 				bulletDir = vunit(DEG2RAD(angle));
 				g_world->createBullet(messageGetTranform.pos, vmake(10.0f, 10.0f), bulletDir, m_weaponData.bulletSpeed, m_weaponData.bulletDamage, m_weaponData.bulletLife, m_weaponData.bulletRange, m_weaponData.isExplossive, m_weaponData.isBouncy, m_owner->getType(), "data/shotgunBullet.png");
-				angle = vangle(m_aimDirection);
+				angle = vangle(m_aimDirections[0]);
 				angle -= SHOTGUN_DISP_ANGLE;
 				bulletDir = vunit(DEG2RAD(angle));
 				g_world->createBullet(messageGetTranform.pos, vmake(10.0f, 10.0f), bulletDir, m_weaponData.bulletSpeed, m_weaponData.bulletDamage, m_weaponData.bulletLife, m_weaponData.bulletRange, m_weaponData.isExplossive, m_weaponData.isBouncy, m_owner->getType(), "data/shotgunBullet.png");
 				break;
 			}
 			case EMines: {
-				g_world->createBullet(messageGetTranform.pos, vmake(20.0f, 20.0f), m_aimDirection, m_weaponData.bulletSpeed, m_weaponData.bulletDamage, m_weaponData.bulletLife, m_weaponData.bulletRange, m_weaponData.isExplossive, m_weaponData.isBouncy, Entity::EMine, "data/mine.png");
+				g_world->createBullet(messageGetTranform.pos, vmake(20.0f, 20.0f), m_aimDirections[0], m_weaponData.bulletSpeed, m_weaponData.bulletDamage, m_weaponData.bulletLife, m_weaponData.bulletRange, m_weaponData.isExplossive, m_weaponData.isBouncy, Entity::EMine, "data/mine.png");
 				break;
 			}
 			case EC4: {
-				m_remoteBullet = g_world->createBullet(messageGetTranform.pos, vmake(20.0f, 20.0f), m_aimDirection, m_weaponData.bulletSpeed, m_weaponData.bulletDamage, m_weaponData.bulletLife, m_weaponData.bulletRange, m_weaponData.isExplossive, m_weaponData.isBouncy, m_owner->getType(), "data/c4.png");
+				m_remoteBullet = g_world->createBullet(messageGetTranform.pos, vmake(20.0f, 20.0f), m_aimDirections[0], m_weaponData.bulletSpeed, m_weaponData.bulletDamage, m_weaponData.bulletLife, m_weaponData.bulletRange, m_weaponData.isExplossive, m_weaponData.isBouncy, m_owner->getType(), "data/c4.png");
 				break;
 			}
 			case ERocketLauncher: {
-				g_world->createBullet(messageGetTranform.pos, vmake(15.0f, 15.0f), m_aimDirection, m_weaponData.bulletSpeed, m_weaponData.bulletDamage, m_weaponData.bulletLife, m_weaponData.bulletRange, m_weaponData.isExplossive, m_weaponData.isBouncy, m_owner->getType(), "data/rocket.png");
+				g_world->createBullet(messageGetTranform.pos, vmake(15.0f, 15.0f), m_aimDirections[0], m_weaponData.bulletSpeed, m_weaponData.bulletDamage, m_weaponData.bulletLife, m_weaponData.bulletRange, m_weaponData.isExplossive, m_weaponData.isBouncy, m_owner->getType(), "data/rocket.png");
 				break;
 			}
 			case ENuclearBomb: {
@@ -401,7 +401,10 @@ void ComponentWeapon::run(float deltaTime) {
 				break;
 			}
 			default: {
-				g_world->createBullet(messageGetTranform.pos, vmake(10.0f, 10.0f), m_aimDirection, m_weaponData.bulletSpeed, m_weaponData.bulletDamage, m_weaponData.bulletLife, m_weaponData.bulletRange, m_weaponData.isExplossive, m_weaponData.isBouncy, m_owner->getType(), "data/bullet.png");
+				for (size_t i = 0; i < m_weaponData.numBullets; ++i) {
+					float angle = i * 360.f / m_weaponData.numBullets;
+					g_world->createBullet(messageGetTranform.pos, vmake(10.0f, 10.0f), vunit(DEG2RAD(angle)), m_weaponData.bulletSpeed, m_weaponData.bulletDamage, m_weaponData.bulletLife, m_weaponData.bulletRange, m_weaponData.isExplossive, m_weaponData.isBouncy, m_owner->getType(), "data/bullet.png");
+				}	
 				break;
 			}
 		}
@@ -437,7 +440,7 @@ void ComponentWeapon::receiveMessage(ptr<Message> message) {
 		else {
 			ptr<MessageAimDirection> msgAimDirection = dynamic_cast<ptr<MessageAimDirection>>(message);
 			if (msgAimDirection) {
-				m_aimDirection = msgAimDirection->direction;
+				m_aimDirections = msgAimDirection->directions;
 			}
 			else {
 				ptr<MessageAmmoInfo> msgAmmoInfo = dynamic_cast<ptr<MessageAmmoInfo>>(message);
@@ -612,12 +615,17 @@ void ComponentAIFire::run(float deltaTime) {
 		MessageGetTransform messagePlayerPos;
 		m_player->receiveMessage(&messagePlayerPos);
 		MessageAimDirection messageAimDirection;
-		messageAimDirection.direction = vnorm(vsub(messagePlayerPos.pos, messageSelfPos.pos));
+		messageAimDirection.directions.push_back(vnorm(vsub(messagePlayerPos.pos, messageSelfPos.pos)));
 		m_owner->receiveMessage(&messageAimDirection);
 	}
 	else {
 		MessageAimDirection messageAimDirection;
-		messageAimDirection.direction = m_fireDirections[m_currentFireDirection];
+		if (m_shuffle) {
+			messageAimDirection.directions.push_back(m_fireDirections[m_currentFireDirection]);
+		}
+		else {
+			messageAimDirection.directions = m_fireDirections;
+		}
 		m_owner->receiveMessage(&messageAimDirection);
 	}
 }
@@ -633,7 +641,12 @@ void ComponentAIFire::receiveMessage(ptr<Message> message) {
 			m_currentFireDirection = 0;
 		}
 		MessageAimDirection messageAimDirection;
-		messageAimDirection.direction = m_fireDirections[m_currentFireDirection];
+		if (m_shuffle) {
+			messageAimDirection.directions.push_back(m_fireDirections[m_currentFireDirection]);
+		}
+		else {
+			messageAimDirection.directions = m_fireDirections;
+		}
 		m_owner->receiveMessage(&messageAimDirection);
 	}
 }
@@ -879,7 +892,7 @@ bool ComponentHUD::onEvent(const IInputManager::Event& event) {
 			MessageGetTransform messagePos;
 			m_owner->receiveMessage(&messagePos);
 			MessageAimDirection messageAimDirection;
-			messageAimDirection.direction = vnorm(vsub(targetPos, messagePos.pos));
+			messageAimDirection.directions.push_back(vnorm(vsub(targetPos, messagePos.pos)));
 			m_owner->receiveMessage(&messageAimDirection);
 		}
 	}

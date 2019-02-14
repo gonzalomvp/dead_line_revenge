@@ -153,7 +153,8 @@ public:
 		EC4,
 		ERocketLauncher,
 		ENuclearBomb,
-		EWeaponCount = 7
+		EBoss,
+		EWeaponCount = 8
 	};
 
 	struct TWeaponData {
@@ -165,6 +166,7 @@ public:
 		int         bulletDamage;
 		int         bulletLife;
 		int         bulletRange;
+		int         numBullets = 8;
 		bool        isAutomatic;
 		bool        isExplossive;
 		bool        isBouncy;
@@ -175,7 +177,6 @@ public:
 		Component(owner),
 		m_weaponData(weaponData),
 		m_remoteBullet(nullptr),
-		m_aimDirection(vmake(0.0f, 0.0f)),
 		m_isFiring(false),
 		m_currentBullets(m_weaponData.capacity),
 		m_fireTimer(m_weaponData.fireRate),
@@ -186,7 +187,7 @@ public:
 private:
 	TWeaponData m_weaponData;
 	ptr<Entity> m_remoteBullet;
-	vec2        m_aimDirection;
+	std::vector<vec2> m_aimDirections;
 	int         m_currentBullets;
 	bool        m_isFiring;
 
