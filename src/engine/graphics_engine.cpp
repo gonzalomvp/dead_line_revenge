@@ -36,11 +36,11 @@ GLuint GraphicsEngine::getTexture(const std::string& fileName) {
 	return textureId;
 }
 
-void GraphicsEngine::addGfxEntity(ptr<GfxEntity> gfxEntity) {
+void GraphicsEngine::addGfxEntity(GfxEntity* gfxEntity) {
 	m_gfxEntities.push_back(gfxEntity);
 }
 
-void GraphicsEngine::removeGfxEntity(const ptr<GfxEntity> gfxEntity) {
+void GraphicsEngine::removeGfxEntity(const GfxEntity* gfxEntity) {
 	for (auto itGfxEntity = m_gfxEntities.begin(); itGfxEntity != m_gfxEntities.end(); ++itGfxEntity) {
 		if (*itGfxEntity == gfxEntity) {
 			m_gfxEntities.erase(itGfxEntity);
@@ -55,7 +55,7 @@ void GraphicsEngine::render() {
 	//sort by priority
 	std::sort(m_gfxEntities.begin(),
 		m_gfxEntities.end(),
-		[](const ptr<GfxEntity> lhs, const ptr<GfxEntity> rhs) {
+		[](const GfxEntity* lhs, const GfxEntity* rhs) {
 		return lhs->getPriority() > rhs->getPriority();
 	});
 

@@ -5,9 +5,6 @@
 #pragma warning(disable: 4996)
 #include <stdlib.h>
 
-template<class T>
-using ptr = T*;
-
 #ifdef MEMORY_LEAKS_MONITOR
 
 struct ALLOC_INFO 
@@ -20,8 +17,8 @@ struct ALLOC_INFO
 };
 
 template<typename T>
-ptr<T> AddTrack(ptr<T> addr, unsigned int asize, const char *fname, unsigned int lnum) {
-	ALLOC_INFO *info;
+T* AddTrack(T* addr, unsigned int asize, const char *fname, unsigned int lnum) {
+	ALLOC_INFO* info;
 
 	info = (ALLOC_INFO*)malloc(sizeof(ALLOC_INFO));
 	info->address = (unsigned int) addr;
@@ -35,7 +32,7 @@ ptr<T> AddTrack(ptr<T> addr, unsigned int asize, const char *fname, unsigned int
 }
 
 template<typename T>
-void RemoveTrack(ptr<T> addr) {
+void RemoveTrack(T* addr) {
 	ALLOC_INFO *pLastItem = 0;
 	ALLOC_INFO *pCurrItem = g_LeakList;
 		while (pCurrItem) {

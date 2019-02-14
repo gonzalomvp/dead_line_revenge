@@ -8,7 +8,7 @@ class Entity;
 
 class CLifeComponent : public Component {
 public:
-	CLifeComponent(ptr<Entity> _pOwner, int _iLife, int _iTimeToLive, int _iInvencibleTime) :
+	CLifeComponent(Entity* _pOwner, int _iLife, int _iTimeToLive, int _iInvencibleTime) :
 		Component(_pOwner),
 		m_iLife(_iLife),
 		m_iTimeToLive(_iTimeToLive),
@@ -17,9 +17,9 @@ public:
 		m_iInvencibleTimer(0) {}
 
 	virtual void run(float _fDeltaTime);
-	virtual void receiveMessage(ptr<Message> _pMessage);
+	virtual void receiveMessage(Message* _pMessage);
 
-	static ptr<Component> loadComponent(ptr<Entity> _pOwner, ptr<const rapidjson::Value> _pComponentInfo);
+	static Component* loadComponent(Entity* _pOwner, const rapidjson::Value* _pComponentInfo);
 private:
 	int m_iLife;
 	int m_iTimeToLive;

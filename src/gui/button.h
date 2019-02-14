@@ -13,7 +13,7 @@ class Button : public Control {
 public:
 	class IListener {
 	public:
-		virtual void onClick(ptr<Button> button) = 0;
+		virtual void onClick(Button* button) = 0;
 	};
 
 	Button(const std::string& name, const vec2& pos, const vec2& size, bool isActive = true) : Control(name, pos, size, isActive) {}
@@ -21,7 +21,7 @@ public:
 
 	void init(const char* normalImage, const char* pushImage, const std::string& text, bool notifyHold = false, unsigned int holdTimer = 10);
 
-	void addListener(ptr<IListener> listener) { m_listeners.push_back(listener); }
+	void addListener(IListener* listener) { m_listeners.push_back(listener); }
 
 	// Control Interface
 	virtual void activate  () override;
@@ -30,15 +30,15 @@ public:
 	virtual bool onEvent(const IInputManager::Event&) override;
 
 private:
-	ptr<Sprite>      m_spriteNormal;
-	ptr<Sprite>      m_spritePush;
+	Sprite*      m_spriteNormal;
+	Sprite*      m_spritePush;
 	std::string  m_text;
-	ptr<Text>        m_buttonText;
+	Text*        m_buttonText;
 	bool         m_isPushed;
 	bool         m_isHold;
 	unsigned int m_holdTime;
 	unsigned int m_holdTimer;
 	bool         m_notifyHold;
 
-	std::vector<ptr<IListener>> m_listeners;
+	std::vector<IListener*> m_listeners;
 };

@@ -130,11 +130,11 @@ void World::run(float deltaTime) {
 	}
 }
 
-void World::addEntity(ptr<Entity> entity) {
+void World::addEntity(Entity* entity) {
 	m_entitiesToAdd.push_back(entity);
 }
 
-void World::removeEntity(ptr<Entity> entity) {
+void World::removeEntity(Entity* entity) {
 	m_entitiesToRemove.push_back(entity);
 }
 
@@ -160,106 +160,106 @@ bool World::onEvent(const IInputManager::Event& event) {
 //=============================================================================
 // Entity creation methods
 //=============================================================================
-ptr<Entity> World::createPlayer(vec2 pos) {
-	ptr<Entity> player = NEW(Entity, Entity::EPlayer);
-	ptr<ComponentTransform> transform = NEW(ComponentTransform, player, pos, vmake(30, 25));
+Entity* World::createPlayer(vec2 pos) {
+	Entity* player = NEW(Entity, Entity::EPlayer);
+	ComponentTransform* transform = NEW(ComponentTransform, player, pos, vmake(30, 25));
 	transform->init();
-	ptr<ComponentRenderable> renderable = NEW(ComponentRenderable, player, "data/player.png", 0.0f, 1.0f, 5, 10);
+	ComponentRenderable* renderable = NEW(ComponentRenderable, player, "data/player.png", 0.0f, 1.0f, 5, 10);
 	renderable->init();
-	ptr<ComponentPlayerController> playerControl = NEW(ComponentPlayerController, player);
+	ComponentPlayerController* playerControl = NEW(ComponentPlayerController, player);
 	playerControl->init();
-	ptr<ComponentMove> movement = NEW(ComponentMove, player, vmake(0.0f, 0.0f), m_playerSpeed, false, false);
+	ComponentMove* movement = NEW(ComponentMove, player, vmake(0.0f, 0.0f), m_playerSpeed, false, false);
 	movement->init();
-	ptr<ComponentWeapon> weapon = NEW(ComponentWeapon, player, m_weaponData[ComponentWeapon::ERevolver]);
+	ComponentWeapon* weapon = NEW(ComponentWeapon, player, m_weaponData[ComponentWeapon::ERevolver]);
 	weapon->init();
-	ptr<ComponentCollider> collider = NEW(ComponentCollider, player, ComponentCollider::ERectCollider, -1, ComponentCollider::EPlayerCollider, ComponentCollider::EEnemyCollider | ComponentCollider::EEnemyWeaponCollider);
+	ComponentCollider* collider = NEW(ComponentCollider, player, ComponentCollider::ERectCollider, -1, ComponentCollider::EPlayerCollider, ComponentCollider::EEnemyCollider | ComponentCollider::EEnemyWeaponCollider);
 	collider->init();
-	ptr<ComponentLife> life = NEW(ComponentLife, player, 5, 0, 20);
+	ComponentLife* life = NEW(ComponentLife, player, 5, 0, 20);
 	life->init();
-	ptr<ComponentHUD> hudComponent = NEW(ComponentHUD, player);
+	ComponentHUD* hudComponent = NEW(ComponentHUD, player);
 	hudComponent->init();
 	addEntity(player);
 	return player;
 }
 
-ptr<Entity> World::createBullet(vec2 pos, vec2 size, vec2 direction, float speed, int damage, int life, int range, bool isExplossive, bool isBouncy, Entity::TType entityType, const char* texture) {
-	ptr<Entity> bullet = NEW(Entity, Entity::EWeapon);
-	ptr<ComponentTransform> transform = NEW(ComponentTransform, bullet, pos, size);
+Entity* World::createBullet(vec2 pos, vec2 size, vec2 direction, float speed, int damage, int life, int range, bool isExplossive, bool isBouncy, Entity::TType entityType, const char* texture) {
+	Entity* bullet = NEW(Entity, Entity::EWeapon);
+	ComponentTransform* transform = NEW(ComponentTransform, bullet, pos, size);
 	transform->init();
-	ptr<ComponentRenderable> renderable = NEW(ComponentRenderable, bullet, texture, vangle(direction), 1.0f, 5);
+	ComponentRenderable* renderable = NEW(ComponentRenderable, bullet, texture, vangle(direction), 1.0f, 5);
 	renderable->init();
-	ptr<ComponentMove> movement = NEW(ComponentMove, bullet, direction, speed, true, isBouncy);
+	ComponentMove* movement = NEW(ComponentMove, bullet, direction, speed, true, isBouncy);
 	movement->init();
 	
 	// Depending on the type of bullet it has different collider setup
 	switch (entityType) {
 		case Entity::EPlayer: {
-			ptr<ComponentCollider> collider = NEW(ComponentCollider, bullet, ComponentCollider::ECircleCollider, damage, ComponentCollider::EPlayerWeaponCollider, ComponentCollider::EEnemyCollider | ComponentCollider::EBoundariesCollider);
+			ComponentCollider* collider = NEW(ComponentCollider, bullet, ComponentCollider::ECircleCollider, damage, ComponentCollider::EPlayerWeaponCollider, ComponentCollider::EEnemyCollider | ComponentCollider::EBoundariesCollider);
 			collider->init();
 			break;
 		}
 		case Entity::EMine: {
-			ptr<ComponentCollider> collider = NEW(ComponentCollider, bullet, ComponentCollider::ECircleCollider, 0, ComponentCollider::ENoneCollider, ComponentCollider::EPlayerCollider | ComponentCollider::EEnemyCollider | ComponentCollider::EPlayerWeaponCollider | ComponentCollider::EEnemyWeaponCollider);
+			ComponentCollider* collider = NEW(ComponentCollider, bullet, ComponentCollider::ECircleCollider, 0, ComponentCollider::ENoneCollider, ComponentCollider::EPlayerCollider | ComponentCollider::EEnemyCollider | ComponentCollider::EPlayerWeaponCollider | ComponentCollider::EEnemyWeaponCollider);
 			collider->setActivationDelay(20);
 			collider->init();
 			break;
 		}
 		default: {
-			ptr<ComponentCollider> collider = NEW(ComponentCollider, bullet, ComponentCollider::ECircleCollider, damage, ComponentCollider::EEnemyWeaponCollider, ComponentCollider::EPlayerCollider | ComponentCollider::EBoundariesCollider);
+			ComponentCollider* collider = NEW(ComponentCollider, bullet, ComponentCollider::ECircleCollider, damage, ComponentCollider::EEnemyWeaponCollider, ComponentCollider::EPlayerCollider | ComponentCollider::EBoundariesCollider);
 			collider->init();
 			break;
 		}
 	}
 	if (isExplossive) {
-		ptr<ComponentExplossive> explossive = NEW(ComponentExplossive, bullet);
+		ComponentExplossive* explossive = NEW(ComponentExplossive, bullet);
 		explossive->init();
 	}
-	ptr<ComponentLife> componentLife = NEW(ComponentLife, bullet, life, range, 0);
+	ComponentLife* componentLife = NEW(ComponentLife, bullet, life, range, 0);
 	componentLife->init();
 	addEntity(bullet);
 	return bullet;
 }
 
-ptr<Entity> World::createExplossion(vec2 pos, vec2 size, vec2 sizeIncrement, int duration, Entity::TType entityType) {
-	ptr<Entity> explossion = NEW(Entity, entityType);
-	ptr<ComponentTransform> transform = NEW(ComponentTransform, explossion, pos, size, sizeIncrement);
+Entity* World::createExplossion(vec2 pos, vec2 size, vec2 sizeIncrement, int duration, Entity::TType entityType) {
+	Entity* explossion = NEW(Entity, entityType);
+	ComponentTransform* transform = NEW(ComponentTransform, explossion, pos, size, sizeIncrement);
 	transform->init();
-	ptr<ComponentRenderable> renderable = NEW(ComponentRenderable, explossion, "data/explossion.png", 0.0f, 0.5f, 5);
+	ComponentRenderable* renderable = NEW(ComponentRenderable, explossion, "data/explossion.png", 0.0f, 0.5f, 5);
 	renderable->init();
 
 	// Nuclear explossion has different collider than standard explosssion
 	switch (entityType) {
 		case Entity::ENuclearExplossion: {
-			ptr<ComponentCollider> collider = NEW(ComponentCollider, explossion, ComponentCollider::ECircleCollider, -50, ComponentCollider::EPlayerWeaponCollider | ComponentCollider::EBoundariesCollider, ComponentCollider::ENoneCollider);
+			ComponentCollider* collider = NEW(ComponentCollider, explossion, ComponentCollider::ECircleCollider, -50, ComponentCollider::EPlayerWeaponCollider | ComponentCollider::EBoundariesCollider, ComponentCollider::ENoneCollider);
 			collider->init();
 			break;
 		}
 		default: {
-			ptr<ComponentCollider> collider = NEW(ComponentCollider, explossion, ComponentCollider::ECircleCollider, -1, ComponentCollider::EPlayerWeaponCollider | ComponentCollider::EEnemyWeaponCollider | ComponentCollider::EBoundariesCollider, ComponentCollider::ENoneCollider);
+			ComponentCollider* collider = NEW(ComponentCollider, explossion, ComponentCollider::ECircleCollider, -1, ComponentCollider::EPlayerWeaponCollider | ComponentCollider::EEnemyWeaponCollider | ComponentCollider::EBoundariesCollider, ComponentCollider::ENoneCollider);
 			collider->init();
 			break;
 		}
 	}
-	ptr<ComponentLife> life = NEW(ComponentLife, explossion, 1, duration, 0);
+	ComponentLife* life = NEW(ComponentLife, explossion, 1, duration, 0);
 	life->init();
 	g_soundEngine->playSound("data/explossion.wav");
 	g_world->addEntity(explossion);
 	return explossion;
 }
 
-ptr<Entity> World::createEnemy(vec2 pos, TEnemyData enemyData, ptr<Entity> player) {
-	ptr<Entity> enemy = NEW(Entity, enemyData.type);
-	ptr<ComponentTransform> transform = NEW(ComponentTransform, enemy, pos, enemyData.size);
+Entity* World::createEnemy(vec2 pos, TEnemyData enemyData, Entity* player) {
+	Entity* enemy = NEW(Entity, enemyData.type);
+	ComponentTransform* transform = NEW(ComponentTransform, enemy, pos, enemyData.size);
 	transform->init();
-	ptr<ComponentRenderable> renderable = NEW(ComponentRenderable, enemy, enemyData.imageFile.c_str(), 0.0f, 1.0f, 5, 10);
+	ComponentRenderable* renderable = NEW(ComponentRenderable, enemy, enemyData.imageFile.c_str(), 0.0f, 1.0f, 5, 10);
 	renderable->init();
 
 	// Melee and Big enemies follow player until contact
 	if (enemyData.type == Entity::EEnemyMelee || enemyData.type == Entity::EEnemyBig) {
-		ptr<ComponentAIMelee> aiMelee = NEW(ComponentAIMelee, enemy, player, enemyData.speed, 0);
+		ComponentAIMelee* aiMelee = NEW(ComponentAIMelee, enemy, player, enemyData.speed, 0);
 		aiMelee->init();
 
-		ptr<BossIAComponent> bossAI = NEW(BossIAComponent, enemy, "data/bt/boss_bt.xml");
+		BossIAComponent* bossAI = NEW(BossIAComponent, enemy, "data/bt/boss_bt.xml");
 		bossAI->init();
 	}
 
@@ -277,70 +277,70 @@ ptr<Entity> World::createEnemy(vec2 pos, TEnemyData enemyData, ptr<Entity> playe
 		weaponData.isBouncy     = enemyData.isBouncy;
 		weaponData.isAutomatic  = true;
 		weaponData.soundFile    = "";
-		ptr<ComponentWeapon> gun = NEW(ComponentWeapon, enemy, weaponData);
+		ComponentWeapon* gun = NEW(ComponentWeapon, enemy, weaponData);
 		gun->init();
 
 		// If a player is passed the enemy keep a distance between ComponentAIMelee and ComponentAIEvade distances and aim to it
 		if (player) {
-			ptr<ComponentAIFire> aiFire = NEW(ComponentAIFire, enemy, player);
+			ComponentAIFire* aiFire = NEW(ComponentAIFire, enemy, player);
 			aiFire->init();
-			ptr<ComponentAIMelee> aiMelee = NEW(ComponentAIMelee, enemy, player, enemyData.speed, 200);
+			ComponentAIMelee* aiMelee = NEW(ComponentAIMelee, enemy, player, enemyData.speed, 200);
 			aiMelee->init();
-			ptr<ComponentAIEvade> aiEvade = NEW(ComponentAIEvade, enemy, player, enemyData.speed, 150);
+			ComponentAIEvade* aiEvade = NEW(ComponentAIEvade, enemy, player, enemyData.speed, 150);
 			aiEvade->init();
 		}
 	}
 
-	ptr<ComponentCollider> collider = NEW(ComponentCollider, enemy, ComponentCollider::ERectCollider, enemyData.collisionDamage, ComponentCollider::EEnemyCollider, ComponentCollider::EPlayerWeaponCollider);
+	ComponentCollider* collider = NEW(ComponentCollider, enemy, ComponentCollider::ERectCollider, enemyData.collisionDamage, ComponentCollider::EEnemyCollider, ComponentCollider::EPlayerWeaponCollider);
 	collider->init();
-	ptr<ComponentLife> life = NEW(ComponentLife, enemy, enemyData.life, 0, 0);
+	ComponentLife* life = NEW(ComponentLife, enemy, enemyData.life, 0, 0);
 	life->init();
-	ptr<ComponentPoints> points = NEW(ComponentPoints, enemy, enemyData.points);
+	ComponentPoints* points = NEW(ComponentPoints, enemy, enemyData.points);
 	points->init();
 	addEntity(enemy);
 	return enemy;
 }
 
-ptr<Entity> World::createEnemy(vec2 pos, TEnemyData enemyData, vec2 moveDir, std::vector<vec2> aimDirections, bool shuffleAim) {
-	ptr<Entity> enemy = createEnemy(pos, enemyData, nullptr);
-	ptr<ComponentMove> movement = NEW(ComponentMove, enemy, moveDir, enemyData.speed, true, true);
+Entity* World::createEnemy(vec2 pos, TEnemyData enemyData, vec2 moveDir, std::vector<vec2> aimDirections, bool shuffleAim) {
+	Entity* enemy = createEnemy(pos, enemyData, nullptr);
+	ComponentMove* movement = NEW(ComponentMove, enemy, moveDir, enemyData.speed, true, true);
 	movement->init();
 
 	// Used by the turrets to fire in the given directions and use a delay to not shoot all at the same time
-	ptr<ComponentAIFire> aiFire = NEW(ComponentAIFire, enemy, aimDirections, shuffleAim);
+	ComponentAIFire* aiFire = NEW(ComponentAIFire, enemy, aimDirections, shuffleAim);
 	aiFire->setActivationDelay(rand() % 100);
 	aiFire->init();
 	return enemy;
 }
 
-ptr<Entity> World::createWeaponPickup() {
+Entity* World::createWeaponPickup() {
 	// Calculate a random weapon type
 	ComponentWeapon::TWeapon type = static_cast<ComponentWeapon::TWeapon>(rand() % ComponentWeapon::EWeaponCount);
 	// Calculate a random spawn position
 	vec2 randomPos = vmake(CORE_FRand(0.0, WORLD_WIDTH), CORE_FRand(80, WORLD_HEIGHT - 80));
 	
-	ptr<Entity> weaponPickup = NEW(Entity, Entity::EPickup);
-	ptr<ComponentTransform> transform = NEW(ComponentTransform, weaponPickup, randomPos, vmake(20, 20));
+	Entity* weaponPickup = NEW(Entity, Entity::EPickup);
+	ComponentTransform* transform = NEW(ComponentTransform, weaponPickup, randomPos, vmake(20, 20));
 	transform->init();
-	ptr<ComponentRenderable> renderable = NEW(ComponentRenderable, weaponPickup, "data/crate-1.png", 0.0f, 1.0f, 5);
+	ComponentRenderable* renderable = NEW(ComponentRenderable, weaponPickup, "data/crate-1.png", 0.0f, 1.0f, 5);
 	renderable->init();
-	ptr<ComponentCollider> collider = NEW(ComponentCollider, weaponPickup, ComponentCollider::ERectCollider, 0, ComponentCollider::EPickupCollider, ComponentCollider::EPlayerCollider);
+	ComponentCollider* collider = NEW(ComponentCollider, weaponPickup, ComponentCollider::ERectCollider, 0, ComponentCollider::EPickupCollider, ComponentCollider::EPlayerCollider);
 	collider->init();
-	ptr<ComponentWeaponPickup> pickup = NEW(ComponentWeaponPickup, weaponPickup, m_weaponData[type]);
+	ComponentWeaponPickup* pickup = NEW(ComponentWeaponPickup, weaponPickup, m_weaponData[type]);
 	pickup->init();
-	ptr<ComponentPoints> points = NEW(ComponentPoints, weaponPickup, m_pickupPoints);
+	ComponentPoints* points = NEW(ComponentPoints, weaponPickup, m_pickupPoints);
 	points->init();
-	ptr<ComponentLife> life = NEW(ComponentLife, weaponPickup, 1, 0, 0);
+	ComponentLife* life = NEW(ComponentLife, weaponPickup, 1, 0, 0);
 	life->init();
 	addEntity(weaponPickup);
 	return weaponPickup;
 }
 
-ptr<Entity> World::createHUDMessage(const std::string& message, vec2 pos, int displayTime) {
-	ptr<Entity> hudMessage = NEW(Entity, Entity::EHUDMessage);
-	ptr<ComponentHUDMessage> hudMessageComponent = NEW(ComponentHUDMessage, hudMessage, pos, message);
+Entity* World::createHUDMessage(const std::string& message, vec2 pos, int displayTime) {
+	Entity* hudMessage = NEW(Entity, Entity::EHUDMessage);
+	ComponentHUDMessage* hudMessageComponent = NEW(ComponentHUDMessage, hudMessage, pos, message);
 	hudMessageComponent->init();
-	ptr<ComponentLife> life = NEW(ComponentLife, hudMessage, 1, displayTime, 0);
+	ComponentLife* life = NEW(ComponentLife, hudMessage, 1, displayTime, 0);
 	life->init();
 
 	// Remove any previous HUD message still on screen
@@ -414,9 +414,9 @@ bool World::loadConfig() {
 
 void World::checkCollisions() {
 	for (size_t i = 0; i < m_entities.size(); ++i) {
-		ptr<Entity> entity1 = m_entities[i];
+		Entity* entity1 = m_entities[i];
 		for (size_t j = i + 1; j < m_entities.size(); ++j) {
-			ptr<Entity> entity2 = m_entities[j];
+			Entity* entity2 = m_entities[j];
 			MessageCheckCollision msgCheckCollision;
 			msgCheckCollision.other = entity2;
 			entity1->receiveMessage(&msgCheckCollision);

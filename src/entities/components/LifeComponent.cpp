@@ -28,19 +28,19 @@ void CLifeComponent::run(float _fDeltaTime) {
 	}
 }
 
-void CLifeComponent::receiveMessage(ptr<Message> _pMmessage) {
+void CLifeComponent::receiveMessage(Message* _pMmessage) {
 	ASSERT(_pMmessage);
 
 	if (!m_isActive)
 		return;
 
-	ptr<MessageGetLife>msgGetLife = dynamic_cast<ptr<MessageGetLife>>(_pMmessage);
+	MessageGetLife*msgGetLife = dynamic_cast<MessageGetLife*>(_pMmessage);
 	if (msgGetLife) {
 		msgGetLife->currentLife = m_iLife;
 
 	}
 	else {
-		ptr<MessageChangeLife> msgChangeLife = dynamic_cast<ptr<MessageChangeLife>>(_pMmessage);
+		MessageChangeLife* msgChangeLife = dynamic_cast<MessageChangeLife*>(_pMmessage);
 		if (msgChangeLife && (m_iLife != -1) && (m_iInvencibleTimer >= m_iInvencibleTime)) {
 			m_iLife += msgChangeLife->deltaLife;
 			m_iInvencibleTimer = 0;
@@ -49,7 +49,7 @@ void CLifeComponent::receiveMessage(ptr<Message> _pMmessage) {
 			}
 		}
 		else {
-			ptr<MessageDestroy> msgdestroy = dynamic_cast<ptr<MessageDestroy>>(_pMmessage);
+			MessageDestroy* msgdestroy = dynamic_cast<MessageDestroy*>(_pMmessage);
 			if (msgdestroy) {
 				m_iLife = 0;
 			}
@@ -57,7 +57,7 @@ void CLifeComponent::receiveMessage(ptr<Message> _pMmessage) {
 	}
 }
 
-ptr<Component> CLifeComponent::loadComponent(ptr<Entity> _pOwner, ptr<const rapidjson::Value> _pComponentInfo) {
+Component* CLifeComponent::loadComponent(Entity* _pOwner, const rapidjson::Value* _pComponentInfo) {
 	ASSERT(_pComponentInfo);
 
 	// Default values
@@ -77,7 +77,7 @@ ptr<Component> CLifeComponent::loadComponent(ptr<Entity> _pOwner, ptr<const rapi
 		iInvencibleTime = (*_pComponentInfo)["invencibleTime"].GetInt();
 	}
 
-	ptr<Component> pComponent = NEW(CLifeComponent, _pOwner, iLife, iTimeToLive, iInvencibleTime);
+	Component* pComponent = NEW(CLifeComponent, _pOwner, iLife, iTimeToLive, iInvencibleTime);
 
 	ASSERT(pComponent);
 	pComponent->init();

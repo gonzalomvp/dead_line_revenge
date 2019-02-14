@@ -52,7 +52,7 @@ struct MessageCheckCollision : public Message {
 	int                              deltaLife                 = 0;
 	int                              collisionChannel          = 0;
 	int                              collisionChannelsResponse = 0;
-	ptr<Entity>                      other                     = nullptr;
+	Entity*                      other                     = nullptr;
 	bool                             overlap                   = false;
 	vec2                             bounceDirection           = vmake(0.0f, 0.0f);
 };

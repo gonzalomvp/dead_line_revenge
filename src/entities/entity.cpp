@@ -27,12 +27,12 @@ void Entity::run(float deltaTime) {
 	}
 }
 
-void Entity::receiveMessage(ptr<Message> message) {
+void Entity::receiveMessage(Message* message) {
 	for (auto itComponents = m_components.begin(); itComponents != m_components.end(); ++itComponents) {
 		(*itComponents)->receiveMessage(message);
 	}
 }
 
-void Entity::addComponent(ptr<Component> component) {
+void Entity::addComponent(Component* component) {
 	m_components.push_back(component);
 }

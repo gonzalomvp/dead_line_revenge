@@ -13,7 +13,7 @@ public:
 	void applyMode   ();
 	void switchMode  (AppMode::TMode wantedMode, uint16_t level = 0);
 private:
-	ptr<AppMode>   m_appMode;
+	AppMode*   m_appMode;
 	AppMode::TMode m_wantedMode;
 	uint16_t       m_level;
 };

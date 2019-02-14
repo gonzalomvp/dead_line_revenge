@@ -21,13 +21,13 @@ public:
 	virtual void activate      ();
 	virtual void deactivate    ();
 	virtual void run           (float deltaTime);
-	virtual void receiveMessage(ptr<Message> message) {}
+	virtual void receiveMessage(Message* message) {}
 
 	void setActivationDelay(int activationDelay) { m_activationDelay = activationDelay; }
 protected:
-	Component(ptr<Entity> owner) : m_owner(owner), m_isActive(false), m_activationDelay(0), m_activationTimer(0) {}
+	Component(Entity* owner) : m_owner(owner), m_isActive(false), m_activationDelay(0), m_activationTimer(0) {}
 
-	ptr<Entity> m_owner;
+	Entity* m_owner;
 	bool        m_isActive;
 	int         m_activationDelay;
 	int         m_activationTimer;
@@ -38,14 +38,14 @@ protected:
 //=============================================================================
 class ComponentTransform : public Component {
 public:
-	ComponentTransform(ptr<Entity> owner, const vec2& pos, const vec2& size, const vec2& sizeIncrement = vmake(0.0f, 0.0f)) :
+	ComponentTransform(Entity* owner, const vec2& pos, const vec2& size, const vec2& sizeIncrement = vmake(0.0f, 0.0f)) :
 		Component(owner),
 		m_pos(pos),
 		m_size(size),
 		m_sizeIncrement(sizeIncrement) {}
 
 	virtual void run           (float deltaTime);
-	virtual void receiveMessage(ptr<Message> message);
+	virtual void receiveMessage(Message* message);
 private:
 	vec2 m_pos;
 	vec2 m_size;
@@ -57,7 +57,7 @@ private:
 //=============================================================================
 class ComponentLife: public Component {
 public:
-	ComponentLife(ptr<Entity> owner, int life, int timeToLive, int invencibleTime) :
+	ComponentLife(Entity* owner, int life, int timeToLive, int invencibleTime) :
 		Component(owner), 
 		m_life(life), 
 		m_timeToLive(timeToLive), 
@@ -66,7 +66,7 @@ public:
 		m_invencibleTimer(0) {}
 
 	virtual void run           (float deltaTime);
-	virtual void receiveMessage(ptr<Message> message);
+	virtual void receiveMessage(Message* message);
 private:
 	int m_life;
 	int m_timeToLive;
@@ -82,7 +82,7 @@ private:
 //=============================================================================
 class ComponentMove : public Component {
 public:
-	ComponentMove(ptr<Entity> owner, const vec2& direction, float speed, bool hasInertia, bool hasBounce) :
+	ComponentMove(Entity* owner, const vec2& direction, float speed, bool hasInertia, bool hasBounce) :
 		Component(owner), 
 		m_direction(direction),
 		m_speed(speed),
@@ -90,7 +90,7 @@ public:
 		m_hasBounce(hasBounce) {}
 	
 	virtual void run           (float deltaTime);
-	virtual void receiveMessage(ptr<Message> message);
+	virtual void receiveMessage(Message* message);
 private:
 	vec2  m_direction;
 	float m_speed;
@@ -103,7 +103,7 @@ private:
 //=============================================================================
 class ComponentRenderable : public Component {
 public:
-	ComponentRenderable(ptr<Entity> owner, const std::string& texture, float angle, float alpha, int priority, int hitTime = 0) :
+	ComponentRenderable(Entity* owner, const std::string& texture, float angle, float alpha, int priority, int hitTime = 0) :
 		Component(owner),
 		m_texture(texture),
 		m_angle(angle),
@@ -115,9 +115,9 @@ public:
 
 	virtual void init          ();
 	virtual void run           (float deltaTime);
-	virtual void receiveMessage(ptr<Message> message);
+	virtual void receiveMessage(Message* message);
 private:
-	ptr<Sprite> m_sprite;
+	Sprite* m_sprite;
 	std::string m_texture;
 	int         m_priority;
 	float       m_alpha;
@@ -133,7 +133,7 @@ private:
 //=============================================================================
 class ComponentPlayerController : public Component, public IInputManager::IListener {
 public:
-	ComponentPlayerController(ptr<Entity> owner) : Component(owner) {}
+	ComponentPlayerController(Entity* owner) : Component(owner) {}
 	~ComponentPlayerController();
 
 	virtual void init   ();
@@ -171,7 +171,7 @@ public:
 		std::string soundFile;
 	};
 
-	ComponentWeapon(ptr<Entity> owner, TWeaponData weaponData) : 
+	ComponentWeapon(Entity* owner, TWeaponData weaponData) : 
 		Component(owner),
 		m_weaponData(weaponData),
 		m_remoteBullet(nullptr),
@@ -182,10 +182,10 @@ public:
 		m_reloadTimer(m_weaponData.reloadTime) {}
 
 	virtual void run           (float deltaTime);
-	virtual void receiveMessage(ptr<Message> message);
+	virtual void receiveMessage(Message* message);
 private:
 	TWeaponData m_weaponData;
-	ptr<Entity> m_remoteBullet;
+	Entity* m_remoteBullet;
 	vec2        m_aimDirection;
 	int         m_currentBullets;
 	bool        m_isFiring;
@@ -200,9 +200,9 @@ private:
 //=============================================================================
 class ComponentExplossive : public Component {
 public:
-	ComponentExplossive(ptr<Entity> owner) : Component(owner) {}
+	ComponentExplossive(Entity* owner) : Component(owner) {}
 
-	virtual void receiveMessage(ptr<Message> message);
+	virtual void receiveMessage(Message* message);
 };
 
 //=============================================================================
@@ -210,12 +210,12 @@ public:
 //=============================================================================
 class ComponentAIMelee : public Component {
 public:
-	ComponentAIMelee(ptr<Entity> owner, ptr<Entity> player, float speed, float maxDistance);
+	ComponentAIMelee(Entity* owner, Entity* player, float speed, float maxDistance);
 	
 	virtual void run(float deltaTime);
-	virtual void receiveMessage(ptr<Message> message);
+	virtual void receiveMessage(Message* message);
 private:
-	ptr<Entity> m_player;
+	Entity* m_player;
 	float       m_speed;
 	float       m_maxDistance;
 	vec2        m_offset;
@@ -226,13 +226,13 @@ private:
 //=============================================================================
 class ComponentAIEvade: public Component {
 public:
-	ComponentAIEvade(ptr<Entity> owner, ptr<Entity> player, float speed, float range) : Component(owner), m_player(player), m_speed(speed), m_range(range) {}
+	ComponentAIEvade(Entity* owner, Entity* player, float speed, float range) : Component(owner), m_player(player), m_speed(speed), m_range(range) {}
 	
 	virtual void run(float deltaTime);
 private:
 	vec2 calculatIntersectionWithWall(const vec2& position, float angle);
 
-	ptr<Entity> m_player;
+	Entity* m_player;
 	float       m_speed;
 	float       m_range;
 };
@@ -242,8 +242,8 @@ private:
 //=============================================================================
 class ComponentAIFire : public Component {
 public:
-	ComponentAIFire(ptr<Entity> owner, ptr<Entity> player) : Component(owner), m_player(player) {}
-	ComponentAIFire(ptr<Entity> owner, const std::vector<vec2>& fireDirections, bool shuffle) : 
+	ComponentAIFire(Entity* owner, Entity* player) : Component(owner), m_player(player) {}
+	ComponentAIFire(Entity* owner, const std::vector<vec2>& fireDirections, bool shuffle) : 
 		Component(owner), 
 		m_fireDirections(fireDirections),
 		m_currentFireDirection(0),
@@ -251,9 +251,9 @@ public:
 	
 	virtual void init          ();
 	virtual void run           (float deltaTime);
-	virtual void receiveMessage(ptr<Message> message);
+	virtual void receiveMessage(Message* message);
 private:
-	ptr<Entity>       m_player;
+	Entity*       m_player;
 	std::vector<vec2> m_fireDirections;
 	size_t            m_currentFireDirection;
 	bool              m_shuffle;
@@ -279,7 +279,7 @@ public:
 		ENoneCollider         = 0,
 	};
 
-	ComponentCollider(ptr<Entity> owner, TColliderType type, int deltaLife, int collisionChannel, int collisionChannelsResponse) :
+	ComponentCollider(Entity* owner, TColliderType type, int deltaLife, int collisionChannel, int collisionChannelsResponse) :
 		Component(owner),
 		m_type(type),
 		m_center(vmake(0.0f, 0.0f)),
@@ -289,7 +289,7 @@ public:
 		m_collisionChannelsResponse(collisionChannelsResponse) {}
 	
 	virtual void run           (float deltaTime);
-	virtual void receiveMessage(ptr<Message> message);
+	virtual void receiveMessage(Message* message);
 private:
 	TColliderType m_type;
 	int           m_collisionChannel;
@@ -304,9 +304,9 @@ private:
 //=============================================================================
 class ComponentPoints : public Component {
 public:
-	ComponentPoints(ptr<Entity> owner, int points): Component(owner), m_points(points) {}
+	ComponentPoints(Entity* owner, int points): Component(owner), m_points(points) {}
 
-	virtual void receiveMessage(ptr<Message> message);
+	virtual void receiveMessage(Message* message);
 private:
 	int m_points;
 };
@@ -316,9 +316,9 @@ private:
 //=============================================================================
 class ComponentWeaponPickup : public Component {
 public:
-	ComponentWeaponPickup(ptr<Entity> owner, ComponentWeapon::TWeaponData weaponData) : Component(owner), m_weaponData(weaponData) {}
+	ComponentWeaponPickup(Entity* owner, ComponentWeapon::TWeaponData weaponData) : Component(owner), m_weaponData(weaponData) {}
 	
-	virtual void receiveMessage(ptr<Message> message);
+	virtual void receiveMessage(Message* message);
 private:
 	ComponentWeapon::TWeaponData m_weaponData;
 };
@@ -328,7 +328,7 @@ private:
 //=============================================================================
 class ComponentHUDMessage : public Component {
 public:
-	ComponentHUDMessage(ptr<Entity> owner, vec2 pos, const std::string& messageText) : 
+	ComponentHUDMessage(Entity* owner, vec2 pos, const std::string& messageText) : 
 		Component(owner), m_pos(pos),
 		m_messageText(messageText),
 		m_message(nullptr) {}
@@ -338,7 +338,7 @@ public:
 private:
 	vec2        m_pos;
 	std::string m_messageText;
-	ptr<Text>   m_message;
+	Text*   m_message;
 };
 
 //=============================================================================
@@ -346,19 +346,19 @@ private:
 //=============================================================================
 class ComponentHUD : public Component, public IInputManager::IListener {
 public:
-	ComponentHUD(ptr<Entity> owner) : Component(owner) {}
+	ComponentHUD(Entity* owner) : Component(owner) {}
 	~ComponentHUD();
 
 	virtual void init   ();
 	virtual void run    (float deltaTime);
 	virtual bool onEvent(const IInputManager::Event&);
 private:
-	ptr<Text>                   m_life;
-	ptr<Text>                   m_score;
-	ptr<Text>                   m_ammo;
-	ptr<Sprite>                 m_target;
-	ptr<Sprite>                 m_reloadAnim;
-	std::vector<ptr<GfxEntity>> m_gfxEntities;
+	Text*                   m_life;
+	Text*                   m_score;
+	Text*                   m_ammo;
+	Sprite*                 m_target;
+	Sprite*                 m_reloadAnim;
+	std::vector<GfxEntity*> m_gfxEntities;
 };
 
 //=============================================================================

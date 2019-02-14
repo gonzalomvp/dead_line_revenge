@@ -13,7 +13,7 @@ class Checkbox : public Control {
 public:
 	class IListener {
 	public:
-		virtual void onClick(ptr<Checkbox> button) = 0;
+		virtual void onClick(Checkbox* button) = 0;
 	};
 
 	Checkbox(const std::string& name, const vec2& pos, const vec2& size, bool isActive = true) : Control(name, pos, size, isActive) {}
@@ -21,7 +21,7 @@ public:
 
 	void init(const char* spriteChecked, const char* spriteUnchecked, bool isChecked);
 
-	void addListener(ptr<IListener> listener) { m_listeners.push_back(listener); }
+	void addListener(IListener* listener) { m_listeners.push_back(listener); }
 	bool isChecked() { return m_isChecked; }
 
 	// Control Interface
@@ -30,11 +30,11 @@ public:
 	virtual bool onEvent(const IInputManager::Event&) override;
 
 private:
-	ptr<Sprite> m_spriteChecked;
-	ptr<Sprite> m_spriteUnchecked;
+	Sprite* m_spriteChecked;
+	Sprite* m_spriteUnchecked;
 	
 	bool m_isPushed;
 	bool m_isChecked;
 
-	std::vector<ptr<IListener>> m_listeners;
+	std::vector<IListener*> m_listeners;
 };

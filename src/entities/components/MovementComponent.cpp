@@ -25,23 +25,23 @@ void CMovementComponent::run(float _fDeltaTime) {
 	}
 }
 
-void CMovementComponent::receiveMessage(ptr<Message> _pMessage) {
+void CMovementComponent::receiveMessage(Message* _pMessage) {
 	if (!m_isActive)
 		return;
 
-	ptr<MessageAddMovement> msgAddMovement = dynamic_cast<ptr<MessageAddMovement>>(_pMessage);
+	MessageAddMovement* msgAddMovement = dynamic_cast<MessageAddMovement*>(_pMessage);
 	if (msgAddMovement) {
 		m_vDirection = vadd(m_vDirection, msgAddMovement->dir);
 	}
 	else {
-		ptr<MessageCheckCollision> msgCheckCollision = dynamic_cast<ptr<MessageCheckCollision>>(_pMessage);
+		MessageCheckCollision* msgCheckCollision = dynamic_cast<MessageCheckCollision*>(_pMessage);
 		if (msgCheckCollision && msgCheckCollision->overlap && m_bHasBounce && vlen2(msgCheckCollision->bounceDirection) > 0) {
 			m_vDirection = vmake(m_vDirection.x * msgCheckCollision->bounceDirection.x, m_vDirection.y * msgCheckCollision->bounceDirection.y);
 		}
 	}
 }
 
-ptr<Component> CMovementComponent::loadComponent(ptr<Entity> _pOwner, ptr<const rapidjson::Value> _pComponentInfo) {
+Component* CMovementComponent::loadComponent(Entity* _pOwner, const rapidjson::Value* _pComponentInfo) {
 	ASSERT(_pComponentInfo);
 
 	// Default values
@@ -67,7 +67,7 @@ ptr<Component> CMovementComponent::loadComponent(ptr<Entity> _pOwner, ptr<const 
 		bHasBounce = (*_pComponentInfo)["hasBounce"].GetBool();
 	}
 
-	ptr<Component> pComponent = NEW(CMovementComponent, _pOwner, vDirection, fSpeed, bHasInertia, bHasBounce);
+	Component* pComponent = NEW(CMovementComponent, _pOwner, vDirection, fSpeed, bHasInertia, bHasBounce);
 
 	ASSERT(pComponent);
 	pComponent->init();

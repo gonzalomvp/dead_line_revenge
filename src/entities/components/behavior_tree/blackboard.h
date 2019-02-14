@@ -15,16 +15,16 @@ public:
 	void setValueVec2(TKey key, const vec2& _vValue);
 	void setValueInt(TKey key, int _iValue);
 	void setValueFloat(TKey key, float _fValue);
-	void setValueEntity(TKey key, ptr<Entity> _pValue);
+	void setValueEntity(TKey key, Entity* _pValue);
 
 	bool getValueVec2(TKey key, vec2& vValue_);
 	bool getValueInt(TKey key, int& iValue_ );
 	bool getValueFloat(TKey key, float& fValue_);
-	bool getValueEntity(TKey key, ptr<Entity>& pValue_);
+	bool getValueEntity(TKey key, Entity*& pValue_);
 
 private:
 	std::map<TKey, int>		    m_mapInt;
 	std::map<TKey, float>		m_mapFloat;
 	std::map<TKey, vec2>		m_mapVec2;
-	std::map<TKey, ptr<Entity>>	m_mapEntity;
+	std::map<TKey, Entity*>	m_mapEntity;
 };

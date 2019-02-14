@@ -57,7 +57,7 @@ void BehaviorTree::run(float deltaTime)
 	}
 }
 
-Behavior* BehaviorTree::createBehavior(ptr<TiXmlElement> behaviorElem) {
+Behavior* BehaviorTree::createBehavior(TiXmlElement* behaviorElem) {
 	Behavior* behavior = nullptr;
 	if (behaviorElem) {
 		std::string type = behaviorElem->Attribute("type");

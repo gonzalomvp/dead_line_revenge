@@ -8,9 +8,9 @@ class Entity;
 
 class CMovementComponent : public Component {
 public:
-	static ptr<Component> loadComponent(ptr<Entity> _pOwner, ptr<const rapidjson::Value> _pComponentInfo);
+	static Component* loadComponent(Entity* _pOwner, const rapidjson::Value* _pComponentInfo);
 
-	CMovementComponent(ptr<Entity> _pOwner, const vec2& _vDirection, float _fSpeed, bool _bHasInertia, bool _bHasBounce) :
+	CMovementComponent(Entity* _pOwner, const vec2& _vDirection, float _fSpeed, bool _bHasInertia, bool _bHasBounce) :
 		Component(_pOwner),
 		m_vDirection(_vDirection),
 		m_fSpeed(_fSpeed),
@@ -18,7 +18,7 @@ public:
 		m_bHasBounce(_bHasBounce) {}
 
 	virtual void run(float _fDeltaTime);
-	virtual void receiveMessage(ptr<Message> _pMessage);
+	virtual void receiveMessage(Message* _pMessage);
 private:
 	vec2  m_vDirection;
 	float m_fSpeed;

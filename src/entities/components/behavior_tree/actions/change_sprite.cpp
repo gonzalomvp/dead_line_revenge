@@ -13,7 +13,7 @@ Status ChangeSprite::update(float step) {
 
 	float dist;
 	mOwner->getBlackboard().getValueFloat("distance", dist);
-	ptr<Entity> player;
+	Entity* player;
 	mOwner->getBlackboard().getValueEntity("player", player);
 
 	return eSuccess;

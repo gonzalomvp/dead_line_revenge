@@ -48,11 +48,11 @@ void ComponentTransform::run(float deltaTime) {
 	m_size = vadd(m_size, m_sizeIncrement);
 }
 
-void ComponentTransform::receiveMessage(ptr<Message> message) {
+void ComponentTransform::receiveMessage(Message* message) {
 	if (!m_isActive)
 		return;
 
-	ptr<MessageSetTransform> msgSetTransform = dynamic_cast<ptr<MessageSetTransform>>(message);
+	MessageSetTransform* msgSetTransform = dynamic_cast<MessageSetTransform*>(message);
 	if (msgSetTransform) {
 		m_pos = msgSetTransform->pos;
 		m_size = msgSetTransform->size;
@@ -90,7 +90,7 @@ void ComponentTransform::receiveMessage(ptr<Message> message) {
 		}
 	}
 	else {
-		ptr<MessageGetTransform> msgGetTransform = dynamic_cast<ptr<MessageGetTransform>>(message);
+		MessageGetTransform* msgGetTransform = dynamic_cast<MessageGetTransform*>(message);
 		if (msgGetTransform) {
 			msgGetTransform->pos = m_pos;
 			msgGetTransform->size = m_size;
@@ -124,17 +124,17 @@ void ComponentLife::run(float deltaTime) {
 	}
 }
 
-void ComponentLife::receiveMessage(ptr<Message> message) {
+void ComponentLife::receiveMessage(Message* message) {
 	if (!m_isActive)
 		return;
 
-	ptr<MessageGetLife>msgGetLife = dynamic_cast<ptr<MessageGetLife>>(message);
+	MessageGetLife* msgGetLife = dynamic_cast<MessageGetLife*>(message);
 	if (msgGetLife) {
 		msgGetLife->currentLife = m_life;
 		
 	}
 	else {
-		ptr<MessageChangeLife> msgChangeLife = dynamic_cast<ptr<MessageChangeLife>>(message);
+		MessageChangeLife* msgChangeLife = dynamic_cast<MessageChangeLife*>(message);
 		if (msgChangeLife && (m_life != -1) && (m_invencibleTimer >= m_invencibleTime)) {
 			m_life += msgChangeLife->deltaLife;
 			m_invencibleTimer = 0;
@@ -143,7 +143,7 @@ void ComponentLife::receiveMessage(ptr<Message> message) {
 			}
 		}
 		else {
-			ptr<MessageDestroy> msgdestroy = dynamic_cast<ptr<MessageDestroy>>(message);
+			MessageDestroy* msgdestroy = dynamic_cast<MessageDestroy*>(message);
 			if (msgdestroy) {
 				m_life = 0;
 			}
@@ -174,16 +174,16 @@ void ComponentMove::run(float deltaTime) {
 	}
 }
 
-void ComponentMove::receiveMessage(ptr<Message> message) {
+void ComponentMove::receiveMessage(Message* message) {
 	if (!m_isActive)
 		return;
 
-	ptr<MessageAddMovement> msgAddMovement = dynamic_cast<ptr<MessageAddMovement>>(message);
+	MessageAddMovement* msgAddMovement = dynamic_cast<MessageAddMovement*>(message);
 	if (msgAddMovement) {
 		m_direction = vadd(m_direction, msgAddMovement->dir);
 	}
 	else {
-		ptr<MessageCheckCollision> msgCheckCollision = dynamic_cast<ptr<MessageCheckCollision>>(message);
+		MessageCheckCollision* msgCheckCollision = dynamic_cast<MessageCheckCollision*>(message);
 		if (msgCheckCollision && msgCheckCollision->overlap && m_hasBounce && vlen2(msgCheckCollision->bounceDirection) > 0) {
 			m_direction = vmake(m_direction.x * msgCheckCollision->bounceDirection.x, m_direction.y * msgCheckCollision->bounceDirection.y);
 		}
@@ -228,21 +228,21 @@ void ComponentRenderable::run(float deltaTime) {
 	}
 }
 
-void ComponentRenderable::receiveMessage(ptr<Message> message) {
+void ComponentRenderable::receiveMessage(Message* message) {
 	if (!m_isActive)
 		return;
 
-	ptr<MessageChangeLife> msgChangeLife = dynamic_cast<ptr<MessageChangeLife>>(message);
+	MessageChangeLife* msgChangeLife = dynamic_cast<MessageChangeLife*>(message);
 	if (msgChangeLife && msgChangeLife->deltaLife < 0) {
 		m_hitTimer = 0;
 	}
 	else {
-		ptr<MessageAimDirection> messageAimDirection = dynamic_cast<ptr<MessageAimDirection>>(message);
+		MessageAimDirection* messageAimDirection = dynamic_cast<MessageAimDirection*>(message);
 		if (messageAimDirection) {
 			m_sprite->setAngle(vangle(messageAimDirection->direction));
 		}
 		else {
-			ptr<MessageChangeSprite> messageChangeSprite = dynamic_cast<ptr<MessageChangeSprite>>(message);
+			MessageChangeSprite* messageChangeSprite = dynamic_cast<MessageChangeSprite*>(message);
 			if (messageChangeSprite) {
 				DELETE(m_sprite);
 				m_texture = messageChangeSprite->texture;
@@ -417,11 +417,11 @@ void ComponentWeapon::run(float deltaTime) {
 	}
 }
 
-void ComponentWeapon::receiveMessage(ptr<Message> message) {
+void ComponentWeapon::receiveMessage(Message* message) {
 	if (!m_isActive)
 		return;
 
-	ptr<MessageWeaponChange> msgWeaponChange = dynamic_cast<ptr<MessageWeaponChange>>(message);
+	MessageWeaponChange* msgWeaponChange = dynamic_cast<MessageWeaponChange*>(message);
 	if (msgWeaponChange) {
 		m_weaponData = msgWeaponChange->weaponData;
 		m_isFiring = false;
@@ -430,17 +430,17 @@ void ComponentWeapon::receiveMessage(ptr<Message> message) {
 		m_reloadTimer = m_weaponData.reloadTime;
 	}
 	else {
-		ptr<MessageFire> msgFire = dynamic_cast<ptr<MessageFire>>(message);
+		MessageFire* msgFire = dynamic_cast<MessageFire*>(message);
 		if (msgFire) {
 			m_isFiring = msgFire->isFiring;
 		}
 		else {
-			ptr<MessageAimDirection> msgAimDirection = dynamic_cast<ptr<MessageAimDirection>>(message);
+			MessageAimDirection* msgAimDirection = dynamic_cast<MessageAimDirection*>(message);
 			if (msgAimDirection) {
 				m_aimDirection = msgAimDirection->direction;
 			}
 			else {
-				ptr<MessageAmmoInfo> msgAmmoInfo = dynamic_cast<ptr<MessageAmmoInfo>>(message);
+				MessageAmmoInfo* msgAmmoInfo = dynamic_cast<MessageAmmoInfo*>(message);
 				if (msgAmmoInfo) {
 					msgAmmoInfo->currentAmmo = m_currentBullets;
 					msgAmmoInfo->totalAmmo = m_weaponData.capacity;
@@ -450,7 +450,7 @@ void ComponentWeapon::receiveMessage(ptr<Message> message) {
 					}
 				}
 				else {
-					ptr<MessageReload> msgReload = dynamic_cast<ptr<MessageReload>>(message);
+					MessageReload* msgReload = dynamic_cast<MessageReload*>(message);
 					if (msgReload && m_currentBullets < m_weaponData.capacity && m_reloadTimer >= m_weaponData.reloadTime) {
 						m_isFiring = false;
 						m_reloadTimer = 0;
@@ -464,11 +464,11 @@ void ComponentWeapon::receiveMessage(ptr<Message> message) {
 //=============================================================================
 // ComponentExplossive class
 //=============================================================================
-void ComponentExplossive::receiveMessage(ptr<Message> message) {
+void ComponentExplossive::receiveMessage(Message* message) {
 	if (!m_isActive)
 		return;
 
-	ptr<MessageDestroy> msgDestroy = dynamic_cast<ptr<MessageDestroy>>(message);
+	MessageDestroy* msgDestroy = dynamic_cast<MessageDestroy*>(message);
 	if (msgDestroy) {
 		MessageGetTransform messageSelfPos;
 		m_owner->receiveMessage(&messageSelfPos);
@@ -479,7 +479,7 @@ void ComponentExplossive::receiveMessage(ptr<Message> message) {
 //=============================================================================
 // ComponentAIMelee class
 //=============================================================================
-ComponentAIMelee::ComponentAIMelee(ptr<Entity> owner, ptr<Entity> player, float speed, float maxDistance) : Component(owner), m_player(player), m_speed(speed), m_maxDistance(maxDistance) {
+ComponentAIMelee::ComponentAIMelee(Entity* owner, Entity* player, float speed, float maxDistance) : Component(owner), m_player(player), m_speed(speed), m_maxDistance(maxDistance) {
 	m_offset = vmake(CORE_FRand(-20, 20), CORE_FRand(-20, 20));
 }
 void ComponentAIMelee::run(float deltaTime) {
@@ -501,8 +501,8 @@ void ComponentAIMelee::run(float deltaTime) {
 	}
 }
 
-void ComponentAIMelee::receiveMessage(ptr<Message> message) {
-	ptr<MessageEnableAI> msgEnableAI = dynamic_cast<ptr<MessageEnableAI>>(message);
+void ComponentAIMelee::receiveMessage(Message* message) {
+	MessageEnableAI* msgEnableAI = dynamic_cast<MessageEnableAI*>(message);
 	if (msgEnableAI) {
 		if (msgEnableAI->enable) {
 			activate();
@@ -622,11 +622,11 @@ void ComponentAIFire::run(float deltaTime) {
 	}
 }
 
-void ComponentAIFire::receiveMessage(ptr<Message> message) {
+void ComponentAIFire::receiveMessage(Message* message) {
 	if (!m_isActive)
 		return;
 
-	ptr<MessageFire> msgFire = dynamic_cast<ptr<MessageFire>>(message);
+	MessageFire* msgFire = dynamic_cast<MessageFire*>(message);
 	if (msgFire && msgFire->isFireDone && ! m_player) {
 		++m_currentFireDirection;
 		if (m_currentFireDirection >= m_fireDirections.size()) {
@@ -652,14 +652,14 @@ void ComponentCollider::run(float deltaTime) {
 	m_size   = message.size;
 }
 
-void ComponentCollider::receiveMessage(ptr<Message> message) {
+void ComponentCollider::receiveMessage(Message* message) {
 	if (!m_isActive)
 		return;
 
-	ptr<MessageCheckCollision> msgCheckCollision = dynamic_cast<ptr<MessageCheckCollision>>(message);
+	MessageCheckCollision* msgCheckCollision = dynamic_cast<MessageCheckCollision*>(message);
 	if (msgCheckCollision) {
 		bool overlap = false;
-		ptr<Entity> other = msgCheckCollision->other;
+		Entity* other = msgCheckCollision->other;
 		if (msgCheckCollision->other) {
 			msgCheckCollision->type = m_type;
 			msgCheckCollision->center = m_center;
@@ -719,11 +719,11 @@ void ComponentCollider::receiveMessage(ptr<Message> message) {
 //=============================================================================
 // ComponentPoints class
 //=============================================================================
-void ComponentPoints::receiveMessage(ptr<Message> message) {
+void ComponentPoints::receiveMessage(Message* message) {
 	if (!m_isActive)
 		return;
 
-	ptr<MessageDestroy> msgDestroy = dynamic_cast<ptr<MessageDestroy>>(message);
+	MessageDestroy* msgDestroy = dynamic_cast<MessageDestroy*>(message);
 	if (msgDestroy) {
 		g_world->addPoints(m_points);
 	}
@@ -732,11 +732,11 @@ void ComponentPoints::receiveMessage(ptr<Message> message) {
 //=============================================================================
 // ComponentWeaponPickup class
 //=============================================================================
-void ComponentWeaponPickup::receiveMessage(ptr<Message> message) {
+void ComponentWeaponPickup::receiveMessage(Message* message) {
 	if (!m_isActive)
 		return;
 
-	ptr<MessageDestroy> msgDestroy = dynamic_cast<ptr<MessageDestroy>>(message);
+	MessageDestroy* msgDestroy = dynamic_cast<MessageDestroy*>(message);
 	if (msgDestroy) {
 		MessageWeaponChange msgWeapon;
 		msgWeapon.weaponData = m_weaponData;
@@ -801,7 +801,7 @@ void ComponentHUD::init() {
 	Component::init();
 	
 	// Life HUD
-	ptr<Text> title = NEW(Text, "LTEXT_GUI_LIFE_HUD", vmake(20, 450), 4);
+	Text* title = NEW(Text, "LTEXT_GUI_LIFE_HUD", vmake(20, 450), 4);
 	g_graphicsEngine->addGfxEntity(title);
 	m_gfxEntities.push_back(title);
 	float titleEndPos = title->getPos().x + g_stringManager->getText(title->getText()).length() * 16.0f;

@@ -30,7 +30,7 @@ private:
 	std::string              m_name;
 	std::string              m_text;
 	vec2                     m_pos;
-	ptr<Text>                m_gfxText;
+	Text*                m_gfxText;
 	bool                     m_hasFocus;
 	size_t                   m_selectedOption;
 	std::vector<std::string> m_options;
@@ -43,7 +43,7 @@ class Menu : public Control {
 public:
 	class IListener {
 	public:
-		virtual void onSelected(ptr<MenuItem> menuItem) = 0;
+		virtual void onSelected(MenuItem* menuItem) = 0;
 	};
 
 	Menu(const std::string& name, const vec2& pos, const vec2& size, bool isActive) : Control(name, pos, size, isActive), m_seletedItem(0), m_title(nullptr) {}
@@ -54,11 +54,11 @@ public:
 	virtual void run       ();
 
 	virtual bool onEvent    (const IInputManager::Event& event);
-	void         addListener(ptr<IListener> listener)  { m_listeners.push_back(listener); }
-	void         addMenuItem(ptr<MenuItem> menuItem)   { m_menuItems.push_back(menuItem); }
-	void         addControl (ptr<Control> control)     { m_controls.push_back(control);   }
+	void         addListener(IListener* listener)  { m_listeners.push_back(listener); }
+	void         addMenuItem(MenuItem* menuItem)   { m_menuItems.push_back(menuItem); }
+	void         addControl (Control* control)     { m_controls.push_back(control);   }
 
-	ptr<MenuItem> getSelectedItem() const { return m_menuItems[m_seletedItem]; }
+	MenuItem* getSelectedItem() const { return m_menuItems[m_seletedItem]; }
 	void          setSelectedItem(int newOption);
 	void          setTitle       (const std::string& title);
 private:
@@ -66,10 +66,10 @@ private:
 	void selectNextItem    ();
 
 	unsigned int                m_seletedItem;
-	ptr<Text>                   m_title;
-	std::vector<ptr<MenuItem>>  m_menuItems;
-	std::vector<ptr<Control>>   m_controls;
-	std::vector<ptr<IListener>> m_listeners;
+	Text*                   m_title;
+	std::vector<MenuItem*>  m_menuItems;
+	std::vector<Control*>   m_controls;
+	std::vector<IListener*> m_listeners;
 };
 
 //=============================================================================
@@ -91,11 +91,11 @@ public:
 	void         run           ();
 	void         activateMenu  (TMenu menu);
 	void         deactivateMenu();
-	virtual void onSelected    (ptr<MenuItem> menuItem);
-	virtual void onClick       (ptr<Button> button);
-	virtual void onClick       (ptr<Checkbox> checkbox);
-	virtual void onValueChange (ptr<Slider> slider);
-	ptr<Menu>    getMenu       (TMenu menu);
+	virtual void onSelected    (MenuItem* menuItem);
+	virtual void onClick       (Button* button);
+	virtual void onClick       (Checkbox* checkbox);
+	virtual void onValueChange (Slider* slider);
+	Menu*    getMenu       (TMenu menu);
 private:
 	void createMainMenu    ();
 	void createPlayMenu    ();
@@ -103,6 +103,6 @@ private:
 	void createPauseMenu   ();
 	void createGameOverMenu();
 
-	ptr<Menu>                  m_activeMenu;
-	std::map<TMenu, ptr<Menu>> m_menus;
+	Menu*                  m_activeMenu;
+	std::map<TMenu, Menu*> m_menus;
 };

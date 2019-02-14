@@ -7,7 +7,7 @@
 //=============================================================================
 class BossIAComponent : public BehaviorTree {
 public:
-	BossIAComponent(ptr<Entity> owner, const char* filename) :
+	BossIAComponent(Entity* owner, const char* filename) :
 		BehaviorTree(owner),
 		m_btFilename(filename) {}
 

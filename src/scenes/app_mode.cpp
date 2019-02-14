@@ -5,7 +5,7 @@
 #include "../gui/menu.h"
 #include "../scenes/world.h"
 
-ptr<World> g_world;
+World* g_world;
 
 //=============================================================================
 // AppModeMenu class

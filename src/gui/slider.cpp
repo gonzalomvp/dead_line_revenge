@@ -144,7 +144,7 @@ bool Slider::onEvent(const IInputManager::Event& event) {
 	return true;
 }
 
-void Slider::onClick(ptr<Button> button) {
+void Slider::onClick(Button* button) {
 	float increment = 0.1f; // hacer variable miembro
 	if (button == m_leftButton) {
 		increment = -increment;

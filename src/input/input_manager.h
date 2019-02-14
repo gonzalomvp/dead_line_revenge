@@ -56,9 +56,9 @@ public:
 		virtual bool onEvent(const Event& event) = 0;
 	};
 
-	virtual void registerEvent  (ptr<IListener>, TEventType eventType) = 0;
-	virtual void unregisterEvent(ptr<IListener>, TEventType eventType) = 0;
-	virtual void addEvent       (ptr<Event> event)                     = 0;
+	virtual void registerEvent  (IListener*, TEventType eventType) = 0;
+	virtual void unregisterEvent(IListener*, TEventType eventType) = 0;
+	virtual void addEvent       (Event* event)                     = 0;
 	virtual void processInput   ()                                     = 0;
 };
 
@@ -69,9 +69,9 @@ class InputManager : public IInputManager {
 public:
 	~InputManager();
 
-	virtual void registerEvent  (ptr<IListener>, TEventType eventType);
-	virtual void unregisterEvent(ptr<IListener>, TEventType eventType);
-	virtual void addEvent       (ptr<Event> event);
+	virtual void registerEvent  (IListener*, TEventType eventType);
+	virtual void unregisterEvent(IListener*, TEventType eventType);
+	virtual void addEvent       (Event* event);
 	virtual void processInput   ();
 private:
 	void processKeyboard      ();
@@ -79,7 +79,7 @@ private:
 	void checkKeyState        (int key);
 	void checkMouseButtonState(int button, const vec2& mousePos);
 
-	std::vector<ptr<Event>>                           m_events;
+	std::vector<Event*>                           m_events;
 	std::map<int, bool>                               m_inputStates;
-	std::map<TEventType, std::vector<ptr<IListener>>> m_listenersMap;
+	std::map<TEventType, std::vector<IListener*>> m_listenersMap;
 };
