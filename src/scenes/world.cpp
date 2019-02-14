@@ -257,7 +257,7 @@ ptr<Entity> World::createEnemy(vec2 pos, TEnemyData enemyData, ptr<Entity> playe
 	// Melee and Big enemies follow player until contact
 	if (enemyData.type == Entity::EEnemyMelee || enemyData.type == Entity::EEnemyBig) {
 		ptr<ComponentAIMelee> aiMelee = NEW(ComponentAIMelee, enemy, player, enemyData.speed, 0);
-		aiMelee->init();
+		//aiMelee->init();
 
 		ptr<BossIAComponent> bossAI = NEW(BossIAComponent, enemy, "data/bt/boss_bt.xml");
 		bossAI->init();

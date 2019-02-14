@@ -11,6 +11,8 @@
 #include "entities/components/behavior_tree/actions/death.h"
 #include "entities/components/behavior_tree/conditions/check_dead.h"
 #include "entities/components/behavior_tree/conditions/check_distance.h"
+#include "entities/components/behavior_tree/actions/goto_random.h"
+#include "entities/components/behavior_tree/actions/wait.h"
 
 #pragma pack(push,0)
 #include "tinyxml/tinyxml.h"
@@ -113,6 +115,12 @@ Behavior* BehaviorTree::createBehavior(ptr<TiXmlElement> behaviorElem) {
 		}
 		else if (type == "idle") {
 			behavior = new Idle(this, std::stoi(params[0]));
+		}
+		else if (type == "goToRandomPosition") {
+			behavior = new GoToRandomPosition(this);
+		}
+		else if (type == "wait") {
+			behavior = new Wait(this, std::stoi(params[0]));
 		}
 	}
 	return behavior;

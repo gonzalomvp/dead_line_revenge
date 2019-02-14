@@ -15,8 +15,9 @@
       <behavior type="changeSprite">
         <param value="data/enemy.png" />
       </behavior>
-      <behavior type="idle">
-        <param value="1" />
+      <behavior type="goToRandomPosition"/>
+	  <behavior type="wait">
+        <param value="100" />
       </behavior>
     </behavior>
   </behavior>
