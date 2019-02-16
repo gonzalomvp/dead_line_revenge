@@ -260,26 +260,14 @@ Entity* World::createEnemy(vec2 pos, TEnemyData enemyData, Entity* player) {
 		aiMelee->init();
 
 		BossIAComponent* bossAI = NEW(BossIAComponent, enemy, "data/bt/boss_bt.xml");
-		bossAI->init();
+		//bossAI->init();
 	}
 
 	// Range and Turrets have a fire weapon
-	if (enemyData.type == Entity::EEnemyRange || enemyData.type == Entity::ETurret) {
-		ComponentWeapon::TWeaponData weaponData;
-		weaponData.fireRate     = enemyData.fireRate;
-		weaponData.reloadTime   = 1;
-		weaponData.capacity     = 1;
-		weaponData.bulletSpeed  = enemyData.bulletSpeed;
-		weaponData.bulletDamage = enemyData.bulletDamage;
-		weaponData.bulletLife   = enemyData.bulletLife;
-		weaponData.bulletRange  = enemyData.bulletRange;
-		weaponData.isExplossive = enemyData.isExplossive;
-		weaponData.isBouncy     = enemyData.isBouncy;
-		weaponData.isAutomatic  = true;
-		weaponData.soundFile    = "";
-		ComponentWeapon* gun = NEW(ComponentWeapon, enemy, weaponData);
+	if (enemyData.weapon != ComponentWeapon::TWeapon::ENone) {
+		ComponentWeapon* gun = NEW(ComponentWeapon, enemy, m_weaponData[enemyData.weapon]);
 		gun->init();
-
+		
 		// If a player is passed the enemy keep a distance between ComponentAIMelee and ComponentAIEvade distances and aim to it
 		if (player) {
 			ComponentAIFire* aiFire = NEW(ComponentAIFire, enemy, player);
@@ -375,6 +363,10 @@ bool World::loadConfig() {
 		weapon.bulletDamage       = weapons[i]["bulletDamage"].GetInt();
 		weapon.bulletLife         = weapons[i]["bulletLife"].GetInt();
 		weapon.bulletRange        = weapons[i]["bulletRange"].GetInt();
+		weapon.numBullets = 1;
+		if (weapons[i].HasMember("numBullets")) {
+			weapon.numBullets = weapons[i]["numBullets"].GetInt();
+		}
 		weapon.isAutomatic        = weapons[i]["isAutomatic"].GetBool();
 		weapon.isExplossive       = weapons[i]["isExplossive"].GetBool();
 		weapon.isBouncy           = weapons[i]["isBouncy"].GetBool();
@@ -390,13 +382,10 @@ bool World::loadConfig() {
 		enemy.life              = enemies[i]["life"].GetInt();
 		enemy.speed             = enemies[i]["speed"].GetFloat();
 		enemy.collisionDamage   = enemies[i]["collisionDamage"].GetInt();
-		enemy.fireRate          = enemies[i]["fireRate"].GetInt();
-		enemy.bulletSpeed       = enemies[i]["bulletSpeed"].GetFloat();
-		enemy.bulletDamage      = enemies[i]["bulletDamage"].GetInt();
-		enemy.bulletLife        = enemies[i]["bulletLife"].GetInt();
-		enemy.bulletRange       = enemies[i]["bulletRange"].GetInt();
-		enemy.isExplossive      = enemies[i]["isExplossive"].GetBool();
-		enemy.isBouncy          = enemies[i]["isBouncy"].GetBool();
+		enemy.weapon            = ComponentWeapon::TWeapon::ENone;
+		if (enemies[i].HasMember("weapon")) {
+			enemy.weapon = static_cast<ComponentWeapon::TWeapon>(enemies[i]["weapon"].GetInt());
+		}
 		enemy.size              = vmake(enemies[i]["size"][0].GetFloat(), enemies[i]["size"][1].GetFloat());
 		enemy.imageFile         = enemies[i]["imageFile"].GetString();
 		m_enemyData[enemy.type] = enemy;
@@ -439,7 +428,8 @@ void World::removePendingEntities() {
 			case Entity::EEnemyMelee:
 			case Entity::EEnemyBig:
 			case Entity::EEnemyRange:
-			case Entity::ETurret: {
+			case Entity::ETurret:
+			case Entity::EBoss: {
 				--m_currentEnemies;
 				break;
 			}

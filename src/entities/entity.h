@@ -10,6 +10,7 @@ public:
 		EEnemyBig,
 		EEnemyRange,
 		ETurret,
+		EBoss,
 		EPlayer,
 		EPickup,
 		EWeapon,

@@ -153,6 +153,9 @@ public:
 		EC4,
 		ERocketLauncher,
 		ENuclearBomb,
+		EEnemyWeapon,
+		EBossWeapon,
+		ENone,
 		EWeaponCount = 7
 	};
 
@@ -165,6 +168,7 @@ public:
 		int         bulletDamage;
 		int         bulletLife;
 		int         bulletRange;
+		int         numBullets;
 		bool        isAutomatic;
 		bool        isExplossive;
 		bool        isBouncy;

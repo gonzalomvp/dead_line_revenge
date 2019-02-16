@@ -9,25 +9,31 @@
 	{
 		"type": "melee",
 		"id": 0,
-		"spawnProbability": 0.6,
+		"spawnProbability": 0,
 		"points": 1
 	},
 	{
 		"type": "big",
 		"id": 1,
-		"spawnProbability": 0.3,
+		"spawnProbability": 0,
 		"points": 2
 	},
 	{
 		"type": "range",
 		"id": 2,
-		"spawnProbability": 0.1,
+		"spawnProbability": 0,
 		"points": 4
 	},
 	{
 		"type": "turret",
 		"id": 3,
 		"spawnProbability": 0,
+		"points": 3
+	},
+	{
+		"type": "boss",
+		"id": 4,
+		"spawnProbability": 1,
 		"points": 3
 	}
 	],

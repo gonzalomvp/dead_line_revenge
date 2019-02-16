@@ -10,21 +10,15 @@
 class World : public IInputManager::IListener {
 public:
 	struct TEnemyData {
-		Entity::TType  type;
-		int            life;
-		float          speed;
-		int            collisionDamage;
-		int            fireRate;
-		float          bulletSpeed;
-		int            bulletDamage;
-		int            bulletLife;
-		int            bulletRange;
-		bool           isExplossive;
-		bool           isBouncy;
-		float          spawnProbability;
-		int            points;
-		vec2           size;
-		std::string    imageFile;
+		Entity::TType            type;
+		int                      life;
+		float                    speed;
+		int                      collisionDamage;
+		ComponentWeapon::TWeapon weapon;
+		float                    spawnProbability;
+		int                      points;
+		vec2                     size;
+		std::string              imageFile;
 	};
 
 	World(uint16_t level) : m_level(level) {}

@@ -104,6 +104,37 @@
 		"isExplossive": false,
 		"isBouncy": false,
 		"soundFile": ""
+	},
+	{
+		"type": "enemy weapon",
+		"id": 7,
+		"fireRate": 100,
+		"reloadTime": 1,
+		"capacity": 1,
+		"bulletSpeed": 6,
+		"bulletDamage": -1,
+		"bulletLife": 1,
+		"bulletRange": 0,
+		"isAutomatic": true,
+		"isExplossive": false,
+		"isBouncy": false,
+		"soundFile": ""
+	},
+	{
+		"type": "boss weapon",
+		"id": 8,
+		"fireRate": 100,
+		"reloadTime": 1,
+		"capacity": 1,
+		"bulletSpeed": 6,
+		"bulletDamage": -1,
+		"bulletLife": 1,
+		"bulletRange": 0,
+		"numBullets": 8,
+		"isAutomatic": true,
+		"isExplossive": false,
+		"isBouncy": false,
+		"soundFile": ""
 	}
 	],
 	"enemies": [
@@ -113,13 +144,6 @@
 		"life": 1,
 		"speed": 3,
 		"collisionDamage": -1,
-		"fireRate": 0,
-		"bulletSpeed": 0,
-		"bulletDamage": 0,
-		"bulletLife": 0,
-		"bulletRange": 0,
-		"isExplossive": false,
-		"isBouncy": false,
 		"size": [ 25 ,25 ],
 		"imageFile": "data/enemy.png"
 	},
@@ -129,13 +153,6 @@
 		"life": 4,
 		"speed": 2,
 		"collisionDamage": -2,
-		"fireRate": 0,
-		"bulletSpeed": 0,
-		"bulletDamage": 0,
-		"bulletLife": 0,
-		"bulletRange": 0,
-		"isExplossive": false,
-		"isBouncy": false,
 		"size": [ 35 ,35 ],
 		"imageFile": "data/bigEnemy.png"
 	},
@@ -145,13 +162,7 @@
 		"life": 1,
 		"speed": 2,
 		"collisionDamage": -1,
-		"fireRate": 100,
-		"bulletSpeed": 6,
-		"bulletDamage": -1,
-		"bulletLife": 1,
-		"bulletRange": 0,
-		"isExplossive": false,
-		"isBouncy": false,
+		"weapon": 7,
 		"size": [ 25 ,25 ],
 		"imageFile": "data/rangeEnemy.png"
 	},
@@ -161,15 +172,20 @@
 		"life": 3,
 		"speed": 2,
 		"collisionDamage": -1,
-		"fireRate": 100,
-		"bulletSpeed": 6,
-		"bulletDamage": -1,
-		"bulletLife": 1,
-		"bulletRange": 0,
-		"isExplossive": false,
-		"isBouncy": false,
+		"weapon": 7,
 		"size": [ 25 ,25 ],
 		"imageFile": "data/turret.png"
+	}
+	,
+	{
+		"type": "boss",
+		"id": 4,
+		"life": 4,
+		"speed": 2,
+		"collisionDamage": -2,
+		"weapon": 8,
+		"size": [ 74 ,90 ],
+		"imageFile": "data/boss1.png"
 	}
 	]
 }

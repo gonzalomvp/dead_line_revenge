@@ -401,7 +401,16 @@ void ComponentWeapon::run(float deltaTime) {
 				break;
 			}
 			default: {
-				g_world->createBullet(messageGetTranform.pos, vmake(10.0f, 10.0f), m_aimDirection, m_weaponData.bulletSpeed, m_weaponData.bulletDamage, m_weaponData.bulletLife, m_weaponData.bulletRange, m_weaponData.isExplossive, m_weaponData.isBouncy, m_owner->getType(), "data/bullet.png");
+				if (m_weaponData.numBullets > 1) {
+					for (size_t i = 0; i < m_weaponData.numBullets; i++) {
+						float angle = i * 360.f / m_weaponData.numBullets;
+						g_world->createBullet(messageGetTranform.pos, vmake(10.0f, 10.0f), vunit(DEG2RAD(angle)), m_weaponData.bulletSpeed, m_weaponData.bulletDamage, m_weaponData.bulletLife, m_weaponData.bulletRange, m_weaponData.isExplossive, m_weaponData.isBouncy, m_owner->getType(), "data/bullet.png");
+					}
+				}
+				else {
+					g_world->createBullet(messageGetTranform.pos, vmake(10.0f, 10.0f), m_aimDirection, m_weaponData.bulletSpeed, m_weaponData.bulletDamage, m_weaponData.bulletLife, m_weaponData.bulletRange, m_weaponData.isExplossive, m_weaponData.isBouncy, m_owner->getType(), "data/bullet.png");
+				}
+				
 				break;
 			}
 		}
