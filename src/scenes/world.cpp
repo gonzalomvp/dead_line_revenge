@@ -48,6 +48,10 @@ bool World::loadLevel() {
 			fileName = "data/level3.json";
 			break;
 	}
+
+	// Force test level
+	fileName = "data/levelTest.json";
+
 	FILE* file = fopen(fileName, "r");
 	if (!file) return false;
 
@@ -174,7 +178,7 @@ Entity* World::createPlayer(vec2 pos) {
 	weapon->init();
 	ComponentCollider* collider = NEW(ComponentCollider, player, ComponentCollider::ERectCollider, -1, ComponentCollider::EPlayerCollider, ComponentCollider::EEnemyCollider | ComponentCollider::EEnemyWeaponCollider);
 	collider->init();
-	ComponentLife* life = NEW(ComponentLife, player, 5, 0, 20);
+	ComponentLife* life = NEW(ComponentLife, player, m_playerLife, 0, 20);
 	life->init();
 	ComponentHUD* hudComponent = NEW(ComponentHUD, player);
 	hudComponent->init();
@@ -258,9 +262,6 @@ Entity* World::createEnemy(vec2 pos, TEnemyData enemyData, Entity* player) {
 	if (enemyData.type == Entity::EEnemyMelee || enemyData.type == Entity::EEnemyBig) {
 		ComponentAIMelee* aiMelee = NEW(ComponentAIMelee, enemy, player, enemyData.speed, 0);
 		aiMelee->init();
-
-		BossIAComponent* bossAI = NEW(BossIAComponent, enemy, "data/bt/boss_bt.xml");
-		//bossAI->init();
 	}
 
 	// Range and Turrets have a fire weapon
@@ -269,7 +270,7 @@ Entity* World::createEnemy(vec2 pos, TEnemyData enemyData, Entity* player) {
 		gun->init();
 		
 		// If a player is passed the enemy keep a distance between ComponentAIMelee and ComponentAIEvade distances and aim to it
-		if (player) {
+		if (player && enemyData.type != Entity::EBoss) {
 			ComponentAIFire* aiFire = NEW(ComponentAIFire, enemy, player);
 			aiFire->init();
 			ComponentAIMelee* aiMelee = NEW(ComponentAIMelee, enemy, player, enemyData.speed, 200);
@@ -277,6 +278,12 @@ Entity* World::createEnemy(vec2 pos, TEnemyData enemyData, Entity* player) {
 			ComponentAIEvade* aiEvade = NEW(ComponentAIEvade, enemy, player, enemyData.speed, 150);
 			aiEvade->init();
 		}
+	}
+
+	// Boss AI
+	if (enemyData.type == Entity::EBoss) {
+		BossIAComponent* bossAI = NEW(BossIAComponent, enemy, "data/bt/boss_bt.xml");
+		bossAI->init();
 	}
 
 	ComponentCollider* collider = NEW(ComponentCollider, enemy, ComponentCollider::ERectCollider, enemyData.collisionDamage, ComponentCollider::EEnemyCollider, ComponentCollider::EPlayerWeaponCollider);

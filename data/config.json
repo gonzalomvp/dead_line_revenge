@@ -121,17 +121,33 @@
 		"soundFile": ""
 	},
 	{
-		"type": "boss weapon",
+		"type": "boss weapon1",
 		"id": 8,
-		"fireRate": 100,
+		"fireRate": 30,
 		"reloadTime": 1,
 		"capacity": 1,
-		"bulletSpeed": 6,
+		"bulletSpeed": 8,
 		"bulletDamage": -1,
 		"bulletLife": 1,
 		"bulletRange": 0,
-		"numBullets": 8,
-		"isAutomatic": true,
+		"numBullets": 10,
+		"isAutomatic": false,
+		"isExplossive": false,
+		"isBouncy": false,
+		"soundFile": ""
+	},
+	{
+		"type": "boss weapon2",
+		"id": 9,
+		"fireRate": 10,
+		"reloadTime": 1,
+		"capacity": 1,
+		"bulletSpeed": 5,
+		"bulletDamage": -1,
+		"bulletLife": 1,
+		"bulletRange": 0,
+		"numBullets": 3,
+		"isAutomatic": false,
 		"isExplossive": false,
 		"isBouncy": false,
 		"soundFile": ""
@@ -180,11 +196,11 @@
 	{
 		"type": "boss",
 		"id": 4,
-		"life": 4,
+		"life": 40,
 		"speed": 2,
 		"collisionDamage": -2,
 		"weapon": 8,
-		"size": [ 74 ,90 ],
+		"size": [ 90 ,74 ],
 		"imageFile": "data/boss1.png"
 	}
 	]

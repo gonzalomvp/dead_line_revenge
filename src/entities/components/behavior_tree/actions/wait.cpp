@@ -1,5 +1,7 @@
 #include "common/stdafx.h"
 #include "wait.h"
+#include "entities/message.h"
+#include "scenes/world.h"
 #include "entities/components/behavior_tree/behavior_tree.h"
 
 void Wait::onEnter() {
@@ -7,7 +9,6 @@ void Wait::onEnter() {
 }
 
 Status Wait::update(float step) {
-
 	if (mWaitTimer >= mWaitTime) {
 		return eSuccess;
 	}

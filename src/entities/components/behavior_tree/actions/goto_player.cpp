@@ -1,19 +1,18 @@
 #include "common/stdafx.h"
-#include "goto_random.h"
+#include "goto_player.h"
 #include "entities/entity.h"
 #include "entities/components/behavior_tree/behavior_tree.h"
 #include "entities/message.h"
 #include "scenes/world.h"
 
-void GoToRandomPosition::onEnter() {
-	Entity* self = mOwner->getCharacter();
-	MessageGetTransform messageSelfPos;
-	self->receiveMessage(&messageSelfPos);
-
-	mTargetPos = vmake(CORE_FRand(0.0 + messageSelfPos.size.x * 0.5f, WORLD_WIDTH - messageSelfPos.size.x * 0.5f), CORE_FRand(80 + messageSelfPos.size.y * 0.5f, WORLD_HEIGHT - 80 - messageSelfPos.size.y * 0.5f));
+void GoToPlayerPosition::onEnter() {
+	Entity* player = g_world->getPlayer();
+	MessageGetTransform messagePlayerPos;
+	player->receiveMessage(&messagePlayerPos);
+	mTargetPos = messagePlayerPos.pos;
 }
 
-Status GoToRandomPosition::update(float step) {
+Status GoToPlayerPosition::update(float step) {
 
 	Entity* self = mOwner->getCharacter();
 

@@ -237,9 +237,9 @@ void ComponentRenderable::receiveMessage(Message* message) {
 		m_hitTimer = 0;
 	}
 	else {
-		MessageAimDirection* messageAimDirection = dynamic_cast<MessageAimDirection*>(message);
-		if (messageAimDirection) {
-			m_sprite->setAngle(vangle(messageAimDirection->direction));
+		MessageSetAimDirection* messageSetAimDirection = dynamic_cast<MessageSetAimDirection*>(message);
+		if (messageSetAimDirection && messageSetAimDirection->changeAngle) {
+			m_sprite->setAngle(vangle(messageSetAimDirection->direction));
 		}
 		else {
 			MessageChangeSprite* messageChangeSprite = dynamic_cast<MessageChangeSprite*>(message);
@@ -403,7 +403,7 @@ void ComponentWeapon::run(float deltaTime) {
 			default: {
 				if (m_weaponData.numBullets > 1) {
 					for (size_t i = 0; i < m_weaponData.numBullets; i++) {
-						float angle = i * 360.f / m_weaponData.numBullets;
+						float angle = vangle(m_aimDirection) + (i * 360.f / m_weaponData.numBullets);
 						g_world->createBullet(messageGetTranform.pos, vmake(10.0f, 10.0f), vunit(DEG2RAD(angle)), m_weaponData.bulletSpeed, m_weaponData.bulletDamage, m_weaponData.bulletLife, m_weaponData.bulletRange, m_weaponData.isExplossive, m_weaponData.isBouncy, m_owner->getType(), "data/bullet.png");
 					}
 				}
@@ -444,25 +444,31 @@ void ComponentWeapon::receiveMessage(Message* message) {
 			m_isFiring = msgFire->isFiring;
 		}
 		else {
-			MessageAimDirection* msgAimDirection = dynamic_cast<MessageAimDirection*>(message);
-			if (msgAimDirection) {
-				m_aimDirection = msgAimDirection->direction;
+			MessageSetAimDirection* messageSetAimDirection = dynamic_cast<MessageSetAimDirection*>(message);
+			if (messageSetAimDirection) {
+				m_aimDirection = messageSetAimDirection->direction;
 			}
 			else {
-				MessageAmmoInfo* msgAmmoInfo = dynamic_cast<MessageAmmoInfo*>(message);
-				if (msgAmmoInfo) {
-					msgAmmoInfo->currentAmmo = m_currentBullets;
-					msgAmmoInfo->totalAmmo = m_weaponData.capacity;
-					msgAmmoInfo->reloadPercent = m_reloadTimer * 1.0f / m_weaponData.reloadTime;
-					if (msgAmmoInfo->reloadPercent > 1.0f) {
-						msgAmmoInfo->reloadPercent = 1.0f;
-					}
+				MessageGetAimDirection* messageGetAimDirection = dynamic_cast<MessageGetAimDirection*>(message);
+				if (messageGetAimDirection) {
+					messageGetAimDirection->direction = m_aimDirection;
 				}
 				else {
-					MessageReload* msgReload = dynamic_cast<MessageReload*>(message);
-					if (msgReload && m_currentBullets < m_weaponData.capacity && m_reloadTimer >= m_weaponData.reloadTime) {
-						m_isFiring = false;
-						m_reloadTimer = 0;
+					MessageAmmoInfo* msgAmmoInfo = dynamic_cast<MessageAmmoInfo*>(message);
+					if (msgAmmoInfo) {
+						msgAmmoInfo->currentAmmo = m_currentBullets;
+						msgAmmoInfo->totalAmmo = m_weaponData.capacity;
+						msgAmmoInfo->reloadPercent = m_reloadTimer * 1.0f / m_weaponData.reloadTime;
+						if (msgAmmoInfo->reloadPercent > 1.0f) {
+							msgAmmoInfo->reloadPercent = 1.0f;
+						}
+					}
+					else {
+						MessageReload* msgReload = dynamic_cast<MessageReload*>(message);
+						if (msgReload && m_currentBullets < m_weaponData.capacity && m_reloadTimer >= m_weaponData.reloadTime) {
+							m_isFiring = false;
+							m_reloadTimer = 0;
+						}
 					}
 				}
 			}
@@ -620,14 +626,16 @@ void ComponentAIFire::run(float deltaTime) {
 		m_owner->receiveMessage(&messageSelfPos);
 		MessageGetTransform messagePlayerPos;
 		m_player->receiveMessage(&messagePlayerPos);
-		MessageAimDirection messageAimDirection;
-		messageAimDirection.direction = vnorm(vsub(messagePlayerPos.pos, messageSelfPos.pos));
-		m_owner->receiveMessage(&messageAimDirection);
+		MessageSetAimDirection messageSetAimDirection;
+		messageSetAimDirection.direction = vnorm(vsub(messagePlayerPos.pos, messageSelfPos.pos));
+		messageSetAimDirection.changeAngle = true;
+		m_owner->receiveMessage(&messageSetAimDirection);
 	}
 	else {
-		MessageAimDirection messageAimDirection;
-		messageAimDirection.direction = m_fireDirections[m_currentFireDirection];
-		m_owner->receiveMessage(&messageAimDirection);
+		MessageSetAimDirection messageSetAimDirection;
+		messageSetAimDirection.direction = m_fireDirections[m_currentFireDirection];
+		messageSetAimDirection.changeAngle = true;
+		m_owner->receiveMessage(&messageSetAimDirection);
 	}
 }
 
@@ -641,9 +649,9 @@ void ComponentAIFire::receiveMessage(Message* message) {
 		if (m_currentFireDirection >= m_fireDirections.size()) {
 			m_currentFireDirection = 0;
 		}
-		MessageAimDirection messageAimDirection;
-		messageAimDirection.direction = m_fireDirections[m_currentFireDirection];
-		m_owner->receiveMessage(&messageAimDirection);
+		//MessageAimDirection messageAimDirection;
+		//messageAimDirection.direction = m_fireDirections[m_currentFireDirection];
+		//m_owner->receiveMessage(&messageAimDirection);
 	}
 }
 
@@ -887,9 +895,10 @@ bool ComponentHUD::onEvent(const IInputManager::Event& event) {
 
 			MessageGetTransform messagePos;
 			m_owner->receiveMessage(&messagePos);
-			MessageAimDirection messageAimDirection;
-			messageAimDirection.direction = vnorm(vsub(targetPos, messagePos.pos));
-			m_owner->receiveMessage(&messageAimDirection);
+			MessageSetAimDirection messageSetAimDirection;
+			messageSetAimDirection.direction = vnorm(vsub(targetPos, messagePos.pos));
+			messageSetAimDirection.changeAngle = true;
+			m_owner->receiveMessage(&messageSetAimDirection);
 		}
 	}
 	return true;

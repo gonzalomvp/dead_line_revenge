@@ -43,6 +43,8 @@ public:
 	Entity* createEnemy       (vec2 pos, TEnemyData enemyData, vec2 moveDir, std::vector<vec2> aimDirections, bool shuffleAim);
 	Entity* createWeaponPickup();
 	Entity* createHUDMessage  (const std::string&, vec2 pos, int displayTime);
+
+	std::map<ComponentWeapon::TWeapon, ComponentWeapon::TWeaponData> m_weaponData;
 private:
 	bool loadConfig           ();
 	void checkCollisions      ();
@@ -70,7 +72,6 @@ private:
 	int      m_maxEnemies;
 
 	// Config loaded from file
-	std::map<ComponentWeapon::TWeapon, ComponentWeapon::TWeaponData> m_weaponData;
 	std::map<Entity::TType, TEnemyData>                              m_enemyData;
 	std::vector<vec2>                                                m_spawnData;
 

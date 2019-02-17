@@ -3,9 +3,9 @@
 
 class BehaviorTree;
 
-class GoToRandomPosition : public Behavior {
+class GoToPlayerPosition : public Behavior {
 public:
-	GoToRandomPosition(BehaviorTree* owner, float speed) : Behavior(owner), mSpeed(speed) {}
+	GoToPlayerPosition(BehaviorTree* owner, float speed) : Behavior(owner), mSpeed(speed) {}
 
 protected:
 	virtual void onEnter() override;

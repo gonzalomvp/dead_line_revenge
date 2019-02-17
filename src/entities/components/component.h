@@ -154,7 +154,8 @@ public:
 		ERocketLauncher,
 		ENuclearBomb,
 		EEnemyWeapon,
-		EBossWeapon,
+		EBossWeapon1,
+		EBossWeapon2,
 		ENone,
 		EWeaponCount = 7
 	};

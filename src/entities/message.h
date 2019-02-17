@@ -35,7 +35,12 @@ struct MessageFire : public Message {
 	bool isFireDone = false;
 };
 
-struct MessageAimDirection : public Message {
+struct MessageSetAimDirection : public Message {
+	vec2 direction = vmake(0.0f, 0.0f);
+	bool changeAngle = false;
+};
+
+struct MessageGetAimDirection : public Message {
 	vec2 direction = vmake(0.0f, 0.0f);
 };
 
