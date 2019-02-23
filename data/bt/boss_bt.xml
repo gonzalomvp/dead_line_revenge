@@ -8,7 +8,7 @@
 				<param value="2" />
 			</behavior>
 			<behavior type="changeWeapon">
-				<param value="9" />
+				<param value="boss weapon2" />
 			</behavior>
 			<behavior type="aimPlayer"/>
 			<behavior type="repeat" numRepeats="15">
@@ -31,7 +31,7 @@
 				<param value="6" />
 			</behavior>
 			<behavior type="changeWeapon">
-				<param value="8" />
+				<param value="boss weapon1" />
 			</behavior>
 			<behavior type="repeat" numRepeats="3">
 				<behavior type="sequence">

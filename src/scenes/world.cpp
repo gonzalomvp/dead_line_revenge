@@ -174,7 +174,7 @@ Entity* World::createPlayer(vec2 pos) {
 	playerControl->init();
 	ComponentMove* movement = NEW(ComponentMove, player, vmake(0.0f, 0.0f), m_playerSpeed, false, false);
 	movement->init();
-	ComponentWeapon* weapon = NEW(ComponentWeapon, player, m_weaponData[ComponentWeapon::ERevolver]);
+	ComponentWeapon* weapon = NEW(ComponentWeapon, player, m_weaponData[ComponentWeapon::EEREVOLVER]);
 	weapon->init();
 	ComponentCollider* collider = NEW(ComponentCollider, player, ComponentCollider::ERectCollider, -1, ComponentCollider::EPlayerCollider, ComponentCollider::EEnemyCollider | ComponentCollider::EEnemyWeaponCollider);
 	collider->init();
@@ -265,7 +265,7 @@ Entity* World::createEnemy(vec2 pos, TEnemyData enemyData, Entity* player) {
 	}
 
 	// Range and Turrets have a fire weapon
-	if (enemyData.weapon != ComponentWeapon::TWeapon::ENone) {
+	if (enemyData.weapon != ComponentWeapon::TType::EInvalid) {
 		ComponentWeapon* gun = NEW(ComponentWeapon, enemy, m_weaponData[enemyData.weapon]);
 		gun->init();
 		
@@ -310,7 +310,7 @@ Entity* World::createEnemy(vec2 pos, TEnemyData enemyData, vec2 moveDir, std::ve
 
 Entity* World::createWeaponPickup() {
 	// Calculate a random weapon type
-	ComponentWeapon::TWeapon type = static_cast<ComponentWeapon::TWeapon>(rand() % ComponentWeapon::EWeaponCount);
+	ComponentWeapon::TType type = static_cast<ComponentWeapon::TType>(rand() % ComponentWeapon::NUM_PLAYER_WEAPONS_TYPES);
 	// Calculate a random spawn position
 	vec2 randomPos = vmake(CORE_FRand(0.0, WORLD_WIDTH), CORE_FRand(80, WORLD_HEIGHT - 80));
 	
@@ -362,7 +362,7 @@ bool World::loadConfig() {
 	const Value& weapons = doc["weapons"];
 	for (SizeType i = 0; i < weapons.Size(); i++) {
 		ComponentWeapon::TWeaponData weapon;
-		weapon.type               = static_cast<ComponentWeapon::TWeapon>(weapons[i]["id"].GetInt());
+		weapon.type               = ComponentWeapon::getWeaponTypeByName(weapons[i]["name"].GetString());
 		weapon.fireRate           = weapons[i]["fireRate"].GetInt();
 		weapon.reloadTime         = weapons[i]["reloadTime"].GetInt();
 		weapon.capacity           = weapons[i]["capacity"].GetInt();
@@ -389,9 +389,9 @@ bool World::loadConfig() {
 		enemy.life              = enemies[i]["life"].GetInt();
 		enemy.speed             = enemies[i]["speed"].GetFloat();
 		enemy.collisionDamage   = enemies[i]["collisionDamage"].GetInt();
-		enemy.weapon            = ComponentWeapon::TWeapon::ENone;
+		enemy.weapon            = ComponentWeapon::TType::EInvalid;
 		if (enemies[i].HasMember("weapon")) {
-			enemy.weapon = static_cast<ComponentWeapon::TWeapon>(enemies[i]["weapon"].GetInt());
+			enemy.weapon = static_cast<ComponentWeapon::TType>(enemies[i]["weapon"].GetInt());
 		}
 		enemy.size              = vmake(enemies[i]["size"][0].GetFloat(), enemies[i]["size"][1].GetFloat());
 		enemy.imageFile         = enemies[i]["imageFile"].GetString();

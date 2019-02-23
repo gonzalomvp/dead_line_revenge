@@ -14,7 +14,7 @@ public:
 		int                      life;
 		float                    speed;
 		int                      collisionDamage;
-		ComponentWeapon::TWeapon weapon;
+		ComponentWeapon::TType   weapon;
 		float                    spawnProbability;
 		int                      points;
 		vec2                     size;
@@ -44,7 +44,7 @@ public:
 	Entity* createWeaponPickup();
 	Entity* createHUDMessage  (const std::string&, vec2 pos, int displayTime);
 
-	std::map<ComponentWeapon::TWeapon, ComponentWeapon::TWeaponData> m_weaponData;
+	std::map<ComponentWeapon::TType, ComponentWeapon::TWeaponData> m_weaponData;
 private:
 	bool loadConfig           ();
 	void checkCollisions      ();

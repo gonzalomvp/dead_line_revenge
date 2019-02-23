@@ -1,7 +1,7 @@
 {
 	"weapons": [
 	{
-		"type": "revolver",
+		"name": "revolver",
 		"id": 0,
 		"fireRate": 20,
 		"reloadTime": 60,
@@ -16,8 +16,7 @@
 		"soundFile": "data/shot.wav"
 	},
 	{
-		"type": "machinegun",
-		"id": 1,
+		"name": "machinegun",
 		"fireRate": 10,
 		"reloadTime": 80,
 		"capacity": 20,
@@ -31,8 +30,7 @@
 		"soundFile": "data/shot.wav"
 	},
 	{
-		"type": "shotgun",
-		"id": 2,
+		"name": "shotgun",
 		"fireRate": 0,
 		"reloadTime": 50,
 		"capacity": 2,
@@ -46,8 +44,7 @@
 		"soundFile": "data/shotgun.wav"
 	},
 	{
-		"type": "mines",
-		"id": 3,
+		"name": "mines",
 		"fireRate": 0,
 		"reloadTime": 120,
 		"capacity": 1,
@@ -61,8 +58,7 @@
 		"soundFile": "data/mine.wav"
 	},
 	{
-		"type": "c4",
-		"id": 4,
+		"name": "c4",
 		"fireRate": 0,
 		"reloadTime": 0,
 		"capacity": 1,
@@ -76,8 +72,7 @@
 		"soundFile": "data/mine.wav"
 	},
 	{
-		"type": "rocket launcher",
-		"id": 5,
+		"name": "rocket launcher",
 		"fireRate": 0,
 		"reloadTime": 100,
 		"capacity": 1,
@@ -91,8 +86,7 @@
 		"soundFile": "data/rocketlauncher.wav"
 	},
 	{
-		"type": "nuclear bomb",
-		"id": 6,
+		"name": "nuclear bomb",
 		"fireRate": 0,
 		"reloadTime": 0,
 		"capacity": 1,
@@ -106,8 +100,7 @@
 		"soundFile": ""
 	},
 	{
-		"type": "enemy weapon",
-		"id": 7,
+		"name": "enemy weapon",
 		"fireRate": 100,
 		"reloadTime": 1,
 		"capacity": 1,
@@ -121,8 +114,7 @@
 		"soundFile": ""
 	},
 	{
-		"type": "boss weapon1",
-		"id": 8,
+		"name": "boss weapon1",
 		"fireRate": 30,
 		"reloadTime": 1,
 		"capacity": 1,
@@ -137,8 +129,7 @@
 		"soundFile": ""
 	},
 	{
-		"type": "boss weapon2",
-		"id": 9,
+		"name": "boss weapon2",
 		"fireRate": 10,
 		"reloadTime": 1,
 		"capacity": 1,

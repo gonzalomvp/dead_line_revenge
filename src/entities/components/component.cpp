@@ -333,6 +333,15 @@ bool ComponentPlayerController::onEvent(const IInputManager::Event& event) {
 //=============================================================================
 // ComponentWeapon class
 //=============================================================================
+
+ComponentWeapon::TWeaponInfo ComponentWeapon::s_aWeaponInfo[] =
+{
+#define REG_WEAPON(Val, name) \
+	{EE##Val, name},
+#include "REG_WEAPONS.h"
+#undef REG_WEAPON
+};
+
 void ComponentWeapon::run(float deltaTime) {
 	Component::run(deltaTime);
 	if (!m_isActive)
@@ -371,7 +380,7 @@ void ComponentWeapon::run(float deltaTime) {
 		m_owner->receiveMessage(&messageGetTranform);
 
 		switch (m_weaponData.type) {
-			case EShotgun: {
+			case EESHOTGUN: {
 				vec2 bulletDir = m_aimDirection;
 				g_world->createBullet(messageGetTranform.pos, vmake(10.0f, 10.0f), bulletDir, m_weaponData.bulletSpeed, m_weaponData.bulletDamage, m_weaponData.bulletLife, m_weaponData.bulletRange, m_weaponData.isExplossive, m_weaponData.isBouncy, m_owner->getType(), "data/shotgunBullet.png");
 				float angle = vangle(m_aimDirection);
@@ -384,19 +393,19 @@ void ComponentWeapon::run(float deltaTime) {
 				g_world->createBullet(messageGetTranform.pos, vmake(10.0f, 10.0f), bulletDir, m_weaponData.bulletSpeed, m_weaponData.bulletDamage, m_weaponData.bulletLife, m_weaponData.bulletRange, m_weaponData.isExplossive, m_weaponData.isBouncy, m_owner->getType(), "data/shotgunBullet.png");
 				break;
 			}
-			case EMines: {
+			case EEMINES: {
 				g_world->createBullet(messageGetTranform.pos, vmake(20.0f, 20.0f), m_aimDirection, m_weaponData.bulletSpeed, m_weaponData.bulletDamage, m_weaponData.bulletLife, m_weaponData.bulletRange, m_weaponData.isExplossive, m_weaponData.isBouncy, Entity::EMine, "data/mine.png");
 				break;
 			}
-			case EC4: {
+			case EEC4: {
 				m_remoteBullet = g_world->createBullet(messageGetTranform.pos, vmake(20.0f, 20.0f), m_aimDirection, m_weaponData.bulletSpeed, m_weaponData.bulletDamage, m_weaponData.bulletLife, m_weaponData.bulletRange, m_weaponData.isExplossive, m_weaponData.isBouncy, m_owner->getType(), "data/c4.png");
 				break;
 			}
-			case ERocketLauncher: {
+			case EEROCKETLAUNCHER: {
 				g_world->createBullet(messageGetTranform.pos, vmake(15.0f, 15.0f), m_aimDirection, m_weaponData.bulletSpeed, m_weaponData.bulletDamage, m_weaponData.bulletLife, m_weaponData.bulletRange, m_weaponData.isExplossive, m_weaponData.isBouncy, m_owner->getType(), "data/rocket.png");
 				break;
 			}
-			case ENuclearBomb: {
+			case EENUCLEARBOMB: {
 				g_world->createExplossion(messageGetTranform.pos, vmake(20.0f, 20.0f), vmake(8.0f, 8.0f), 100, Entity::ENuclearExplossion);
 				break;
 			}
@@ -474,6 +483,19 @@ void ComponentWeapon::receiveMessage(Message* message) {
 			}
 		}
 	}
+}
+
+ComponentWeapon::TType ComponentWeapon::getWeaponTypeByName(const std::string& name) {
+	ComponentWeapon::TType etype = EInvalid;
+	int i = 0;
+	while ((etype == EInvalid) && (i < NUM_WEAPON_TYPES))
+	{
+		if (name == s_aWeaponInfo[i].sName) {
+			etype = s_aWeaponInfo[i].eType;
+		}
+		i++;
+	}
+	return etype;
 }
 
 //=============================================================================
@@ -762,26 +784,13 @@ void ComponentWeaponPickup::receiveMessage(Message* message) {
 		std::string hudMessage = g_stringManager->getText("LTEXT_GUI_PICKUP_MESSAGE");
 		switch (m_weaponData.type)
 		{
-			case ComponentWeapon::ERevolver:
-				hudMessage += g_stringManager->getText("LTEXT_GUI_REVOLVER_MESSAGE");
+#define REG_WEAPON(val, name) \
+			case ComponentWeapon::EE##val: \
+				hudMessage += g_stringManager->getText("LTEXT_GUI_"#val"_MESSAGE"); \
 				break;
-			case ComponentWeapon::EMachinegun:
-				hudMessage += g_stringManager->getText("LTEXT_GUI_MACHINEGUN_MESSAGE");
-				break;
-			case ComponentWeapon::EShotgun:
-				hudMessage += g_stringManager->getText("LTEXT_GUI_SHOTGUN_MESSAGE");
-				break;
-			case ComponentWeapon::EMines:
-				hudMessage += g_stringManager->getText("LTEXT_GUI_MINES_MESSAGE");
-				break;
-			case ComponentWeapon::EC4:
-				hudMessage += g_stringManager->getText("LTEXT_GUI_C4_MESSAGE");
-				break;
-			case ComponentWeapon::ERocketLauncher:
-				hudMessage += g_stringManager->getText("LTEXT_GUI_ROCKETLAUNCHER_MESSAGE");
-				break;
-			case ComponentWeapon::ENuclearBomb:
-				hudMessage += g_stringManager->getText("LTEXT_GUI_NUCLEAR_MESSAGE");
+#include "REG_WEAPONS.h"
+#undef REG_WEAPON
+			default:
 				break;
 		}
 

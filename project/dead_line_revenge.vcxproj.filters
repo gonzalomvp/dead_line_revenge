@@ -201,6 +201,9 @@
     <ClInclude Include="..\src\entities\components\behavior_tree\actions\goto_player.h">
       <Filter>src\entities\components\behavior_tree\actions</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\REG_WEAPONS.h">
+      <Filter>src</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\main.cpp">

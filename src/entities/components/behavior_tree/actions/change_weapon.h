@@ -5,12 +5,12 @@ class BehaviorTree;
 
 class ChangeWeapon : public Behavior {
 public:
-	ChangeWeapon(BehaviorTree* owner, int weaponId) : Behavior(owner), mWeaponID(weaponId) {}
+	ChangeWeapon(BehaviorTree* owner, const std::string& weaponName) : Behavior(owner), mWeaponName(weaponName) {}
 
 protected:
 	virtual Status update(float step) override;
 
 private:
-	int mWeaponID;
+	std::string mWeaponName;
 };
 

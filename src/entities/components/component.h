@@ -145,23 +145,35 @@ public:
 //=============================================================================
 class ComponentWeapon : public Component {
 public:
-	enum TWeapon {
-		ERevolver,
-		EMachinegun,
-		EShotgun,
-		EMines,
-		EC4,
-		ERocketLauncher,
-		ENuclearBomb,
-		EEnemyWeapon,
-		EBossWeapon1,
-		EBossWeapon2,
-		ENone,
-		EWeaponCount = 7
+	//enum TWeapon {
+	//	ERevolver,
+	//	EMachinegun,
+	//	EShotgun,
+	//	EMines,
+	//	EC4,
+	//	ERocketLauncher,
+	//	ENuclearBomb,
+	//	EEnemyWeapon,
+	//	EBossWeapon1,
+	//	EBossWeapon2,
+	//	ENone,
+	//	EWeaponCount = 7
+	//};
+
+	enum TType {
+#define REG_WEAPON(val, name) \
+		EE##val,
+#include "REG_WEAPONS.h"
+#undef REG_WEAPON
+
+		EInvalid,
 	};
 
+	static const int NUM_WEAPON_TYPES = EInvalid;
+	static const int NUM_PLAYER_WEAPONS_TYPES = EENUM_PLAYER_WEAPONS;
+
 	struct TWeaponData {
-		TWeapon     type;
+		TType       type;
 		int         fireRate;
 		int         reloadTime;
 		int         capacity;
@@ -188,6 +200,8 @@ public:
 
 	virtual void run           (float deltaTime);
 	virtual void receiveMessage(Message* message);
+
+	static TType getWeaponTypeByName(const std::string& name);
 private:
 	TWeaponData m_weaponData;
 	Entity* m_remoteBullet;
@@ -198,6 +212,13 @@ private:
 	//Timers
 	int m_fireTimer;
 	int m_reloadTimer;
+
+	struct TWeaponInfo
+	{
+		TType eType;
+		std::string sName;
+	};
+	static TWeaponInfo s_aWeaponInfo[];
 };
 
 //=============================================================================
