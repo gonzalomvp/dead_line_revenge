@@ -8,14 +8,14 @@
 // Label class
 //=============================================================================
 Label::~Label() {
-	g_graphicsEngine->removeGfxEntity(m_labelText);
+	g_pGraphicsEngine->removeGfxEntity(m_labelText);
 	DELETE(m_labelText);
 }
 
 void Label::init(const std::string& text) {
 	m_text = text;
 	m_labelText = NEW(Text, m_text, vmake(m_pos.x - (m_text.length() / 2.0f * 16), m_pos.y - 6), 1);
-	g_graphicsEngine->addGfxEntity(m_labelText);
+	g_pGraphicsEngine->addGfxEntity(m_labelText);
 }
 
 void Label::activate() {
@@ -35,7 +35,7 @@ void Label::run() {
 	if (m_isActive) {
 		Control::run();
 
-		std::string textToDraw = g_stringManager->getText(m_text);
+		std::string textToDraw = g_pStringManager->getText(m_text);
 		m_labelText->setText(textToDraw.c_str());
 		vec2 currentPos = m_labelText->getPos();
 		currentPos.x = m_pos.x - (textToDraw.length() / 2.0f * 16);

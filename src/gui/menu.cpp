@@ -5,7 +5,8 @@
 #include "../engine/sound_engine.h"
 #include "../gui/label.h"
 #include "../gui/string_manager.h"
-#include "../scenes/app_manager.h"
+#include "scenes/scene.h"
+#include "scenes/scene_manager.h"
 #include "../scenes/world.h"
 
 
@@ -19,7 +20,7 @@ MenuItem::~MenuItem() {
 void MenuItem::init() {
 	m_gfxText = NEW(Text, m_text, m_pos, 1);
 	m_gfxText->deactivate();
-	g_graphicsEngine->addGfxEntity(m_gfxText);
+	g_pGraphicsEngine->addGfxEntity(m_gfxText);
 }
 
 void MenuItem::activate() {
@@ -31,9 +32,9 @@ void MenuItem::deactivate() {
 }
 
 void MenuItem::run() {
-	std::string textToDraw = g_stringManager->getText(m_text);
+	std::string textToDraw = g_pStringManager->getText(m_text);
 	if (m_options.size() > 0) {
-		textToDraw += " " + g_stringManager->getText(m_options[m_selectedOption]);
+		textToDraw += " " + g_pStringManager->getText(m_options[m_selectedOption]);
 	}
 	if (m_hasFocus) {
 		textToDraw = "- " + textToDraw + " -";
@@ -54,8 +55,8 @@ void MenuItem::nextOption() {
 // Menu class
 //=============================================================================
 Menu::~Menu() {
-	if (g_inputManager) {
-		g_inputManager->unregisterEvent(this, IInputManager::TEventType::EKeyDown);
+	if (g_pInputManager) {
+		g_pInputManager->unregisterEvent(this, IInputManager::TEventType::EKeyDown);
 	}
 	for (auto itMenuItems = m_menuItems.begin(); itMenuItems != m_menuItems.end(); ++itMenuItems) {
 		DELETE(*itMenuItems);
@@ -80,7 +81,7 @@ void Menu::activate() {
 		m_title->activate();
 	}
 	setSelectedItem(0);
-	g_inputManager->registerEvent(this, IInputManager::TEventType::EKeyDown);
+	g_pInputManager->registerEvent(this, IInputManager::TEventType::EKeyDown);
 }
 
 void Menu::deactivate() {
@@ -94,7 +95,7 @@ void Menu::deactivate() {
 	if (m_title) {
 		m_title->deactivate();
 	}
-	g_inputManager->unregisterEvent(this, IInputManager::TEventType::EKeyDown);
+	g_pInputManager->unregisterEvent(this, IInputManager::TEventType::EKeyDown);
 }
 
 void Menu::run() {
@@ -148,7 +149,7 @@ void Menu::setTitle(const std::string& title) {
 		if (!m_isActive) {
 			m_title->deactivate();
 		}
-		g_graphicsEngine->addGfxEntity(m_title);
+		g_pGraphicsEngine->addGfxEntity(m_title);
 	}
 	m_title->setPos(vmake((SCR_WIDTH / 2) - (title.length() / 2.0f * 16), m_title->getPos().y));
 }
@@ -196,7 +197,7 @@ void MenuManager::init() {
 	}
 }
 
-void MenuManager::run() {
+void MenuManager::run(float _fDeltaTime) {
 	if (m_activeMenu) {
 		m_activeMenu->run();
 	}
@@ -227,24 +228,24 @@ void MenuManager::onSelected(MenuItem* menuItem) {
 	}
 	else if (menuItem->getName() == "MAIN_MENU") {
 		activateMenu(EMainMenu);
-		g_appManager->switchMode(AppMode::EMENU);
+		g_pSceneManager->switchScene(IScene::EMENU);
 	}
 	else if (menuItem->getName() == "EASY") {
-		g_appManager->switchMode(AppMode::EGAME, 1);
+		g_pSceneManager->switchScene(IScene::EGAME, 1);
 	}
 	else if (menuItem->getName() == "MEDIUM") {
-		g_appManager->switchMode(AppMode::EGAME, 2);
+		g_pSceneManager->switchScene(IScene::EGAME, 2);
 	}
 	else if (menuItem->getName() == "HARD") {
-		g_appManager->switchMode(AppMode::EGAME, 3);
+		g_pSceneManager->switchScene(IScene::EGAME, 3);
 	}
 	else if (menuItem->getName() == "SETTINGS_MUSIC") {
 		g_settings.music = !g_settings.music;
 		if (g_settings.music) {
-			g_soundEngine->playMusic("data/audio/music.wav");
+			g_pSoundEngine->playMusic("data/audio/music.wav");
 		}
 		else {
-			g_soundEngine->stopMusic();
+			g_pSoundEngine->stopMusic();
 		}
 	}
 	else if (menuItem->getName() == "SETTINGS_SFX") {
@@ -257,18 +258,18 @@ void MenuManager::onSelected(MenuItem* menuItem) {
 		else if (g_settings.language == ESpanish) {
 			g_settings.language = EEnglish;
 		}
-		g_stringManager->loadLanguage(g_settings.language);
+		g_pStringManager->loadLanguage(g_settings.language);
 	}
 	else if (menuItem->getName() == "RESUME") {
 		IInputManager::Event* pauseEvent = NEW(IInputManager::Event, IInputManager::TEventType::EPause);
-		g_inputManager->addEvent(pauseEvent);
+		g_pInputManager->addEvent(pauseEvent);
 	}
 	else if (menuItem->getName() == "ABANDON") {
-		g_appManager->switchMode(AppMode::EMENU);
+		g_pSceneManager->switchScene(IScene::EMENU);
 	}
 	else if (menuItem->getName() == "RETRY") {
-		g_menuManager->deactivateMenu();
-		g_world->loadLevel();
+		g_pMenuManager->deactivateMenu();
+		g_pWorld->loadLevel();
 	}
 	else if (menuItem->getName() == "EXIT") {
 		exit(0);
@@ -284,24 +285,24 @@ void MenuManager::onClick(Button* button) {
 	}
 	else if (button->getName() == "MAIN_MENU") {
 		activateMenu(EMainMenu);
-		g_appManager->switchMode(AppMode::EMENU);
+		g_pSceneManager->switchScene(IScene::EMENU);
 	}
 	else if (button->getName() == "EASY") {
-		g_appManager->switchMode(AppMode::EGAME, 1);
+		g_pSceneManager->switchScene(IScene::EGAME, 1);
 	}
 	else if (button->getName() == "MEDIUM") {
-		g_appManager->switchMode(AppMode::EGAME, 2);
+		g_pSceneManager->switchScene(IScene::EGAME, 2);
 	}
 	else if (button->getName() == "HARD") {
-		g_appManager->switchMode(AppMode::EGAME, 3);
+		g_pSceneManager->switchScene(IScene::EGAME, 3);
 	}
 	else if (button->getName() == "SETTINGS_MUSIC") {
 		g_settings.music = !g_settings.music;
 		if (g_settings.music) {
-			g_soundEngine->playMusic("data/audio/menu.wav");
+			g_pSoundEngine->playMusic("data/audio/menu.wav");
 		}
 		else {
-			g_soundEngine->stopMusic();
+			g_pSoundEngine->stopMusic();
 		}
 	}
 	else if (button->getName() == "SETTINGS_SFX") {
@@ -314,18 +315,18 @@ void MenuManager::onClick(Button* button) {
 		else if (g_settings.language == ESpanish) {
 			g_settings.language = EEnglish;
 		}
-		g_stringManager->loadLanguage(g_settings.language);
+		g_pStringManager->loadLanguage(g_settings.language);
 	}
 	else if (button->getName() == "RESUME") {
 		IInputManager::Event* pauseEvent = NEW(IInputManager::Event, IInputManager::TEventType::EPause);
-		g_inputManager->addEvent(pauseEvent);
+		g_pInputManager->addEvent(pauseEvent);
 	}
 	else if (button->getName() == "ABANDON") {
-		g_appManager->switchMode(AppMode::EMENU);
+		g_pSceneManager->switchScene(IScene::EMENU);
 	}
 	else if (button->getName() == "RETRY") {
-		g_menuManager->deactivateMenu();
-		g_world->loadLevel();
+		g_pMenuManager->deactivateMenu();
+		g_pWorld->loadLevel();
 	}
 	else if (button->getName() == "EXIT") {
 		exit(0);
@@ -339,10 +340,10 @@ void MenuManager::onClick(Checkbox* checkbox) {
 	else if (checkbox->getName() == "SETTINGS_MUSIC") {
 		g_settings.music = !g_settings.music;
 		if (g_settings.music) {
-			g_soundEngine->playMusic("data/audio/menu.wav");
+			g_pSoundEngine->playMusic("data/audio/menu.wav");
 		}
 		else {
-			g_soundEngine->stopMusic();
+			g_pSoundEngine->stopMusic();
 		}
 	}
 }
@@ -350,7 +351,7 @@ void MenuManager::onClick(Checkbox* checkbox) {
 void MenuManager::onValueChange(Slider* slider) {
 	if (slider->getName() == "SETTINGS_VOLUME") {
 		g_settings.volume = slider->getValue();
-		g_soundEngine->setVolume(g_settings.volume);
+		g_pSoundEngine->setVolume(g_settings.volume);
 	}
 }
 

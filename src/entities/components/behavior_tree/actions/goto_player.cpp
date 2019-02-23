@@ -6,7 +6,7 @@
 #include "scenes/world.h"
 
 void GoToPlayerPosition::onEnter() {
-	Entity* player = g_world->getPlayer();
+	Entity* player = g_pWorld->getPlayer();
 	MessageGetTransform messagePlayerPos;
 	player->receiveMessage(&messagePlayerPos);
 	mTargetPos = messagePlayerPos.pos;

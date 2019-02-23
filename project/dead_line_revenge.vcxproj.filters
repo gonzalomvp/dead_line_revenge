@@ -48,12 +48,6 @@
     <ClInclude Include="..\src\globals.h">
       <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\scenes\app_manager.h">
-      <Filter>src\scenes</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\scenes\app_mode.h">
-      <Filter>src\scenes</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\scenes\world.h">
       <Filter>src\scenes</Filter>
     </ClInclude>
@@ -204,16 +198,22 @@
     <ClInclude Include="..\src\REG_WEAPONS.h">
       <Filter>src</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\scenes\menu_scene.h">
+      <Filter>src\scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\scenes\game_scene.h">
+      <Filter>src\scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\scenes\scene.h">
+      <Filter>src\scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\scenes\scene_manager.h">
+      <Filter>src\scenes</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\main.cpp">
       <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\scenes\app_manager.cpp">
-      <Filter>src\scenes</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\scenes\app_mode.cpp">
-      <Filter>src\scenes</Filter>
     </ClCompile>
     <ClCompile Include="..\src\scenes\world.cpp">
       <Filter>src\scenes</Filter>
@@ -367,6 +367,15 @@
     </ClCompile>
     <ClCompile Include="..\src\entities\components\behavior_tree\actions\goto_player.cpp">
       <Filter>src\entities\components\behavior_tree\actions</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\scenes\menu_scene.cpp">
+      <Filter>src\scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\scenes\game_scene.cpp">
+      <Filter>src\scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\scenes\scene_manager.cpp">
+      <Filter>src\scenes</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

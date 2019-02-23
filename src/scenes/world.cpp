@@ -15,13 +15,13 @@ using namespace rapidjson;
 
 World::~World() {
 	unloadLevel();
-	if (g_inputManager) {
-		g_inputManager->unregisterEvent(this, IInputManager::TEventType::EPause);
+	if (g_pInputManager) {
+		g_pInputManager->unregisterEvent(this, IInputManager::TEventType::EPause);
 	}
 }
 
 void World::init() {
-	g_inputManager->registerEvent(this, IInputManager::TEventType::EPause);
+	g_pInputManager->registerEvent(this, IInputManager::TEventType::EPause);
 	loadConfig();
 }
 
@@ -151,11 +151,11 @@ bool World::onEvent(const IInputManager::Event& event) {
 		m_isPaused = !m_isPaused;
 		if (m_isPaused) {
 			m_player->deactivate();
-			g_menuManager->activateMenu(MenuManager::EPauseMenu);
+			g_pMenuManager->activateMenu(MenuManager::EPauseMenu);
 		}
 		else {
 			m_player->activate();
-			g_menuManager->deactivateMenu();
+			g_pMenuManager->deactivateMenu();
 		}
 	}
 	return true;
@@ -246,8 +246,8 @@ Entity* World::createExplossion(vec2 pos, vec2 size, vec2 sizeIncrement, int dur
 	}
 	ComponentLife* life = NEW(ComponentLife, explossion, 1, duration, 0);
 	life->init();
-	g_soundEngine->playSound("data/explossion.wav");
-	g_world->addEntity(explossion);
+	g_pSoundEngine->playSound("data/explossion.wav");
+	g_pWorld->addEntity(explossion);
 	return explossion;
 }
 
@@ -340,9 +340,9 @@ Entity* World::createHUDMessage(const std::string& message, vec2 pos, int displa
 
 	// Remove any previous HUD message still on screen
 	if (m_hudMessage) {
-		g_world->removeEntity(m_hudMessage);
+		g_pWorld->removeEntity(m_hudMessage);
 	}
-	g_world->addEntity(hudMessage);
+	g_pWorld->addEntity(hudMessage);
 	return hudMessage;
 }
 //=============================================================================
@@ -461,10 +461,10 @@ void World::removePendingEntities() {
 	m_entitiesToRemove.clear();
 
 	if (m_isGameOver) {
-		g_world->unloadLevel();
-		std::string scoreMessage = g_stringManager->getText("LTEXT_GUI_SCORE_MESSAGE") + std::to_string(m_score);
-		g_menuManager->getMenu(MenuManager::EGameOverMenu)->setTitle(scoreMessage.c_str());
-		g_menuManager->activateMenu(MenuManager::EGameOverMenu);
+		g_pWorld->unloadLevel();
+		std::string scoreMessage = g_pStringManager->getText("LTEXT_GUI_SCORE_MESSAGE") + std::to_string(m_score);
+		g_pMenuManager->getMenu(MenuManager::EGameOverMenu)->setTitle(scoreMessage.c_str());
+		g_pMenuManager->activateMenu(MenuManager::EGameOverMenu);
 	}
 }
 

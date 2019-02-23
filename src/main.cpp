@@ -1,21 +1,22 @@
-#include "./common/stdafx.h"
-#include "./scenes/app_manager.h"
-#include "./engine/graphics_engine.h"
-#include "./engine/sound_engine.h"
-#include "./input/input_manager.h"
-#include "./gui/string_manager.h"
-#include "./gui/menu.h"
+#include "common/stdafx.h"
+
+#include "engine/graphics_engine.h"
+#include "engine/sound_engine.h"
+#include "gui/menu.h"
+#include "gui/string_manager.h"
+#include "input/input_manager.h"
+#include "scenes/scene_manager.h"
 
 #include <ctime>
 
 // Global variables
-GraphicsEngine* g_graphicsEngine;
-SoundEngine*    g_soundEngine;
-IInputManager*  g_inputManager;
-AppManager*     g_appManager;
-StringManager*  g_stringManager;
-MenuManager*    g_menuManager;
-Settings            g_settings;
+GraphicsEngine* g_pGraphicsEngine;
+SoundEngine*    g_pSoundEngine;
+IInputManager*  g_pInputManager;
+CSceneManager*  g_pSceneManager;
+StringManager*  g_pStringManager;
+MenuManager*    g_pMenuManager;
+Settings        g_settings;
 
 int Main(void) {
 	g_settings.music = true;
@@ -23,42 +24,42 @@ int Main(void) {
 	g_settings.volume = 0.2f;
 	g_settings.language = EEnglish;
 
-	g_graphicsEngine = NEW(GraphicsEngine);
-	g_soundEngine    = NEW(SoundEngine);
-	g_inputManager   = NEW(InputManager);
-	g_appManager     = NEW(AppManager);
-	g_stringManager  = NEW(StringManager);
-	g_menuManager    = NEW(MenuManager);
-	g_menuManager->init();
+	g_pGraphicsEngine = NEW(GraphicsEngine);
+	g_pSoundEngine    = NEW(SoundEngine);
+	g_pInputManager   = NEW(InputManager);
+	g_pSceneManager   = NEW(CSceneManager);
+	g_pStringManager  = NEW(StringManager);
+	g_pMenuManager    = NEW(MenuManager);
+	g_pMenuManager->init();
 
 	// Load default language
-	g_stringManager->loadLanguage(g_settings.language);
+	g_pStringManager->loadLanguage(g_settings.language);
 
 	// Init Menu Scene
-	g_appManager->switchMode(AppMode::EMENU);
+	g_pSceneManager->switchScene(IScene::EMENU);
 
 	//Set Background
-	Sprite background(g_graphicsEngine->getTexture("data/background.png"), vmake(SCR_WIDTH * 0.5f, SCR_HEIGHT * 0.5f), vmake(SCR_WIDTH, SCR_HEIGHT), 0.0f, 1.0f, 6);
-	g_graphicsEngine->addGfxEntity(&background);
+	Sprite background(g_pGraphicsEngine->getTexture("data/background.png"), vmake(SCR_WIDTH * 0.5f, SCR_HEIGHT * 0.5f), vmake(SCR_WIDTH, SCR_HEIGHT), 0.0f, 1.0f, 6);
+	g_pGraphicsEngine->addGfxEntity(&background);
 
 	//Play Music
-	g_soundEngine->playMusic("data/audio/music.wav");
+	g_pSoundEngine->playMusic("data/audio/music.wav");
 	
-	clock_t beginTime = clock();
-	clock_t endTime;
+	clock_t cBeginTime = clock();
+	clock_t cEndTime;
 	
 	// Random seed
-	srand(beginTime);
+	srand(cBeginTime);
 	while (!SYS_GottaQuit()) {
 		// Prepared for deltaTime but not used yet
-		endTime = clock();
-		float deltaTime = static_cast<float>(endTime - beginTime);
-		beginTime = endTime;
+		cEndTime = clock();
+		float fDeltaTime = static_cast<float>(cEndTime - cBeginTime);
+		cBeginTime = cEndTime;
 
-		g_appManager->applyMode();
-		g_appManager->processInput();
-		g_appManager->run(deltaTime);
-		g_appManager->render();
+		g_pSceneManager->applyScene();
+		g_pSceneManager->processInput();
+		g_pSceneManager->run(fDeltaTime);
+		g_pSceneManager->render();
 
 		// Keep system running
 		SYS_Pump();
@@ -66,18 +67,18 @@ int Main(void) {
 	}
 
 	// Free memory
-	DELETE(g_appManager);
-	g_appManager = nullptr;
-	DELETE(g_menuManager);
-	g_menuManager = nullptr;
-	DELETE(g_graphicsEngine);
-	g_graphicsEngine = nullptr;
-	DELETE(g_soundEngine);
-	g_soundEngine = nullptr;
-	DELETE(g_inputManager);
-	g_inputManager = nullptr;
-	DELETE(g_stringManager);
-	g_stringManager = nullptr;
+	DELETE(g_pSceneManager);
+	g_pSceneManager = nullptr;
+	DELETE(g_pMenuManager);
+	g_pMenuManager = nullptr;
+	DELETE(g_pGraphicsEngine);
+	g_pGraphicsEngine = nullptr;
+	DELETE(g_pSoundEngine);
+	g_pSoundEngine = nullptr;
+	DELETE(g_pInputManager);
+	g_pInputManager = nullptr;
+	DELETE(g_pStringManager);
+	g_pStringManager = nullptr;
 	
 	DUMP_UNFREED;
 

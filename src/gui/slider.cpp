@@ -11,18 +11,18 @@ Slider::~Slider() {
 	DELETE(m_leftButton);
 	DELETE(m_rightButton);
 
-	g_graphicsEngine->removeGfxEntity(m_spriteBar);
+	g_pGraphicsEngine->removeGfxEntity(m_spriteBar);
 	DELETE(m_spriteBar);
 
-	g_graphicsEngine->removeGfxEntity(m_spriteBall);
+	g_pGraphicsEngine->removeGfxEntity(m_spriteBall);
 	DELETE(m_spriteBall);
 
-	g_graphicsEngine->removeGfxEntity(m_sliderText);
+	g_pGraphicsEngine->removeGfxEntity(m_sliderText);
 	DELETE(m_sliderText);
 
-	g_inputManager->unregisterEvent(this, IInputManager::EMouseButtonDown);
-	g_inputManager->unregisterEvent(this, IInputManager::EMouseButtonUp);
-	g_inputManager->unregisterEvent(this, IInputManager::EMouseButtonHold);
+	g_pInputManager->unregisterEvent(this, IInputManager::EMouseButtonDown);
+	g_pInputManager->unregisterEvent(this, IInputManager::EMouseButtonUp);
+	g_pInputManager->unregisterEvent(this, IInputManager::EMouseButtonHold);
 }
 
 void Slider::init(const char* spriteLeftNormal, const char* spriteLeftPush, const char* spriteRightNormal, const char* spriteRightPush, const char* spriteBar, const char* spriteBall, float value) {
@@ -34,14 +34,14 @@ void Slider::init(const char* spriteLeftNormal, const char* spriteLeftPush, cons
 	m_rightButton->init("data/ui/Slider_Right_Normal.png", "data/ui/Slider_Right_Push.png", "", true);
 	m_rightButton->addListener(this);
 
-	m_spriteBar = NEW(Sprite, g_graphicsEngine->getTexture("data/ui/Slider_bar.png"), m_pos, vmake(m_size.x, 5), 0.f, 1.f, 2);
-	g_graphicsEngine->addGfxEntity(m_spriteBar);
+	m_spriteBar = NEW(Sprite, g_pGraphicsEngine->getTexture("data/ui/Slider_bar.png"), m_pos, vmake(m_size.x, 5), 0.f, 1.f, 2);
+	g_pGraphicsEngine->addGfxEntity(m_spriteBar);
 
-	m_spriteBall = NEW(Sprite, g_graphicsEngine->getTexture("data/ui/Slider_ball.png"), m_pos, vmake(20, 20), 0.f, 1.f, 1);
-	g_graphicsEngine->addGfxEntity(m_spriteBall);
+	m_spriteBall = NEW(Sprite, g_pGraphicsEngine->getTexture("data/ui/Slider_ball.png"), m_pos, vmake(20, 20), 0.f, 1.f, 1);
+	g_pGraphicsEngine->addGfxEntity(m_spriteBall);
 
 	m_sliderText = NEW(Text, "", vmake(m_pos.x + m_size.x * 0.5f + m_rightButton->getSize().x, m_pos.y - 6), 1);
-	g_graphicsEngine->addGfxEntity(m_sliderText);
+	g_pGraphicsEngine->addGfxEntity(m_sliderText);
 
 	m_value = value;
 }
@@ -59,9 +59,9 @@ void Slider::activate() {
 	m_isBallPushed = false;
 	setValue(m_value);
 
-	g_inputManager->registerEvent(this, IInputManager::EMouseButtonDown);
-	g_inputManager->registerEvent(this, IInputManager::EMouseButtonUp);
-	g_inputManager->registerEvent(this, IInputManager::EMouseButtonHold);
+	g_pInputManager->registerEvent(this, IInputManager::EMouseButtonDown);
+	g_pInputManager->registerEvent(this, IInputManager::EMouseButtonUp);
+	g_pInputManager->registerEvent(this, IInputManager::EMouseButtonHold);
 }
 
 void Slider::deactivate() {
@@ -73,9 +73,9 @@ void Slider::deactivate() {
 	m_spriteBall->deactivate();
 	m_sliderText->deactivate();
 
-	g_inputManager->unregisterEvent(this, IInputManager::EMouseButtonDown);
-	g_inputManager->unregisterEvent(this, IInputManager::EMouseButtonUp);
-	g_inputManager->unregisterEvent(this, IInputManager::EMouseButtonHold);
+	g_pInputManager->unregisterEvent(this, IInputManager::EMouseButtonDown);
+	g_pInputManager->unregisterEvent(this, IInputManager::EMouseButtonUp);
+	g_pInputManager->unregisterEvent(this, IInputManager::EMouseButtonHold);
 }
 
 void Slider::run() {
