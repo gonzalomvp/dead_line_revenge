@@ -11,6 +11,8 @@
 #include "rapidjson/filereadstream.h"
 #include <fstream>
 
+#include "entities/entities_factory.h"
+
 using namespace rapidjson;
 
 World::~World() {
@@ -50,7 +52,7 @@ bool World::loadLevel() {
 	}
 
 	// Force test level
-	fileName = "data/levelTest.json";
+	//fileName = "data/levelTest.json";
 
 	FILE* file = fopen(fileName, "r");
 	if (!file) return false;
@@ -101,7 +103,13 @@ bool World::loadLevel() {
 	fclose(file);
 
 	// Create player and first pickup
-	createPlayer(vmake(WORLD_WIDTH * 0.5f, WORLD_HEIGHT * 0.5f));
+	Entity* player = EntitiesFactory::createEntity(Entity::EPlayer);
+	MessageSetTransform msg;
+	msg.pos = vmake(WORLD_WIDTH * 0.5f, WORLD_HEIGHT * 0.5f);
+	msg.size = vmake(30, 25);
+	player->receiveMessage(&msg);
+	addEntity(player);
+
 	createWeaponPickup();
 
 	return true;
@@ -503,7 +511,13 @@ void World::spawnNewEntities() {
 		float enemyType = CORE_FRand(0.0f, 1.0f);
 		for (auto itEnemyData = m_enemyData.begin(); itEnemyData != m_enemyData.end(); ++itEnemyData) {
 			if (enemyType <= itEnemyData->second.spawnProbability) {
-				createEnemy(spawnLocation, m_enemyData[itEnemyData->second.type], m_player);
+				Entity::TType type = Entity::EEnemyRange;
+				Entity* enemy = EntitiesFactory::createEntity(type);
+				MessageSetTransform msg;
+				msg.pos = spawnLocation;
+				msg.size = m_enemyData[type].size;
+				enemy->receiveMessage(&msg);
+				addEntity(enemy);
 				break;
 			}
 		}

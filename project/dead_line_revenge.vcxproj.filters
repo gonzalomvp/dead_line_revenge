@@ -201,6 +201,9 @@
     <ClInclude Include="..\src\entities\components\behavior_tree\actions\goto_player.h">
       <Filter>src\entities\components\behavior_tree\actions</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\entities\entities_factory.h">
+      <Filter>src\entities</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\main.cpp">
@@ -364,6 +367,9 @@
     </ClCompile>
     <ClCompile Include="..\src\entities\components\behavior_tree\actions\goto_player.cpp">
       <Filter>src\entities\components\behavior_tree\actions</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\entities\entities_factory.cpp">
+      <Filter>src\entities</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

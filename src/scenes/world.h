@@ -45,6 +45,8 @@ public:
 	Entity* createHUDMessage  (const std::string&, vec2 pos, int displayTime);
 
 	std::map<ComponentWeapon::TWeapon, ComponentWeapon::TWeaponData> m_weaponData;
+	std::map<Entity::TType, TEnemyData>                              m_enemyData;
+	std::vector<vec2>                                                m_spawnData;
 private:
 	bool loadConfig           ();
 	void checkCollisions      ();
@@ -52,6 +54,7 @@ private:
 	void addPendingEntities   ();
 	void spawnNewEntities     ();
 
+public:
 	uint16_t              m_level;
 	Entity*               m_player;
 	Entity*               m_hudMessage;
@@ -72,8 +75,7 @@ private:
 	int      m_maxEnemies;
 
 	// Config loaded from file
-	std::map<Entity::TType, TEnemyData>                              m_enemyData;
-	std::vector<vec2>                                                m_spawnData;
+
 
 	// Timers
 	int m_pickupSpawnTimer;

@@ -57,6 +57,7 @@
     <ClInclude Include="..\src\entities\components\component.h" />
     <ClInclude Include="..\src\entities\components\LifeComponent.h" />
     <ClInclude Include="..\src\entities\components\MovementComponent.h" />
+    <ClInclude Include="..\src\entities\entities_factory.h" />
     <ClInclude Include="..\src\entities\entity.h" />
     <ClInclude Include="..\src\entities\message.h" />
     <ClInclude Include="..\src\globals.h" />
@@ -114,6 +115,7 @@
     <ClCompile Include="..\src\entities\components\component.cpp" />
     <ClCompile Include="..\src\entities\components\LifeComponent.cpp" />
     <ClCompile Include="..\src\entities\components\MovementComponent.cpp" />
+    <ClCompile Include="..\src\entities\entities_factory.cpp" />
     <ClCompile Include="..\src\entities\entity.cpp" />
     <ClCompile Include="..\src\gui\button.cpp" />
     <ClCompile Include="..\src\gui\checkbox.cpp" />
@@ -131,7 +133,7 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>{CC0EB618-AC99-4DFE-A4E1-534AD384C3A1}</ProjectGuid>
     <RootNamespace>dead_line_revenge</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.17134.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
     <ProjectName>dead_line_revenge</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
