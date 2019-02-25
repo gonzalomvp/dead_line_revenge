@@ -144,7 +144,7 @@ Behavior* BehaviorTree::createBehavior(TiXmlElement* behaviorElem) {
 			behavior = new Fire(this);
 		}
 		else if (type == "changeWeapon") {
-			behavior = new ChangeWeapon(this, std::stoi(params[0]));
+			behavior = new ChangeWeapon(this, params[0]);
 		}
 		else if (type == "checkLife") {
 			behavior = new CheckLife(this, std::stoi(params[0]));

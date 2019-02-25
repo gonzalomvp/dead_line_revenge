@@ -71,8 +71,8 @@ void GraphicsEngine::render() {
 // GfxEntity class
 //=============================================================================
 GfxEntity::~GfxEntity() {
-	if (g_graphicsEngine) {
-		g_graphicsEngine->removeGfxEntity(this);
+	if (g_pGraphicsEngine) {
+		g_pGraphicsEngine->removeGfxEntity(this);
 	}
 }
 
@@ -87,6 +87,6 @@ void Sprite::render() {
 // Text class
 //=============================================================================
 void Text::render() {
-	std::string textToDraw = g_stringManager->getText(m_text);
+	std::string textToDraw = g_pStringManager->getText(m_text);
 	FONT_DrawString(m_pos, textToDraw.c_str());
 }

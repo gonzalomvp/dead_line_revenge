@@ -60,7 +60,7 @@ void InputManager::processMouse() {
 	checkMouseButtonState(SYS_MB_LEFT, mousePos);
 	checkMouseButtonState(SYS_MB_RIGHT, mousePos);
 	MouseEvent* mouseEvent = NEW(MouseEvent, EMouseMove, 0, mousePos);
-	g_inputManager->addEvent(mouseEvent);
+	g_pInputManager->addEvent(mouseEvent);
 }
 
 void InputManager::checkKeyState(int key) {
@@ -68,20 +68,20 @@ void InputManager::checkKeyState(int key) {
 		if (m_inputStates[key] == false) {
 			m_inputStates[key] = true;
 			KeyEvent* keyEvent = NEW(KeyEvent, TEventType::EKeyDown, key);
-			g_inputManager->addEvent(keyEvent);
+			g_pInputManager->addEvent(keyEvent);
 
 			if (key == VK_ESCAPE) {
 				Event* pauseEvent = NEW(Event, TEventType::EPause);
-				g_inputManager->addEvent(pauseEvent);
+				g_pInputManager->addEvent(pauseEvent);
 			}
 		}
 		KeyEvent* keyEvent = NEW(KeyEvent, TEventType::EKeyHold, key);
-		g_inputManager->addEvent(keyEvent);
+		g_pInputManager->addEvent(keyEvent);
 	}
 	else if (!SYS_KeyPressed(key) && m_inputStates[key] == true) {
 		m_inputStates[key] = false;
 		KeyEvent* keyEvent = NEW(KeyEvent, TEventType::EKeyUp, key);
-		g_inputManager->addEvent(keyEvent);
+		g_pInputManager->addEvent(keyEvent);
 	}
 }
 
@@ -90,14 +90,14 @@ void InputManager::checkMouseButtonState(int button, const vec2& mousePos) {
 		if (m_inputStates[button] == false) {
 			m_inputStates[button] = true;
 			MouseEvent* mouseEvent = NEW(MouseEvent, EMouseButtonDown, button, mousePos);
-			g_inputManager->addEvent(mouseEvent);
+			g_pInputManager->addEvent(mouseEvent);
 		}
 		MouseEvent* mouseEvent = NEW(MouseEvent, EMouseButtonHold, button, mousePos);
-		g_inputManager->addEvent(mouseEvent);
+		g_pInputManager->addEvent(mouseEvent);
 	}
 	else if (m_inputStates[button] == true) {
 		m_inputStates[button] = false;
 		MouseEvent* mouseEvent = NEW(MouseEvent, EMouseButtonUp, button, mousePos);
-		g_inputManager->addEvent(mouseEvent);
+		g_pInputManager->addEvent(mouseEvent);
 	}
 }

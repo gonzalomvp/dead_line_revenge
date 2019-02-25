@@ -8,23 +8,23 @@
 // Checkbox class
 //=============================================================================
 Checkbox::~Checkbox() {
-	g_graphicsEngine->removeGfxEntity(m_spriteChecked);
+	g_pGraphicsEngine->removeGfxEntity(m_spriteChecked);
 	DELETE(m_spriteChecked);
 
-	g_graphicsEngine->removeGfxEntity(m_spriteUnchecked);
+	g_pGraphicsEngine->removeGfxEntity(m_spriteUnchecked);
 	DELETE(m_spriteUnchecked);
 
-	g_inputManager->unregisterEvent(this, IInputManager::EMouseButtonDown);
-	g_inputManager->unregisterEvent(this, IInputManager::EMouseButtonUp);
-	g_inputManager->unregisterEvent(this, IInputManager::EMouseButtonHold);
+	g_pInputManager->unregisterEvent(this, IInputManager::EMouseButtonDown);
+	g_pInputManager->unregisterEvent(this, IInputManager::EMouseButtonUp);
+	g_pInputManager->unregisterEvent(this, IInputManager::EMouseButtonHold);
 }
 
 
 void Checkbox::init(const char* spriteChecked, const char* spriteUnchecked, bool isChecked) {
-	m_spriteChecked = NEW(Sprite, g_graphicsEngine->getTexture(spriteChecked), m_pos, m_size, 0.f, 1.f, 1);
-	g_graphicsEngine->addGfxEntity(m_spriteChecked);
-	m_spriteUnchecked = NEW(Sprite, g_graphicsEngine->getTexture(spriteUnchecked), m_pos, m_size, 0.f, 1.f, 1);
-	g_graphicsEngine->addGfxEntity(m_spriteUnchecked);
+	m_spriteChecked = NEW(Sprite, g_pGraphicsEngine->getTexture(spriteChecked), m_pos, m_size, 0.f, 1.f, 1);
+	g_pGraphicsEngine->addGfxEntity(m_spriteChecked);
+	m_spriteUnchecked = NEW(Sprite, g_pGraphicsEngine->getTexture(spriteUnchecked), m_pos, m_size, 0.f, 1.f, 1);
+	g_pGraphicsEngine->addGfxEntity(m_spriteUnchecked);
 	m_isChecked = isChecked;
 	deactivate();
 }
@@ -43,9 +43,9 @@ void Checkbox::activate() {
 
 	m_isPushed = false;
 
-	g_inputManager->registerEvent(this, IInputManager::EMouseButtonDown);
-	g_inputManager->registerEvent(this, IInputManager::EMouseButtonUp);
-	g_inputManager->registerEvent(this, IInputManager::EMouseButtonHold);
+	g_pInputManager->registerEvent(this, IInputManager::EMouseButtonDown);
+	g_pInputManager->registerEvent(this, IInputManager::EMouseButtonUp);
+	g_pInputManager->registerEvent(this, IInputManager::EMouseButtonHold);
 }
 
 void Checkbox::deactivate() {
@@ -54,9 +54,9 @@ void Checkbox::deactivate() {
 	m_spriteChecked->deactivate();
 	m_spriteUnchecked->deactivate();
 
-	g_inputManager->unregisterEvent(this, IInputManager::EMouseButtonDown);
-	g_inputManager->unregisterEvent(this, IInputManager::EMouseButtonUp);
-	g_inputManager->unregisterEvent(this, IInputManager::EMouseButtonHold);
+	g_pInputManager->unregisterEvent(this, IInputManager::EMouseButtonDown);
+	g_pInputManager->unregisterEvent(this, IInputManager::EMouseButtonUp);
+	g_pInputManager->unregisterEvent(this, IInputManager::EMouseButtonHold);
 }
 
 bool Checkbox::onEvent(const IInputManager::Event& event) {

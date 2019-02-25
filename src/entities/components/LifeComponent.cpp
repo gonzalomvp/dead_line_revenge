@@ -24,7 +24,7 @@ void CLifeComponent::run(float _fDeltaTime) {
 		MessageDestroy msgDestroy;
 		m_owner->receiveMessage(&msgDestroy);
 		m_owner->deactivate();
-		g_world->removeEntity(m_owner);
+		g_pWorld->removeEntity(m_owner);
 	}
 }
 

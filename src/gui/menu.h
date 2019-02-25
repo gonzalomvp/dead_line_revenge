@@ -88,7 +88,7 @@ public:
 	~MenuManager();
 
 	void         init          ();
-	void         run           ();
+	void         run           (float _fDeltaTime);
 	void         activateMenu  (TMenu menu);
 	void         deactivateMenu();
 	virtual void onSelected    (MenuItem* menuItem);

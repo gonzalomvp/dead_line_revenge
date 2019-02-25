@@ -8,7 +8,7 @@
 
 Status CheckDistance::update(float step) {
 	Entity* self = mOwner->getCharacter();
-	Entity* player = g_world->getPlayer();
+	Entity* player = g_pWorld->getPlayer();
 	MessageGetTransform messageSelfPos;
 	self->receiveMessage(&messageSelfPos);
 	MessageGetTransform messagePlayerPos;

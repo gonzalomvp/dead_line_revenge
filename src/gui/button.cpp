@@ -9,28 +9,28 @@
 //=============================================================================
 
 Button::~Button() {
-	g_graphicsEngine->removeGfxEntity(m_spriteNormal);
+	g_pGraphicsEngine->removeGfxEntity(m_spriteNormal);
 	DELETE(m_spriteNormal);
 
-	g_graphicsEngine->removeGfxEntity(m_spritePush);
+	g_pGraphicsEngine->removeGfxEntity(m_spritePush);
 	DELETE(m_spritePush);
 
-	g_graphicsEngine->removeGfxEntity(m_buttonText);
+	g_pGraphicsEngine->removeGfxEntity(m_buttonText);
 	DELETE(m_buttonText);
 
-	g_inputManager->unregisterEvent(this, IInputManager::EMouseButtonDown);
-	g_inputManager->unregisterEvent(this, IInputManager::EMouseButtonUp);
-	g_inputManager->unregisterEvent(this, IInputManager::EMouseButtonHold);
+	g_pInputManager->unregisterEvent(this, IInputManager::EMouseButtonDown);
+	g_pInputManager->unregisterEvent(this, IInputManager::EMouseButtonUp);
+	g_pInputManager->unregisterEvent(this, IInputManager::EMouseButtonHold);
 }
 
 void Button::init(const char* normalImage, const char* pushImage, const std::string& text, bool notifyHold, unsigned int holdTime) {
-	m_spriteNormal = NEW(Sprite, g_graphicsEngine->getTexture(normalImage), m_pos, m_size, 0.f, 1.f, 2);
-	g_graphicsEngine->addGfxEntity(m_spriteNormal);
-	m_spritePush = NEW(Sprite, g_graphicsEngine->getTexture(pushImage) , m_pos, m_size, 0.f, 1.f, 2);
-	g_graphicsEngine->addGfxEntity(m_spritePush);
+	m_spriteNormal = NEW(Sprite, g_pGraphicsEngine->getTexture(normalImage), m_pos, m_size, 0.f, 1.f, 2);
+	g_pGraphicsEngine->addGfxEntity(m_spriteNormal);
+	m_spritePush = NEW(Sprite, g_pGraphicsEngine->getTexture(pushImage) , m_pos, m_size, 0.f, 1.f, 2);
+	g_pGraphicsEngine->addGfxEntity(m_spritePush);
 	m_text = text;
 	m_buttonText = NEW(Text, m_text, vmake(m_pos.x - (m_text.length() / 2.0f * 16), m_pos.y - 6), 1);
-	g_graphicsEngine->addGfxEntity(m_buttonText);
+	g_pGraphicsEngine->addGfxEntity(m_buttonText);
 	m_notifyHold = notifyHold;
 	m_holdTime = holdTime;
 }
@@ -47,9 +47,9 @@ void Button::activate() {
 	m_isHold = false;
 	m_holdTimer = 0;
 
-	g_inputManager->registerEvent(this, IInputManager::EMouseButtonDown);
-	g_inputManager->registerEvent(this, IInputManager::EMouseButtonUp);
-	g_inputManager->registerEvent(this, IInputManager::EMouseButtonHold);
+	g_pInputManager->registerEvent(this, IInputManager::EMouseButtonDown);
+	g_pInputManager->registerEvent(this, IInputManager::EMouseButtonUp);
+	g_pInputManager->registerEvent(this, IInputManager::EMouseButtonHold);
 }
 
 void Button::deactivate() {
@@ -59,16 +59,16 @@ void Button::deactivate() {
 	m_spritePush->deactivate();
 	m_buttonText->deactivate();
 
-	g_inputManager->unregisterEvent(this, IInputManager::EMouseButtonDown);
-	g_inputManager->unregisterEvent(this, IInputManager::EMouseButtonUp);
-	g_inputManager->unregisterEvent(this, IInputManager::EMouseButtonHold);
+	g_pInputManager->unregisterEvent(this, IInputManager::EMouseButtonDown);
+	g_pInputManager->unregisterEvent(this, IInputManager::EMouseButtonUp);
+	g_pInputManager->unregisterEvent(this, IInputManager::EMouseButtonHold);
 }
 
 void Button::run() {
 	if (m_isActive) {
 		Control::run();
 
-		std::string textToDraw = g_stringManager->getText(m_text);
+		std::string textToDraw = g_pStringManager->getText(m_text);
 		m_buttonText->setText(textToDraw.c_str());
 		vec2 currentPos = m_buttonText->getPos();
 		currentPos.x = m_pos.x - (textToDraw.length() / 2.0f * 16);

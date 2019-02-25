@@ -120,7 +120,7 @@ void ComponentLife::run(float deltaTime) {
 		MessageDestroy msgDestroy;
 		m_owner->receiveMessage(&msgDestroy);
 		m_owner->deactivate();
-		g_world->removeEntity(m_owner);
+		g_pWorld->removeEntity(m_owner);
 	}
 }
 
@@ -199,8 +199,8 @@ ComponentRenderable::~ComponentRenderable() {
 
 void ComponentRenderable::init() {
 	Component::init();
-	m_sprite = NEW(Sprite, g_graphicsEngine->getTexture(m_texture), vmake(0.0f, 0.0f), vmake(0.0f, 0.0f), m_angle, m_alpha, m_priority);
-	g_graphicsEngine->addGfxEntity(m_sprite);
+	m_sprite = NEW(Sprite, g_pGraphicsEngine->getTexture(m_texture), vmake(0.0f, 0.0f), vmake(0.0f, 0.0f), m_angle, m_alpha, m_priority);
+	g_pGraphicsEngine->addGfxEntity(m_sprite);
 }
 
 void ComponentRenderable::run(float deltaTime) {
@@ -246,8 +246,8 @@ void ComponentRenderable::receiveMessage(Message* message) {
 			if (messageChangeSprite) {
 				DELETE(m_sprite);
 				m_texture = messageChangeSprite->texture;
-				m_sprite = NEW(Sprite, g_graphicsEngine->getTexture(m_texture), vmake(0.0f, 0.0f), vmake(0.0f, 0.0f), m_angle, m_alpha, m_priority);
-				g_graphicsEngine->addGfxEntity(m_sprite);
+				m_sprite = NEW(Sprite, g_pGraphicsEngine->getTexture(m_texture), vmake(0.0f, 0.0f), vmake(0.0f, 0.0f), m_angle, m_alpha, m_priority);
+				g_pGraphicsEngine->addGfxEntity(m_sprite);
 				MessageGetTransform msgGetTransform;
 				m_owner->receiveMessage(&msgGetTransform);
 				m_sprite->setPos(msgGetTransform.pos);
@@ -262,18 +262,18 @@ void ComponentRenderable::receiveMessage(Message* message) {
 //=============================================================================
 void ComponentPlayerController::init() {
 	Component::init();
-	g_inputManager->registerEvent(this, IInputManager::TEventType::EKeyHold);
-	g_inputManager->registerEvent(this, IInputManager::TEventType::EMouseButtonDown);
-	g_inputManager->registerEvent(this, IInputManager::TEventType::EMouseButtonUp);
-	g_inputManager->registerEvent(this, IInputManager::TEventType::EMouseButtonHold);
+	g_pInputManager->registerEvent(this, IInputManager::TEventType::EKeyHold);
+	g_pInputManager->registerEvent(this, IInputManager::TEventType::EMouseButtonDown);
+	g_pInputManager->registerEvent(this, IInputManager::TEventType::EMouseButtonUp);
+	g_pInputManager->registerEvent(this, IInputManager::TEventType::EMouseButtonHold);
 }
 
 ComponentPlayerController::~ComponentPlayerController() {
-	if (g_inputManager) {
-		g_inputManager->unregisterEvent(this, IInputManager::TEventType::EKeyHold);
-		g_inputManager->unregisterEvent(this, IInputManager::TEventType::EMouseButtonDown);
-		g_inputManager->unregisterEvent(this, IInputManager::TEventType::EMouseButtonUp);
-		g_inputManager->unregisterEvent(this, IInputManager::TEventType::EMouseButtonHold);
+	if (g_pInputManager) {
+		g_pInputManager->unregisterEvent(this, IInputManager::TEventType::EKeyHold);
+		g_pInputManager->unregisterEvent(this, IInputManager::TEventType::EMouseButtonDown);
+		g_pInputManager->unregisterEvent(this, IInputManager::TEventType::EMouseButtonUp);
+		g_pInputManager->unregisterEvent(this, IInputManager::TEventType::EMouseButtonHold);
 	}
 }
 
@@ -333,18 +333,27 @@ bool ComponentPlayerController::onEvent(const IInputManager::Event& event) {
 //=============================================================================
 // ComponentWeapon class
 //=============================================================================
+
+ComponentWeapon::TWeaponInfo ComponentWeapon::s_aWeaponInfo[] =
+{
+#define REG_WEAPON(Val, name) \
+	{EE##Val, name},
+#include "REG_WEAPONS.h"
+#undef REG_WEAPON
+};
+
 void ComponentWeapon::run(float deltaTime) {
 	Component::run(deltaTime);
 	if (!m_isActive)
 		return;
 
-	if (m_fireTimer < m_weaponData.fireRate) {
+	if (m_fireTimer < m_mWeaponData.fireRate) {
 		++m_fireTimer;
 	}
-	if (m_reloadTimer <= m_weaponData.reloadTime) {
+	if (m_reloadTimer <= m_mWeaponData.reloadTime) {
 		++m_reloadTimer;
-		if (m_reloadTimer == m_weaponData.reloadTime) {
-			m_currentBullets = m_weaponData.capacity;
+		if (m_reloadTimer == m_mWeaponData.reloadTime) {
+			m_currentBullets = m_mWeaponData.capacity;
 			m_isFiring       = false;
 		}
 	}
@@ -354,69 +363,69 @@ void ComponentWeapon::run(float deltaTime) {
 		m_remoteBullet->receiveMessage(&msgDestroy);
 		m_remoteBullet = nullptr;
 		m_isFiring = false;
-		m_currentBullets = m_weaponData.capacity;
+		m_currentBullets = m_mWeaponData.capacity;
 	}
 
-	else if (m_isFiring && m_fireTimer >= m_weaponData.fireRate && m_reloadTimer >= m_weaponData.reloadTime && m_currentBullets > 0) {
+	else if (m_isFiring && m_fireTimer >= m_mWeaponData.fireRate && m_reloadTimer >= m_mWeaponData.reloadTime && m_currentBullets > 0) {
 		m_fireTimer = 0;
 		--m_currentBullets;
 		if (m_currentBullets == 0) {
 			m_reloadTimer = 0;
 		}
-		if (!m_weaponData.isAutomatic) {
+		if (!m_mWeaponData.isAutomatic) {
 			m_isFiring = false;
 		}
 		
 		MessageGetTransform messageGetTranform;
 		m_owner->receiveMessage(&messageGetTranform);
 
-		switch (m_weaponData.type) {
-			case EShotgun: {
+		switch (m_mWeaponData.type) {
+			case EESHOTGUN: {
 				vec2 bulletDir = m_aimDirection;
-				g_world->createBullet(messageGetTranform.pos, vmake(10.0f, 10.0f), bulletDir, m_weaponData.bulletSpeed, m_weaponData.bulletDamage, m_weaponData.bulletLife, m_weaponData.bulletRange, m_weaponData.isExplossive, m_weaponData.isBouncy, m_owner->getType(), "data/shotgunBullet.png");
+				g_pWorld->createBullet(messageGetTranform.pos, vmake(10.0f, 10.0f), bulletDir, m_mWeaponData.bulletSpeed, m_mWeaponData.bulletDamage, m_mWeaponData.bulletLife, m_mWeaponData.bulletRange, m_mWeaponData.isExplossive, m_mWeaponData.isBouncy, m_owner->getType(), "data/shotgunBullet.png");
 				float angle = vangle(m_aimDirection);
 				angle += SHOTGUN_DISP_ANGLE;
 				bulletDir = vunit(DEG2RAD(angle));
-				g_world->createBullet(messageGetTranform.pos, vmake(10.0f, 10.0f), bulletDir, m_weaponData.bulletSpeed, m_weaponData.bulletDamage, m_weaponData.bulletLife, m_weaponData.bulletRange, m_weaponData.isExplossive, m_weaponData.isBouncy, m_owner->getType(), "data/shotgunBullet.png");
+				g_pWorld->createBullet(messageGetTranform.pos, vmake(10.0f, 10.0f), bulletDir, m_mWeaponData.bulletSpeed, m_mWeaponData.bulletDamage, m_mWeaponData.bulletLife, m_mWeaponData.bulletRange, m_mWeaponData.isExplossive, m_mWeaponData.isBouncy, m_owner->getType(), "data/shotgunBullet.png");
 				angle = vangle(m_aimDirection);
 				angle -= SHOTGUN_DISP_ANGLE;
 				bulletDir = vunit(DEG2RAD(angle));
-				g_world->createBullet(messageGetTranform.pos, vmake(10.0f, 10.0f), bulletDir, m_weaponData.bulletSpeed, m_weaponData.bulletDamage, m_weaponData.bulletLife, m_weaponData.bulletRange, m_weaponData.isExplossive, m_weaponData.isBouncy, m_owner->getType(), "data/shotgunBullet.png");
+				g_pWorld->createBullet(messageGetTranform.pos, vmake(10.0f, 10.0f), bulletDir, m_mWeaponData.bulletSpeed, m_mWeaponData.bulletDamage, m_mWeaponData.bulletLife, m_mWeaponData.bulletRange, m_mWeaponData.isExplossive, m_mWeaponData.isBouncy, m_owner->getType(), "data/shotgunBullet.png");
 				break;
 			}
-			case EMines: {
-				g_world->createBullet(messageGetTranform.pos, vmake(20.0f, 20.0f), m_aimDirection, m_weaponData.bulletSpeed, m_weaponData.bulletDamage, m_weaponData.bulletLife, m_weaponData.bulletRange, m_weaponData.isExplossive, m_weaponData.isBouncy, Entity::EMine, "data/mine.png");
+			case EEMINES: {
+				g_pWorld->createBullet(messageGetTranform.pos, vmake(20.0f, 20.0f), m_aimDirection, m_mWeaponData.bulletSpeed, m_mWeaponData.bulletDamage, m_mWeaponData.bulletLife, m_mWeaponData.bulletRange, m_mWeaponData.isExplossive, m_mWeaponData.isBouncy, Entity::EMine, "data/mine.png");
 				break;
 			}
-			case EC4: {
-				m_remoteBullet = g_world->createBullet(messageGetTranform.pos, vmake(20.0f, 20.0f), m_aimDirection, m_weaponData.bulletSpeed, m_weaponData.bulletDamage, m_weaponData.bulletLife, m_weaponData.bulletRange, m_weaponData.isExplossive, m_weaponData.isBouncy, m_owner->getType(), "data/c4.png");
+			case EEC4: {
+				m_remoteBullet = g_pWorld->createBullet(messageGetTranform.pos, vmake(20.0f, 20.0f), m_aimDirection, m_mWeaponData.bulletSpeed, m_mWeaponData.bulletDamage, m_mWeaponData.bulletLife, m_mWeaponData.bulletRange, m_mWeaponData.isExplossive, m_mWeaponData.isBouncy, m_owner->getType(), "data/c4.png");
 				break;
 			}
-			case ERocketLauncher: {
-				g_world->createBullet(messageGetTranform.pos, vmake(15.0f, 15.0f), m_aimDirection, m_weaponData.bulletSpeed, m_weaponData.bulletDamage, m_weaponData.bulletLife, m_weaponData.bulletRange, m_weaponData.isExplossive, m_weaponData.isBouncy, m_owner->getType(), "data/rocket.png");
+			case EEROCKETLAUNCHER: {
+				g_pWorld->createBullet(messageGetTranform.pos, vmake(15.0f, 15.0f), m_aimDirection, m_mWeaponData.bulletSpeed, m_mWeaponData.bulletDamage, m_mWeaponData.bulletLife, m_mWeaponData.bulletRange, m_mWeaponData.isExplossive, m_mWeaponData.isBouncy, m_owner->getType(), "data/rocket.png");
 				break;
 			}
-			case ENuclearBomb: {
-				g_world->createExplossion(messageGetTranform.pos, vmake(20.0f, 20.0f), vmake(8.0f, 8.0f), 100, Entity::ENuclearExplossion);
+			case EENUCLEARBOMB: {
+				g_pWorld->createExplossion(messageGetTranform.pos, vmake(20.0f, 20.0f), vmake(8.0f, 8.0f), 100, Entity::ENuclearExplossion);
 				break;
 			}
 			default: {
-				if (m_weaponData.numBullets > 1) {
-					for (size_t i = 0; i < m_weaponData.numBullets; i++) {
-						float angle = vangle(m_aimDirection) + (i * 360.f / m_weaponData.numBullets);
-						g_world->createBullet(messageGetTranform.pos, vmake(10.0f, 10.0f), vunit(DEG2RAD(angle)), m_weaponData.bulletSpeed, m_weaponData.bulletDamage, m_weaponData.bulletLife, m_weaponData.bulletRange, m_weaponData.isExplossive, m_weaponData.isBouncy, m_owner->getType(), "data/bullet.png");
+				if (m_mWeaponData.numBullets > 1) {
+					for (size_t i = 0; i < m_mWeaponData.numBullets; i++) {
+						float angle = vangle(m_aimDirection) + (i * 360.f / m_mWeaponData.numBullets);
+						g_pWorld->createBullet(messageGetTranform.pos, vmake(10.0f, 10.0f), vunit(DEG2RAD(angle)), m_mWeaponData.bulletSpeed, m_mWeaponData.bulletDamage, m_mWeaponData.bulletLife, m_mWeaponData.bulletRange, m_mWeaponData.isExplossive, m_mWeaponData.isBouncy, m_owner->getType(), "data/bullet.png");
 					}
 				}
 				else {
-					g_world->createBullet(messageGetTranform.pos, vmake(10.0f, 10.0f), m_aimDirection, m_weaponData.bulletSpeed, m_weaponData.bulletDamage, m_weaponData.bulletLife, m_weaponData.bulletRange, m_weaponData.isExplossive, m_weaponData.isBouncy, m_owner->getType(), "data/bullet.png");
+					g_pWorld->createBullet(messageGetTranform.pos, vmake(10.0f, 10.0f), m_aimDirection, m_mWeaponData.bulletSpeed, m_mWeaponData.bulletDamage, m_mWeaponData.bulletLife, m_mWeaponData.bulletRange, m_mWeaponData.isExplossive, m_mWeaponData.isBouncy, m_owner->getType(), "data/bullet.png");
 				}
 				
 				break;
 			}
 		}
 
-		if (m_weaponData.soundFile != "") {
-			g_soundEngine->playSound(m_weaponData.soundFile.c_str());
+		if (m_mWeaponData.soundFile != "") {
+			g_pSoundEngine->playSound(m_mWeaponData.soundFile.c_str());
 		}
 
 		MessageFire messageFire;
@@ -432,11 +441,11 @@ void ComponentWeapon::receiveMessage(Message* message) {
 
 	MessageWeaponChange* msgWeaponChange = dynamic_cast<MessageWeaponChange*>(message);
 	if (msgWeaponChange) {
-		m_weaponData = msgWeaponChange->weaponData;
+		m_mWeaponData = msgWeaponChange->weaponData;
 		m_isFiring = false;
-		m_currentBullets = m_weaponData.capacity;
-		m_fireTimer = m_weaponData.fireRate;
-		m_reloadTimer = m_weaponData.reloadTime;
+		m_currentBullets = m_mWeaponData.capacity;
+		m_fireTimer = m_mWeaponData.fireRate;
+		m_reloadTimer = m_mWeaponData.reloadTime;
 	}
 	else {
 		MessageFire* msgFire = dynamic_cast<MessageFire*>(message);
@@ -457,15 +466,15 @@ void ComponentWeapon::receiveMessage(Message* message) {
 					MessageAmmoInfo* msgAmmoInfo = dynamic_cast<MessageAmmoInfo*>(message);
 					if (msgAmmoInfo) {
 						msgAmmoInfo->currentAmmo = m_currentBullets;
-						msgAmmoInfo->totalAmmo = m_weaponData.capacity;
-						msgAmmoInfo->reloadPercent = m_reloadTimer * 1.0f / m_weaponData.reloadTime;
+						msgAmmoInfo->totalAmmo = m_mWeaponData.capacity;
+						msgAmmoInfo->reloadPercent = m_reloadTimer * 1.0f / m_mWeaponData.reloadTime;
 						if (msgAmmoInfo->reloadPercent > 1.0f) {
 							msgAmmoInfo->reloadPercent = 1.0f;
 						}
 					}
 					else {
 						MessageReload* msgReload = dynamic_cast<MessageReload*>(message);
-						if (msgReload && m_currentBullets < m_weaponData.capacity && m_reloadTimer >= m_weaponData.reloadTime) {
+						if (msgReload && m_currentBullets < m_mWeaponData.capacity && m_reloadTimer >= m_mWeaponData.reloadTime) {
 							m_isFiring = false;
 							m_reloadTimer = 0;
 						}
@@ -474,6 +483,19 @@ void ComponentWeapon::receiveMessage(Message* message) {
 			}
 		}
 	}
+}
+
+ComponentWeapon::TType ComponentWeapon::getWeaponTypeByName(const std::string& name) {
+	ComponentWeapon::TType etype = EInvalid;
+	int i = 0;
+	while ((etype == EInvalid) && (i < NUM_WEAPON_TYPES))
+	{
+		if (name == s_aWeaponInfo[i].sName) {
+			etype = s_aWeaponInfo[i].eType;
+		}
+		i++;
+	}
+	return etype;
 }
 
 //=============================================================================
@@ -487,14 +509,14 @@ void ComponentExplossive::receiveMessage(Message* message) {
 	if (msgDestroy) {
 		MessageGetTransform messageSelfPos;
 		m_owner->receiveMessage(&messageSelfPos);
-		g_world->createExplossion(messageSelfPos.pos, vmake(10.0f, 10.0f), vmake(2.0f, 2.0f), 50, Entity::EExplossion);
+		g_pWorld->createExplossion(messageSelfPos.pos, vmake(10.0f, 10.0f), vmake(2.0f, 2.0f), 50, Entity::EExplossion);
 	}
 }
 
 //=============================================================================
 // ComponentAIMelee class
 //=============================================================================
-ComponentAIMelee::ComponentAIMelee(Entity* owner, Entity* player, float speed, float maxDistance) : Component(owner), m_player(player), m_speed(speed), m_maxDistance(maxDistance) {
+ComponentAIMelee::ComponentAIMelee(Entity* owner, Entity* player, float speed, float maxDistance) : Component(owner), m_pPlayer(player), m_speed(speed), m_maxDistance(maxDistance) {
 	m_offset = vmake(CORE_FRand(-20, 20), CORE_FRand(-20, 20));
 }
 void ComponentAIMelee::run(float deltaTime) {
@@ -505,7 +527,7 @@ void ComponentAIMelee::run(float deltaTime) {
 	MessageGetTransform messageSelfPos;
 	m_owner->receiveMessage(&messageSelfPos);
 	MessageGetTransform messagePlayerPos;
-	m_player->receiveMessage(&messagePlayerPos);
+	m_pPlayer->receiveMessage(&messagePlayerPos);
 	vec2 direction = vsub(vadd(messagePlayerPos.pos, m_offset), messageSelfPos.pos);
 
 	if (vlen(direction) > m_maxDistance) {
@@ -539,7 +561,7 @@ void ComponentAIEvade::run(float deltaTime) {
 	MessageGetTransform messageSelfPos;
 	m_owner->receiveMessage(&messageSelfPos);
 	MessageGetTransform messagePlayerPos;
-	m_player->receiveMessage(&messagePlayerPos);
+	m_pPlayer->receiveMessage(&messagePlayerPos);
 
 	//Move in opposite direction
 	vec2 escapeDirection = vsub(messageSelfPos.pos, messagePlayerPos.pos);
@@ -621,11 +643,11 @@ void ComponentAIFire::run(float deltaTime) {
 	msgFire.isFiring = true;
 	m_owner->receiveMessage(&msgFire);
 
-	if (m_player) {
+	if (m_pPlayer) {
 		MessageGetTransform messageSelfPos;
 		m_owner->receiveMessage(&messageSelfPos);
 		MessageGetTransform messagePlayerPos;
-		m_player->receiveMessage(&messagePlayerPos);
+		m_pPlayer->receiveMessage(&messagePlayerPos);
 		MessageSetAimDirection messageSetAimDirection;
 		messageSetAimDirection.direction = vnorm(vsub(messagePlayerPos.pos, messageSelfPos.pos));
 		messageSetAimDirection.changeAngle = true;
@@ -644,7 +666,7 @@ void ComponentAIFire::receiveMessage(Message* message) {
 		return;
 
 	MessageFire* msgFire = dynamic_cast<MessageFire*>(message);
-	if (msgFire && msgFire->isFireDone && ! m_player) {
+	if (msgFire && msgFire->isFireDone && ! m_pPlayer) {
 		++m_currentFireDirection;
 		if (m_currentFireDirection >= m_fireDirections.size()) {
 			m_currentFireDirection = 0;
@@ -742,7 +764,7 @@ void ComponentPoints::receiveMessage(Message* message) {
 
 	MessageDestroy* msgDestroy = dynamic_cast<MessageDestroy*>(message);
 	if (msgDestroy) {
-		g_world->addPoints(m_points);
+		g_pWorld->addPoints(m_points);
 	}
 }
 
@@ -756,36 +778,23 @@ void ComponentWeaponPickup::receiveMessage(Message* message) {
 	MessageDestroy* msgDestroy = dynamic_cast<MessageDestroy*>(message);
 	if (msgDestroy) {
 		MessageWeaponChange msgWeapon;
-		msgWeapon.weaponData = m_weaponData;
-		g_world->getPlayer()->receiveMessage(&msgWeapon);
+		msgWeapon.weaponData = m_mWeaponData;
+		g_pWorld->getPlayer()->receiveMessage(&msgWeapon);
 
-		std::string hudMessage = g_stringManager->getText("LTEXT_GUI_PICKUP_MESSAGE");
-		switch (m_weaponData.type)
+		std::string hudMessage = g_pStringManager->getText("LTEXT_GUI_PICKUP_MESSAGE");
+		switch (m_mWeaponData.type)
 		{
-			case ComponentWeapon::ERevolver:
-				hudMessage += g_stringManager->getText("LTEXT_GUI_REVOLVER_MESSAGE");
+#define REG_WEAPON(val, name) \
+			case ComponentWeapon::EE##val: \
+				hudMessage += g_pStringManager->getText("LTEXT_GUI_"#val"_MESSAGE"); \
 				break;
-			case ComponentWeapon::EMachinegun:
-				hudMessage += g_stringManager->getText("LTEXT_GUI_MACHINEGUN_MESSAGE");
-				break;
-			case ComponentWeapon::EShotgun:
-				hudMessage += g_stringManager->getText("LTEXT_GUI_SHOTGUN_MESSAGE");
-				break;
-			case ComponentWeapon::EMines:
-				hudMessage += g_stringManager->getText("LTEXT_GUI_MINES_MESSAGE");
-				break;
-			case ComponentWeapon::EC4:
-				hudMessage += g_stringManager->getText("LTEXT_GUI_C4_MESSAGE");
-				break;
-			case ComponentWeapon::ERocketLauncher:
-				hudMessage += g_stringManager->getText("LTEXT_GUI_ROCKETLAUNCHER_MESSAGE");
-				break;
-			case ComponentWeapon::ENuclearBomb:
-				hudMessage += g_stringManager->getText("LTEXT_GUI_NUCLEAR_MESSAGE");
+#include "REG_WEAPONS.h"
+#undef REG_WEAPON
+			default:
 				break;
 		}
 
-		g_world->createHUDMessage(hudMessage, vmake((WORLD_WIDTH / 2) - (hudMessage.length() / 2.0f * 16), 20), 100);
+		g_pWorld->createHUDMessage(hudMessage, vmake((WORLD_WIDTH / 2) - (hudMessage.length() / 2.0f * 16), 20), 100);
 	}
 }
 
@@ -799,7 +808,7 @@ ComponentHUDMessage::~ComponentHUDMessage() {
 void ComponentHUDMessage::init() {
 	Component::init();
 	m_message = NEW(Text, m_messageText, m_pos, 1);
-	g_graphicsEngine->addGfxEntity(m_message);
+	g_pGraphicsEngine->addGfxEntity(m_message);
 }
 
 //=============================================================================
@@ -809,8 +818,8 @@ ComponentHUD::~ComponentHUD() {
 	for (size_t i = 0; i < m_gfxEntities.size(); ++i) {
 		DELETE(m_gfxEntities[i]);
 	}
-	if (g_inputManager) {
-		g_inputManager->unregisterEvent(this, IInputManager::TEventType::EMouseMove);
+	if (g_pInputManager) {
+		g_pInputManager->unregisterEvent(this, IInputManager::TEventType::EMouseMove);
 	}
 }
 
@@ -819,42 +828,42 @@ void ComponentHUD::init() {
 	
 	// Life HUD
 	Text* title = NEW(Text, "LTEXT_GUI_LIFE_HUD", vmake(20, 450), 4);
-	g_graphicsEngine->addGfxEntity(title);
+	g_pGraphicsEngine->addGfxEntity(title);
 	m_gfxEntities.push_back(title);
-	float titleEndPos = title->getPos().x + g_stringManager->getText(title->getText()).length() * 16.0f;
+	float titleEndPos = title->getPos().x + g_pStringManager->getText(title->getText()).length() * 16.0f;
 	m_life = NEW(Text, "0", vmake(title->getPos().x, 430), 4);
-	g_graphicsEngine->addGfxEntity(m_life);
+	g_pGraphicsEngine->addGfxEntity(m_life);
 	m_gfxEntities.push_back(m_life);
 
 	// Score HUD
 	title = NEW(Text, "LTEXT_GUI_SCORE_HUD", vmake(titleEndPos + 20, 450), 4);
-	g_graphicsEngine->addGfxEntity(title);
+	g_pGraphicsEngine->addGfxEntity(title);
 	m_gfxEntities.push_back(title);
-	titleEndPos = title->getPos().x + g_stringManager->getText(title->getText()).length() * 16.0f;
-	m_score = NEW(Text, "0", vmake(title->getPos().x, 430), 4);
-	g_graphicsEngine->addGfxEntity(m_score);
-	m_gfxEntities.push_back(m_score);
+	titleEndPos = title->getPos().x + g_pStringManager->getText(title->getText()).length() * 16.0f;
+	m_uScore = NEW(Text, "0", vmake(title->getPos().x, 430), 4);
+	g_pGraphicsEngine->addGfxEntity(m_uScore);
+	m_gfxEntities.push_back(m_uScore);
 
 	// AMMO HUD
 	title = NEW(Text, "LTEXT_GUI_AMMO_HUD", vmake(titleEndPos + 20, 450), 4);
-	g_graphicsEngine->addGfxEntity(title);
+	g_pGraphicsEngine->addGfxEntity(title);
 	m_gfxEntities.push_back(title);
 	m_ammo = NEW(Text, "0/0", vmake(title->getPos().x, 430), 4);
-	g_graphicsEngine->addGfxEntity(m_ammo);
+	g_pGraphicsEngine->addGfxEntity(m_ammo);
 	m_gfxEntities.push_back(m_ammo);
 
 	// Target HUD
-	m_target = NEW(Sprite, g_graphicsEngine->getTexture("data/target.png"), vmake(0.0f, 0.0f), vmake(0.0f, 0.0f), 0.0f, 1.0f, 4);
+	m_target = NEW(Sprite, g_pGraphicsEngine->getTexture("data/target.png"), vmake(0.0f, 0.0f), vmake(0.0f, 0.0f), 0.0f, 1.0f, 4);
 	m_target->setSize(vmake(36, 36));
-	g_graphicsEngine->addGfxEntity(m_target);
+	g_pGraphicsEngine->addGfxEntity(m_target);
 	m_gfxEntities.push_back(m_target);
 
 	// Reload Animation
-	m_reloadAnim = NEW(Sprite, g_graphicsEngine->getTexture("data/reload.png"), vmake(0.0f, 0.0f), vmake(0.0f, 0.0f), 0.0f, 1.0f, 4);
-	g_graphicsEngine->addGfxEntity(m_reloadAnim);
+	m_reloadAnim = NEW(Sprite, g_pGraphicsEngine->getTexture("data/reload.png"), vmake(0.0f, 0.0f), vmake(0.0f, 0.0f), 0.0f, 1.0f, 4);
+	g_pGraphicsEngine->addGfxEntity(m_reloadAnim);
 	m_gfxEntities.push_back(m_reloadAnim);
 
-	g_inputManager->registerEvent(this, IInputManager::TEventType::EMouseMove);
+	g_pInputManager->registerEvent(this, IInputManager::TEventType::EMouseMove);
 }
 
 void ComponentHUD::run(float deltaTime) {
@@ -863,7 +872,7 @@ void ComponentHUD::run(float deltaTime) {
 	m_owner->receiveMessage(&msgLife);
 	m_life->setText(std::to_string(msgLife.currentLife));
 	
-	m_score->setText(std::to_string(g_world->getScore()));
+	m_uScore->setText(std::to_string(g_pWorld->getScore()));
 
 	MessageAmmoInfo msgAmmo;
 	m_owner->receiveMessage(&msgAmmo);
