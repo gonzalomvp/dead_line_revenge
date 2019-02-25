@@ -1,50 +1,51 @@
 #pragma once
 
-#include "../input/input_manager.h"
-#include"../entities/components/component.h"
-#include "../entities/entity.h"
+#include "entities/components/component.h"
+#include "entities/entity.h"
+#include "input/input_manager.h"
 
 #define WORLD_WIDTH  640
 #define WORLD_HEIGHT 480
 
-class World : public IInputManager::IListener {
+class CWorld : public IInputManager::IListener {
 public:
 	struct TEnemyData {
-		Entity::TType            type;
-		int                      life;
-		float                    speed;
-		int                      collisionDamage;
-		ComponentWeapon::TType   weapon;
-		float                    spawnProbability;
-		int                      points;
-		vec2                     size;
-		std::string              imageFile;
+		Entity::TType            eType;
+		int                      iLife;
+		float                    fSpeed;
+		int                      iCollisionDamage;
+		ComponentWeapon::TType   eWeapon;
+		float                    fSpawnProbability;
+		int                      iPoints;
+		vec2                     v2Size;
+		std::string              sImageFile;
 	};
 
-	World(uint16_t level) : m_level(level) {}
-	~World();
+	CWorld(uint16_t _uLevel) : m_uLevel(_uLevel) {}
+	~CWorld();
 
 	void         init         ();
 	bool         loadLevel    ();
 	void         unloadLevel  ();
-	void         run          (float deltaTime);
-	void         addEntity    (Entity* entity);
-	void         removeEntity (Entity* entity);
-	uint16_t     getScore     () const                             { return m_score;    }
-	Entity*      getPlayer    () const                             { return m_player;   }
-	void         addPoints    (uint16_t points)                    { m_score += points; }
-	virtual bool onEvent      (const IInputManager::Event& event);
+	void         run          (float _fDeltaTime);
+	void         addEntity    (Entity* _pEntity);
+	void         removeEntity (Entity* _pEntity);
+	uint16_t     getScore     () const                             { return m_uScore;      }
+	Entity*      getPlayer    () const                             { return m_pPlayer;     }
+	void         addPoints    (uint16_t _uPoints)                  { m_uScore += _uPoints; }
+	virtual bool onEvent      (const IInputManager::Event& _event);
 
 	// Entity creation methods
-	Entity* createPlayer      (vec2 pos);
-	Entity* createBullet      (vec2 pos, vec2 size, vec2 direction, float speed, int damage, int life, int range, bool isExplossive, bool isBouncy, Entity::TType entityType, const char* texture);
-	Entity* createExplossion  (vec2 pos, vec2 size, vec2 sizeIncrement, int duration, Entity::TType entityType);
-	Entity* createEnemy       (vec2 pos, TEnemyData enemyData, Entity* player);
-	Entity* createEnemy       (vec2 pos, TEnemyData enemyData, vec2 moveDir, std::vector<vec2> aimDirections, bool shuffleAim);
+	Entity* createPlayer      (vec2 _v2Pos);
+	Entity* createBullet      (vec2 _v2Pos, vec2 _v2Size, vec2 _v2Direction, float _fSpeed, int _iDamage, int _iLife, int _iRange, bool _bIsExplossive, bool _bIsBouncy, Entity::TType _eEntityType, const char* _psTexture);
+	Entity* createExplossion  (vec2 _v2Pos, vec2 _v2Size, vec2 _v2SizeIncrement, int _iDuration, Entity::TType _eEntityType);
+	Entity* createEnemy       (vec2 _v2Pos, TEnemyData _tEnemyData, Entity* _pPlayer);
+	Entity* createEnemy       (vec2 _v2Pos, TEnemyData _tEnemyData, vec2 _v2MoveDir, std::vector<vec2> _vAimDirections, bool _bIshuffleAim);
 	Entity* createWeaponPickup();
-	Entity* createHUDMessage  (const std::string&, vec2 pos, int displayTime);
+	Entity* createHUDMessage  (const std::string& _sMessage, vec2 _v2Pos, int _iDisplayTime);
 
-	std::map<ComponentWeapon::TType, ComponentWeapon::TWeaponData> m_weaponData;
+	std::map<ComponentWeapon::TType, ComponentWeapon::TWeaponData> m_mWeaponData;
+
 private:
 	bool loadConfig           ();
 	void checkCollisions      ();
@@ -52,30 +53,30 @@ private:
 	void addPendingEntities   ();
 	void spawnNewEntities     ();
 
-	uint16_t              m_level;
-	Entity*               m_player;
-	Entity*               m_hudMessage;
-	std::vector <Entity*> m_entities;
-	std::vector <Entity*> m_entitiesToRemove;
-	std::vector <Entity*> m_entitiesToAdd;
-	bool                  m_isGameOver;
-	bool                  m_isPaused;
+	uint16_t              m_uLevel;
+	Entity*               m_pPlayer;
+	Entity*               m_pHudMessage;
+	std::vector <Entity*> m_vEntities;
+	std::vector <Entity*> m_vEntitiesToRemove;
+	std::vector <Entity*> m_vEntitiesToAdd;
+	bool                  m_bIsGameOver;
+	bool                  m_bIsPaused;
 
 	// Game rules
-	uint16_t m_score;
-	int      m_playerLife;
-	float    m_playerSpeed;
-	int      m_pickupPoints;
-	int      m_pickupSpawnWait;
-	int      m_enemySpawnWait;
-	int      m_currentEnemies;
-	int      m_maxEnemies;
+	uint16_t m_uScore;
+	int      m_iPlayerLife;
+	float    m_fPlayerSpeed;
+	int      m_iPickupPoints;
+	int      m_iPickupSpawnWait;
+	int      m_iEnemySpawnWait;
+	int      m_iCurrentEnemies;
+	int      m_iMaxEnemies;
 
 	// Config loaded from file
-	std::map<Entity::TType, TEnemyData>                              m_enemyData;
-	std::vector<vec2>                                                m_spawnData;
+	std::map<Entity::TType, TEnemyData> m_mEnemyData;
+	std::vector<vec2>                   m_vSpawnData;
 
 	// Timers
-	int m_pickupSpawnTimer;
-	int m_enemySpawnTimer;
+	int m_iPickupSpawnTimer;
+	int m_iEnemySpawnTimer;
 };

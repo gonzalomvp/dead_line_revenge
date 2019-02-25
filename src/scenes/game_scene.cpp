@@ -6,11 +6,11 @@
 #include "gui/menu.h"
 #include "scenes/world.h"
 
-World* g_pWorld;
+CWorld* g_pWorld;
 
 void CGameScene::init() {
 	g_pMenuManager->deactivateMenu();
-	g_pWorld = NEW(World, m_uLevel);
+	g_pWorld = NEW(CWorld, m_uLevel);
 	g_pWorld->init();
 	g_pWorld->loadLevel();
 }

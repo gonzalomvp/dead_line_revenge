@@ -190,20 +190,20 @@ public:
 
 	ComponentWeapon(Entity* owner, TWeaponData weaponData) : 
 		Component(owner),
-		m_weaponData(weaponData),
+		m_mWeaponData(weaponData),
 		m_remoteBullet(nullptr),
 		m_aimDirection(vmake(0.0f, 0.0f)),
 		m_isFiring(false),
-		m_currentBullets(m_weaponData.capacity),
-		m_fireTimer(m_weaponData.fireRate),
-		m_reloadTimer(m_weaponData.reloadTime) {}
+		m_currentBullets(m_mWeaponData.capacity),
+		m_fireTimer(m_mWeaponData.fireRate),
+		m_reloadTimer(m_mWeaponData.reloadTime) {}
 
 	virtual void run           (float deltaTime);
 	virtual void receiveMessage(Message* message);
 
 	static TType getWeaponTypeByName(const std::string& name);
 private:
-	TWeaponData m_weaponData;
+	TWeaponData m_mWeaponData;
 	Entity* m_remoteBullet;
 	vec2        m_aimDirection;
 	int         m_currentBullets;
@@ -241,7 +241,7 @@ public:
 	virtual void run(float deltaTime);
 	virtual void receiveMessage(Message* message);
 private:
-	Entity* m_player;
+	Entity* m_pPlayer;
 	float       m_speed;
 	float       m_maxDistance;
 	vec2        m_offset;
@@ -252,13 +252,13 @@ private:
 //=============================================================================
 class ComponentAIEvade: public Component {
 public:
-	ComponentAIEvade(Entity* owner, Entity* player, float speed, float range) : Component(owner), m_player(player), m_speed(speed), m_range(range) {}
+	ComponentAIEvade(Entity* owner, Entity* player, float speed, float range) : Component(owner), m_pPlayer(player), m_speed(speed), m_range(range) {}
 	
 	virtual void run(float deltaTime);
 private:
 	vec2 calculatIntersectionWithWall(const vec2& position, float angle);
 
-	Entity* m_player;
+	Entity* m_pPlayer;
 	float       m_speed;
 	float       m_range;
 };
@@ -268,7 +268,7 @@ private:
 //=============================================================================
 class ComponentAIFire : public Component {
 public:
-	ComponentAIFire(Entity* owner, Entity* player) : Component(owner), m_player(player) {}
+	ComponentAIFire(Entity* owner, Entity* player) : Component(owner), m_pPlayer(player) {}
 	ComponentAIFire(Entity* owner, const std::vector<vec2>& fireDirections, bool shuffle) : 
 		Component(owner), 
 		m_fireDirections(fireDirections),
@@ -279,7 +279,7 @@ public:
 	virtual void run           (float deltaTime);
 	virtual void receiveMessage(Message* message);
 private:
-	Entity*       m_player;
+	Entity*       m_pPlayer;
 	std::vector<vec2> m_fireDirections;
 	size_t            m_currentFireDirection;
 	bool              m_shuffle;
@@ -342,11 +342,11 @@ private:
 //=============================================================================
 class ComponentWeaponPickup : public Component {
 public:
-	ComponentWeaponPickup(Entity* owner, ComponentWeapon::TWeaponData weaponData) : Component(owner), m_weaponData(weaponData) {}
+	ComponentWeaponPickup(Entity* owner, ComponentWeapon::TWeaponData weaponData) : Component(owner), m_mWeaponData(weaponData) {}
 	
 	virtual void receiveMessage(Message* message);
 private:
-	ComponentWeapon::TWeaponData m_weaponData;
+	ComponentWeapon::TWeaponData m_mWeaponData;
 };
 
 //=============================================================================
@@ -380,7 +380,7 @@ public:
 	virtual bool onEvent(const IInputManager::Event&);
 private:
 	Text*                   m_life;
-	Text*                   m_score;
+	Text*                   m_uScore;
 	Text*                   m_ammo;
 	Sprite*                 m_target;
 	Sprite*                 m_reloadAnim;

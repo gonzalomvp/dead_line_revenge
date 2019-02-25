@@ -1,7 +1,7 @@
 #pragma once
 
 class CSceneManager;
-class World;
+class CWorld;
 class GraphicsEngine;
 class SoundEngine;
 class IInputManager;
@@ -21,7 +21,7 @@ struct Settings {
 };
 
 extern CSceneManager*  g_pSceneManager;
-extern World*          g_pWorld;
+extern CWorld*         g_pWorld;
 extern GraphicsEngine* g_pGraphicsEngine;
 extern SoundEngine*    g_pSoundEngine;
 extern IInputManager*  g_pInputManager;
