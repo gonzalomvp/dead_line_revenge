@@ -8,5 +8,7 @@ public:
 	static Entity* createEnemyMelee();
 	static Entity* createEnemyBig();
 	static Entity* createEnemyRange();
+	static Entity* createEnemyTurret();
 	static Entity* createPlayer();
+	static Entity* createBullet();
 };

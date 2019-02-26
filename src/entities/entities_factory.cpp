@@ -17,6 +17,7 @@ Entity* EntitiesFactory::createEntity(Entity::TType type) {
 		return EntitiesFactory::createEnemyRange();
 		break;
 	case Entity::ETurret:
+		return EntitiesFactory::createEnemyTurret();
 		break;
 	case Entity::EBoss:
 		break;
@@ -94,6 +95,31 @@ Entity* EntitiesFactory::createEnemyRange() {
 	life->init();
 	ComponentPoints* points = NEW(ComponentPoints, enemy, g_pWorld->m_mEnemyData[Entity::EEnemyRange].iPoints);
 	points->init();
+	return enemy;
+}
+
+Entity* EntitiesFactory::createEnemyTurret() {
+	Entity* enemy = NEW(Entity, Entity::ETurret);
+	ComponentTransform* transform = NEW(ComponentTransform, enemy, vmake(0.f, 0.f), g_pWorld->m_mEnemyData[Entity::ETurret].v2Size);
+	transform->init();
+	ComponentRenderable* renderable = NEW(ComponentRenderable, enemy, g_pWorld->m_mEnemyData[Entity::ETurret].sImageFile.c_str(), 0.0f, 1.0f, 5, 10);
+	renderable->init();
+	ComponentWeapon* gun = NEW(ComponentWeapon, enemy, g_pWorld->m_mWeaponData[g_pWorld->m_mEnemyData[Entity::ETurret].eWeapon]);
+	gun->init();
+	ComponentCollider* collider = NEW(ComponentCollider, enemy, ComponentCollider::ERectCollider, g_pWorld->m_mEnemyData[Entity::ETurret].iCollisionDamage, ComponentCollider::EEnemyCollider, ComponentCollider::EPlayerWeaponCollider);
+	collider->init();
+	ComponentLife* life = NEW(ComponentLife, enemy, g_pWorld->m_mEnemyData[Entity::ETurret].iLife, 0, 0);
+	life->init();
+	ComponentPoints* points = NEW(ComponentPoints, enemy, g_pWorld->m_mEnemyData[Entity::ETurret].iPoints);
+	points->init();
+	std::vector<vec2> aimdirections;
+	aimdirections.push_back(vmake(0.f, 1.f));
+	aimdirections.push_back(vmake(1.f, 0.f));
+	ComponentMove* movement = NEW(ComponentMove, enemy, vmake(0.f, 0.f), g_pWorld->m_mEnemyData[Entity::ETurret].fSpeed, true, true);
+	movement->init();
+	ComponentAIFire* aiFire = NEW(ComponentAIFire, enemy, aimdirections, false);
+	aiFire->setActivationDelay(rand() % 100);
+	aiFire->init();
 	return enemy;
 }
 

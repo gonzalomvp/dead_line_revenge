@@ -99,7 +99,13 @@ bool CWorld::loadLevel() {
 		}
 		
 		// Create turrets
-		createEnemy(pos, m_mEnemyData[Entity::ETurret], moveDirection, aimDirections, shuffleAim);
+		//createEnemy(pos, m_mEnemyData[Entity::ETurret], moveDirection, aimDirections, shuffleAim);
+		Entity* turret = EntitiesFactory::createEntity(Entity::ETurret);
+		MessageSetTransform msg;
+		msg.pos = pos;
+		msg.size = m_mEnemyData[Entity::ETurret].v2Size;
+		turret->receiveMessage(&msg);
+		addEntity(turret);
 		++m_iCurrentEnemies;
 	}
 	fclose(file);
