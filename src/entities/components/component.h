@@ -185,6 +185,8 @@ public:
 		bool        isAutomatic;
 		bool        isExplossive;
 		bool        isBouncy;
+		vec2        bulletSize;
+		std::string bulletImageFile;
 		std::string soundFile;
 	};
 

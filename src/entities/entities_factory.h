@@ -1,6 +1,7 @@
 #pragma once
 
 #include "entity.h"
+#include "components/component.h"
 
 class EntitiesFactory {
 public:
@@ -10,5 +11,5 @@ public:
 	static Entity* createEnemyRange();
 	static Entity* createEnemyTurret();
 	static Entity* createPlayer();
-	static Entity* createBullet();
+	static Entity* createBullet(ComponentWeapon::TType type);
 };

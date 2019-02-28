@@ -393,6 +393,17 @@ bool CWorld::loadConfig() {
 		weapon.isAutomatic        = weapons[i]["isAutomatic"].GetBool();
 		weapon.isExplossive       = weapons[i]["isExplossive"].GetBool();
 		weapon.isBouncy           = weapons[i]["isBouncy"].GetBool();
+
+		weapon.bulletSize         = vmake(0.0f, 0.0f);
+		if (weapons[i].HasMember("bulletSize")) {
+			weapon.bulletSize = vmake(weapons[i]["bulletSize"][0].GetFloat(), weapons[i]["bulletSize"][1].GetFloat());
+		}
+
+		weapon.bulletImageFile = "";
+		if (weapons[i].HasMember("bulletImage")) {
+			weapon.bulletImageFile = weapons[i]["bulletImage"].GetString();
+		}
+
 		weapon.soundFile          = weapons[i]["soundFile"].GetString();
 		m_mWeaponData[weapon.type] = weapon;
 	}

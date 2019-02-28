@@ -143,3 +143,25 @@ Entity* EntitiesFactory::createPlayer() {
 	hudComponent->init();
 	return player;
 }
+
+Entity* EntitiesFactory::createBullet(ComponentWeapon::TType type) {
+	Entity* bullet = NEW(Entity, Entity::EWeapon);
+	ComponentTransform* transform = NEW(ComponentTransform, bullet, vmake(.0f, .0f), g_pWorld->m_mWeaponData[type].bulletSize);
+	transform->init();
+	ComponentRenderable* renderable = NEW(ComponentRenderable, bullet, g_pWorld->m_mWeaponData[type].bulletImageFile, 0.f, 1.0f, 5);
+	renderable->init();
+	ComponentMove* movement = NEW(ComponentMove, bullet, vmake(1.f, 0.f), g_pWorld->m_mWeaponData[type].bulletSpeed, true, g_pWorld->m_mWeaponData[type].isBouncy);
+	movement->init();
+
+	// Depending on the type of bullet it has different collider setup
+	ComponentCollider* collider = NEW(ComponentCollider, bullet, ComponentCollider::ECircleCollider, g_pWorld->m_mWeaponData[type].bulletDamage, ComponentCollider::EEnemyWeaponCollider, ComponentCollider::EPlayerCollider | ComponentCollider::EBoundariesCollider);
+	collider->init();
+	
+	if (g_pWorld->m_mWeaponData[type].isExplossive) {
+		ComponentExplossive* explossive = NEW(ComponentExplossive, bullet);
+		explossive->init();
+	}
+	ComponentLife* componentLife = NEW(ComponentLife, bullet, g_pWorld->m_mWeaponData[type].bulletLife, g_pWorld->m_mWeaponData[type].bulletRange, 0);
+	componentLife->init();
+	return bullet;
+}

@@ -8,6 +8,8 @@
 #include "../entity.h"
 #include "../message.h"
 
+#include "entities/entities_factory.h"
+
 #include <algorithm>
 
 #define EVASION_ANGLE         45.0f
@@ -180,7 +182,7 @@ void ComponentMove::receiveMessage(Message* message) {
 
 	MessageAddMovement* msgAddMovement = dynamic_cast<MessageAddMovement*>(message);
 	if (msgAddMovement) {
-		m_direction = vadd(m_direction, msgAddMovement->dir);
+		m_direction = msgAddMovement->dir;
 	}
 	else {
 		MessageCheckCollision* msgCheckCollision = dynamic_cast<MessageCheckCollision*>(message);
@@ -417,7 +419,16 @@ void ComponentWeapon::run(float deltaTime) {
 					}
 				}
 				else {
-					g_pWorld->createBullet(messageGetTranform.pos, vmake(10.0f, 10.0f), m_aimDirection, m_mWeaponData.bulletSpeed, m_mWeaponData.bulletDamage, m_mWeaponData.bulletLife, m_mWeaponData.bulletRange, m_mWeaponData.isExplossive, m_mWeaponData.isBouncy, m_owner->getType(), "data/bullet.png");
+					Entity* bullet = EntitiesFactory::createBullet(m_mWeaponData.type);
+					MessageSetTransform msg;
+					msg.pos = messageGetTranform.pos;
+					msg.size = m_mWeaponData.bulletSize;
+					bullet->receiveMessage(&msg);
+					MessageAddMovement msgMove;
+					msgMove.dir = m_aimDirection;
+					bullet->receiveMessage(&msgMove);
+					g_pWorld->addEntity(bullet);
+					//g_pWorld->createBullet(messageGetTranform.pos, vmake(10.0f, 10.0f), m_aimDirection, m_mWeaponData.bulletSpeed, m_mWeaponData.bulletDamage, m_mWeaponData.bulletLife, m_mWeaponData.bulletRange, m_mWeaponData.isExplossive, m_mWeaponData.isBouncy, m_owner->getType(), "data/bullet.png");
 				}
 				
 				break;
