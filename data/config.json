@@ -169,7 +169,7 @@
 		"life": 1,
 		"speed": 2,
 		"collisionDamage": -1,
-		"weapon": 7,
+		"weapon": "enemy weapon",
 		"size": [ 25 ,25 ],
 		"imageFile": "data/rangeEnemy.png"
 	},
@@ -179,7 +179,7 @@
 		"life": 3,
 		"speed": 2,
 		"collisionDamage": -1,
-		"weapon": 7,
+		"weapon": "enemy weapon",
 		"size": [ 25 ,25 ],
 		"imageFile": "data/turret.png"
 	}
@@ -190,9 +190,10 @@
 		"life": 40,
 		"speed": 2,
 		"collisionDamage": -2,
-		"weapon": 8,
+		"weapon": "boss weapon2",
 		"size": [ 90 ,74 ],
 		"imageFile": "data/boss1.png"
 	}
-	]
+	],
+	"pickups": [ "revolver", "machinegun", "shotgun", "mines", "c4", "rocket launcher", "nuclear bomb" ]
 }

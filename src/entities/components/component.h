@@ -170,7 +170,6 @@ public:
 	};
 
 	static const int NUM_WEAPON_TYPES = EInvalid;
-	static const int NUM_PLAYER_WEAPONS_TYPES = EENUM_PLAYER_WEAPONS;
 
 	struct TWeaponData {
 		TType       type;
@@ -330,11 +329,9 @@ private:
 //=============================================================================
 class ComponentPoints : public Component {
 public:
-	ComponentPoints(Entity* owner, int points): Component(owner), m_points(points) {}
+	ComponentPoints(Entity* owner): Component(owner) {}
 
 	virtual void receiveMessage(Message* message);
-private:
-	int m_points;
 };
 
 //=============================================================================

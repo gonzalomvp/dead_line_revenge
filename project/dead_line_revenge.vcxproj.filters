@@ -210,6 +210,9 @@
     <ClInclude Include="..\src\scenes\scene_manager.h">
       <Filter>src\scenes</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\entities\entities_factory.h">
+      <Filter>src\entities</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\main.cpp">
@@ -376,6 +379,9 @@
     </ClCompile>
     <ClCompile Include="..\src\scenes\scene_manager.cpp">
       <Filter>src\scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\entities\entities_factory.cpp">
+      <Filter>src\entities</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

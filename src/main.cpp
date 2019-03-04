@@ -2,6 +2,7 @@
 
 #include "engine/graphics_engine.h"
 #include "engine/sound_engine.h"
+#include "entities/entities_factory.h"
 #include "gui/menu.h"
 #include "gui/string_manager.h"
 #include "input/input_manager.h"
@@ -10,13 +11,14 @@
 #include <ctime>
 
 // Global variables
-GraphicsEngine* g_pGraphicsEngine;
-SoundEngine*    g_pSoundEngine;
-IInputManager*  g_pInputManager;
-CSceneManager*  g_pSceneManager;
-StringManager*  g_pStringManager;
-MenuManager*    g_pMenuManager;
-Settings        g_settings;
+GraphicsEngine*   g_pGraphicsEngine;
+SoundEngine*      g_pSoundEngine;
+IInputManager*    g_pInputManager;
+CSceneManager*    g_pSceneManager;
+CEntitiesFactory* g_pEntitiesFactory;
+StringManager*    g_pStringManager;
+MenuManager*      g_pMenuManager;
+Settings          g_settings;
 
 int Main(void) {
 	g_settings.music = true;
@@ -24,12 +26,13 @@ int Main(void) {
 	g_settings.volume = 0.2f;
 	g_settings.language = EEnglish;
 
-	g_pGraphicsEngine = NEW(GraphicsEngine);
-	g_pSoundEngine    = NEW(SoundEngine);
-	g_pInputManager   = NEW(InputManager);
-	g_pSceneManager   = NEW(CSceneManager);
-	g_pStringManager  = NEW(StringManager);
-	g_pMenuManager    = NEW(MenuManager);
+	g_pGraphicsEngine  = NEW(GraphicsEngine);
+	g_pSoundEngine     = NEW(SoundEngine);
+	g_pInputManager    = NEW(InputManager);
+	g_pSceneManager    = NEW(CSceneManager);
+	g_pEntitiesFactory = NEW(CEntitiesFactory);
+	g_pStringManager   = NEW(StringManager);
+	g_pMenuManager     = NEW(MenuManager);
 	g_pMenuManager->init();
 
 	// Load default language
@@ -37,6 +40,9 @@ int Main(void) {
 
 	// Init Menu Scene
 	g_pSceneManager->switchScene(IScene::EMENU);
+
+	// Init Entities Factory
+	g_pEntitiesFactory->init("data/config.json");
 
 	//Set Background
 	Sprite background(g_pGraphicsEngine->getTexture("data/background.png"), vmake(SCR_WIDTH * 0.5f, SCR_HEIGHT * 0.5f), vmake(SCR_WIDTH, SCR_HEIGHT), 0.0f, 1.0f, 6);
@@ -67,6 +73,8 @@ int Main(void) {
 	}
 
 	// Free memory
+	DELETE(g_pEntitiesFactory);
+	g_pEntitiesFactory = nullptr;
 	DELETE(g_pSceneManager);
 	g_pSceneManager = nullptr;
 	DELETE(g_pMenuManager);

@@ -6,6 +6,7 @@
 #include "../../gui/string_manager.h"
 #include "../../scenes/world.h"
 #include "../entity.h"
+#include "entities/entities_factory.h"
 #include "../message.h"
 
 #include <algorithm>
@@ -382,42 +383,43 @@ void ComponentWeapon::run(float deltaTime) {
 		switch (m_mWeaponData.type) {
 			case EESHOTGUN: {
 				vec2 bulletDir = m_aimDirection;
-				g_pWorld->createBullet(messageGetTranform.pos, vmake(10.0f, 10.0f), bulletDir, m_mWeaponData.bulletSpeed, m_mWeaponData.bulletDamage, m_mWeaponData.bulletLife, m_mWeaponData.bulletRange, m_mWeaponData.isExplossive, m_mWeaponData.isBouncy, m_owner->getType(), "data/shotgunBullet.png");
+				g_pWorld->addEntity(g_pEntitiesFactory->createBullet(messageGetTranform.pos, vmake(10.0f, 10.0f), bulletDir, m_mWeaponData.bulletSpeed, m_mWeaponData.bulletDamage, m_mWeaponData.bulletLife, m_mWeaponData.bulletRange, m_mWeaponData.isExplossive, m_mWeaponData.isBouncy, m_owner->getType(), "data/shotgunBullet.png"));
 				float angle = vangle(m_aimDirection);
 				angle += SHOTGUN_DISP_ANGLE;
 				bulletDir = vunit(DEG2RAD(angle));
-				g_pWorld->createBullet(messageGetTranform.pos, vmake(10.0f, 10.0f), bulletDir, m_mWeaponData.bulletSpeed, m_mWeaponData.bulletDamage, m_mWeaponData.bulletLife, m_mWeaponData.bulletRange, m_mWeaponData.isExplossive, m_mWeaponData.isBouncy, m_owner->getType(), "data/shotgunBullet.png");
+				g_pWorld->addEntity(g_pEntitiesFactory->createBullet(messageGetTranform.pos, vmake(10.0f, 10.0f), bulletDir, m_mWeaponData.bulletSpeed, m_mWeaponData.bulletDamage, m_mWeaponData.bulletLife, m_mWeaponData.bulletRange, m_mWeaponData.isExplossive, m_mWeaponData.isBouncy, m_owner->getType(), "data/shotgunBullet.png"));
 				angle = vangle(m_aimDirection);
 				angle -= SHOTGUN_DISP_ANGLE;
 				bulletDir = vunit(DEG2RAD(angle));
-				g_pWorld->createBullet(messageGetTranform.pos, vmake(10.0f, 10.0f), bulletDir, m_mWeaponData.bulletSpeed, m_mWeaponData.bulletDamage, m_mWeaponData.bulletLife, m_mWeaponData.bulletRange, m_mWeaponData.isExplossive, m_mWeaponData.isBouncy, m_owner->getType(), "data/shotgunBullet.png");
+				g_pWorld->addEntity(g_pEntitiesFactory->createBullet(messageGetTranform.pos, vmake(10.0f, 10.0f), bulletDir, m_mWeaponData.bulletSpeed, m_mWeaponData.bulletDamage, m_mWeaponData.bulletLife, m_mWeaponData.bulletRange, m_mWeaponData.isExplossive, m_mWeaponData.isBouncy, m_owner->getType(), "data/shotgunBullet.png"));
 				break;
 			}
 			case EEMINES: {
-				g_pWorld->createBullet(messageGetTranform.pos, vmake(20.0f, 20.0f), m_aimDirection, m_mWeaponData.bulletSpeed, m_mWeaponData.bulletDamage, m_mWeaponData.bulletLife, m_mWeaponData.bulletRange, m_mWeaponData.isExplossive, m_mWeaponData.isBouncy, Entity::EMine, "data/mine.png");
+				g_pWorld->addEntity(g_pEntitiesFactory->createBullet(messageGetTranform.pos, vmake(20.0f, 20.0f), m_aimDirection, m_mWeaponData.bulletSpeed, m_mWeaponData.bulletDamage, m_mWeaponData.bulletLife, m_mWeaponData.bulletRange, m_mWeaponData.isExplossive, m_mWeaponData.isBouncy, Entity::EMine, "data/mine.png"));
 				break;
 			}
 			case EEC4: {
-				m_remoteBullet = g_pWorld->createBullet(messageGetTranform.pos, vmake(20.0f, 20.0f), m_aimDirection, m_mWeaponData.bulletSpeed, m_mWeaponData.bulletDamage, m_mWeaponData.bulletLife, m_mWeaponData.bulletRange, m_mWeaponData.isExplossive, m_mWeaponData.isBouncy, m_owner->getType(), "data/c4.png");
+				m_remoteBullet = g_pEntitiesFactory->createBullet(messageGetTranform.pos, vmake(20.0f, 20.0f), m_aimDirection, m_mWeaponData.bulletSpeed, m_mWeaponData.bulletDamage, m_mWeaponData.bulletLife, m_mWeaponData.bulletRange, m_mWeaponData.isExplossive, m_mWeaponData.isBouncy, m_owner->getType(), "data/c4.png");
+				g_pWorld->addEntity(m_remoteBullet);
 				break;
 			}
 			case EEROCKETLAUNCHER: {
-				g_pWorld->createBullet(messageGetTranform.pos, vmake(15.0f, 15.0f), m_aimDirection, m_mWeaponData.bulletSpeed, m_mWeaponData.bulletDamage, m_mWeaponData.bulletLife, m_mWeaponData.bulletRange, m_mWeaponData.isExplossive, m_mWeaponData.isBouncy, m_owner->getType(), "data/rocket.png");
+				g_pWorld->addEntity(g_pEntitiesFactory->createBullet(messageGetTranform.pos, vmake(15.0f, 15.0f), m_aimDirection, m_mWeaponData.bulletSpeed, m_mWeaponData.bulletDamage, m_mWeaponData.bulletLife, m_mWeaponData.bulletRange, m_mWeaponData.isExplossive, m_mWeaponData.isBouncy, m_owner->getType(), "data/rocket.png"));
 				break;
 			}
 			case EENUCLEARBOMB: {
-				g_pWorld->createExplossion(messageGetTranform.pos, vmake(20.0f, 20.0f), vmake(8.0f, 8.0f), 100, Entity::ENuclearExplossion);
+				g_pWorld->addEntity(g_pEntitiesFactory->createExplossion(messageGetTranform.pos, vmake(20.0f, 20.0f), vmake(8.0f, 8.0f), 100, Entity::ENuclearExplossion));
 				break;
 			}
 			default: {
 				if (m_mWeaponData.numBullets > 1) {
 					for (size_t i = 0; i < m_mWeaponData.numBullets; i++) {
 						float angle = vangle(m_aimDirection) + (i * 360.f / m_mWeaponData.numBullets);
-						g_pWorld->createBullet(messageGetTranform.pos, vmake(10.0f, 10.0f), vunit(DEG2RAD(angle)), m_mWeaponData.bulletSpeed, m_mWeaponData.bulletDamage, m_mWeaponData.bulletLife, m_mWeaponData.bulletRange, m_mWeaponData.isExplossive, m_mWeaponData.isBouncy, m_owner->getType(), "data/bullet.png");
+						g_pWorld->addEntity(g_pEntitiesFactory->createBullet(messageGetTranform.pos, vmake(10.0f, 10.0f), vunit(DEG2RAD(angle)), m_mWeaponData.bulletSpeed, m_mWeaponData.bulletDamage, m_mWeaponData.bulletLife, m_mWeaponData.bulletRange, m_mWeaponData.isExplossive, m_mWeaponData.isBouncy, m_owner->getType(), "data/bullet.png"));
 					}
 				}
 				else {
-					g_pWorld->createBullet(messageGetTranform.pos, vmake(10.0f, 10.0f), m_aimDirection, m_mWeaponData.bulletSpeed, m_mWeaponData.bulletDamage, m_mWeaponData.bulletLife, m_mWeaponData.bulletRange, m_mWeaponData.isExplossive, m_mWeaponData.isBouncy, m_owner->getType(), "data/bullet.png");
+					g_pWorld->addEntity(g_pEntitiesFactory->createBullet(messageGetTranform.pos, vmake(10.0f, 10.0f), m_aimDirection, m_mWeaponData.bulletSpeed, m_mWeaponData.bulletDamage, m_mWeaponData.bulletLife, m_mWeaponData.bulletRange, m_mWeaponData.isExplossive, m_mWeaponData.isBouncy, m_owner->getType(), "data/bullet.png"));
 				}
 				
 				break;
@@ -509,7 +511,7 @@ void ComponentExplossive::receiveMessage(Message* message) {
 	if (msgDestroy) {
 		MessageGetTransform messageSelfPos;
 		m_owner->receiveMessage(&messageSelfPos);
-		g_pWorld->createExplossion(messageSelfPos.pos, vmake(10.0f, 10.0f), vmake(2.0f, 2.0f), 50, Entity::EExplossion);
+		g_pWorld->addEntity(g_pEntitiesFactory->createExplossion(messageSelfPos.pos, vmake(10.0f, 10.0f), vmake(2.0f, 2.0f), 50, Entity::EExplossion));
 	}
 }
 
@@ -764,7 +766,7 @@ void ComponentPoints::receiveMessage(Message* message) {
 
 	MessageDestroy* msgDestroy = dynamic_cast<MessageDestroy*>(message);
 	if (msgDestroy) {
-		g_pWorld->addPoints(m_points);
+		g_pWorld->addPoints(m_owner->getType());
 	}
 }
 
@@ -794,7 +796,7 @@ void ComponentWeaponPickup::receiveMessage(Message* message) {
 				break;
 		}
 
-		g_pWorld->createHUDMessage(hudMessage, vmake((WORLD_WIDTH / 2) - (hudMessage.length() / 2.0f * 16), 20), 100);
+		g_pWorld->addEntity(g_pEntitiesFactory->createHUDMessage(hudMessage, vmake((WORLD_WIDTH / 2) - (hudMessage.length() / 2.0f * 16), 20), 100));
 	}
 }
 
