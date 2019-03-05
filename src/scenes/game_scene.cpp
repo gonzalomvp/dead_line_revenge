@@ -10,9 +10,8 @@ CWorld* g_pWorld;
 
 void CGameScene::init() {
 	g_pMenuManager->deactivateMenu();
-	g_pWorld = NEW(CWorld, m_uLevel);
-	g_pWorld->init();
-	g_pWorld->loadLevel();
+	g_pWorld = NEW(CWorld);
+	g_pWorld->init(m_uLevel);
 }
 
 CGameScene::~CGameScene() {

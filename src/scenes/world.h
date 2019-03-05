@@ -8,15 +8,15 @@
 
 class CWorld : public IInputManager::IListener {
 public:
-	CWorld(uint16_t _uLevel);
+	CWorld();
 	~CWorld();
 
-	void         init           ();
-	bool         loadLevel      ();
-	void         unloadLevel    ();
+	bool         init           (uint16_t _uLevel);
+	void         cleanup        ();
 	void         run            (float _fDeltaTime);
 	void         addEntity      (Entity* _pEntity);
 	void         removeEntity   (Entity* _pEntity);
+	uint16_t     getLevel       () const                             { return m_uLevel;        }
 	uint16_t     getScore       () const                             { return m_uScore;        }
 	Entity*      getPlayer      () const                             { return m_pPlayer;       }
 	int	         getPlayerLife  () const                             { return m_iPlayerLife;   }

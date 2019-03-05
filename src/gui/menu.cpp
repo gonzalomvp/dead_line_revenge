@@ -269,7 +269,7 @@ void MenuManager::onSelected(MenuItem* menuItem) {
 	}
 	else if (menuItem->getName() == "RETRY") {
 		g_pMenuManager->deactivateMenu();
-		g_pWorld->loadLevel();
+		//g_pWorld->loadLevel();
 	}
 	else if (menuItem->getName() == "EXIT") {
 		exit(0);
@@ -326,7 +326,7 @@ void MenuManager::onClick(Button* button) {
 	}
 	else if (button->getName() == "RETRY") {
 		g_pMenuManager->deactivateMenu();
-		g_pWorld->loadLevel();
+		g_pWorld->init(g_pWorld->getLevel());
 	}
 	else if (button->getName() == "EXIT") {
 		exit(0);

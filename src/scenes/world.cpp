@@ -12,9 +12,8 @@
 
 using namespace rapidjson;
 
-CWorld::CWorld(uint16_t _uLevel) 
-: m_uLevel(_uLevel)
-, m_pPlayer(nullptr)
+CWorld::CWorld() 
+: m_pPlayer(nullptr)
 , m_pHudMessage(nullptr)
 , m_bIsGameOver(false)
 , m_bIsPaused(false)
@@ -30,18 +29,17 @@ CWorld::CWorld(uint16_t _uLevel)
 {}
 
 CWorld::~CWorld() {
-	unloadLevel();
+	cleanup();
 	if (g_pInputManager) {
 		g_pInputManager->unregisterEvent(this, IInputManager::TEventType::EPause);
 	}
 }
 
-void CWorld::init() {
+bool CWorld::init(uint16_t _uLevel) {
 	ASSERT(g_pInputManager);
 	g_pInputManager->registerEvent(this, IInputManager::TEventType::EPause);
-}
 
-bool CWorld::loadLevel() {
+	m_uLevel = _uLevel;
 	m_pPlayer = nullptr;
 	m_pHudMessage = nullptr;
 	m_bIsGameOver = false;
@@ -66,16 +64,16 @@ bool CWorld::loadLevel() {
 
 	// Parse level file
 	char* fileName = "";
-	switch (m_uLevel) {
-		case 1:
-			fileName = "data/level1.json";
-			break;
-		case 2:
-			fileName = "data/level2.json";
-			break;
-		case 3:
-			fileName = "data/level3.json";
-			break;
+	switch (_uLevel) {
+	case 1:
+		fileName = "data/level1.json";
+		break;
+	case 2:
+		fileName = "data/level2.json";
+		break;
+	case 3:
+		fileName = "data/level3.json";
+		break;
 	}
 
 	// Force test level
@@ -92,36 +90,36 @@ bool CWorld::loadLevel() {
 	doc.ParseStream(is);
 
 	// Load general level rules
-	m_iPlayerLife       = doc["playerLife"].GetInt();
-	m_fPlayerSpeed      = doc["playerSpeed"].GetFloat();
-	m_iPickupSpawnWait  = doc["pickupSpawnWait"].GetInt();
-	m_iEnemySpawnWait   = doc["enemySpawnWait"].GetInt();
-	m_iMaxEnemies       = doc["maxEnemies"].GetInt();
+	m_iPlayerLife = doc["playerLife"].GetInt();
+	m_fPlayerSpeed = doc["playerSpeed"].GetFloat();
+	m_iPickupSpawnWait = doc["pickupSpawnWait"].GetInt();
+	m_iEnemySpawnWait = doc["enemySpawnWait"].GetInt();
+	m_iMaxEnemies = doc["maxEnemies"].GetInt();
 	m_iPickupSpawnTimer = m_iPickupSpawnWait;
 	m_mEntityPoints[Entity::EPickup] = doc["pickupPoints"].GetInt();
 
 	// Load enemy level configuration
 	float totalProbability = 0.0f;
-	const Value& enemies   = doc["enemies"];
+	const Value& enemies = doc["enemies"];
 	for (SizeType i = 0; i < enemies.Size(); i++) {
 		Entity::TType enemyType = static_cast<Entity::TType>(enemies[i]["id"].GetInt());
-		totalProbability          += enemies[i]["spawnProbability"].GetFloat();
+		totalProbability += enemies[i]["spawnProbability"].GetFloat();
 		m_mEnemyProbabilities[enemyType] = totalProbability;
-		m_mEntityPoints[enemyType]       = enemies[i]["points"].GetInt();
+		m_mEntityPoints[enemyType] = enemies[i]["points"].GetInt();
 	}
 
 	// Load turret level configuration
 	const Value& turrets = doc["turrets"];
 	for (SizeType i = 0; i < turrets.Size(); i++) {
 		std::vector<vec2> aimDirections;
-		vec2 pos                = vmake(turrets[i]["position"][0].GetFloat(), turrets[i]["position"][1].GetFloat());
-		vec2 moveDirection      = vmake(turrets[i]["moveDirection"][0].GetFloat(), turrets[i]["moveDirection"][1].GetFloat());
-		bool shuffleAim         = turrets[i]["shuffleAim"].GetBool();
+		vec2 pos = vmake(turrets[i]["position"][0].GetFloat(), turrets[i]["position"][1].GetFloat());
+		vec2 moveDirection = vmake(turrets[i]["moveDirection"][0].GetFloat(), turrets[i]["moveDirection"][1].GetFloat());
+		bool shuffleAim = turrets[i]["shuffleAim"].GetBool();
 		const Value& directions = turrets[i]["aimDirections"];
 		for (SizeType j = 0; j < directions.Size(); j++) {
 			aimDirections.push_back(vmake(directions[j][0].GetFloat(), directions[j][1].GetFloat()));
 		}
-		
+
 		// Create turrets
 		addEntity(g_pEntitiesFactory->createEnemy(pos, Entity::ETurret, moveDirection, aimDirections, shuffleAim));
 		++m_iCurrentEnemies;
@@ -141,7 +139,7 @@ bool CWorld::loadLevel() {
 	return true;
 }
 
-void CWorld::unloadLevel() {
+void CWorld::cleanup() {
 	for (size_t i = 0; i < m_vEntities.size(); ++i) {
 		DELETE(m_vEntities[i]);
 	}
@@ -153,6 +151,10 @@ void CWorld::unloadLevel() {
 	m_vEntitiesToAdd.clear();
 
 	m_vEntitiesToRemove.clear();
+
+	if (g_pInputManager) {
+		g_pInputManager->unregisterEvent(this, IInputManager::TEventType::EPause);
+	}
 }
 
 void CWorld::run(float _fDeltaTime) {
@@ -250,7 +252,7 @@ void CWorld::removePendingEntities() {
 	m_vEntitiesToRemove.clear();
 
 	if (m_bIsGameOver) {
-		g_pWorld->unloadLevel();
+		g_pWorld->cleanup();
 		std::string scoreMessage = g_pStringManager->getText("LTEXT_GUI_SCORE_MESSAGE") + std::to_string(m_uScore);
 		g_pMenuManager->getMenu(MenuManager::EGameOverMenu)->setTitle(scoreMessage.c_str());
 		g_pMenuManager->activateMenu(MenuManager::EGameOverMenu);
