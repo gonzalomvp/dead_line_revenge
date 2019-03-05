@@ -11,18 +11,20 @@ Slider::~Slider() {
 	DELETE(m_leftButton);
 	DELETE(m_rightButton);
 
-	g_pGraphicsEngine->removeGfxEntity(m_spriteBar);
+	if (g_pGraphicsEngine) {
+		g_pGraphicsEngine->removeGfxEntity(m_spriteBar);
+		g_pGraphicsEngine->removeGfxEntity(m_spriteBall);
+		g_pGraphicsEngine->removeGfxEntity(m_sliderText);
+	}
 	DELETE(m_spriteBar);
-
-	g_pGraphicsEngine->removeGfxEntity(m_spriteBall);
 	DELETE(m_spriteBall);
-
-	g_pGraphicsEngine->removeGfxEntity(m_sliderText);
 	DELETE(m_sliderText);
 
-	g_pInputManager->unregisterEvent(this, IInputManager::EMouseButtonDown);
-	g_pInputManager->unregisterEvent(this, IInputManager::EMouseButtonUp);
-	g_pInputManager->unregisterEvent(this, IInputManager::EMouseButtonHold);
+	if (g_pInputManager) {
+		g_pInputManager->unregisterEvent(this, IInputManager::EMouseButtonDown);
+		g_pInputManager->unregisterEvent(this, IInputManager::EMouseButtonUp);
+		g_pInputManager->unregisterEvent(this, IInputManager::EMouseButtonHold);
+	}
 }
 
 void Slider::init(const char* spriteLeftNormal, const char* spriteLeftPush, const char* spriteRightNormal, const char* spriteRightPush, const char* spriteBar, const char* spriteBall, float value) {

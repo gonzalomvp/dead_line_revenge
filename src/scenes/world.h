@@ -8,7 +8,7 @@
 
 class CWorld : public IInputManager::IListener {
 public:
-	CWorld(uint16_t _uLevel) : m_uLevel(_uLevel) {}
+	CWorld(uint16_t _uLevel);
 	~CWorld();
 
 	void         init           ();
@@ -49,7 +49,7 @@ private:
 	int      m_iEnemySpawnWait;
 	int      m_iCurrentEnemies;
 	int      m_iMaxEnemies;
-	std::map<Entity::TType, float> m_mEnemyProbability;
+	std::map<Entity::TType, float> m_mEnemyProbabilities;
 	std::map<Entity::TType, float> m_mEntityPoints;
 	std::vector<vec2> m_vSpawnPositions;
 

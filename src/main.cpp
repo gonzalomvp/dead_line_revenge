@@ -73,6 +73,8 @@ int Main(void) {
 	}
 
 	// Free memory
+	DELETE(g_pInputManager);
+	g_pInputManager = nullptr;
 	DELETE(g_pEntitiesFactory);
 	g_pEntitiesFactory = nullptr;
 	DELETE(g_pSceneManager);
@@ -83,8 +85,7 @@ int Main(void) {
 	g_pGraphicsEngine = nullptr;
 	DELETE(g_pSoundEngine);
 	g_pSoundEngine = nullptr;
-	DELETE(g_pInputManager);
-	g_pInputManager = nullptr;
+
 	DELETE(g_pStringManager);
 	g_pStringManager = nullptr;
 	

@@ -25,7 +25,6 @@ public:
 	Entity* createExplossion(vec2 _v2Pos, vec2 _v2Size, vec2 _v2SizeIncrement, int _iDuration, Entity::TType _eEntityType);
 	Entity* createEnemy(vec2 _v2Pos, Entity::TType _tEnemyType, Entity* _pPlayer);
 	Entity* createEnemy(vec2 _v2Pos, Entity::TType _tEnemyType, vec2 _v2MoveDir, std::vector<vec2> _vAimDirections, bool _bIshuffleAim);
-	Entity* createRandomEnemy(vec2 _v2Pos);
 	Entity* createWeaponPickup();
 	Entity* createHUDMessage(const std::string& _sMessage, vec2 _v2Pos, int _iDisplayTime);
 

@@ -217,13 +217,6 @@ Entity* CEntitiesFactory::createEnemy(vec2 _v2Pos, Entity::TType _tEnemyType, ve
 	return enemy;
 }
 
-Entity* CEntitiesFactory::createRandomEnemy(vec2 _v2Pos) {
-	Entity* enemy = nullptr;
-
-	
-	return enemy;
-}
-
 Entity* CEntitiesFactory::createWeaponPickup() {
 	// Calculate a random weapon type
 	ComponentWeapon::TType type = m_vWeaponPickups[rand() % m_vWeaponPickups.size()];

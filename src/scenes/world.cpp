@@ -1,19 +1,33 @@
 #include "common/stdafx.h"
 #include "scenes/world.h"
 
-#include "engine/sound_engine.h"
 #include "entities/entities_factory.h"
-#include "entities/components/component.h"
-#include "entities/components/bossIAComponent.h"
 #include "entities/message.h"
-#include "gui/string_manager.h"
 #include "gui/menu.h"
+#include "gui/string_manager.h"
 
 #include "rapidjson/document.h"
 #include "rapidjson/filereadstream.h"
 #include <fstream>
 
 using namespace rapidjson;
+
+CWorld::CWorld(uint16_t _uLevel) 
+: m_uLevel(_uLevel)
+, m_pPlayer(nullptr)
+, m_pHudMessage(nullptr)
+, m_bIsGameOver(false)
+, m_bIsPaused(false)
+, m_uScore(0)
+, m_iPlayerLife(0)
+, m_fPlayerSpeed(0.0f)
+, m_iPickupSpawnWait(0)
+, m_iEnemySpawnWait(0)
+, m_iCurrentEnemies(0)
+, m_iMaxEnemies(0)
+, m_iPickupSpawnTimer(0)
+, m_iEnemySpawnTimer(0)
+{}
 
 CWorld::~CWorld() {
 	unloadLevel();
@@ -33,9 +47,22 @@ bool CWorld::loadLevel() {
 	m_bIsGameOver = false;
 	m_bIsPaused = false;
 	m_uScore = 0;
+	m_iPlayerLife = 0;
+	m_fPlayerSpeed = 0.0f;
+	m_iPickupSpawnWait = 0;
+	m_iEnemySpawnWait = 0;
 	m_iCurrentEnemies = 0;
+	m_iMaxEnemies = 0;
 	m_iPickupSpawnTimer = 0;
 	m_iEnemySpawnTimer = 0;
+
+	m_vEntities.clear();
+	m_vEntitiesToRemove.clear();
+	m_vEntitiesToAdd.clear();
+
+	m_mEnemyProbabilities.clear();
+	m_mEntityPoints.clear();
+	m_vSpawnPositions.clear();
 
 	// Parse level file
 	char* fileName = "";
@@ -79,8 +106,8 @@ bool CWorld::loadLevel() {
 	for (SizeType i = 0; i < enemies.Size(); i++) {
 		Entity::TType enemyType = static_cast<Entity::TType>(enemies[i]["id"].GetInt());
 		totalProbability          += enemies[i]["spawnProbability"].GetFloat();
-		m_mEnemyProbability[enemyType] = totalProbability;
-		m_mEntityPoints[enemyType]      = enemies[i]["points"].GetInt();
+		m_mEnemyProbabilities[enemyType] = totalProbability;
+		m_mEntityPoints[enemyType]       = enemies[i]["points"].GetInt();
 	}
 
 	// Load turret level configuration
@@ -267,7 +294,7 @@ void CWorld::spawnNewEntities() {
 
 		// Pick a random enemy based on the configure probability of each one
 		float enemyType = CORE_FRand(0.0f, 1.0f);
-		for (auto itEnemyProbability = m_mEnemyProbability.begin(); itEnemyProbability != m_mEnemyProbability.end(); ++itEnemyProbability) {
+		for (auto itEnemyProbability = m_mEnemyProbabilities.begin(); itEnemyProbability != m_mEnemyProbabilities.end(); ++itEnemyProbability) {
 			if (enemyType <= itEnemyProbability->second) {
 				addEntity(g_pEntitiesFactory->createEnemy(spawnLocation, itEnemyProbability->first, m_pPlayer));
 				break;

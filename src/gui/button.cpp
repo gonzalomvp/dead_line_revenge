@@ -9,18 +9,20 @@
 //=============================================================================
 
 Button::~Button() {
-	g_pGraphicsEngine->removeGfxEntity(m_spriteNormal);
+	if (g_pGraphicsEngine) {
+		g_pGraphicsEngine->removeGfxEntity(m_spriteNormal);
+		g_pGraphicsEngine->removeGfxEntity(m_spritePush);
+		g_pGraphicsEngine->removeGfxEntity(m_buttonText);
+	}
 	DELETE(m_spriteNormal);
-
-	g_pGraphicsEngine->removeGfxEntity(m_spritePush);
 	DELETE(m_spritePush);
-
-	g_pGraphicsEngine->removeGfxEntity(m_buttonText);
 	DELETE(m_buttonText);
 
-	g_pInputManager->unregisterEvent(this, IInputManager::EMouseButtonDown);
-	g_pInputManager->unregisterEvent(this, IInputManager::EMouseButtonUp);
-	g_pInputManager->unregisterEvent(this, IInputManager::EMouseButtonHold);
+	if (g_pInputManager) {
+		g_pInputManager->unregisterEvent(this, IInputManager::EMouseButtonDown);
+		g_pInputManager->unregisterEvent(this, IInputManager::EMouseButtonUp);
+		g_pInputManager->unregisterEvent(this, IInputManager::EMouseButtonHold);
+	}
 }
 
 void Button::init(const char* normalImage, const char* pushImage, const std::string& text, bool notifyHold, unsigned int holdTime) {

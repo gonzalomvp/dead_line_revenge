@@ -8,15 +8,18 @@
 // Checkbox class
 //=============================================================================
 Checkbox::~Checkbox() {
-	g_pGraphicsEngine->removeGfxEntity(m_spriteChecked);
+	if (g_pGraphicsEngine) {
+		g_pGraphicsEngine->removeGfxEntity(m_spriteChecked);
+		g_pGraphicsEngine->removeGfxEntity(m_spriteUnchecked);
+	}
 	DELETE(m_spriteChecked);
-
-	g_pGraphicsEngine->removeGfxEntity(m_spriteUnchecked);
 	DELETE(m_spriteUnchecked);
 
-	g_pInputManager->unregisterEvent(this, IInputManager::EMouseButtonDown);
-	g_pInputManager->unregisterEvent(this, IInputManager::EMouseButtonUp);
-	g_pInputManager->unregisterEvent(this, IInputManager::EMouseButtonHold);
+	if (g_pInputManager) {
+		g_pInputManager->unregisterEvent(this, IInputManager::EMouseButtonDown);
+		g_pInputManager->unregisterEvent(this, IInputManager::EMouseButtonUp);
+		g_pInputManager->unregisterEvent(this, IInputManager::EMouseButtonHold);
+	}
 }
 
 
