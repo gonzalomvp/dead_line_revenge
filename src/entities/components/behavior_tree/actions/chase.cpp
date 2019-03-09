@@ -10,8 +10,8 @@ Chase::Chase(BehaviorTree* owner, float arriveDistance, float lostDistance) : Be
 
 Chase::~Chase() {
 
-	delete mPursueSteering;
-	delete mAlignToMovementSteering;
+	//delete mPursueSteering;
+	//delete mAlignToMovementSteering;
 }
 
 void Chase::onEnter() {

@@ -2,8 +2,8 @@
 	"playerLife": 1000,
 	"playerSpeed": 5,
 	"pickupPoints": 10,
-	"pickupSpawnWait": 10,
-	"enemySpawnWait": 100,
+	"pickupSpawnWait": 0.2,
+	"enemySpawnWait": 2.0,
 	"maxEnemies": 1,
 	"enemies": [
 	{

@@ -56,7 +56,7 @@ bool CEntitiesFactory::init(const char* _sConfigFile) {
 		weapon.bulletRange = weapons[i]["bulletRange"].GetInt();
 		weapon.numBullets = 1;
 		if (weapons[i].HasMember("numBullets")) {
-			weapon.numBullets = weapons[i]["numBullets"].GetInt();
+			weapon.numBullets = weapons[i]["numBullets"].GetUint();
 		}
 		weapon.isAutomatic = weapons[i]["isAutomatic"].GetBool();
 		weapon.isExplossive = weapons[i]["isExplossive"].GetBool();

@@ -10,7 +10,7 @@ void GoToRandomPosition::onEnter() {
 	MessageGetTransform messageSelfPos;
 	self->receiveMessage(&messageSelfPos);
 
-	mTargetPos = vmake(CORE_FRand(0.0 + messageSelfPos.size.x * 0.5f, WORLD_WIDTH - messageSelfPos.size.x * 0.5f), CORE_FRand(80 + messageSelfPos.size.y * 0.5f, WORLD_HEIGHT - 80 - messageSelfPos.size.y * 0.5f));
+	mTargetPos = vmake(CORE_FRand(0.0f + messageSelfPos.size.x * 0.5f, WORLD_WIDTH - messageSelfPos.size.x * 0.5f), CORE_FRand(80 + messageSelfPos.size.y * 0.5f, WORLD_HEIGHT - 80 - messageSelfPos.size.y * 0.5f));
 }
 
 Status GoToRandomPosition::update(float step) {

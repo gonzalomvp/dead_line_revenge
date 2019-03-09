@@ -22,12 +22,12 @@ CWorld::CWorld()
 , m_uScore(0)
 , m_iPlayerLife(0)
 , m_fPlayerSpeed(0.0f)
-, m_iPickupSpawnWait(0)
-, m_iEnemySpawnWait(0)
+, m_fPickupSpawnWait(0.0f)
+, m_fEnemySpawnWait(0.0f)
 , m_iCurrentEnemies(0)
 , m_iMaxEnemies(0)
-, m_iPickupSpawnTimer(0)
-, m_iEnemySpawnTimer(0)
+, m_fPickupSpawnTimer(0.0f)
+, m_fEnemySpawnTimer(0.0f)
 {}
 
 CWorld::~CWorld() {
@@ -43,12 +43,12 @@ bool CWorld::init(uint16_t _uLevel) {
 	m_uScore = 0;
 	m_iPlayerLife = 0;
 	m_fPlayerSpeed = 0.0f;
-	m_iPickupSpawnWait = 0;
-	m_iEnemySpawnWait = 0;
+	m_fPickupSpawnWait = 0.0f;
+	m_fEnemySpawnWait = 0.0f;
 	m_iCurrentEnemies = 0;
 	m_iMaxEnemies = 0;
-	m_iPickupSpawnTimer = 0;
-	m_iEnemySpawnTimer = 0;
+	m_fPickupSpawnTimer = 0.0f;
+	m_fEnemySpawnTimer = 0.0f;
 
 	m_vEntities.clear();
 	m_vEntitiesToRemove.clear();
@@ -79,7 +79,7 @@ bool CWorld::init(uint16_t _uLevel) {
 	}
 
 	// Force test level
-	//fileName = "data/levelTest.json";
+	psFileName = "data/levelTest.json";
 
 	FILE* pFile = fopen(psFileName, "r");
 	if (!pFile) return false;
@@ -97,10 +97,9 @@ bool CWorld::init(uint16_t _uLevel) {
 	ASSERT(doc.HasMember("playerSpeed"));
 	m_fPlayerSpeed = doc["playerSpeed"].GetFloat();
 	ASSERT(doc.HasMember("pickupSpawnWait"));
-	m_iPickupSpawnWait = doc["pickupSpawnWait"].GetInt();
-	m_iPickupSpawnTimer = m_iPickupSpawnWait;
+	m_fPickupSpawnWait = doc["pickupSpawnWait"].GetFloat();
 	ASSERT(doc.HasMember("enemySpawnWait"));
-	m_iEnemySpawnWait = doc["enemySpawnWait"].GetInt();
+	m_fEnemySpawnWait = doc["enemySpawnWait"].GetFloat();
 	ASSERT(doc.HasMember("maxEnemies"));
 	m_iMaxEnemies = doc["maxEnemies"].GetInt();
 	ASSERT(doc.HasMember("pickupPoints"));
@@ -117,7 +116,7 @@ bool CWorld::init(uint16_t _uLevel) {
 		fTotalProbability += enemies[i]["spawnProbability"].GetFloat();
 		m_mEnemyProbabilities[eEnemyType] = fTotalProbability;
 		ASSERT(enemies[i].HasMember("points"));
-		m_mEntityPoints[eEnemyType] = enemies[i]["points"].GetInt();
+		m_mEntityPoints[eEnemyType] = enemies[i]["points"].GetUint();
 	}
 
 	// Load turret level configuration
@@ -155,9 +154,11 @@ bool CWorld::init(uint16_t _uLevel) {
 	// Create player and first pickup
 	Entity* pPlayer = g_pEntitiesFactory->createPlayer(vmake(WORLD_WIDTH * 0.5f, WORLD_HEIGHT * 0.5f));
 	addEntity(pPlayer);
+	m_pPlayer = pPlayer;
 
 	Entity* pPickup = g_pEntitiesFactory->createWeaponPickup();
 	addEntity(pPickup);
+	m_fPickupSpawnTimer = m_fPickupSpawnWait;
 
 	// Generate spawn points
 	m_vSpawnPositions.push_back(vmake(WORLD_WIDTH / 2.0f, WORLD_HEIGHT));
@@ -202,7 +203,7 @@ void CWorld::run(float _fDeltaTime) {
 			g_pMenuManager->activateMenu(MenuManager::EGameOverMenu);
 		}
 		else {
-			spawnNewEntities();
+			spawnNewEntities(_fDeltaTime);
 			addPendingEntities();
 		}
 	}
@@ -255,15 +256,12 @@ void CWorld::removePendingEntities() {
 				break;
 			}
 			case Entity::EPICKUP: {
-				m_iPickupSpawnTimer = 0;
+				m_fPickupSpawnTimer = 0.0f;
 				break;
 			}
 
 #define REG_ENTITY(val, name) \
 			case Entity::E##val: \
-				if (m_iCurrentEnemies == m_iMaxEnemies) { \
-					m_iEnemySpawnTimer = 0; \
-				} \
 				--m_iCurrentEnemies; \
 				break;
 #include "REG_ENEMIES.h"
@@ -290,9 +288,6 @@ void CWorld::addPendingEntities() {
 	for (size_t i = 0; i < m_vEntitiesToAdd.size(); ++i) {
 		m_vEntities.push_back(m_vEntitiesToAdd[i]);
 		switch (m_vEntitiesToAdd[i]->getType()){
-			case Entity::EPLAYER: 
-				m_pPlayer = m_vEntitiesToAdd[i];
-				break;
 			case Entity::EHUDMESSAGE:
 				// Remove any previous HUD message still on screen
 				if (m_pHudMessage) {
@@ -305,33 +300,34 @@ void CWorld::addPendingEntities() {
 	m_vEntitiesToAdd.clear();
 }
 
-void CWorld::spawnNewEntities() {
+void CWorld::spawnNewEntities(float _fDeltaTime) {
 	// Spawn Pickup
-	if (m_iPickupSpawnTimer <= m_iPickupSpawnWait) {
-		++m_iPickupSpawnTimer;
-		if (m_iPickupSpawnTimer == m_iPickupSpawnWait) {
+	if (m_fPickupSpawnTimer < m_fPickupSpawnWait) {
+		m_fPickupSpawnTimer += _fDeltaTime;
+		if (m_fPickupSpawnTimer >= m_fPickupSpawnWait) {
 			Entity* pPickup = g_pEntitiesFactory->createWeaponPickup();
 			addEntity(pPickup);
 		}
 	}
-
+	
 	// Spawn Enemy
-	++m_iEnemySpawnTimer;
+	if (m_fEnemySpawnTimer < m_fEnemySpawnWait && m_iCurrentEnemies < m_iMaxEnemies) {
+		m_fEnemySpawnTimer += _fDeltaTime;
+		if (m_fEnemySpawnTimer >= m_fEnemySpawnWait) {
+			// Pick a random spawn point from the available ones
+			vec2 v2SpawnLocation = m_vSpawnPositions[rand() % m_vSpawnPositions.size()];
 
-	if (m_iEnemySpawnTimer >= m_iEnemySpawnWait && m_iCurrentEnemies < m_iMaxEnemies) {
-		// Pick a random spawn point from the available ones
-		vec2 spawnLocation = m_vSpawnPositions[rand() % m_vSpawnPositions.size()];
-
-		// Pick a random enemy based on the configure probability of each one
-		float enemyType = CORE_FRand(0.0f, 1.0f);
-		for (auto itEnemyProbability = m_mEnemyProbabilities.begin(); itEnemyProbability != m_mEnemyProbabilities.end(); ++itEnemyProbability) {
-			if (enemyType <= itEnemyProbability->second) {
-				addEntity(g_pEntitiesFactory->createEnemy(spawnLocation, itEnemyProbability->first, m_pPlayer));
-				break;
+			// Pick a random enemy based on the probability for each one
+			float fEnemyTypeProb = CORE_FRand(0.0f, 1.0f);
+			for (auto itEnemyProbability = m_mEnemyProbabilities.begin(); itEnemyProbability != m_mEnemyProbabilities.end(); ++itEnemyProbability) {
+				if (fEnemyTypeProb <= itEnemyProbability->second) {
+					Entity* enemy = g_pEntitiesFactory->createEnemy(v2SpawnLocation, itEnemyProbability->first, m_pPlayer);
+					addEntity(enemy);
+					++m_iCurrentEnemies;
+					m_fEnemySpawnTimer = 0.0f;
+					break;
+				}
 			}
 		}
-		
-		++m_iCurrentEnemies;
-		m_iEnemySpawnTimer = 0;
 	}
 }

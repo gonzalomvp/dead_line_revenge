@@ -20,7 +20,7 @@ public:
 	uint16_t     getScore       () const                             { return m_uScore;        }
 	Entity*      getPlayer      () const                             { return m_pPlayer;       }
 	int	         getPlayerLife  () const                             { return m_iPlayerLife;   }
-	int	         getPlayerSpeed () const                             { return m_fPlayerSpeed;  }
+	float	     getPlayerSpeed () const                             { return m_fPlayerSpeed;  }
 
 
 	void         addPoints    (Entity::TType _tEntityType)           { m_uScore += m_mEntityPoints[_tEntityType]; }
@@ -30,7 +30,7 @@ private:
 	void checkCollisions      ();
 	void removePendingEntities();
 	void addPendingEntities   ();
-	void spawnNewEntities     ();
+	void spawnNewEntities     (float _fDeltaTime);
 
 	uint16_t              m_uLevel;
 	Entity*               m_pPlayer;
@@ -45,15 +45,15 @@ private:
 	uint16_t m_uScore;
 	int      m_iPlayerLife;
 	float    m_fPlayerSpeed;
-	int      m_iPickupSpawnWait;
-	int      m_iEnemySpawnWait;
+	float    m_fPickupSpawnWait;
+	float    m_fEnemySpawnWait;
 	int      m_iCurrentEnemies;
 	int      m_iMaxEnemies;
-	std::map<Entity::TType, float> m_mEnemyProbabilities;
-	std::map<Entity::TType, float> m_mEntityPoints;
+	std::map<Entity::TType, float>    m_mEnemyProbabilities;
+	std::map<Entity::TType, uint16_t> m_mEntityPoints;
 	std::vector<vec2> m_vSpawnPositions;
 
 	// Timers
-	int m_iPickupSpawnTimer;
-	int m_iEnemySpawnTimer;
+	float m_fPickupSpawnTimer;
+	float m_fEnemySpawnTimer;
 };

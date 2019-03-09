@@ -11,6 +11,6 @@ protected:
 	virtual Status update(float step) override;
 
 private:
-	int mAngle;
+	float mAngle;
 };
 

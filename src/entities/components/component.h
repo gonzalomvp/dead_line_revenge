@@ -180,7 +180,7 @@ public:
 		int         bulletDamage;
 		int         bulletLife;
 		int         bulletRange;
-		int         numBullets;
+		uint16_t    numBullets;
 		bool        isAutomatic;
 		bool        isExplossive;
 		bool        isBouncy;

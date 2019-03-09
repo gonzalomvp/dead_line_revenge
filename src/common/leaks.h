@@ -1,11 +1,10 @@
 #ifndef _____LEAKS_CONTROL____
 #define _____LEAKS_CONTROL____
 
-#pragma warning(disable: 4100)
-#pragma warning(disable: 4996)
 #include <stdlib.h>
 
 #ifdef MEMORY_LEAKS_MONITOR
+#pragma warning(disable:4005)
 
 struct ALLOC_INFO 
 {

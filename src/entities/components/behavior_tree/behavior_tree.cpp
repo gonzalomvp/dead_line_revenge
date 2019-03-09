@@ -21,7 +21,8 @@
 #include "entities/components/behavior_tree/actions/rotate_aim.h"
 #include "entities/components/behavior_tree/actions/aim_player.h"
 
-#pragma pack(push,0)
+#pragma pack(push)
+#pragma pack()
 #include "tinyxml/tinyxml.h"
 #pragma pack(pop)
 

@@ -59,7 +59,7 @@ int Main(void) {
 	while (!SYS_GottaQuit()) {
 		// Prepared for deltaTime but not used yet
 		cEndTime = clock();
-		float fDeltaTime = static_cast<float>(cEndTime - cBeginTime);
+		float fDeltaTime = static_cast<float>(cEndTime - cBeginTime) / 1000.f;
 		cBeginTime = cEndTime;
 
 		g_pSceneManager->applyScene();
