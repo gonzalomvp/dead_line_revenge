@@ -162,7 +162,7 @@ public:
 
 	enum TType {
 #define REG_WEAPON(val, name) \
-		EE##val,
+		E##val,
 #include "REG_WEAPONS.h"
 #undef REG_WEAPON
 

@@ -81,7 +81,7 @@ void Menu::activate() {
 		m_title->activate();
 	}
 	setSelectedItem(0);
-	g_pInputManager->registerEvent(this, IInputManager::TEventType::EKeyDown);
+	//g_pInputManager->registerEvent(this, IInputManager::TEventType::EKeyDown);
 }
 
 void Menu::deactivate() {

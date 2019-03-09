@@ -338,7 +338,7 @@ bool ComponentPlayerController::onEvent(const IInputManager::Event& event) {
 ComponentWeapon::TWeaponInfo ComponentWeapon::s_aWeaponInfo[] =
 {
 #define REG_WEAPON(Val, name) \
-	{EE##Val, name},
+	{E##Val, name},
 #include "REG_WEAPONS.h"
 #undef REG_WEAPON
 };
@@ -381,7 +381,7 @@ void ComponentWeapon::run(float deltaTime) {
 		m_owner->receiveMessage(&messageGetTranform);
 
 		switch (m_mWeaponData.type) {
-			case EESHOTGUN: {
+			case ESHOTGUN: {
 				vec2 bulletDir = m_aimDirection;
 				g_pWorld->addEntity(g_pEntitiesFactory->createBullet(messageGetTranform.pos, vmake(10.0f, 10.0f), bulletDir, m_mWeaponData.bulletSpeed, m_mWeaponData.bulletDamage, m_mWeaponData.bulletLife, m_mWeaponData.bulletRange, m_mWeaponData.isExplossive, m_mWeaponData.isBouncy, m_owner->getType(), "data/shotgunBullet.png"));
 				float angle = vangle(m_aimDirection);
@@ -394,21 +394,21 @@ void ComponentWeapon::run(float deltaTime) {
 				g_pWorld->addEntity(g_pEntitiesFactory->createBullet(messageGetTranform.pos, vmake(10.0f, 10.0f), bulletDir, m_mWeaponData.bulletSpeed, m_mWeaponData.bulletDamage, m_mWeaponData.bulletLife, m_mWeaponData.bulletRange, m_mWeaponData.isExplossive, m_mWeaponData.isBouncy, m_owner->getType(), "data/shotgunBullet.png"));
 				break;
 			}
-			case EEMINES: {
-				g_pWorld->addEntity(g_pEntitiesFactory->createBullet(messageGetTranform.pos, vmake(20.0f, 20.0f), m_aimDirection, m_mWeaponData.bulletSpeed, m_mWeaponData.bulletDamage, m_mWeaponData.bulletLife, m_mWeaponData.bulletRange, m_mWeaponData.isExplossive, m_mWeaponData.isBouncy, Entity::EMine, "data/mine.png"));
+			case EMINES: {
+				g_pWorld->addEntity(g_pEntitiesFactory->createBullet(messageGetTranform.pos, vmake(20.0f, 20.0f), m_aimDirection, m_mWeaponData.bulletSpeed, m_mWeaponData.bulletDamage, m_mWeaponData.bulletLife, m_mWeaponData.bulletRange, m_mWeaponData.isExplossive, m_mWeaponData.isBouncy, Entity::EMINE, "data/mine.png"));
 				break;
 			}
-			case EEC4: {
+			case EC4: {
 				m_remoteBullet = g_pEntitiesFactory->createBullet(messageGetTranform.pos, vmake(20.0f, 20.0f), m_aimDirection, m_mWeaponData.bulletSpeed, m_mWeaponData.bulletDamage, m_mWeaponData.bulletLife, m_mWeaponData.bulletRange, m_mWeaponData.isExplossive, m_mWeaponData.isBouncy, m_owner->getType(), "data/c4.png");
 				g_pWorld->addEntity(m_remoteBullet);
 				break;
 			}
-			case EEROCKETLAUNCHER: {
+			case EROCKETLAUNCHER: {
 				g_pWorld->addEntity(g_pEntitiesFactory->createBullet(messageGetTranform.pos, vmake(15.0f, 15.0f), m_aimDirection, m_mWeaponData.bulletSpeed, m_mWeaponData.bulletDamage, m_mWeaponData.bulletLife, m_mWeaponData.bulletRange, m_mWeaponData.isExplossive, m_mWeaponData.isBouncy, m_owner->getType(), "data/rocket.png"));
 				break;
 			}
-			case EENUCLEARBOMB: {
-				g_pWorld->addEntity(g_pEntitiesFactory->createExplossion(messageGetTranform.pos, vmake(20.0f, 20.0f), vmake(8.0f, 8.0f), 100, Entity::ENuclearExplossion));
+			case ENUCLEARBOMB: {
+				g_pWorld->addEntity(g_pEntitiesFactory->createExplossion(messageGetTranform.pos, vmake(20.0f, 20.0f), vmake(8.0f, 8.0f), 100, Entity::ENUCLEAREXPLOSSION));
 				break;
 			}
 			default: {
@@ -511,7 +511,7 @@ void ComponentExplossive::receiveMessage(Message* message) {
 	if (msgDestroy) {
 		MessageGetTransform messageSelfPos;
 		m_owner->receiveMessage(&messageSelfPos);
-		g_pWorld->addEntity(g_pEntitiesFactory->createExplossion(messageSelfPos.pos, vmake(10.0f, 10.0f), vmake(2.0f, 2.0f), 50, Entity::EExplossion));
+		g_pWorld->addEntity(g_pEntitiesFactory->createExplossion(messageSelfPos.pos, vmake(10.0f, 10.0f), vmake(2.0f, 2.0f), 50, Entity::EEXPLOSSION));
 	}
 }
 
@@ -787,7 +787,7 @@ void ComponentWeaponPickup::receiveMessage(Message* message) {
 		switch (m_mWeaponData.type)
 		{
 #define REG_WEAPON(val, name) \
-			case ComponentWeapon::EE##val: \
+			case ComponentWeapon::E##val: \
 				hudMessage += g_pStringManager->getText("LTEXT_GUI_"#val"_MESSAGE"); \
 				break;
 #include "REG_WEAPONS.h"

@@ -11,6 +11,26 @@
 
 using namespace rapidjson;
 
+CEntitiesFactory::TEntityInfo CEntitiesFactory::s_aEntityInfo[] = {
+#define REG_ENTITY(Val, name) \
+	{Entity::E##Val, name},
+#include "REG_ENTITIES.h"
+#undef REG_ENTITY
+};
+
+Entity::TType CEntitiesFactory::getEntityTypeByName(const std::string& name) {
+	Entity::TType etype = Entity::EInvalid;
+	int i = 0;
+	while ((etype == Entity::EInvalid) && (i < Entity::NUM_ENTITIES))
+	{
+		if (name == s_aEntityInfo[i].sName) {
+			etype = s_aEntityInfo[i].eType;
+		}
+		i++;
+	}
+	return etype;
+}
+
 bool CEntitiesFactory::init(const char* _sConfigFile) {
 	FILE* file = fopen(_sConfigFile, "r");
 	if (!file) return false;
@@ -49,7 +69,7 @@ bool CEntitiesFactory::init(const char* _sConfigFile) {
 	const Value& enemies = doc["enemies"];
 	for (SizeType i = 0; i < enemies.Size(); i++) {
 		TEnemyDef enemy;
-		enemy.eType = static_cast<Entity::TType>(enemies[i]["id"].GetInt());
+		enemy.eType = getEntityTypeByName(enemies[i]["type"].GetString());
 		enemy.iLife = enemies[i]["life"].GetInt();
 		enemy.fSpeed = enemies[i]["speed"].GetFloat();
 		enemy.iCollisionDamage = enemies[i]["collisionDamage"].GetInt();
@@ -74,7 +94,7 @@ bool CEntitiesFactory::init(const char* _sConfigFile) {
 }
 
 Entity* CEntitiesFactory::createPlayer(vec2 _v2Pos) {
-	Entity* player = NEW(Entity, Entity::EPlayer);
+	Entity* player = NEW(Entity, Entity::EPLAYER);
 	ComponentTransform* transform = NEW(ComponentTransform, player, _v2Pos, vmake(30, 25));
 	transform->init();
 	ComponentRenderable* renderable = NEW(ComponentRenderable, player, "data/player.png", 0.0f, 1.0f, 5, 10);
@@ -83,7 +103,7 @@ Entity* CEntitiesFactory::createPlayer(vec2 _v2Pos) {
 	playerControl->init();
 	ComponentMove* movement = NEW(ComponentMove, player, vmake(0.0f, 0.0f), g_pWorld->getPlayerSpeed(), false, false);
 	movement->init();
-	ComponentWeapon* weapon = NEW(ComponentWeapon, player, m_mWeaponDef[ComponentWeapon::EEREVOLVER]);
+	ComponentWeapon* weapon = NEW(ComponentWeapon, player, m_mWeaponDef[ComponentWeapon::EREVOLVER]);
 	weapon->init();
 	ComponentCollider* collider = NEW(ComponentCollider, player, ComponentCollider::ERectCollider, -1, ComponentCollider::EPlayerCollider, ComponentCollider::EEnemyCollider | ComponentCollider::EEnemyWeaponCollider);
 	collider->init();
@@ -95,7 +115,7 @@ Entity* CEntitiesFactory::createPlayer(vec2 _v2Pos) {
 }
 
 Entity* CEntitiesFactory::createBullet(vec2 _v2Pos, vec2 _v2Size, vec2 _v2Direction, float _fSpeed, int _iDamage, int _iLife, int _iRange, bool _bIsExplossive, bool _bIsBouncy, Entity::TType _eEntityType, const char* _psTexture) {
-	Entity* bullet = NEW(Entity, Entity::EWeapon);
+	Entity* bullet = NEW(Entity, Entity::EWEAPON);
 	ComponentTransform* transform = NEW(ComponentTransform, bullet, _v2Pos, _v2Size);
 	transform->init();
 	ComponentRenderable* renderable = NEW(ComponentRenderable, bullet, _psTexture, vangle(_v2Direction), 1.0f, 5);
@@ -105,12 +125,12 @@ Entity* CEntitiesFactory::createBullet(vec2 _v2Pos, vec2 _v2Size, vec2 _v2Direct
 
 	// Depending on the type of bullet it has different collider setup
 	switch (_eEntityType) {
-	case Entity::EPlayer: {
+	case Entity::EPLAYER: {
 		ComponentCollider* collider = NEW(ComponentCollider, bullet, ComponentCollider::ECircleCollider, _iDamage, ComponentCollider::EPlayerWeaponCollider, ComponentCollider::EEnemyCollider | ComponentCollider::EBoundariesCollider);
 		collider->init();
 		break;
 	}
-	case Entity::EMine: {
+	case Entity::EMINE: {
 		ComponentCollider* collider = NEW(ComponentCollider, bullet, ComponentCollider::ECircleCollider, 0, ComponentCollider::ENoneCollider, ComponentCollider::EPlayerCollider | ComponentCollider::EEnemyCollider | ComponentCollider::EPlayerWeaponCollider | ComponentCollider::EEnemyWeaponCollider);
 		collider->setActivationDelay(20);
 		collider->init();
@@ -140,7 +160,7 @@ Entity* CEntitiesFactory::createExplossion(vec2 _v2Pos, vec2 _v2Size, vec2 _v2Si
 
 	// Nuclear explossion has different collider than standard explosssion
 	switch (_eEntityType) {
-	case Entity::ENuclearExplossion: {
+	case Entity::ENUCLEAREXPLOSSION: {
 		ComponentCollider* collider = NEW(ComponentCollider, explossion, ComponentCollider::ECircleCollider, -50, ComponentCollider::EPlayerWeaponCollider | ComponentCollider::EBoundariesCollider, ComponentCollider::ENoneCollider);
 		collider->init();
 		break;
@@ -167,7 +187,7 @@ Entity* CEntitiesFactory::createEnemy(vec2 _v2Pos, Entity::TType _tEnemyType, En
 	renderable->init();
 
 	// Melee and Big enemies follow player until contact
-	if (tEnemyDef.eType == Entity::EEnemyMelee || tEnemyDef.eType == Entity::EEnemyBig) {
+	if (tEnemyDef.eType == Entity::EENEMYMELEE || tEnemyDef.eType == Entity::EENEMYBIG) {
 		ComponentAIMelee* aiMelee = NEW(ComponentAIMelee, enemy, _pPlayer, tEnemyDef.fSpeed, 0);
 		aiMelee->init();
 	}
@@ -178,7 +198,7 @@ Entity* CEntitiesFactory::createEnemy(vec2 _v2Pos, Entity::TType _tEnemyType, En
 		gun->init();
 
 		// If a player is passed the enemy keep a distance between ComponentAIMelee and ComponentAIEvade distances and aim to it
-		if (_pPlayer && tEnemyDef.eType != Entity::EBoss) {
+		if (_pPlayer && tEnemyDef.eType != Entity::EENEMYBOSS) {
 			ComponentAIFire* aiFire = NEW(ComponentAIFire, enemy, _pPlayer);
 			aiFire->init();
 			ComponentAIMelee* aiMelee = NEW(ComponentAIMelee, enemy, _pPlayer, tEnemyDef.fSpeed, 200);
@@ -189,7 +209,7 @@ Entity* CEntitiesFactory::createEnemy(vec2 _v2Pos, Entity::TType _tEnemyType, En
 	}
 
 	// Boss AI
-	if (tEnemyDef.eType == Entity::EBoss) {
+	if (tEnemyDef.eType == Entity::EENEMYBOSS) {
 		BossIAComponent* bossAI = NEW(BossIAComponent, enemy, "data/bt/boss_bt.xml");
 		bossAI->init();
 	}
@@ -223,7 +243,7 @@ Entity* CEntitiesFactory::createWeaponPickup() {
 	// Calculate a random spawn position
 	vec2 randomPos = vmake(CORE_FRand(0.0, WORLD_WIDTH), CORE_FRand(80, WORLD_HEIGHT - 80));
 
-	Entity* weaponPickup = NEW(Entity, Entity::EPickup);
+	Entity* weaponPickup = NEW(Entity, Entity::EPICKUP);
 	ComponentTransform* transform = NEW(ComponentTransform, weaponPickup, randomPos, vmake(20, 20));
 	transform->init();
 	ComponentRenderable* renderable = NEW(ComponentRenderable, weaponPickup, "data/crate-1.png", 0.0f, 1.0f, 5);
@@ -240,7 +260,7 @@ Entity* CEntitiesFactory::createWeaponPickup() {
 }
 
 Entity* CEntitiesFactory::createHUDMessage(const std::string& _sMessage, vec2 _v2Pos, int _iDisplayTime) {
-	Entity* hudMessage = NEW(Entity, Entity::EHUDMessage);
+	Entity* hudMessage = NEW(Entity, Entity::EHUDMESSAGE);
 	ComponentHUDMessage* hudMessageComponent = NEW(ComponentHUDMessage, hudMessage, _v2Pos, _sMessage);
 	hudMessageComponent->init();
 	ComponentLife* life = NEW(ComponentLife, hudMessage, 1, _iDisplayTime, 0);

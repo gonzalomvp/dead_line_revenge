@@ -6,6 +6,7 @@
 #include "gui/menu.h"
 #include "gui/string_manager.h"
 
+#include <algorithm>
 #include "rapidjson/document.h"
 #include "rapidjson/filereadstream.h"
 #include <fstream>
@@ -13,7 +14,8 @@
 using namespace rapidjson;
 
 CWorld::CWorld() 
-: m_pPlayer(nullptr)
+: m_uLevel(0)
+, m_pPlayer(nullptr)
 , m_pHudMessage(nullptr)
 , m_bIsGameOver(false)
 , m_bIsPaused(false)
@@ -30,15 +32,9 @@ CWorld::CWorld()
 
 CWorld::~CWorld() {
 	cleanup();
-	if (g_pInputManager) {
-		g_pInputManager->unregisterEvent(this, IInputManager::TEventType::EPause);
-	}
 }
 
 bool CWorld::init(uint16_t _uLevel) {
-	ASSERT(g_pInputManager);
-	g_pInputManager->registerEvent(this, IInputManager::TEventType::EPause);
-
 	m_uLevel = _uLevel;
 	m_pPlayer = nullptr;
 	m_pHudMessage = nullptr;
@@ -62,73 +58,106 @@ bool CWorld::init(uint16_t _uLevel) {
 	m_mEntityPoints.clear();
 	m_vSpawnPositions.clear();
 
+	ASSERT(g_pInputManager);
+	g_pInputManager->registerEvent(this, IInputManager::TEventType::EPause);
+
 	// Parse level file
-	char* fileName = "";
+	const char* psFileName = "";
 	switch (_uLevel) {
 	case 1:
-		fileName = "data/level1.json";
+		psFileName = "data/level1.json";
 		break;
 	case 2:
-		fileName = "data/level2.json";
+		psFileName = "data/level2.json";
 		break;
 	case 3:
-		fileName = "data/level3.json";
+		psFileName = "data/level3.json";
 		break;
+	default:
+		// Invalid level
+		return false;
 	}
 
 	// Force test level
 	//fileName = "data/levelTest.json";
 
-	FILE* file = fopen(fileName, "r");
-	if (!file) return false;
+	FILE* pFile = fopen(psFileName, "r");
+	if (!pFile) return false;
 
-	fseek(file, 0, SEEK_END);
-	std::vector<char> fileData(ftell(file));
-	fseek(file, 0, SEEK_SET);
-	FileReadStream is(file, fileData.data(), fileData.size());
+	fseek(pFile, 0, SEEK_END);
+	std::vector<char> vFileData(ftell(pFile));
+	fseek(pFile, 0, SEEK_SET);
+	FileReadStream is(pFile, vFileData.data(), vFileData.size());
 	Document doc;
 	doc.ParseStream(is);
 
 	// Load general level rules
+	ASSERT(doc.HasMember("playerLife"));
 	m_iPlayerLife = doc["playerLife"].GetInt();
+	ASSERT(doc.HasMember("playerSpeed"));
 	m_fPlayerSpeed = doc["playerSpeed"].GetFloat();
+	ASSERT(doc.HasMember("pickupSpawnWait"));
 	m_iPickupSpawnWait = doc["pickupSpawnWait"].GetInt();
-	m_iEnemySpawnWait = doc["enemySpawnWait"].GetInt();
-	m_iMaxEnemies = doc["maxEnemies"].GetInt();
 	m_iPickupSpawnTimer = m_iPickupSpawnWait;
-	m_mEntityPoints[Entity::EPickup] = doc["pickupPoints"].GetInt();
+	ASSERT(doc.HasMember("enemySpawnWait"));
+	m_iEnemySpawnWait = doc["enemySpawnWait"].GetInt();
+	ASSERT(doc.HasMember("maxEnemies"));
+	m_iMaxEnemies = doc["maxEnemies"].GetInt();
+	ASSERT(doc.HasMember("pickupPoints"));
+	m_mEntityPoints[Entity::EPICKUP] = doc["pickupPoints"].GetInt();
 
 	// Load enemy level configuration
-	float totalProbability = 0.0f;
+	float fTotalProbability = 0.0f;
+	ASSERT(doc.HasMember("enemies"));
 	const Value& enemies = doc["enemies"];
 	for (SizeType i = 0; i < enemies.Size(); i++) {
-		Entity::TType enemyType = static_cast<Entity::TType>(enemies[i]["id"].GetInt());
-		totalProbability += enemies[i]["spawnProbability"].GetFloat();
-		m_mEnemyProbabilities[enemyType] = totalProbability;
-		m_mEntityPoints[enemyType] = enemies[i]["points"].GetInt();
+		ASSERT(enemies[i].HasMember("type"));
+		Entity::TType eEnemyType = CEntitiesFactory::getEntityTypeByName(enemies[i]["type"].GetString());
+		ASSERT(enemies[i].HasMember("spawnProbability"));
+		fTotalProbability += enemies[i]["spawnProbability"].GetFloat();
+		m_mEnemyProbabilities[eEnemyType] = fTotalProbability;
+		ASSERT(enemies[i].HasMember("points"));
+		m_mEntityPoints[eEnemyType] = enemies[i]["points"].GetInt();
 	}
 
 	// Load turret level configuration
 	const Value& turrets = doc["turrets"];
 	for (SizeType i = 0; i < turrets.Size(); i++) {
-		std::vector<vec2> aimDirections;
-		vec2 pos = vmake(turrets[i]["position"][0].GetFloat(), turrets[i]["position"][1].GetFloat());
-		vec2 moveDirection = vmake(turrets[i]["moveDirection"][0].GetFloat(), turrets[i]["moveDirection"][1].GetFloat());
-		bool shuffleAim = turrets[i]["shuffleAim"].GetBool();
+		std::vector<vec2> vAimDirections;
+		ASSERT(turrets[i].HasMember("position") && turrets[i]["position"].Size() == 2);
+		vec2 v2Pos = vmake(turrets[i]["position"][0].GetFloat(), turrets[i]["position"][1].GetFloat());
+
+		vec2 v2MoveDirection = vmake(0.0f, 0.0f);
+		if (turrets[i].HasMember("moveDirection")) {
+			ASSERT(turrets[i]["moveDirection"].Size() == 2);
+			v2MoveDirection = vmake(turrets[i]["moveDirection"][0].GetFloat(), turrets[i]["moveDirection"][1].GetFloat());
+		}
+			
+		bool bShuffleAim = true;
+		if (turrets[i].HasMember("shuffleAim")) {
+			bShuffleAim = turrets[i]["shuffleAim"].GetBool();
+		}
+
+		ASSERT(turrets[i].HasMember("aimDirections"));
 		const Value& directions = turrets[i]["aimDirections"];
 		for (SizeType j = 0; j < directions.Size(); j++) {
-			aimDirections.push_back(vmake(directions[j][0].GetFloat(), directions[j][1].GetFloat()));
+			ASSERT(directions[j].Size() == 2);
+			vAimDirections.push_back(vmake(directions[j][0].GetFloat(), directions[j][1].GetFloat()));
 		}
 
 		// Create turrets
-		addEntity(g_pEntitiesFactory->createEnemy(pos, Entity::ETurret, moveDirection, aimDirections, shuffleAim));
+		Entity* pTurret = g_pEntitiesFactory->createEnemy(v2Pos, Entity::EENEMYTURRET, v2MoveDirection, vAimDirections, bShuffleAim);
+		addEntity(pTurret);
 		++m_iCurrentEnemies;
 	}
-	fclose(file);
+	fclose(pFile);
 
 	// Create player and first pickup
-	addEntity(g_pEntitiesFactory->createPlayer(vmake(WORLD_WIDTH * 0.5f, WORLD_HEIGHT * 0.5f)));
-	addEntity(g_pEntitiesFactory->createWeaponPickup());
+	Entity* pPlayer = g_pEntitiesFactory->createPlayer(vmake(WORLD_WIDTH * 0.5f, WORLD_HEIGHT * 0.5f));
+	addEntity(pPlayer);
+
+	Entity* pPickup = g_pEntitiesFactory->createWeaponPickup();
+	addEntity(pPickup);
 
 	// Generate spawn points
 	m_vSpawnPositions.push_back(vmake(WORLD_WIDTH / 2.0f, WORLD_HEIGHT));
@@ -165,25 +194,33 @@ void CWorld::run(float _fDeltaTime) {
 		}
 		checkCollisions();
 		removePendingEntities();
-		spawnNewEntities();
-		addPendingEntities();
+
+		if (m_bIsGameOver) {
+			g_pWorld->cleanup();
+			std::string scoreMessage = g_pStringManager->getText("LTEXT_GUI_SCORE_MESSAGE") + std::to_string(m_uScore);
+			g_pMenuManager->getMenu(MenuManager::EGameOverMenu)->setTitle(scoreMessage.c_str());
+			g_pMenuManager->activateMenu(MenuManager::EGameOverMenu);
+		}
+		else {
+			spawnNewEntities();
+			addPendingEntities();
+		}
 	}
 }
 
 void CWorld::addEntity(Entity* _pEntity) {
+	ASSERT(_pEntity);
 	m_vEntitiesToAdd.push_back(_pEntity);
 }
 
 void CWorld::removeEntity(Entity* _pEntity) {
+	ASSERT(_pEntity);
 	m_vEntitiesToRemove.push_back(_pEntity);
 }
 
 bool CWorld::onEvent(const IInputManager::Event& _event) {
-	if (m_bIsGameOver)
-		return true;
-
-	IInputManager::TEventType eventType = _event.getType();
-	if (eventType == IInputManager::TEventType::EPause) {
+	IInputManager::TEventType eEventType = _event.getType();
+	if (eEventType == IInputManager::TEventType::EPause) {
 		m_bIsPaused = !m_bIsPaused;
 		if (m_bIsPaused) {
 			m_pPlayer->deactivate();
@@ -199,12 +236,12 @@ bool CWorld::onEvent(const IInputManager::Event& _event) {
 
 void CWorld::checkCollisions() {
 	for (size_t i = 0; i < m_vEntities.size(); ++i) {
-		Entity* entity1 = m_vEntities[i];
+		Entity* pEntity1 = m_vEntities[i];
 		for (size_t j = i + 1; j < m_vEntities.size(); ++j) {
-			Entity* entity2 = m_vEntities[j];
+			Entity* pEntity2 = m_vEntities[j];
 			MessageCheckCollision msgCheckCollision;
-			msgCheckCollision.other = entity2;
-			entity1->receiveMessage(&msgCheckCollision);
+			msgCheckCollision.other = pEntity2;
+			pEntity1->receiveMessage(&msgCheckCollision);
 		}
 	}
 }
@@ -213,60 +250,50 @@ void CWorld::removePendingEntities() {
 	for (auto it = m_vEntitiesToRemove.begin(); it != m_vEntitiesToRemove.end(); ++it) {
 		Entity::TType type = (*it)->getType();
 		switch (type) {
-			case Entity::EPlayer: {
+			case Entity::EPLAYER: {
 				m_bIsGameOver = true;
 				break;
 			}
-			case Entity::EPickup: {
+			case Entity::EPICKUP: {
 				m_iPickupSpawnTimer = 0;
 				break;
 			}
-			case Entity::EEnemyMelee:
-			case Entity::EEnemyBig:
-			case Entity::EEnemyRange:
-			case Entity::ETurret:
-			case Entity::EBoss: {
-				--m_iCurrentEnemies;
+
+#define REG_ENTITY(val, name) \
+			case Entity::E##val: \
+				if (m_iCurrentEnemies == m_iMaxEnemies) { \
+					m_iEnemySpawnTimer = 0; \
+				} \
+				--m_iCurrentEnemies; \
 				break;
-			}
-			case Entity::EHUDMessage: {
+#include "REG_ENEMIES.h"
+#undef REG_ENTITY
+
+			case Entity::EHUDMESSAGE: {
 				if (m_pHudMessage == *it) {
 					m_pHudMessage = nullptr;
 				}
 				break;
 			}
 		}
-		auto it2 = m_vEntities.begin();
-		bool bErased = false;
-		while (!bErased && (it2 != m_vEntities.end())) {
-			if (*it == *it2) {
-				DELETE(*it2);
-				m_vEntities.erase(it2);
-				bErased = true;
-			}
-			else {
-				++it2;
-			}
-		}
+
+		m_vEntities.erase(
+			std::remove(m_vEntities.begin(), m_vEntities.end(), *it),
+			m_vEntities.end()
+		);
+		DELETE(*it);
 	}
 	m_vEntitiesToRemove.clear();
-
-	if (m_bIsGameOver) {
-		g_pWorld->cleanup();
-		std::string scoreMessage = g_pStringManager->getText("LTEXT_GUI_SCORE_MESSAGE") + std::to_string(m_uScore);
-		g_pMenuManager->getMenu(MenuManager::EGameOverMenu)->setTitle(scoreMessage.c_str());
-		g_pMenuManager->activateMenu(MenuManager::EGameOverMenu);
-	}
 }
 
 void CWorld::addPendingEntities() {
 	for (size_t i = 0; i < m_vEntitiesToAdd.size(); ++i) {
 		m_vEntities.push_back(m_vEntitiesToAdd[i]);
 		switch (m_vEntitiesToAdd[i]->getType()){
-			case Entity::EPlayer: 
+			case Entity::EPLAYER: 
 				m_pPlayer = m_vEntitiesToAdd[i];
 				break;
-			case Entity::EHUDMessage:
+			case Entity::EHUDMESSAGE:
 				// Remove any previous HUD message still on screen
 				if (m_pHudMessage) {
 					g_pWorld->removeEntity(m_pHudMessage);
@@ -283,7 +310,8 @@ void CWorld::spawnNewEntities() {
 	if (m_iPickupSpawnTimer <= m_iPickupSpawnWait) {
 		++m_iPickupSpawnTimer;
 		if (m_iPickupSpawnTimer == m_iPickupSpawnWait) {
-			addEntity(g_pEntitiesFactory->createWeaponPickup());
+			Entity* pPickup = g_pEntitiesFactory->createWeaponPickup();
+			addEntity(pPickup);
 		}
 	}
 

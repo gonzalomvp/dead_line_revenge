@@ -8,25 +8,21 @@
 	"enemies": [
 	{
 		"type": "melee",
-		"id": 0,
 		"spawnProbability": 0.6,
 		"points": 1
 	},
 	{
 		"type": "big",
-		"id": 1,
 		"spawnProbability": 0.3,
 		"points": 2
 	},
 	{
 		"type": "range",
-		"id": 2,
 		"spawnProbability": 0.1,
 		"points": 4
 	},
 	{
 		"type": "turret",
-		"id": 3,
 		"spawnProbability": 0,
 		"points": 3
 	}
@@ -34,13 +30,11 @@
 	"turrets": [
 	{
 		"position": [ 100 ,380 ],
-		"moveDirection": [ 0, 0 ],
 		"aimDirections": [[ 0, -1 ]],
 		"shuffleAim": true
 	},
 	{
 		"position": [ 540 ,100 ],
-		"moveDirection": [ 0, 0 ],
 		"aimDirections": [[ 0, 1 ]],
 		"shuffleAim": true
 	}

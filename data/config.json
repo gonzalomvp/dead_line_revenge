@@ -2,7 +2,6 @@
 	"weapons": [
 	{
 		"name": "revolver",
-		"id": 0,
 		"fireRate": 20,
 		"reloadTime": 60,
 		"capacity": 6,
@@ -147,7 +146,6 @@
 	"enemies": [
 	{
 		"type": "melee",
-		"id": 0,
 		"life": 1,
 		"speed": 3,
 		"collisionDamage": -1,
@@ -156,7 +154,6 @@
 	},
 	{
 		"type": "big",
-		"id": 1,
 		"life": 4,
 		"speed": 2,
 		"collisionDamage": -2,
@@ -165,7 +162,6 @@
 	},
 	{
 		"type": "range",
-		"id": 2,
 		"life": 1,
 		"speed": 2,
 		"collisionDamage": -1,
@@ -175,7 +171,6 @@
 	},
 	{
 		"type": "turret",
-		"id": 3,
 		"life": 3,
 		"speed": 2,
 		"collisionDamage": -1,
@@ -186,7 +181,6 @@
 	,
 	{
 		"type": "boss",
-		"id": 4,
 		"life": 40,
 		"speed": 2,
 		"collisionDamage": -2,

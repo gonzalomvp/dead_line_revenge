@@ -18,6 +18,8 @@ public:
 	//CEntitiesFactory();
 	//~CEntitiesFactory();
 
+	static Entity::TType getEntityTypeByName(const std::string& name);
+
 	bool init(const char* _sConfigFile);
 
 	Entity* createPlayer(vec2 _v2Pos);
@@ -34,4 +36,12 @@ public:
 	std::map<Entity::TType, TEnemyDef> m_mEnemyDef;
 	std::map<ComponentWeapon::TType, ComponentWeapon::TWeaponData> m_mWeaponDef;
 	std::vector<ComponentWeapon::TType> m_vWeaponPickups;
+
+private:
+	struct TEntityInfo {
+		Entity::TType eType;
+		std::string sName;
+	};
+
+	static TEntityInfo s_aEntityInfo[];
 };

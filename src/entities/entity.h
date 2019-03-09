@@ -6,19 +6,15 @@ struct Message;
 class Entity {
 public:
 	enum TType {
-		EEnemyMelee,
-		EEnemyBig,
-		EEnemyRange,
-		ETurret,
-		EBoss,
-		EPlayer,
-		EPickup,
-		EWeapon,
-		EMine,
-		EExplossion,
-		ENuclearExplossion,
-		EHUDMessage,
+#define REG_ENTITY(val, name) \
+		E##val,
+#include "REG_ENTITIES.h"
+#undef REG_ENTITY
+
+		EInvalid,
 	};
+
+	static const int NUM_ENTITIES = EInvalid;
 
 	Entity(TType type) : m_type(type) {}
 	~Entity();
