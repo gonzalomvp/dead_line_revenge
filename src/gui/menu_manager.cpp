@@ -114,7 +114,7 @@ void CMenuManager::deactivateMenu() {
 	ShowCursor(false);
 }
 
-Menu* CMenuManager::getMenu(EMenu _eMenu) {
+CMenu* CMenuManager::getMenu(EMenu _eMenu) {
 	ASSERT(m_mMenus.count(_eMenu));
 
 	return m_mMenus[_eMenu];
@@ -198,7 +198,7 @@ void CMenuManager::onValueChange(Slider* _pSlider) {
 }
 
 void CMenuManager::createMainMenu() {
-	Menu* menu = NEW(Menu, s_psMainMenuName, vmake(0.0f, 0.0f), vmake(0.0f, 0.0f), false);
+	CMenu* menu = NEW(CMenu, s_psMainMenuName, vmake(0.0f, 0.0f), vmake(0.0f, 0.0f), false);
 	m_mMenus[EMainMenu] = menu;
 
 	Button* button = NEW(Button, s_psPlayMenuButtonName, vmake(SCR_WIDTH / 2, SCR_HEIGHT * 0.6), vmake(150, 35));
@@ -218,7 +218,7 @@ void CMenuManager::createMainMenu() {
 }
 
 void CMenuManager::createPlayMenu() {
-	Menu* menu = NEW(Menu, s_psPlayMenuName, vmake(0.0f, 0.0f), vmake(0.0f, 0.0f), false);
+	CMenu* menu = NEW(CMenu, s_psPlayMenuName, vmake(0.0f, 0.0f), vmake(0.0f, 0.0f), false);
 	m_mMenus[EPlayMenu] = menu;
 
 	Button* button = NEW(Button, s_psEasyButtonName, vmake(SCR_WIDTH / 2, SCR_HEIGHT * 0.65), vmake(150, 35));
@@ -243,7 +243,7 @@ void CMenuManager::createPlayMenu() {
 }
 
 void CMenuManager::createOptionsMenu() {
-	Menu* menu = NEW(Menu, s_psOptionsMenuName, vmake(0.0f, 0.0f), vmake(0.0f, 0.0f), false);
+	CMenu* menu = NEW(CMenu, s_psOptionsMenuName, vmake(0.0f, 0.0f), vmake(0.0f, 0.0f), false);
 	m_mMenus[EOptionsMenu] = menu;
 
 	Label* label = NEW(Label, s_psSettingsMusicLabelName, vmake(SCR_WIDTH / 2 - 100, SCR_HEIGHT * 0.8), vmake(0.0, 0.0));
@@ -289,7 +289,7 @@ void CMenuManager::createOptionsMenu() {
 }
 
 void CMenuManager::createPauseMenu() {
-	Menu* menu = NEW(Menu, s_psPauseMenuName, vmake(0.0f, 0.0f), vmake(0.0f, 0.0f), false);
+	CMenu* menu = NEW(CMenu, s_psPauseMenuName, vmake(0.0f, 0.0f), vmake(0.0f, 0.0f), false);
 	m_mMenus[EPauseMenu] = menu;
 
 	Button* button = NEW(Button, s_psResumeButtonName, vmake(SCR_WIDTH / 2, SCR_HEIGHT * 0.6), vmake(175, 35));
@@ -304,7 +304,7 @@ void CMenuManager::createPauseMenu() {
 }
 
 void CMenuManager::createGameOverMenu() {
-	Menu* menu = NEW(Menu, s_psGameOverMenuName, vmake(0.0f, 0.0f), vmake(0.0f, 0.0f), false);
+	CMenu* menu = NEW(CMenu, s_psGameOverMenuName, vmake(0.0f, 0.0f), vmake(0.0f, 0.0f), false);
 	m_mMenus[EGameOverMenu] = menu;
 
 	Button* button = NEW(Button, s_psRetryButtonName, vmake(SCR_WIDTH / 2, SCR_HEIGHT * 0.6), vmake(175, 35));

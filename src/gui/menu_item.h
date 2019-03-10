@@ -1,28 +1,37 @@
 #pragma once
 
-#include "../engine/graphics_engine.h"
+#include "button.h"
+#include "checkbox.h"
+#include "control.h"
+#include "slider.h"
 
+#include <map>
+
+class Text;
+
+//=============================================================================
+// MenuItem class
+//=============================================================================
 class MenuItem {
 public:
-	MenuItem(std::string name, vec2 pos, std::string text) : m_name(name), m_pos(pos), m_text(text), m_hasFocus(false), m_selectedOption(-1) { m_gfxText = NEW(Text, "", vmake(0.0f, 0.0f), 1); }
-	~MenuItem() { DELETE(m_gfxText); }
+	MenuItem(const std::string& name, const std::string& text, const vec2& pos) : m_name(name), m_text(text), m_pos(pos), m_gfxText(nullptr), m_hasFocus(false), m_selectedOption(0) {}
+	~MenuItem();
 
-	std::string getName() { return m_name; }
-	void setFocus(bool hasFocus) { m_hasFocus = hasFocus; }
-	void addOption(std::string option) { m_options.push_back(option); m_selectedOption = 0; }
-	void nextOption();
-	void init();
-	void activate();
+	void init      ();
+	void activate  ();
 	void deactivate();
-	void run();
-
-protected:
-	vec2 m_pos;
-	std::string m_name;
-	std::string m_text;
-	Text* m_gfxText;
-	bool m_hasFocus;
-	bool m_active;
+	void run       ();
+	void nextOption();
+	
+	void        addOption(const std::string& option) { m_options.push_back(option); }
+	std::string getName  () const                    { return m_name;               }
+	void        setFocus (bool hasFocus)             { m_hasFocus = hasFocus;       }
+private:
+	std::string              m_name;
+	std::string              m_text;
+	vec2                     m_pos;
+	Text*                m_gfxText;
+	bool                     m_hasFocus;
+	size_t                   m_selectedOption;
 	std::vector<std::string> m_options;
-	size_t m_selectedOption;
 };

@@ -66,6 +66,7 @@
     <ClInclude Include="..\src\gui\control.h" />
     <ClInclude Include="..\src\gui\label.h" />
     <ClInclude Include="..\src\gui\menu.h" />
+    <ClInclude Include="..\src\gui\menu_item.h" />
     <ClInclude Include="..\src\gui\menu_manager.h" />
     <ClInclude Include="..\src\gui\slider.h" />
     <ClInclude Include="..\src\gui\string_manager.h" />
@@ -124,9 +125,9 @@
     <ClCompile Include="..\src\entities\entity.cpp" />
     <ClCompile Include="..\src\gui\button.cpp" />
     <ClCompile Include="..\src\gui\checkbox.cpp" />
-    <ClCompile Include="..\src\gui\control.cpp" />
     <ClCompile Include="..\src\gui\label.cpp" />
     <ClCompile Include="..\src\gui\menu.cpp" />
+    <ClCompile Include="..\src\gui\menu_item.cpp" />
     <ClCompile Include="..\src\gui\menu_manager.cpp" />
     <ClCompile Include="..\src\gui\slider.cpp" />
     <ClCompile Include="..\src\gui\string_manager.cpp" />

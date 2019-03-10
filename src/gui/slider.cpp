@@ -28,28 +28,28 @@ Slider::~Slider() {
 }
 
 void Slider::init(const char* spriteLeftNormal, const char* spriteLeftPush, const char* spriteRightNormal, const char* spriteRightPush, const char* spriteBar, const char* spriteBall, float value) {
-	m_leftButton = NEW(Button, m_name, vmake(m_pos.x - (m_size.x + 32) / 2, m_pos.y), vmake(32, 32));
+	m_leftButton = NEW(Button, m_sName, vmake(m_v2Pos.x - (m_v2Size.x + 32) / 2, m_v2Pos.y), vmake(32, 32));
 	m_leftButton->init("data/ui/Slider_Left_Normal.png", "data/ui/Slider_Left_Push.png", "", true);
 	m_leftButton->addListener(this);
 
-	m_rightButton = NEW(Button, m_name, vmake(m_pos.x + (m_size.x + 32) / 2, m_pos.y), vmake(32, 32));
+	m_rightButton = NEW(Button, m_sName, vmake(m_v2Pos.x + (m_v2Size.x + 32) / 2, m_v2Pos.y), vmake(32, 32));
 	m_rightButton->init("data/ui/Slider_Right_Normal.png", "data/ui/Slider_Right_Push.png", "", true);
 	m_rightButton->addListener(this);
 
-	m_spriteBar = NEW(Sprite, g_pGraphicsEngine->getTexture("data/ui/Slider_bar.png"), m_pos, vmake(m_size.x, 5), 0.f, 1.f, 2);
+	m_spriteBar = NEW(Sprite, g_pGraphicsEngine->getTexture("data/ui/Slider_bar.png"), m_v2Pos, vmake(m_v2Size.x, 5), 0.f, 1.f, 2);
 	g_pGraphicsEngine->addGfxEntity(m_spriteBar);
 
-	m_spriteBall = NEW(Sprite, g_pGraphicsEngine->getTexture("data/ui/Slider_ball.png"), m_pos, vmake(20, 20), 0.f, 1.f, 1);
+	m_spriteBall = NEW(Sprite, g_pGraphicsEngine->getTexture("data/ui/Slider_ball.png"), m_v2Pos, vmake(20, 20), 0.f, 1.f, 1);
 	g_pGraphicsEngine->addGfxEntity(m_spriteBall);
 
-	m_sliderText = NEW(Text, "", vmake(m_pos.x + m_size.x * 0.5f + m_rightButton->getSize().x, m_pos.y - 6), 1);
+	m_sliderText = NEW(Text, "", vmake(m_v2Pos.x + m_v2Size.x * 0.5f + m_rightButton->getSize().x, m_v2Pos.y - 6), 1);
 	g_pGraphicsEngine->addGfxEntity(m_sliderText);
 
 	m_value = value;
 }
 
 void Slider::activate() {
-	Control::activate();
+	CControl::activate();
 
 	m_leftButton->activate();
 	m_rightButton->activate();
@@ -67,7 +67,7 @@ void Slider::activate() {
 }
 
 void Slider::deactivate() {
-	Control::deactivate();
+	CControl::deactivate();
 
 	m_leftButton->deactivate();
 	m_rightButton->deactivate();
@@ -80,12 +80,12 @@ void Slider::deactivate() {
 	g_pInputManager->unregisterEvent(this, IInputManager::EMouseButtonHold);
 }
 
-void Slider::run() {
-	if (m_isActive) {
-		Control::run();
+void Slider::run(float _fDeltaTime) {
+	if (m_bIsActive) {
+		CControl::run(_fDeltaTime);
 
-		m_leftButton->run();
-		m_rightButton->run();
+		m_leftButton->run(_fDeltaTime);
+		m_rightButton->run(_fDeltaTime);
 	}
 }
 
@@ -123,8 +123,8 @@ bool Slider::onEvent(const IInputManager::CEvent& event) {
 			break;
 		case IInputManager::EMouseButtonHold:
 			if (m_isBallPushed) {
-				float initX = m_pos.x - m_size.x / 2.0f + 5.0f;
-				float endX = m_pos.x + m_size.x / 2.0f - 5.0f;
+				float initX = m_v2Pos.x - m_v2Size.x / 2.0f + 5.0f;
+				float endX = m_v2Pos.x + m_v2Size.x / 2.0f - 5.0f;
 				float newX = mouseEvent.getPos().x;
 				if (newX < initX) {
 					newX = initX;
@@ -132,7 +132,7 @@ bool Slider::onEvent(const IInputManager::CEvent& event) {
 				else if (newX > endX) {
 					newX = endX;
 				}
-				m_spriteBall->setPos(vmake(newX, m_pos.y));
+				m_spriteBall->setPos(vmake(newX, m_v2Pos.y));
 				calculateValueFromPosition();
 			}
 			else if (!isMouseOverBar) {
@@ -155,8 +155,8 @@ void Slider::onClick(Button* button) {
 }
 
 void Slider::calculateValueFromPosition() {
-	float initX = m_pos.x - m_size.x / 2.0f + 5.0f;
-	float endX = m_pos.x + m_size.x / 2.0f - 5.0f;
+	float initX = m_v2Pos.x - m_v2Size.x / 2.0f + 5.0f;
+	float endX = m_v2Pos.x + m_v2Size.x / 2.0f - 5.0f;
 	float barLength = endX - initX;
 
 	float distFromInit = m_spriteBall->getPos().x - initX;
@@ -173,11 +173,11 @@ void Slider::setValue(float value) {
 	}
 
 	if (m_spriteBall) {
-		float initX = m_pos.x - m_size.x / 2.0f + 5.0f;
-		float endX = m_pos.x + m_size.x / 2.0f - 5.0f;
+		float initX = m_v2Pos.x - m_v2Size.x / 2.0f + 5.0f;
+		float endX = m_v2Pos.x + m_v2Size.x / 2.0f - 5.0f;
 		float barLength = endX - initX;
 
-		m_spriteBall->setPos(vmake(initX + (barLength)* m_value, m_pos.y));
+		m_spriteBall->setPos(vmake(initX + (barLength)* m_value, m_v2Pos.y));
 	}
 	if (m_sliderText) {
 		m_sliderText->setText(std::to_string(static_cast<int>(roundf(m_value * 100.0f))) + "%");

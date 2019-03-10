@@ -11,14 +11,14 @@ class Text;
 //=============================================================================
 // Button class
 //=============================================================================
-class Slider : public Control, Button::IListener {
+class Slider : public CControl, Button::IListener {
 public:
 	class IListener {
 	public:
 		virtual void onValueChange(Slider* slider) = 0;
 	};
 
-	Slider(const std::string& name, const vec2& pos, const vec2& size, bool isActive = true) : Control(name, pos, size, isActive) {}
+	Slider(const std::string& name, const vec2& pos, const vec2& size, bool isActive = true) : CControl(name, pos, size, isActive) {}
 	~Slider();
 
 	void init(const char* spriteLeftNormal, const char* spriteLeftPush, const char* spriteRightNormal, const char* spriteRightPush, const char* spriteBar, const char* spriteBall, float value);
@@ -29,7 +29,7 @@ public:
 	// Control Interface
 	virtual void activate()   override;
 	virtual void deactivate() override;
-	virtual void run()        override;
+	virtual void run(float _fDeltaTime)        override;
 	virtual bool onEvent(const IInputManager::CEvent&) override;
 
 	// Button::IListener Interface

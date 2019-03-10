@@ -1,25 +1,25 @@
 #pragma once
 
-#include "../input/input_manager.h"
+#include "input/input_manager.h"
 
-class Control : public IInputManager::IListener {
+class CControl : public IInputManager::IListener {
 public:
-	Control(const std::string& name, const vec2& pos, const vec2& size, bool isActive = true) : m_name(name), m_pos(pos), m_size(size), m_isActive(isActive) {}
-	virtual ~Control() {}
+	CControl(const std::string& _sName, const vec2& _v2Pos, const vec2& _v2Size, bool _bIsActive = true) : m_sName(_sName), m_v2Pos(_v2Pos), m_v2Size(_v2Size), m_bIsActive(_bIsActive) {}
+	virtual ~CControl() {}
 
-	virtual void run       () {}
-	virtual void activate  () { m_isActive = true;  }
-	virtual void deactivate() { m_isActive = false; }
+	virtual void run       (float _fDeltaTime) {}
+	virtual void activate  () { m_bIsActive = true;  }
+	virtual void deactivate() { m_bIsActive = false; }
 
-	virtual bool onEvent(const IInputManager::CEvent& event) = 0;
+	virtual bool onEvent(const IInputManager::CEvent& event) { return true; }
 	
-	bool        isActive() const { return m_isActive; }
-	std::string getName () const { return m_name;     }
-	vec2        getSize () const { return m_size;     }
+	bool        isActive() const { return m_bIsActive; }
+	std::string getName () const { return m_sName;     }
+	vec2        getSize () const { return m_v2Size;    }
 
 protected:
-	vec2        m_pos;
-	vec2        m_size;
-	std::string m_name;
-	bool        m_isActive;
+	std::string m_sName;
+	vec2        m_v2Pos;
+	vec2        m_v2Size;
+	bool        m_bIsActive;
 };

@@ -219,6 +219,9 @@
     <ClInclude Include="..\src\gui\control.h">
       <Filter>src\gui</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\gui\menu_item.h">
+      <Filter>src\gui</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\main.cpp">
@@ -389,7 +392,7 @@
     <ClCompile Include="..\src\gui\menu_manager.cpp">
       <Filter>src\gui</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\gui\control.cpp">
+    <ClCompile Include="..\src\gui\menu_item.cpp">
       <Filter>src\gui</Filter>
     </ClCompile>
   </ItemGroup>

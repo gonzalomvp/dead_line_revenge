@@ -6,7 +6,7 @@
 
 #include <map>
 
-class Menu;
+class CMenu;
 
 class CMenuManager : public Button::IListener, public Checkbox::IListener, public Slider::IListener {
 public:
@@ -25,7 +25,7 @@ public:
 	void         run           (float _fDeltaTime);
 	void         activateMenu  (EMenu _eMenu);
 	void         deactivateMenu();
-	Menu*        getMenu       (EMenu _eMenu);
+	CMenu*       getMenu       (EMenu _eMenu);
 
 	virtual void onClick       (Button* _pButton)     override;
 	virtual void onClick       (Checkbox* _pCheckbox) override;
@@ -39,6 +39,6 @@ private:
 	void createPauseMenu   ();
 	void createGameOverMenu();
 
-	Menu*                  m_pActiveMenu;
-	std::map<EMenu, Menu*> m_mMenus;
+	CMenu*                  m_pActiveMenu;
+	std::map<EMenu, CMenu*> m_mMenus;
 };

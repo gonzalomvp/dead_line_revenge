@@ -9,14 +9,14 @@ class Text;
 //=============================================================================
 // Button class
 //=============================================================================
-class Button : public Control {
+class Button : public CControl {
 public:
 	class IListener {
 	public:
 		virtual void onClick(Button* button) = 0;
 	};
 
-	Button(const std::string& name, const vec2& pos, const vec2& size, bool isActive = true) : Control(name, pos, size, isActive) {}
+	Button(const std::string& name, const vec2& pos, const vec2& size, bool isActive = true) : CControl(name, pos, size, isActive) {}
 	~Button();
 
 	void init(const char* normalImage, const char* pushImage, const std::string& text, bool notifyHold = false, unsigned int holdTimer = 10);
@@ -26,7 +26,7 @@ public:
 	// Control Interface
 	virtual void activate  () override;
 	virtual void deactivate() override;
-	virtual void run       () override;
+	virtual void run       (float _fDeltaTime) override;
 	virtual bool onEvent(const IInputManager::CEvent&) override;
 
 private:

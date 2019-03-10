@@ -24,16 +24,16 @@ Checkbox::~Checkbox() {
 
 
 void Checkbox::init(const char* spriteChecked, const char* spriteUnchecked, bool isChecked) {
-	m_spriteChecked = NEW(Sprite, g_pGraphicsEngine->getTexture(spriteChecked), m_pos, m_size, 0.f, 1.f, 1);
+	m_spriteChecked = NEW(Sprite, g_pGraphicsEngine->getTexture(spriteChecked), m_v2Pos, m_v2Size, 0.f, 1.f, 1);
 	g_pGraphicsEngine->addGfxEntity(m_spriteChecked);
-	m_spriteUnchecked = NEW(Sprite, g_pGraphicsEngine->getTexture(spriteUnchecked), m_pos, m_size, 0.f, 1.f, 1);
+	m_spriteUnchecked = NEW(Sprite, g_pGraphicsEngine->getTexture(spriteUnchecked), m_v2Pos, m_v2Size, 0.f, 1.f, 1);
 	g_pGraphicsEngine->addGfxEntity(m_spriteUnchecked);
 	m_isChecked = isChecked;
 	deactivate();
 }
 
 void Checkbox::activate() {
-	Control::activate();
+	CControl::activate();
 
 	if (m_isChecked) {
 		m_spriteChecked->activate();
@@ -52,7 +52,7 @@ void Checkbox::activate() {
 }
 
 void Checkbox::deactivate() {
-	Control::deactivate();
+	CControl::deactivate();
 
 	m_spriteChecked->deactivate();
 	m_spriteUnchecked->deactivate();
@@ -66,7 +66,7 @@ bool Checkbox::onEvent(const IInputManager::CEvent& event) {
 	const IInputManager::CMouseEvent mouseEvent = *static_cast<const IInputManager::CMouseEvent*>(&event);
 	//assert(mouseEvent);
 
-	bool isMouseOverButton = mouseEvent.getPos().x >= m_pos.x - m_size.x * 0.5 && mouseEvent.getPos().x <= m_pos.x + m_size.x * 0.5 && mouseEvent.getPos().y >= m_pos.y - m_size.y * 0.5 && mouseEvent.getPos().y <= m_pos.y + m_size.y * 0.5;
+	bool isMouseOverButton = mouseEvent.getPos().x >= m_v2Pos.x - m_v2Size.x * 0.5 && mouseEvent.getPos().x <= m_v2Pos.x + m_v2Size.x * 0.5 && mouseEvent.getPos().y >= m_v2Pos.y - m_v2Size.y * 0.5 && mouseEvent.getPos().y <= m_v2Pos.y + m_v2Size.y * 0.5;
 
 	if (mouseEvent.getButton() == SYS_MB_LEFT) {
 		switch (mouseEvent.getType()) {

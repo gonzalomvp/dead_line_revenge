@@ -9,14 +9,14 @@ class Text;
 //=============================================================================
 // Checkbox class
 //=============================================================================
-class Checkbox : public Control {
+class Checkbox : public CControl {
 public:
 	class IListener {
 	public:
 		virtual void onClick(Checkbox* button) = 0;
 	};
 
-	Checkbox(const std::string& name, const vec2& pos, const vec2& size, bool isActive = true) : Control(name, pos, size, isActive) {}
+	Checkbox(const std::string& name, const vec2& pos, const vec2& size, bool isActive = true) : CControl(name, pos, size, isActive) {}
 	~Checkbox();
 
 	void init(const char* spriteChecked, const char* spriteUnchecked, bool isChecked);
