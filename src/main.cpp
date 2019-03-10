@@ -28,7 +28,7 @@ int Main(void) {
 
 	g_pGraphicsEngine  = NEW(GraphicsEngine);
 	g_pSoundEngine     = NEW(SoundEngine);
-	g_pInputManager    = NEW(InputManager);
+	g_pInputManager    = NEW(CInputManager);
 	g_pSceneManager    = NEW(CSceneManager);
 	g_pEntitiesFactory = NEW(CEntitiesFactory);
 	g_pStringManager   = NEW(StringManager);

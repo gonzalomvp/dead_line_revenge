@@ -213,6 +213,9 @@
     <ClInclude Include="..\src\entities\entities_factory.h">
       <Filter>src\entities</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\input\iinput_manager.h">
+      <Filter>src\input</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\main.cpp">

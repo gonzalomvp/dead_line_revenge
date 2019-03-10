@@ -89,8 +89,8 @@ void Slider::run() {
 	}
 }
 
-bool Slider::onEvent(const IInputManager::Event& event) {
-	const IInputManager::MouseEvent mouseEvent = *static_cast<const IInputManager::MouseEvent*>(&event);
+bool Slider::onEvent(const IInputManager::CEvent& event) {
+	const IInputManager::CMouseEvent mouseEvent = *static_cast<const IInputManager::CMouseEvent*>(&event);
 	//assert(mouseEvent);
 
 	bool isMouseOverBall = mouseEvent.getPos().x >= m_spriteBall->getPos().x - m_spriteBall->getSize().x * 0.5 && mouseEvent.getPos().x <= m_spriteBall->getPos().x + m_spriteBall->getSize().x * 0.5 && mouseEvent.getPos().y >= m_spriteBall->getPos().y - m_spriteBall->getSize().y * 0.5 && mouseEvent.getPos().y <= m_spriteBall->getPos().y + m_spriteBall->getSize().y * 0.5;

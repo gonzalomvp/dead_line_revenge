@@ -68,6 +68,7 @@
     <ClInclude Include="..\src\gui\menu.h" />
     <ClInclude Include="..\src\gui\slider.h" />
     <ClInclude Include="..\src\gui\string_manager.h" />
+    <ClInclude Include="..\src\input\iinput_manager.h" />
     <ClInclude Include="..\src\input\input_manager.h" />
     <ClInclude Include="..\src\REG_WEAPONS.h" />
     <ClInclude Include="..\src\scenes\game_scene.h" />

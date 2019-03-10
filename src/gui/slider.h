@@ -30,7 +30,7 @@ public:
 	virtual void activate()   override;
 	virtual void deactivate() override;
 	virtual void run()        override;
-	virtual bool onEvent(const IInputManager::Event&) override;
+	virtual bool onEvent(const IInputManager::CEvent&) override;
 
 	// Button::IListener Interface
 	virtual void onClick(Button* button) override;

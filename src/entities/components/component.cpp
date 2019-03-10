@@ -278,13 +278,13 @@ ComponentPlayerController::~ComponentPlayerController() {
 	}
 }
 
-bool ComponentPlayerController::onEvent(const IInputManager::Event& event) {
+bool ComponentPlayerController::onEvent(const IInputManager::CEvent& event) {
 	if (!m_isActive)
 		return false;
 
 	IInputManager::TEventType eventType = event.getType();
 	if (eventType == IInputManager::TEventType::EKeyHold) {
-		const IInputManager::KeyEvent keyEvent = *static_cast<const IInputManager::KeyEvent*>(&event);
+		const IInputManager::CKeyEvent keyEvent = *static_cast<const IInputManager::CKeyEvent*>(&event);
 		vec2 direction = vmake(0, 0);
 		switch (keyEvent.getKey()) {
 			case 'A':
@@ -312,7 +312,7 @@ bool ComponentPlayerController::onEvent(const IInputManager::Event& event) {
 	}
 
 	if (eventType == IInputManager::TEventType::EMouseButtonDown || eventType == IInputManager::TEventType::EMouseButtonUp) {
-		const IInputManager::MouseEvent mouseEvent = *static_cast<const IInputManager::MouseEvent*>(&event);
+		const IInputManager::CMouseEvent mouseEvent = *static_cast<const IInputManager::CMouseEvent*>(&event);
 		if (mouseEvent.getButton() == SYS_MB_LEFT) {
 			MessageFire messageFire;
 			if (eventType == IInputManager::TEventType::EMouseButtonDown) {
@@ -896,11 +896,11 @@ void ComponentHUD::run(float deltaTime) {
 	//m_reloadAnim->setSize(vmake(msgTransform.size.x * (1 - msgAmmo.reloadPercent), 5));
 }
 
-bool ComponentHUD::onEvent(const IInputManager::Event& event) {
+bool ComponentHUD::onEvent(const IInputManager::CEvent& event) {
 	if (m_isActive) {
 		IInputManager::TEventType eventType = event.getType();
 		if (eventType == IInputManager::TEventType::EMouseMove) {
-			const IInputManager::MouseEvent mouseEvent = *static_cast<const IInputManager::MouseEvent*>(&event);
+			const IInputManager::CMouseEvent mouseEvent = *static_cast<const IInputManager::CMouseEvent*>(&event);
 			vec2 targetPos = mouseEvent.getPos();
 			m_target->setPos(targetPos);
 

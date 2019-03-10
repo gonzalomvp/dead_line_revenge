@@ -22,9 +22,8 @@ public:
 	int	         getPlayerLife  () const                             { return m_iPlayerLife;   }
 	float	     getPlayerSpeed () const                             { return m_fPlayerSpeed;  }
 
-
 	void         addPoints    (Entity::TType _tEntityType)           { m_uScore += m_mEntityPoints[_tEntityType]; }
-	virtual bool onEvent      (const IInputManager::Event& _event);
+	virtual bool onEvent      (const IInputManager::CEvent& _event);
 
 private:
 	void checkCollisions      ();

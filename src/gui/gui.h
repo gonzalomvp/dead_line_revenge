@@ -11,7 +11,7 @@ public:
 	virtual void activate  () { m_isActive = true;  }
 	virtual void deactivate() { m_isActive = false; }
 
-	virtual bool onEvent(const IInputManager::Event& event) = 0;
+	virtual bool onEvent(const IInputManager::CEvent& event) = 0;
 	
 	bool        isActive() const { return m_isActive; }
 	std::string getName () const { return m_name;     }

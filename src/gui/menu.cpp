@@ -110,10 +110,10 @@ void Menu::run() {
 	}
 }
 
-bool Menu::onEvent(const IInputManager::Event& event) {
+bool Menu::onEvent(const IInputManager::CEvent& event) {
 	IInputManager::TEventType eventType = event.getType();
 	if (eventType == IInputManager::TEventType::EKeyDown) {
-		const IInputManager::KeyEvent keyEvent = *static_cast<const IInputManager::KeyEvent*>(&event);
+		const IInputManager::CKeyEvent keyEvent = *static_cast<const IInputManager::CKeyEvent*>(&event);
 		switch (keyEvent.getKey()) {
 			case VK_UP:
 				selectPreviousItem();
@@ -261,7 +261,7 @@ void MenuManager::onSelected(MenuItem* menuItem) {
 		g_pStringManager->loadLanguage(g_settings.language);
 	}
 	else if (menuItem->getName() == "RESUME") {
-		IInputManager::Event* pauseEvent = NEW(IInputManager::Event, IInputManager::TEventType::EPause);
+		IInputManager::CEvent* pauseEvent = NEW(IInputManager::CEvent, IInputManager::TEventType::EPause);
 		g_pInputManager->addEvent(pauseEvent);
 	}
 	else if (menuItem->getName() == "ABANDON") {
@@ -318,7 +318,7 @@ void MenuManager::onClick(Button* button) {
 		g_pStringManager->loadLanguage(g_settings.language);
 	}
 	else if (button->getName() == "RESUME") {
-		IInputManager::Event* pauseEvent = NEW(IInputManager::Event, IInputManager::TEventType::EPause);
+		IInputManager::CEvent* pauseEvent = NEW(IInputManager::CEvent, IInputManager::TEventType::EPause);
 		g_pInputManager->addEvent(pauseEvent);
 	}
 	else if (button->getName() == "ABANDON") {

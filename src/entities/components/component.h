@@ -137,7 +137,7 @@ public:
 	~ComponentPlayerController();
 
 	virtual void init   ();
-	virtual bool onEvent(const IInputManager::Event&);
+	virtual bool onEvent(const IInputManager::CEvent&);
 };
 
 //=============================================================================
@@ -374,7 +374,7 @@ public:
 
 	virtual void init   ();
 	virtual void run    (float deltaTime);
-	virtual bool onEvent(const IInputManager::Event&);
+	virtual bool onEvent(const IInputManager::CEvent&);
 private:
 	Text*                   m_life;
 	Text*                   m_uScore;

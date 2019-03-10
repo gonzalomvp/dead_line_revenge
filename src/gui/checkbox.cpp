@@ -62,8 +62,8 @@ void Checkbox::deactivate() {
 	g_pInputManager->unregisterEvent(this, IInputManager::EMouseButtonHold);
 }
 
-bool Checkbox::onEvent(const IInputManager::Event& event) {
-	const IInputManager::MouseEvent mouseEvent = *static_cast<const IInputManager::MouseEvent*>(&event);
+bool Checkbox::onEvent(const IInputManager::CEvent& event) {
+	const IInputManager::CMouseEvent mouseEvent = *static_cast<const IInputManager::CMouseEvent*>(&event);
 	//assert(mouseEvent);
 
 	bool isMouseOverButton = mouseEvent.getPos().x >= m_pos.x - m_size.x * 0.5 && mouseEvent.getPos().x <= m_pos.x + m_size.x * 0.5 && mouseEvent.getPos().y >= m_pos.y - m_size.y * 0.5 && mouseEvent.getPos().y <= m_pos.y + m_size.y * 0.5;

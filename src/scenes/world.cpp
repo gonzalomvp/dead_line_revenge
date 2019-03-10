@@ -219,7 +219,7 @@ void CWorld::removeEntity(Entity* _pEntity) {
 	m_vEntitiesToRemove.push_back(_pEntity);
 }
 
-bool CWorld::onEvent(const IInputManager::Event& _event) {
+bool CWorld::onEvent(const IInputManager::CEvent& _event) {
 	IInputManager::TEventType eEventType = _event.getType();
 	if (eEventType == IInputManager::TEventType::EPause) {
 		m_bIsPaused = !m_bIsPaused;

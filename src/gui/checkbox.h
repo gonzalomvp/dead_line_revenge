@@ -27,7 +27,7 @@ public:
 	// Control Interface
 	virtual void activate  () override;
 	virtual void deactivate() override;
-	virtual bool onEvent(const IInputManager::Event&) override;
+	virtual bool onEvent(const IInputManager::CEvent&) override;
 
 private:
 	Sprite* m_spriteChecked;
