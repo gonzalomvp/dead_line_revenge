@@ -3,7 +3,7 @@
 
 #include "globals.h"
 #include "engine/graphics_engine.h"
-#include "gui/menu.h"
+#include "gui/menu_manager.h"
 #include "scenes/world.h"
 
 CWorld* g_pWorld;

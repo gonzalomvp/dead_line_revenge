@@ -160,7 +160,7 @@ public:
 	//	EWeaponCount = 7
 	//};
 
-	enum TType {
+	enum EType {
 #define REG_WEAPON(val, name) \
 		E##val,
 #include "REG_WEAPONS.h"
@@ -172,7 +172,7 @@ public:
 	static const int NUM_WEAPON_TYPES = EInvalid;
 
 	struct TWeaponData {
-		TType       type;
+		EType       type;
 		int         fireRate;
 		int         reloadTime;
 		int         capacity;
@@ -200,7 +200,7 @@ public:
 	virtual void run           (float deltaTime);
 	virtual void receiveMessage(Message* message);
 
-	static TType getWeaponTypeByName(const std::string& name);
+	static EType getWeaponTypeByName(const std::string& name);
 private:
 	TWeaponData m_mWeaponData;
 	Entity* m_remoteBullet;
@@ -214,7 +214,7 @@ private:
 
 	struct TWeaponInfo
 	{
-		TType eType;
+		EType eType;
 		std::string sName;
 	};
 	static TWeaponInfo s_aWeaponInfo[];

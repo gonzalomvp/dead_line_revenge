@@ -1,7 +1,7 @@
 #pragma once
 
 #include "button.h"
-#include "gui.h"
+#include "control.h"
 
 #include <vector>
 

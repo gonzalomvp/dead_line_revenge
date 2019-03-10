@@ -54,9 +54,6 @@
     <ClInclude Include="..\src\input\input_manager.h">
       <Filter>src\input</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\gui\gui.h">
-      <Filter>src\gui</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\gui\string_manager.h">
       <Filter>src\gui</Filter>
     </ClInclude>
@@ -216,6 +213,12 @@
     <ClInclude Include="..\src\input\iinput_manager.h">
       <Filter>src\input</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\gui\menu_manager.h">
+      <Filter>src\gui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\gui\control.h">
+      <Filter>src\gui</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\main.cpp">
@@ -226,9 +229,6 @@
     </ClCompile>
     <ClCompile Include="..\src\input\input_manager.cpp">
       <Filter>src\input</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\gui\gui.cpp">
-      <Filter>src\gui</Filter>
     </ClCompile>
     <ClCompile Include="..\src\gui\string_manager.cpp">
       <Filter>src\gui</Filter>
@@ -385,6 +385,12 @@
     </ClCompile>
     <ClCompile Include="..\src\entities\entities_factory.cpp">
       <Filter>src\entities</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\gui\menu_manager.cpp">
+      <Filter>src\gui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\gui\control.cpp">
+      <Filter>src\gui</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

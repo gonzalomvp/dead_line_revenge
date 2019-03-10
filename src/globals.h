@@ -7,9 +7,9 @@ class GraphicsEngine;
 class SoundEngine;
 class IInputManager;
 class StringManager;
-class MenuManager;
+class CMenuManager;
 
-enum TLanguage {
+enum ELanguage {
 	EEnglish,
 	ESpanish,
 };
@@ -18,7 +18,7 @@ struct Settings {
 	bool music;
 	bool sfx;
 	float volume;
-	TLanguage language;
+	ELanguage language;
 };
 
 extern CSceneManager*    g_pSceneManager;
@@ -28,5 +28,5 @@ extern GraphicsEngine*   g_pGraphicsEngine;
 extern SoundEngine*      g_pSoundEngine;
 extern IInputManager*    g_pInputManager;
 extern StringManager*    g_pStringManager;
-extern MenuManager*      g_pMenuManager;
+extern CMenuManager*     g_pMenuManager;
 extern Settings          g_settings;

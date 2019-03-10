@@ -3,10 +3,10 @@
 
 #include "globals.h"
 #include "engine/graphics_engine.h"
-#include "gui/menu.h"
+#include "gui/menu_manager.h"
 
 void CMenuScene::init() {
-	g_pMenuManager->activateMenu(MenuManager::EMainMenu);
+	g_pMenuManager->activateMenu(CMenuManager::EMainMenu);
 }
 
 void CMenuScene::processInput() const {

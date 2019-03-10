@@ -263,18 +263,18 @@ void ComponentRenderable::receiveMessage(Message* message) {
 //=============================================================================
 void ComponentPlayerController::init() {
 	Component::init();
-	g_pInputManager->registerEvent(this, IInputManager::TEventType::EKeyHold);
-	g_pInputManager->registerEvent(this, IInputManager::TEventType::EMouseButtonDown);
-	g_pInputManager->registerEvent(this, IInputManager::TEventType::EMouseButtonUp);
-	g_pInputManager->registerEvent(this, IInputManager::TEventType::EMouseButtonHold);
+	g_pInputManager->registerEvent(this, IInputManager::EEventType::EKeyHold);
+	g_pInputManager->registerEvent(this, IInputManager::EEventType::EMouseButtonDown);
+	g_pInputManager->registerEvent(this, IInputManager::EEventType::EMouseButtonUp);
+	g_pInputManager->registerEvent(this, IInputManager::EEventType::EMouseButtonHold);
 }
 
 ComponentPlayerController::~ComponentPlayerController() {
 	if (g_pInputManager) {
-		g_pInputManager->unregisterEvent(this, IInputManager::TEventType::EKeyHold);
-		g_pInputManager->unregisterEvent(this, IInputManager::TEventType::EMouseButtonDown);
-		g_pInputManager->unregisterEvent(this, IInputManager::TEventType::EMouseButtonUp);
-		g_pInputManager->unregisterEvent(this, IInputManager::TEventType::EMouseButtonHold);
+		g_pInputManager->unregisterEvent(this, IInputManager::EEventType::EKeyHold);
+		g_pInputManager->unregisterEvent(this, IInputManager::EEventType::EMouseButtonDown);
+		g_pInputManager->unregisterEvent(this, IInputManager::EEventType::EMouseButtonUp);
+		g_pInputManager->unregisterEvent(this, IInputManager::EEventType::EMouseButtonHold);
 	}
 }
 
@@ -282,8 +282,8 @@ bool ComponentPlayerController::onEvent(const IInputManager::CEvent& event) {
 	if (!m_isActive)
 		return false;
 
-	IInputManager::TEventType eventType = event.getType();
-	if (eventType == IInputManager::TEventType::EKeyHold) {
+	IInputManager::EEventType eventType = event.getType();
+	if (eventType == IInputManager::EEventType::EKeyHold) {
 		const IInputManager::CKeyEvent keyEvent = *static_cast<const IInputManager::CKeyEvent*>(&event);
 		vec2 direction = vmake(0, 0);
 		switch (keyEvent.getKey()) {
@@ -311,19 +311,19 @@ bool ComponentPlayerController::onEvent(const IInputManager::CEvent& event) {
 		}
 	}
 
-	if (eventType == IInputManager::TEventType::EMouseButtonDown || eventType == IInputManager::TEventType::EMouseButtonUp) {
+	if (eventType == IInputManager::EEventType::EMouseButtonDown || eventType == IInputManager::EEventType::EMouseButtonUp) {
 		const IInputManager::CMouseEvent mouseEvent = *static_cast<const IInputManager::CMouseEvent*>(&event);
 		if (mouseEvent.getButton() == SYS_MB_LEFT) {
 			MessageFire messageFire;
-			if (eventType == IInputManager::TEventType::EMouseButtonDown) {
+			if (eventType == IInputManager::EEventType::EMouseButtonDown) {
 				messageFire.isFiring = true;
 			}
-			else if (eventType == IInputManager::TEventType::EMouseButtonUp) {
+			else if (eventType == IInputManager::EEventType::EMouseButtonUp) {
 				messageFire.isFiring = false;
 			}
 			m_owner->receiveMessage(&messageFire);
 		}
-		else if (mouseEvent.getButton() == SYS_MB_RIGHT && eventType == IInputManager::TEventType::EMouseButtonDown) {
+		else if (mouseEvent.getButton() == SYS_MB_RIGHT && eventType == IInputManager::EEventType::EMouseButtonDown) {
 			MessageReload msgReload;
 			m_owner->receiveMessage(&msgReload);
 		}
@@ -487,8 +487,8 @@ void ComponentWeapon::receiveMessage(Message* message) {
 	}
 }
 
-ComponentWeapon::TType ComponentWeapon::getWeaponTypeByName(const std::string& name) {
-	ComponentWeapon::TType etype = EInvalid;
+ComponentWeapon::EType ComponentWeapon::getWeaponTypeByName(const std::string& name) {
+	ComponentWeapon::EType etype = EInvalid;
 	int i = 0;
 	while ((etype == EInvalid) && (i < NUM_WEAPON_TYPES))
 	{
@@ -821,7 +821,7 @@ ComponentHUD::~ComponentHUD() {
 		DELETE(m_gfxEntities[i]);
 	}
 	if (g_pInputManager) {
-		g_pInputManager->unregisterEvent(this, IInputManager::TEventType::EMouseMove);
+		g_pInputManager->unregisterEvent(this, IInputManager::EEventType::EMouseMove);
 	}
 }
 
@@ -865,7 +865,7 @@ void ComponentHUD::init() {
 	g_pGraphicsEngine->addGfxEntity(m_reloadAnim);
 	m_gfxEntities.push_back(m_reloadAnim);
 
-	g_pInputManager->registerEvent(this, IInputManager::TEventType::EMouseMove);
+	g_pInputManager->registerEvent(this, IInputManager::EEventType::EMouseMove);
 }
 
 void ComponentHUD::run(float deltaTime) {
@@ -898,8 +898,8 @@ void ComponentHUD::run(float deltaTime) {
 
 bool ComponentHUD::onEvent(const IInputManager::CEvent& event) {
 	if (m_isActive) {
-		IInputManager::TEventType eventType = event.getType();
-		if (eventType == IInputManager::TEventType::EMouseMove) {
+		IInputManager::EEventType eventType = event.getType();
+		if (eventType == IInputManager::EEventType::EMouseMove) {
 			const IInputManager::CMouseEvent mouseEvent = *static_cast<const IInputManager::CMouseEvent*>(&event);
 			vec2 targetPos = mouseEvent.getPos();
 			m_target->setPos(targetPos);

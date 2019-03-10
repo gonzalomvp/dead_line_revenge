@@ -2,7 +2,7 @@
 
 #include "button.h"
 #include "checkbox.h"
-#include "gui.h"
+#include "control.h"
 #include "slider.h"
 
 #include <map>
@@ -51,7 +51,7 @@ public:
 
 	virtual void activate  ();
 	virtual void deactivate();
-	virtual void run       ();
+	virtual void run       (float _fDeltaTime);
 
 	virtual bool onEvent    (const IInputManager::CEvent& event);
 	void         addListener(IListener* listener)  { m_listeners.push_back(listener); }
@@ -70,39 +70,4 @@ private:
 	std::vector<MenuItem*>  m_menuItems;
 	std::vector<Control*>   m_controls;
 	std::vector<IListener*> m_listeners;
-};
-
-//=============================================================================
-// MenuManager class
-//=============================================================================
-class MenuManager : public Menu::IListener, Button::IListener, Checkbox::IListener, Slider::IListener {
-public:
-	enum TMenu {
-		EMainMenu,
-		EOptionsMenu,
-		EPlayMenu,
-		EPauseMenu,
-		EGameOverMenu,
-	};
-
-	~MenuManager();
-
-	void         init          ();
-	void         run           (float _fDeltaTime);
-	void         activateMenu  (TMenu menu);
-	void         deactivateMenu();
-	virtual void onSelected    (MenuItem* menuItem);
-	virtual void onClick       (Button* button);
-	virtual void onClick       (Checkbox* checkbox);
-	virtual void onValueChange (Slider* slider);
-	Menu*    getMenu       (TMenu menu);
-private:
-	void createMainMenu    ();
-	void createPlayMenu    ();
-	void createOptionsMenu ();
-	void createPauseMenu   ();
-	void createGameOverMenu();
-
-	Menu*                  m_activeMenu;
-	std::map<TMenu, Menu*> m_menus;
 };

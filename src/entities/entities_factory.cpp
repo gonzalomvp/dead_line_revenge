@@ -18,8 +18,8 @@ CEntitiesFactory::TEntityInfo CEntitiesFactory::s_aEntityInfo[] = {
 #undef REG_ENTITY
 };
 
-Entity::TType CEntitiesFactory::getEntityTypeByName(const std::string& name) {
-	Entity::TType etype = Entity::EInvalid;
+Entity::EType CEntitiesFactory::getEntityTypeByName(const std::string& name) {
+	Entity::EType etype = Entity::EInvalid;
 	int i = 0;
 	while ((etype == Entity::EInvalid) && (i < Entity::NUM_ENTITIES))
 	{
@@ -73,7 +73,7 @@ bool CEntitiesFactory::init(const char* _sConfigFile) {
 		enemy.iLife = enemies[i]["life"].GetInt();
 		enemy.fSpeed = enemies[i]["speed"].GetFloat();
 		enemy.iCollisionDamage = enemies[i]["collisionDamage"].GetInt();
-		enemy.eWeapon = ComponentWeapon::TType::EInvalid;
+		enemy.eWeapon = ComponentWeapon::EType::EInvalid;
 		if (enemies[i].HasMember("weapon")) {
 			enemy.eWeapon = ComponentWeapon::getWeaponTypeByName(enemies[i]["weapon"].GetString());
 		}
@@ -114,7 +114,7 @@ Entity* CEntitiesFactory::createPlayer(vec2 _v2Pos) {
 	return player;
 }
 
-Entity* CEntitiesFactory::createBullet(vec2 _v2Pos, vec2 _v2Size, vec2 _v2Direction, float _fSpeed, int _iDamage, int _iLife, int _iRange, bool _bIsExplossive, bool _bIsBouncy, Entity::TType _eEntityType, const char* _psTexture) {
+Entity* CEntitiesFactory::createBullet(vec2 _v2Pos, vec2 _v2Size, vec2 _v2Direction, float _fSpeed, int _iDamage, int _iLife, int _iRange, bool _bIsExplossive, bool _bIsBouncy, Entity::EType _eEntityType, const char* _psTexture) {
 	Entity* bullet = NEW(Entity, Entity::EWEAPON);
 	ComponentTransform* transform = NEW(ComponentTransform, bullet, _v2Pos, _v2Size);
 	transform->init();
@@ -151,7 +151,7 @@ Entity* CEntitiesFactory::createBullet(vec2 _v2Pos, vec2 _v2Size, vec2 _v2Direct
 	return bullet;
 }
 
-Entity* CEntitiesFactory::createExplossion(vec2 _v2Pos, vec2 _v2Size, vec2 _v2SizeIncrement, int _iDuration, Entity::TType _eEntityType) {
+Entity* CEntitiesFactory::createExplossion(vec2 _v2Pos, vec2 _v2Size, vec2 _v2SizeIncrement, int _iDuration, Entity::EType _eEntityType) {
 	Entity* explossion = NEW(Entity, _eEntityType);
 	ComponentTransform* transform = NEW(ComponentTransform, explossion, _v2Pos, _v2Size, _v2SizeIncrement);
 	transform->init();
@@ -177,7 +177,7 @@ Entity* CEntitiesFactory::createExplossion(vec2 _v2Pos, vec2 _v2Size, vec2 _v2Si
 	return explossion;
 }
 
-Entity* CEntitiesFactory::createEnemy(vec2 _v2Pos, Entity::TType _tEnemyType, Entity* _pPlayer) {
+Entity* CEntitiesFactory::createEnemy(vec2 _v2Pos, Entity::EType _tEnemyType, Entity* _pPlayer) {
 	Entity* enemy = NEW(Entity, _tEnemyType);
 	TEnemyDef tEnemyDef = m_mEnemyDef[_tEnemyType];
 
@@ -193,7 +193,7 @@ Entity* CEntitiesFactory::createEnemy(vec2 _v2Pos, Entity::TType _tEnemyType, En
 	}
 
 	// Range and Turrets have a fire weapon
-	if (tEnemyDef.eWeapon != ComponentWeapon::TType::EInvalid) {
+	if (tEnemyDef.eWeapon != ComponentWeapon::EType::EInvalid) {
 		ComponentWeapon* gun = NEW(ComponentWeapon, enemy, m_mWeaponDef[tEnemyDef.eWeapon]);
 		gun->init();
 
@@ -223,7 +223,7 @@ Entity* CEntitiesFactory::createEnemy(vec2 _v2Pos, Entity::TType _tEnemyType, En
 	return enemy;
 }
 
-Entity* CEntitiesFactory::createEnemy(vec2 _v2Pos, Entity::TType _tEnemyType, vec2 _v2MoveDir, std::vector<vec2> _vAimDirections, bool _bIshuffleAim) {
+Entity* CEntitiesFactory::createEnemy(vec2 _v2Pos, Entity::EType _tEnemyType, vec2 _v2MoveDir, std::vector<vec2> _vAimDirections, bool _bIshuffleAim) {
 	Entity* enemy = createEnemy(_v2Pos, _tEnemyType, nullptr);
 	TEnemyDef tEnemyDef = m_mEnemyDef[_tEnemyType];
 
@@ -239,7 +239,7 @@ Entity* CEntitiesFactory::createEnemy(vec2 _v2Pos, Entity::TType _tEnemyType, ve
 
 Entity* CEntitiesFactory::createWeaponPickup() {
 	// Calculate a random weapon type
-	ComponentWeapon::TType type = m_vWeaponPickups[rand() % m_vWeaponPickups.size()];
+	ComponentWeapon::EType type = m_vWeaponPickups[rand() % m_vWeaponPickups.size()];
 	// Calculate a random spawn position
 	vec2 randomPos = vmake(CORE_FRand(0.0, WORLD_WIDTH), CORE_FRand(80, WORLD_HEIGHT - 80));
 

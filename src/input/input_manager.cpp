@@ -9,12 +9,12 @@ CInputManager::~CInputManager() {
 	}
 }
 
-void CInputManager::registerEvent(IListener* _pListener, TEventType _eEventType) {
+void CInputManager::registerEvent(IListener* _pListener, EEventType _eEventType) {
 	ASSERT(_pListener);
 	m_mlisteners[_eEventType].push_back(_pListener);
 }
 
-void CInputManager::unregisterEvent(IListener* _pListener, TEventType _eEventType) {
+void CInputManager::unregisterEvent(IListener* _pListener, EEventType _eEventType) {
 	if (m_mlisteners.count(_eEventType)) {
 		m_mlisteners[_eEventType].erase(
 			std::remove(m_mlisteners[_eEventType].begin(), m_mlisteners[_eEventType].end(), _pListener),
@@ -64,22 +64,22 @@ void CInputManager::checkKeyState(int _iKey) {
 		// Key down
 		if (m_mIputStates[_iKey] == false) {
 			m_mIputStates[_iKey] = true;
-			CKeyEvent* pKeyEvent = NEW(CKeyEvent, TEventType::EKeyDown, _iKey);
+			CKeyEvent* pKeyEvent = NEW(CKeyEvent, EEventType::EKeyDown, _iKey);
 			g_pInputManager->addEvent(pKeyEvent);
 
 			if (_iKey == VK_ESCAPE) {
-				CEvent* pPauseEvent = NEW(CEvent, TEventType::EPause);
+				CEvent* pPauseEvent = NEW(CEvent, EEventType::EPause);
 				g_pInputManager->addEvent(pPauseEvent);
 			}
 		}
 		// Key is being hold
-		CKeyEvent* pKeyEvent = NEW(CKeyEvent, TEventType::EKeyHold, _iKey);
+		CKeyEvent* pKeyEvent = NEW(CKeyEvent, EEventType::EKeyHold, _iKey);
 		g_pInputManager->addEvent(pKeyEvent);
 	}
 	// Key up
 	else if (!SYS_KeyPressed(_iKey) && m_mIputStates[_iKey] == true) {
 		m_mIputStates[_iKey] = false;
-		CKeyEvent* pKeyEvent = NEW(CKeyEvent, TEventType::EKeyUp, _iKey);
+		CKeyEvent* pKeyEvent = NEW(CKeyEvent, EEventType::EKeyUp, _iKey);
 		g_pInputManager->addEvent(pKeyEvent);
 	}
 }

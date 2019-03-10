@@ -3,7 +3,7 @@
 #include "engine/graphics_engine.h"
 #include "engine/sound_engine.h"
 #include "entities/entities_factory.h"
-#include "gui/menu.h"
+#include "gui/menu_manager.h"
 #include "gui/string_manager.h"
 #include "input/input_manager.h"
 #include "scenes/scene_manager.h"
@@ -17,7 +17,7 @@ IInputManager*    g_pInputManager;
 CSceneManager*    g_pSceneManager;
 CEntitiesFactory* g_pEntitiesFactory;
 StringManager*    g_pStringManager;
-MenuManager*      g_pMenuManager;
+CMenuManager*     g_pMenuManager;
 Settings          g_settings;
 
 int Main(void) {
@@ -32,7 +32,7 @@ int Main(void) {
 	g_pSceneManager    = NEW(CSceneManager);
 	g_pEntitiesFactory = NEW(CEntitiesFactory);
 	g_pStringManager   = NEW(StringManager);
-	g_pMenuManager     = NEW(MenuManager);
+	g_pMenuManager     = NEW(CMenuManager);
 	g_pMenuManager->init();
 
 	// Load default language

@@ -22,7 +22,7 @@ public:
 	int	         getPlayerLife  () const                             { return m_iPlayerLife;   }
 	float	     getPlayerSpeed () const                             { return m_fPlayerSpeed;  }
 
-	void         addPoints    (Entity::TType _tEntityType)           { m_uScore += m_mEntityPoints[_tEntityType]; }
+	void         addPoints    (Entity::EType _tEntityType)           { m_uScore += m_mEntityPoints[_tEntityType]; }
 	virtual bool onEvent      (const IInputManager::CEvent& _event);
 
 private:
@@ -48,8 +48,8 @@ private:
 	float    m_fEnemySpawnWait;
 	int      m_iCurrentEnemies;
 	int      m_iMaxEnemies;
-	std::map<Entity::TType, float>    m_mEnemyProbabilities;
-	std::map<Entity::TType, uint16_t> m_mEntityPoints;
+	std::map<Entity::EType, float>    m_mEnemyProbabilities;
+	std::map<Entity::EType, uint16_t> m_mEntityPoints;
 	std::vector<vec2> m_vSpawnPositions;
 
 	// Timers

@@ -3,6 +3,7 @@
 
 #include "entities/entities_factory.h"
 #include "entities/message.h"
+#include "gui/menu_manager.h"
 #include "gui/menu.h"
 #include "gui/string_manager.h"
 
@@ -59,7 +60,7 @@ bool CWorld::init(uint16_t _uLevel) {
 	m_vSpawnPositions.clear();
 
 	ASSERT(g_pInputManager);
-	g_pInputManager->registerEvent(this, IInputManager::TEventType::EPause);
+	g_pInputManager->registerEvent(this, IInputManager::EEventType::EPause);
 
 	// Parse level file
 	const char* psFileName = "";
@@ -79,7 +80,7 @@ bool CWorld::init(uint16_t _uLevel) {
 	}
 
 	// Force test level
-	psFileName = "data/levelTest.json";
+	//psFileName = "data/levelTest.json";
 
 	FILE* pFile = fopen(psFileName, "r");
 	if (!pFile) return false;
@@ -111,7 +112,7 @@ bool CWorld::init(uint16_t _uLevel) {
 	const Value& enemies = doc["enemies"];
 	for (SizeType i = 0; i < enemies.Size(); i++) {
 		ASSERT(enemies[i].HasMember("type"));
-		Entity::TType eEnemyType = CEntitiesFactory::getEntityTypeByName(enemies[i]["type"].GetString());
+		Entity::EType eEnemyType = CEntitiesFactory::getEntityTypeByName(enemies[i]["type"].GetString());
 		ASSERT(enemies[i].HasMember("spawnProbability"));
 		fTotalProbability += enemies[i]["spawnProbability"].GetFloat();
 		m_mEnemyProbabilities[eEnemyType] = fTotalProbability;
@@ -183,7 +184,7 @@ void CWorld::cleanup() {
 	m_vEntitiesToRemove.clear();
 
 	if (g_pInputManager) {
-		g_pInputManager->unregisterEvent(this, IInputManager::TEventType::EPause);
+		g_pInputManager->unregisterEvent(this, IInputManager::EEventType::EPause);
 	}
 }
 
@@ -199,8 +200,8 @@ void CWorld::run(float _fDeltaTime) {
 		if (m_bIsGameOver) {
 			g_pWorld->cleanup();
 			std::string scoreMessage = g_pStringManager->getText("LTEXT_GUI_SCORE_MESSAGE") + std::to_string(m_uScore);
-			g_pMenuManager->getMenu(MenuManager::EGameOverMenu)->setTitle(scoreMessage.c_str());
-			g_pMenuManager->activateMenu(MenuManager::EGameOverMenu);
+			g_pMenuManager->getMenu(CMenuManager::EGameOverMenu)->setTitle(scoreMessage.c_str());
+			g_pMenuManager->activateMenu(CMenuManager::EGameOverMenu);
 		}
 		else {
 			spawnNewEntities(_fDeltaTime);
@@ -220,12 +221,12 @@ void CWorld::removeEntity(Entity* _pEntity) {
 }
 
 bool CWorld::onEvent(const IInputManager::CEvent& _event) {
-	IInputManager::TEventType eEventType = _event.getType();
-	if (eEventType == IInputManager::TEventType::EPause) {
+	IInputManager::EEventType eEventType = _event.getType();
+	if (eEventType == IInputManager::EEventType::EPause) {
 		m_bIsPaused = !m_bIsPaused;
 		if (m_bIsPaused) {
 			m_pPlayer->deactivate();
-			g_pMenuManager->activateMenu(MenuManager::EPauseMenu);
+			g_pMenuManager->activateMenu(CMenuManager::EPauseMenu);
 		}
 		else {
 			m_pPlayer->activate();
@@ -249,7 +250,7 @@ void CWorld::checkCollisions() {
 
 void CWorld::removePendingEntities() {
 	for (auto it = m_vEntitiesToRemove.begin(); it != m_vEntitiesToRemove.end(); ++it) {
-		Entity::TType type = (*it)->getType();
+		Entity::EType type = (*it)->getType();
 		switch (type) {
 			case Entity::EPLAYER: {
 				m_bIsGameOver = true;

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "gui.h"
+#include "control.h"
 #include <vector>
 
 class Text;

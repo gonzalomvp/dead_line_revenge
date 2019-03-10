@@ -5,7 +5,7 @@
 
 class StringManager {
 public:
-	bool loadLanguage(TLanguage language);
+	bool loadLanguage(ELanguage language);
 	std::string getText(const std::string& label);
 
 private:

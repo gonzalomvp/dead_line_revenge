@@ -6,7 +6,7 @@
 
 using namespace rapidjson;
 
-bool StringManager::loadLanguage(TLanguage language) {
+bool StringManager::loadLanguage(ELanguage language) {
 	m_texts.clear();
 	char* filename;
 	switch (language) {
