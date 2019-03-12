@@ -1,6 +1,6 @@
 #pragma once
 
-#include "gui/control.h"
+#include "gui/controls/control.h"
 
 #include <map>
 

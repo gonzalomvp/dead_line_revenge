@@ -43,6 +43,9 @@
     <Filter Include="src\entities\components\behavior_tree\conditions">
       <UniqueIdentifier>{0c481f85-943c-4147-980c-83b8c6610432}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\gui\controls">
+      <UniqueIdentifier>{b269ae87-cddf-4ec4-a3e6-ad2fc1101286}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\globals.h">
@@ -84,23 +87,8 @@
     <ClInclude Include="..\src\common\sys.h">
       <Filter>src\common</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\gui\menu.h">
-      <Filter>src\gui</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\engine\sound_engine.h">
       <Filter>src\engine</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\gui\button.h">
-      <Filter>src\gui</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\gui\checkbox.h">
-      <Filter>src\gui</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\gui\slider.h">
-      <Filter>src\gui</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\gui\label.h">
-      <Filter>src\gui</Filter>
     </ClInclude>
     <ClInclude Include="..\src\common\leaks.h">
       <Filter>src\common</Filter>
@@ -216,11 +204,23 @@
     <ClInclude Include="..\src\gui\menu_manager.h">
       <Filter>src\gui</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\gui\control.h">
-      <Filter>src\gui</Filter>
+    <ClInclude Include="..\src\gui\controls\button.h">
+      <Filter>src\gui\controls</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\gui\menu_item.h">
-      <Filter>src\gui</Filter>
+    <ClInclude Include="..\src\gui\controls\checkbox.h">
+      <Filter>src\gui\controls</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\gui\controls\control.h">
+      <Filter>src\gui\controls</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\gui\controls\label.h">
+      <Filter>src\gui\controls</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\gui\controls\menu.h">
+      <Filter>src\gui\controls</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\gui\controls\slider.h">
+      <Filter>src\gui\controls</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -260,23 +260,8 @@
     <ClCompile Include="..\src\common\sys_win.cpp">
       <Filter>src\common</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\gui\menu.cpp">
-      <Filter>src\gui</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\engine\sound_engine.cpp">
       <Filter>src\engine</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\gui\button.cpp">
-      <Filter>src\gui</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\gui\checkbox.cpp">
-      <Filter>src\gui</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\gui\slider.cpp">
-      <Filter>src\gui</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\gui\label.cpp">
-      <Filter>src\gui</Filter>
     </ClCompile>
     <ClCompile Include="..\src\common\leaks_windows.cpp">
       <Filter>src\common</Filter>
@@ -392,8 +377,20 @@
     <ClCompile Include="..\src\gui\menu_manager.cpp">
       <Filter>src\gui</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\gui\menu_item.cpp">
-      <Filter>src\gui</Filter>
+    <ClCompile Include="..\src\gui\controls\button.cpp">
+      <Filter>src\gui\controls</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\gui\controls\checkbox.cpp">
+      <Filter>src\gui\controls</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\gui\controls\label.cpp">
+      <Filter>src\gui\controls</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\gui\controls\menu.cpp">
+      <Filter>src\gui\controls</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\gui\controls\slider.cpp">
+      <Filter>src\gui\controls</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

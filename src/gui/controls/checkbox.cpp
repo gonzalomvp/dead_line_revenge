@@ -1,8 +1,8 @@
-#include "../common/stdafx.h"
+#include "common/stdafx.h"
 #include "checkbox.h"
 
-#include "../engine/graphics_engine.h"
-#include "../gui/string_manager.h"
+#include "engine/graphics_engine.h"
+#include "gui/string_manager.h"
 
 //=============================================================================
 // Checkbox class

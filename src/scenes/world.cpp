@@ -4,9 +4,9 @@
 #include "entities/entities_factory.h"
 #include "entities/message.h"
 #include "gui/menu_manager.h"
-#include "gui/menu.h"
-#include "gui/label.h"
 #include "gui/string_manager.h"
+#include "gui/controls/label.h"
+#include "gui/controls/menu.h"
 
 #include <algorithm>
 #include "rapidjson/document.h"

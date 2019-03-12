@@ -2,9 +2,9 @@
 #include "menu_manager.h"
 
 #include "engine/sound_engine.h"
-#include "gui/label.h"
+#include "gui/controls/label.h"
+#include "gui/controls/menu.h"
 #include "gui/string_manager.h"
-#include "menu.h"
 #include "scenes/scene_manager.h"
 #include "scenes/world.h"
 

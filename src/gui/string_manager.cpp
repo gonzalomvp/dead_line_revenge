@@ -1,4 +1,4 @@
-#include "../common/stdafx.h"
+#include "common/stdafx.h"
 #include "string_manager.h"
 #include "rapidjson/document.h"
 #include "rapidjson/filereadstream.h"

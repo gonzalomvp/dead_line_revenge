@@ -1,5 +1,5 @@
 #pragma once
-#include "../common/stdafx.h"
+#include "common/stdafx.h"
 #include "../globals.h"
 #include <map>
 

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../common/stdafx.h"
+#include "common/stdafx.h"
 #include <map>
 
 class SoundEngine {

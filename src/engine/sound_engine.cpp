@@ -1,4 +1,4 @@
-#include "../common/stdafx.h"
+#include "common/stdafx.h"
 #include "sound_engine.h"
 
 SoundEngine::SoundEngine() {

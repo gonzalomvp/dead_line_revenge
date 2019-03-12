@@ -1,8 +1,8 @@
-#include "../common/stdafx.h"
+#include "common/stdafx.h"
 #include "label.h"
 
-#include "../engine/graphics_engine.h"
-#include "../gui/string_manager.h"
+#include "engine/graphics_engine.h"
+#include "gui/string_manager.h"
 
 //=============================================================================
 // Label class

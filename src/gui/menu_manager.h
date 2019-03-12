@@ -1,8 +1,8 @@
 #pragma once
 
-#include "button.h"
-#include "checkbox.h"
-#include "slider.h"
+#include "gui/controls/button.h"
+#include "gui/controls/checkbox.h"
+#include "gui/controls/slider.h"
 
 #include <map>
 
