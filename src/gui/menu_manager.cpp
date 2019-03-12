@@ -8,7 +8,7 @@
 #include "scenes/scene_manager.h"
 #include "scenes/world.h"
 
-namespace {
+namespace menu { namespace constants {
 	// Menu names
 	const char* s_psMainMenuName     = "MAIN_MENU";
 	const char* s_psPlayMenuName     = "PLAY_MENU";
@@ -35,10 +35,11 @@ namespace {
 	const char* s_psSettingsSFXLabelName       = "SETTINGS_SFX_LBL";
 	const char* s_psSettingsLanguageLabelName  = "SETTINGS_LANGUAGE_LBL";
 	const char* s_psSettingsVolumeLabelName    = "SETTINGS_VOLUME_LBL";
+	const char* s_psScoreLabelName             = "SCORE_LBL";
 
 	// File names
 	const char* s_psButtonOffImage               = "data/ui/buttonOff.png";
-	const char* s_psButtonOnImage                = "data/ui/buttonOff.png";
+	const char* s_psButtonOnImage                = "data/ui/buttonOn.png";
 	const char* s_psCheckboxEnabledImage         = "data/ui/CheckBox_enabled.png";
 	const char* s_psCheckboxDisabledImage        = "data/ui/CheckBox_disabled.png";
 	const char* s_psSliderLeftButtonNormalImage  = "data/ui/Slider_Left_Normal.png";
@@ -67,7 +68,10 @@ namespace {
 	const char* s_psEasyText          = "LTEXT_GUI_EASY";
 	const char* s_psMediumText        = "LTEXT_GUI_MEDIUM";
 	const char* s_psHardText          = "LTEXT_GUI_HARD";
-}
+	const char* s_psScoreText         = "LTEXT_GUI_SCORE_MESSAGE";
+} }
+
+using namespace menu::constants;
 
 CMenuManager::~CMenuManager() {
 	for (auto itMenu = m_mMenus.begin(); itMenu != m_mMenus.end(); ++itMenu) {
@@ -246,8 +250,8 @@ void CMenuManager::createOptionsMenu() {
 	CMenu* menu = NEW(CMenu, s_psOptionsMenuName, vmake(0.0f, 0.0f), vmake(0.0f, 0.0f), false);
 	m_mMenus[EOptionsMenu] = menu;
 
-	Label* label = NEW(Label, s_psSettingsMusicLabelName, vmake(SCR_WIDTH / 2 - 100, SCR_HEIGHT * 0.8), vmake(0.0, 0.0));
-	label->init(s_psMusicText);
+	Label* label = NEW(Label, s_psSettingsMusicLabelName, vmake(SCR_WIDTH / 2 - 100, SCR_HEIGHT * 0.8), vmake(0.0, 0.0), s_psMusicText);
+	label->init();
 	menu->addControl(label);
 
 	Checkbox* checkbox = NEW(Checkbox, s_psSettingsMusicCheckboxName, vmake(SCR_WIDTH / 2 + 100, SCR_HEIGHT * 0.8), vmake(35, 35));
@@ -255,8 +259,8 @@ void CMenuManager::createOptionsMenu() {
 	checkbox->addListener(this);
 	menu->addControl(checkbox);
 
-	label = NEW(Label, s_psSettingsSFXLabelName, vmake(SCR_WIDTH / 2 - 100, SCR_HEIGHT * 0.65), vmake(0.0, 0.0));
-	label->init(s_psSFXText);
+	label = NEW(Label, s_psSettingsSFXLabelName, vmake(SCR_WIDTH / 2 - 100, SCR_HEIGHT * 0.65), vmake(0.0, 0.0), s_psSFXText);
+	label->init();
 	menu->addControl(label);
 
 	checkbox = NEW(Checkbox, s_psSettingsSFXCheckboxName, vmake(SCR_WIDTH / 2 + 100, SCR_HEIGHT * 0.65), vmake(35, 35));
@@ -264,8 +268,8 @@ void CMenuManager::createOptionsMenu() {
 	checkbox->addListener(this);
 	menu->addControl(checkbox);
 
-	label = NEW(Label, s_psSettingsVolumeLabelName, vmake(SCR_WIDTH / 2 - 100, SCR_HEIGHT * 0.5), vmake(0.0, 0.0));
-	label->init(s_psVolumeText);
+	label = NEW(Label, s_psSettingsVolumeLabelName, vmake(SCR_WIDTH / 2 - 100, SCR_HEIGHT * 0.5), vmake(0.0, 0.0), s_psVolumeText);
+	label->init();
 	menu->addControl(label);
 
 	Slider* slider = NEW(Slider, s_psSettingsVolumeSliderName, vmake(SCR_WIDTH / 2 + 100, SCR_HEIGHT * 0.5), vmake(100, 32));
@@ -273,8 +277,8 @@ void CMenuManager::createOptionsMenu() {
 	slider->addListener(this);
 	menu->addControl(slider);
 
-	label = NEW(Label, s_psSettingsLanguageLabelName, vmake(SCR_WIDTH / 2 - 100, SCR_HEIGHT * 0.35), vmake(0.0, 0.0));
-	label->init(s_psLanguageText);
+	label = NEW(Label, s_psSettingsLanguageLabelName, vmake(SCR_WIDTH / 2 - 100, SCR_HEIGHT * 0.35), vmake(0.0, 0.0), s_psLanguageText);
+	label->init();
 	menu->addControl(label);
 
 	Button* button = NEW(Button, s_psSettingsLanguageButtonName, vmake(SCR_WIDTH / 2 + 100, SCR_HEIGHT * 0.35), vmake(150, 35));
@@ -316,4 +320,8 @@ void CMenuManager::createGameOverMenu() {
 	button->init(s_psButtonOffImage, s_psButtonOnImage, s_psAbandonText);
 	button->addListener(this);
 	menu->addControl(button);
+
+	Label* pLabel = NEW(Label, s_psScoreLabelName, vmake(SCR_WIDTH / 2, SCR_HEIGHT * 0.8), vmake(0.0, 0.0), "");
+	pLabel->init();
+	menu->addControl(pLabel);
 }

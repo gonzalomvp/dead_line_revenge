@@ -8,7 +8,7 @@ class Text;
 
 class CMenu : public CControl {
 public:
-	CMenu(const std::string& _sName, const vec2& _v2Pos, const vec2& _v2Size, bool _bIsActive = true) : CControl(_sName, _v2Pos, _v2Size, _bIsActive), m_pTitle(nullptr) {}
+	CMenu(const std::string& _sName, const vec2& _v2Pos, const vec2& _v2Size, bool _bIsActive = true) : CControl(_sName, _v2Pos, _v2Size, _bIsActive) {}
 	~CMenu();
 
 	virtual void activate  ()                  override;
@@ -16,9 +16,8 @@ public:
 	virtual void run       (float _fDeltaTime) override;
 
 	void addControl (CControl* _pControl) { m_vControls.push_back(_pControl); }
-	void setTitle   (const std::string& _sTitle);
+	CControl* getControlByName(const std::string& _sName);
 
 private:
 	std::vector<CControl*> m_vControls;
-	Text*                  m_pTitle;
 };

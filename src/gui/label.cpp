@@ -12,8 +12,7 @@ Label::~Label() {
 	DELETE(m_labelText);
 }
 
-void Label::init(const std::string& text) {
-	m_text = text;
+void Label::init() {
 	m_labelText = NEW(Text, m_text, vmake(m_v2Pos.x - (m_text.length() / 2.0f * 16), m_v2Pos.y - 6), 1);
 	g_pGraphicsEngine->addGfxEntity(m_labelText);
 }

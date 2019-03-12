@@ -5,6 +5,7 @@
 #include "entities/message.h"
 #include "gui/menu_manager.h"
 #include "gui/menu.h"
+#include "gui/label.h"
 #include "gui/string_manager.h"
 
 #include <algorithm>
@@ -198,9 +199,19 @@ void CWorld::run(float _fDeltaTime) {
 		removePendingEntities();
 
 		if (m_bIsGameOver) {
-			g_pWorld->cleanup();
-			std::string scoreMessage = g_pStringManager->getText("LTEXT_GUI_SCORE_MESSAGE") + std::to_string(m_uScore);
-			g_pMenuManager->getMenu(CMenuManager::EGameOverMenu)->setTitle(scoreMessage.c_str());
+			cleanup();
+
+			// Show Game Over Menu with the score
+			CMenu* pGameOverMenu = g_pMenuManager->getMenu(CMenuManager::EGameOverMenu);
+			ASSERT(pGameOverMenu);
+			std::string scoreMessage = g_pStringManager->getText(menu::constants::s_psScoreText) + std::to_string(m_uScore);
+			CControl* pControl = pGameOverMenu->getControlByName(menu::constants::s_psScoreLabelName);
+			if (pControl) {
+				Label* pLabel = dynamic_cast<Label*>(pControl);
+				if (pLabel) {
+					pLabel->setText(scoreMessage);
+				}
+			}
 			g_pMenuManager->activateMenu(CMenuManager::EGameOverMenu);
 		}
 		else {

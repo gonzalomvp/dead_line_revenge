@@ -10,16 +10,18 @@ class Text;
 //=============================================================================
 class Label : public CControl {
 public:
-	Label(const std::string& name, const vec2& pos, const vec2& size, bool isActive = true) : CControl(name, pos, size, isActive) {}
+	Label(const std::string& name, const vec2& pos, const vec2& size, const std::string& text, bool isActive = true) : CControl(name, pos, size, isActive), m_text(text), m_labelText(nullptr) {}
 	~Label();
 
-	void init(const std::string& text);
+	void init();
 
 	// Control Interface
 	virtual void activate  () override;
 	virtual void deactivate() override;
 	virtual void run       (float _fDeltaTime) override;
 	virtual bool onEvent(const IInputManager::CEvent&) override { return true; }
+
+	void setText(const std::string& text) { m_text = text; }
 
 private:
 	std::string m_text;
