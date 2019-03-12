@@ -11,7 +11,7 @@ class Text;
 //=============================================================================
 // Button class
 //=============================================================================
-class Slider : public CControl, Button::IListener {
+class Slider : public CControl, CButton::IListener {
 public:
 	class IListener {
 	public:
@@ -33,14 +33,14 @@ public:
 	virtual bool onEvent(const IInputManager::CEvent&) override;
 
 	// Button::IListener Interface
-	virtual void onClick(Button* button) override;
+	virtual void onClick(CButton* button) override;
 
 private:
 	void calculateValueFromPosition();
 	void setValue(float value);
 
-	Button* m_leftButton;
-	Button* m_rightButton;
+	CButton* m_leftButton;
+	CButton* m_rightButton;
 	Sprite* m_spriteBar;
 	Sprite* m_spriteBall;
 	Text*   m_sliderText;

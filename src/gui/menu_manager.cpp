@@ -124,7 +124,7 @@ CMenu* CMenuManager::getMenu(EMenu _eMenu) {
 	return m_mMenus[_eMenu];
 }
 
-void CMenuManager::onClick(Button* _pButton) {
+void CMenuManager::onClick(CButton* _pButton) {
 	ASSERT(_pButton);
 	ASSERT(g_pSceneManager && g_pInputManager && g_pStringManager);
 
@@ -205,17 +205,17 @@ void CMenuManager::createMainMenu() {
 	CMenu* menu = NEW(CMenu, s_psMainMenuName, vmake(0.0f, 0.0f), vmake(0.0f, 0.0f), false);
 	m_mMenus[EMainMenu] = menu;
 
-	Button* button = NEW(Button, s_psPlayMenuButtonName, vmake(SCR_WIDTH / 2, SCR_HEIGHT * 0.6), vmake(150, 35));
+	CButton* button = NEW(CButton, s_psPlayMenuButtonName, vmake(SCR_WIDTH / 2, SCR_HEIGHT * 0.6), vmake(150, 35));
 	button->init(s_psButtonOffImage, s_psButtonOnImage, s_psPlayText);
 	button->addListener(this);
 	menu->addControl(button);
 
-	button = NEW(Button, s_psOptionsMenuButtonName, vmake(SCR_WIDTH / 2, SCR_HEIGHT * 0.5), vmake(150, 35));
+	button = NEW(CButton, s_psOptionsMenuButtonName, vmake(SCR_WIDTH / 2, SCR_HEIGHT * 0.5), vmake(150, 35));
 	button->init(s_psButtonOffImage, s_psButtonOnImage, s_psOptionsText);
 	button->addListener(this);
 	menu->addControl(button);
 
-	button = NEW(Button, s_psExitButtonName, vmake(SCR_WIDTH / 2, SCR_HEIGHT * 0.4), vmake(150, 35));
+	button = NEW(CButton, s_psExitButtonName, vmake(SCR_WIDTH / 2, SCR_HEIGHT * 0.4), vmake(150, 35));
 	button->init(s_psButtonOffImage, s_psButtonOnImage, s_psExitText);
 	button->addListener(this);
 	menu->addControl(button);
@@ -225,22 +225,22 @@ void CMenuManager::createPlayMenu() {
 	CMenu* menu = NEW(CMenu, s_psPlayMenuName, vmake(0.0f, 0.0f), vmake(0.0f, 0.0f), false);
 	m_mMenus[EPlayMenu] = menu;
 
-	Button* button = NEW(Button, s_psEasyButtonName, vmake(SCR_WIDTH / 2, SCR_HEIGHT * 0.65), vmake(150, 35));
+	CButton* button = NEW(CButton, s_psEasyButtonName, vmake(SCR_WIDTH / 2, SCR_HEIGHT * 0.65), vmake(150, 35));
 	button->init(s_psButtonOffImage, s_psButtonOnImage, s_psEasyText);
 	button->addListener(this);
 	menu->addControl(button);
 
-	button = NEW(Button, s_psMediumButtonName, vmake(SCR_WIDTH / 2, SCR_HEIGHT * 0.55), vmake(150, 35));
+	button = NEW(CButton, s_psMediumButtonName, vmake(SCR_WIDTH / 2, SCR_HEIGHT * 0.55), vmake(150, 35));
 	button->init(s_psButtonOffImage, s_psButtonOnImage, s_psMediumText);
 	button->addListener(this);
 	menu->addControl(button);
 
-	button = NEW(Button, s_psHardButtonName, vmake(SCR_WIDTH / 2, SCR_HEIGHT * 0.45), vmake(150, 35));
+	button = NEW(CButton, s_psHardButtonName, vmake(SCR_WIDTH / 2, SCR_HEIGHT * 0.45), vmake(150, 35));
 	button->init(s_psButtonOffImage, s_psButtonOnImage, s_psHardText);
 	button->addListener(this);
 	menu->addControl(button);
 
-	button = NEW(Button, s_psMainMenuButtonName, vmake(SCR_WIDTH / 2, SCR_HEIGHT * 0.35), vmake(150, 35));
+	button = NEW(CButton, s_psMainMenuButtonName, vmake(SCR_WIDTH / 2, SCR_HEIGHT * 0.35), vmake(150, 35));
 	button->init(s_psButtonOffImage, s_psButtonOnImage, s_psBackText);
 	button->addListener(this);
 	menu->addControl(button);
@@ -281,12 +281,12 @@ void CMenuManager::createOptionsMenu() {
 	label->init();
 	menu->addControl(label);
 
-	Button* button = NEW(Button, s_psSettingsLanguageButtonName, vmake(SCR_WIDTH / 2 + 100, SCR_HEIGHT * 0.35), vmake(150, 35));
+	CButton* button = NEW(CButton, s_psSettingsLanguageButtonName, vmake(SCR_WIDTH / 2 + 100, SCR_HEIGHT * 0.35), vmake(150, 35));
 	button->init(s_psButtonOffImage, s_psButtonOnImage, s_psLanguageValueText);
 	button->addListener(this);
 	menu->addControl(button);
 	
-	button = NEW(Button, s_psMainMenuButtonName, vmake(SCR_WIDTH / 2, SCR_HEIGHT * 0.15), vmake(150, 35));
+	button = NEW(CButton, s_psMainMenuButtonName, vmake(SCR_WIDTH / 2, SCR_HEIGHT * 0.15), vmake(150, 35));
 	button->init(s_psButtonOffImage, s_psButtonOnImage, s_psBackText);
 	button->addListener(this);
 	menu->addControl(button);
@@ -296,12 +296,12 @@ void CMenuManager::createPauseMenu() {
 	CMenu* menu = NEW(CMenu, s_psPauseMenuName, vmake(0.0f, 0.0f), vmake(0.0f, 0.0f), false);
 	m_mMenus[EPauseMenu] = menu;
 
-	Button* button = NEW(Button, s_psResumeButtonName, vmake(SCR_WIDTH / 2, SCR_HEIGHT * 0.6), vmake(175, 35));
+	CButton* button = NEW(CButton, s_psResumeButtonName, vmake(SCR_WIDTH / 2, SCR_HEIGHT * 0.6), vmake(175, 35));
 	button->init(s_psButtonOffImage, s_psButtonOnImage, s_psResumeText);
 	button->addListener(this);
 	menu->addControl(button);
 
-	button = NEW(Button, s_psAbandonButtonName, vmake(SCR_WIDTH / 2, SCR_HEIGHT * 0.5), vmake(175, 35));
+	button = NEW(CButton, s_psAbandonButtonName, vmake(SCR_WIDTH / 2, SCR_HEIGHT * 0.5), vmake(175, 35));
 	button->init(s_psButtonOffImage, s_psButtonOnImage, s_psAbandonText);
 	button->addListener(this);
 	menu->addControl(button);
@@ -311,12 +311,12 @@ void CMenuManager::createGameOverMenu() {
 	CMenu* menu = NEW(CMenu, s_psGameOverMenuName, vmake(0.0f, 0.0f), vmake(0.0f, 0.0f), false);
 	m_mMenus[EGameOverMenu] = menu;
 
-	Button* button = NEW(Button, s_psRetryButtonName, vmake(SCR_WIDTH / 2, SCR_HEIGHT * 0.6), vmake(175, 35));
+	CButton* button = NEW(CButton, s_psRetryButtonName, vmake(SCR_WIDTH / 2, SCR_HEIGHT * 0.6), vmake(175, 35));
 	button->init(s_psButtonOffImage, s_psButtonOnImage, s_psRetryText);
 	button->addListener(this);
 	menu->addControl(button);
 
-	button = NEW(Button, s_psMainMenuButtonName, vmake(SCR_WIDTH / 2, SCR_HEIGHT * 0.5), vmake(175, 35));
+	button = NEW(CButton, s_psMainMenuButtonName, vmake(SCR_WIDTH / 2, SCR_HEIGHT * 0.5), vmake(175, 35));
 	button->init(s_psButtonOffImage, s_psButtonOnImage, s_psAbandonText);
 	button->addListener(this);
 	menu->addControl(button);

@@ -11,11 +11,12 @@ public:
 	virtual void activate  () { m_bIsActive = true;  }
 	virtual void deactivate() { m_bIsActive = false; }
 
-	virtual bool onEvent(const IInputManager::CEvent& event) { return true; }
+	virtual bool onEvent(const IInputManager::CEvent& _event) { return true; }
 	
-	bool        isActive() const { return m_bIsActive; }
 	std::string getName () const { return m_sName;     }
+	vec2        getPos  () const { return m_v2Pos;     }
 	vec2        getSize () const { return m_v2Size;    }
+	bool        isActive() const { return m_bIsActive; }
 
 protected:
 	std::string m_sName;

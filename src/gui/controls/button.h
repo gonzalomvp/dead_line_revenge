@@ -1,23 +1,21 @@
 #pragma once
 
-#include "control.h"
+#include "gui/controls/control.h"
+
 #include <vector>
 
 class Sprite;
 class Text;
 
-//=============================================================================
-// Button class
-//=============================================================================
-class Button : public CControl {
+class CButton : public CControl {
 public:
 	class IListener {
 	public:
-		virtual void onClick(Button* button) = 0;
+		virtual void onClick(CButton* _pButton) = 0;
 	};
 
-	Button(const std::string& name, const vec2& pos, const vec2& size, bool isActive = true) : CControl(name, pos, size, isActive) {}
-	~Button();
+	CButton(const std::string& name, const vec2& pos, const vec2& size, bool isActive = true) : CControl(name, pos, size, isActive) {}
+	~CButton();
 
 	void init(const char* normalImage, const char* pushImage, const std::string& text, bool notifyHold = false, unsigned int holdTimer = 10);
 

@@ -8,7 +8,7 @@
 // Button class
 //=============================================================================
 
-Button::~Button() {
+CButton::~CButton() {
 	if (g_pGraphicsEngine) {
 		g_pGraphicsEngine->removeGfxEntity(m_spriteNormal);
 		g_pGraphicsEngine->removeGfxEntity(m_spritePush);
@@ -25,7 +25,7 @@ Button::~Button() {
 	}
 }
 
-void Button::init(const char* normalImage, const char* pushImage, const std::string& text, bool notifyHold, unsigned int holdTime) {
+void CButton::init(const char* normalImage, const char* pushImage, const std::string& text, bool notifyHold, unsigned int holdTime) {
 	m_spriteNormal = NEW(Sprite, g_pGraphicsEngine->getTexture(normalImage), m_v2Pos, m_v2Size, 0.f, 1.f, 2);
 	g_pGraphicsEngine->addGfxEntity(m_spriteNormal);
 	m_spritePush = NEW(Sprite, g_pGraphicsEngine->getTexture(pushImage) , m_v2Pos, m_v2Size, 0.f, 1.f, 2);
@@ -37,7 +37,7 @@ void Button::init(const char* normalImage, const char* pushImage, const std::str
 	m_holdTime = holdTime;
 }
 
-void Button::activate() {
+void CButton::activate() {
 	CControl::activate();
 
 	m_spriteNormal->activate();
@@ -54,7 +54,7 @@ void Button::activate() {
 	g_pInputManager->registerEvent(this, IInputManager::EMouseButtonHold);
 }
 
-void Button::deactivate() {
+void CButton::deactivate() {
 	CControl::deactivate();
 
 	m_spriteNormal->deactivate();
@@ -66,7 +66,7 @@ void Button::deactivate() {
 	g_pInputManager->unregisterEvent(this, IInputManager::EMouseButtonHold);
 }
 
-void Button::run(float _fDeltaTime) {
+void CButton::run(float _fDeltaTime) {
 	if (m_bIsActive) {
 		CControl::run(_fDeltaTime);
 
@@ -89,7 +89,7 @@ void Button::run(float _fDeltaTime) {
 	}
 }
 
-bool Button::onEvent(const IInputManager::CEvent& event) {
+bool CButton::onEvent(const IInputManager::CEvent& event) {
 	const IInputManager::CMouseEvent mouseEvent = *static_cast<const IInputManager::CMouseEvent*>(&event);
 	//assert(mouseEvent);
 

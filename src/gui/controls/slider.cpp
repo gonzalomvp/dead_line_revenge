@@ -28,11 +28,11 @@ Slider::~Slider() {
 }
 
 void Slider::init(const char* spriteLeftNormal, const char* spriteLeftPush, const char* spriteRightNormal, const char* spriteRightPush, const char* spriteBar, const char* spriteBall, float value) {
-	m_leftButton = NEW(Button, m_sName, vmake(m_v2Pos.x - (m_v2Size.x + 32) / 2, m_v2Pos.y), vmake(32, 32));
+	m_leftButton = NEW(CButton, m_sName, vmake(m_v2Pos.x - (m_v2Size.x + 32) / 2, m_v2Pos.y), vmake(32, 32));
 	m_leftButton->init("data/ui/Slider_Left_Normal.png", "data/ui/Slider_Left_Push.png", "", true);
 	m_leftButton->addListener(this);
 
-	m_rightButton = NEW(Button, m_sName, vmake(m_v2Pos.x + (m_v2Size.x + 32) / 2, m_v2Pos.y), vmake(32, 32));
+	m_rightButton = NEW(CButton, m_sName, vmake(m_v2Pos.x + (m_v2Size.x + 32) / 2, m_v2Pos.y), vmake(32, 32));
 	m_rightButton->init("data/ui/Slider_Right_Normal.png", "data/ui/Slider_Right_Push.png", "", true);
 	m_rightButton->addListener(this);
 
@@ -146,7 +146,7 @@ bool Slider::onEvent(const IInputManager::CEvent& event) {
 	return true;
 }
 
-void Slider::onClick(Button* button) {
+void Slider::onClick(CButton* button) {
 	float increment = 0.1f; // hacer variable miembro
 	if (button == m_leftButton) {
 		increment = -increment;
