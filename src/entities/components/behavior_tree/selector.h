@@ -1,11 +1,11 @@
 #pragma once
 #include "group.h"
 
-class BehaviorTree;
+class CBehaviorTreeComponent;
 
 class Selector : public Group {
 public:
-	Selector(BehaviorTree* owner) : Group(owner) {}
+	Selector(CBehaviorTreeComponent* owner) : Group(owner) {}
 
 protected:
 	virtual void onEnter() override;

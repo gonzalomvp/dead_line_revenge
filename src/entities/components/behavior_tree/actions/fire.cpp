@@ -8,7 +8,7 @@
 
 Status Fire::update(float step) {
 
-	Entity* self = mOwner->getCharacter();
+	Entity* self = getOwnerEntity();
 	MessageFire messageFire;
 	messageFire.isFiring = true;
 	self->receiveMessage(&messageFire);

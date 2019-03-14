@@ -24,6 +24,8 @@ public:
 	virtual void receiveMessage(Message* message) {}
 
 	void setActivationDelay(int activationDelay) { m_activationDelay = activationDelay; }
+	Entity* getOwner() { return m_owner; }
+
 protected:
 	Component(Entity* owner) : m_owner(owner), m_isActive(false), m_activationDelay(0), m_activationTimer(0) {}
 

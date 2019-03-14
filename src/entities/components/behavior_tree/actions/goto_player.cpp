@@ -14,7 +14,7 @@ void GoToPlayerPosition::onEnter() {
 
 Status GoToPlayerPosition::update(float step) {
 
-	Entity* self = mOwner->getCharacter();
+	Entity* self = getOwnerEntity();
 
 	MessageGetTransform messageSelfPos;
 	self->receiveMessage(&messageSelfPos);

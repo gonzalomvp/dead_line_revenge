@@ -3,23 +3,23 @@
 #include "entities/components/component.h"
 #include "blackboard.h"
 
-class Entity;
 class Behavior;
 class TiXmlElement;
 
-class BehaviorTree : public Component {
+class CBehaviorTreeComponent : public Component {
 public:
-	BehaviorTree(Entity* owner) : Component(owner), mRootBehavior(nullptr) {}
-	~BehaviorTree();
+	CBehaviorTreeComponent(Entity* _pOwner) : Component(_pOwner), m_pRootBehavior(nullptr) {}
+	~CBehaviorTreeComponent();
 	
-	Entity* getCharacter() const { return m_owner; }
-	CBlackboard& getBlackboard() { return m_oBlackboard; }
-	
-	bool load(const char* filename);
-	Behavior* createBehavior(TiXmlElement* behaviorElem);
-	virtual void run(float deltaTime);
+	bool         loadFromXML(const char* _psFilename);
+	CBlackboard& getBlackboard() { return m_blackboard; }
 
+	// CComponent
+	virtual void run(float _fDeltaTime) override;
+  
 private:
-	Behavior* mRootBehavior;
-	CBlackboard m_oBlackboard;
+	Behavior* createBehavior(TiXmlElement* _pBehaviorElem);
+
+	Behavior*   m_pRootBehavior;
+	CBlackboard m_blackboard;
 };

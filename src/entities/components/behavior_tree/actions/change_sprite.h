@@ -1,11 +1,11 @@
 #pragma once
 #include "entities/components/behavior_tree/behavior.h"
 
-class BehaviorTree;
+class CBehaviorTreeComponent;
 
 class ChangeSprite : public Behavior {
 public:
-	ChangeSprite(BehaviorTree* owner, std::string texture) : Behavior(owner), mTexture(texture) {}
+	ChangeSprite(CBehaviorTreeComponent* owner, std::string texture) : Behavior(owner), mTexture(texture) {}
 
 protected:
 	virtual Status update(float step) override;

@@ -2,11 +2,11 @@
 #include "behavior.h"
 #include <vector>
 
-class BehaviorTree;
+class CBehaviorTreeComponent;
 
 class Group : public Behavior {
 public:
-	Group(BehaviorTree* owner) : Behavior(owner) {}
+	Group(CBehaviorTreeComponent* owner) : Behavior(owner) {}
 	~Group();
 	void AddBehavior(Behavior* behavior) { mChildren.push_back(behavior); }
 

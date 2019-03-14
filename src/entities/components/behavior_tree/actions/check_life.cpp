@@ -7,7 +7,7 @@
 
 
 Status CheckLife::update(float step) {
-	Entity* self = mOwner->getCharacter();
+	Entity* self = getOwnerEntity();
 	MessageGetLife messageGetLife;
 	self->receiveMessage(&messageGetLife);
 

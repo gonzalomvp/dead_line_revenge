@@ -1,13 +1,13 @@
 #pragma once
 #include "entities/components/behavior_tree/behavior.h"
 
-class BehaviorTree;
+class CBehaviorTreeComponent;
 class AlignToMovementSteering;
 class PursueSteering;
 
 class Chase : public Behavior {
 public:
-	Chase(BehaviorTree* owner, float arriveDistance, float lostDistance);
+	Chase(CBehaviorTreeComponent* owner, float arriveDistance, float lostDistance);
 	~Chase();
 
 protected:

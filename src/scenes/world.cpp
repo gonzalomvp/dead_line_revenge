@@ -81,7 +81,7 @@ bool CWorld::init(uint16_t _uLevel) {
 	}
 
 	// Force test level
-	//psFileName = "data/levelTest.json";
+	psFileName = "data/levelTest.json";
 
 	FILE* pFile = fopen(psFileName, "r");
 	if (!pFile) return false;

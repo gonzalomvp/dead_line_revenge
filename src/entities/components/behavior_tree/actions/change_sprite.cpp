@@ -6,7 +6,7 @@
 
 Status ChangeSprite::update(float step) {
 	
-	Entity* self = mOwner->getCharacter();
+	Entity* self = getOwnerEntity();
 	MessageChangeSprite messageChangeSprite;
 	messageChangeSprite.texture = mTexture;
 	self->receiveMessage(&messageChangeSprite);

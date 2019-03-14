@@ -7,7 +7,7 @@
 
 
 Status AimPlayer::update(float step) {
-	Entity* self = mOwner->getCharacter();
+	Entity* self = getOwnerEntity();
 	Entity* player = g_pWorld->getPlayer();
 	MessageGetTransform messageSelfPos;
 	self->receiveMessage(&messageSelfPos);

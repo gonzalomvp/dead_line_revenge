@@ -7,7 +7,7 @@
 
 
 Status RotateAim::update(float step) {
-	Entity* self = mOwner->getCharacter();
+	Entity* self = getOwnerEntity();
 	MessageGetAimDirection messageGetAimDirection;
 	self->receiveMessage(&messageGetAimDirection);
 

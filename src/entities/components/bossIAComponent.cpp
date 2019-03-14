@@ -3,5 +3,5 @@
 
 void BossIAComponent::init() {
 	Component::init();
-	load(m_btFilename);
+	loadFromXML(m_btFilename);
 }

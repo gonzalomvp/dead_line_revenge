@@ -6,7 +6,7 @@
 #include "scenes/world.h"
 
 void GoToRandomPosition::onEnter() {
-	Entity* self = mOwner->getCharacter();
+	Entity* self = getOwnerEntity();
 	MessageGetTransform messageSelfPos;
 	self->receiveMessage(&messageSelfPos);
 
@@ -15,7 +15,7 @@ void GoToRandomPosition::onEnter() {
 
 Status GoToRandomPosition::update(float step) {
 
-	Entity* self = mOwner->getCharacter();
+	Entity* self = getOwnerEntity();
 
 	MessageGetTransform messageSelfPos;
 	self->receiveMessage(&messageSelfPos);

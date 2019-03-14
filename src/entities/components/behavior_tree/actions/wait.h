@@ -1,11 +1,11 @@
 #pragma once
 #include "entities/components/behavior_tree/behavior.h"
 
-class BehaviorTree;
+class CBehaviorTreeComponent;
 
 class Wait : public Behavior {
 public:
-	Wait(BehaviorTree* owner, int waitTime) : Behavior(owner), mWaitTime(waitTime) {}
+	Wait(CBehaviorTreeComponent* owner, int waitTime) : Behavior(owner), mWaitTime(waitTime) {}
 
 protected:
 	virtual void onEnter() override;

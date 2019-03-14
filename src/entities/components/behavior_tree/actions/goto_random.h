@@ -1,11 +1,11 @@
 #pragma once
 #include "entities/components/behavior_tree/behavior.h"
 
-class BehaviorTree;
+class CBehaviorTreeComponent;
 
 class GoToRandomPosition : public Behavior {
 public:
-	GoToRandomPosition(BehaviorTree* owner, float speed) : Behavior(owner), mSpeed(speed) {}
+	GoToRandomPosition(CBehaviorTreeComponent* owner, float speed) : Behavior(owner), mSpeed(speed) {}
 
 protected:
 	virtual void onEnter() override;

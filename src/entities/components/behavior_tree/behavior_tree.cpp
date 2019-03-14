@@ -1,9 +1,10 @@
 #include "common/stdafx.h"
 #include "behavior_tree.h"
-#include "behavior.h"
-#include "selector.h"
-#include "sequence.h"
-#include "repeat.h"
+
+#include "entities/components/behavior_tree/behavior.h"
+#include "entities/components/behavior_tree/selector.h"
+#include "entities/components/behavior_tree/sequence.h"
+#include "entities/components/behavior_tree/repeat.h"
 #include "entities/components/behavior_tree/actions/change_sprite.h"
 #include "entities/components/behavior_tree/actions/hit.h"
 #include "entities/components/behavior_tree/actions/idle.h"
@@ -26,48 +27,36 @@
 #include "tinyxml/tinyxml.h"
 #pragma pack(pop)
 
-BehaviorTree::~BehaviorTree() {
-	delete mRootBehavior;
+CBehaviorTreeComponent::~CBehaviorTreeComponent() {
+	delete m_pRootBehavior;
 }
 
-bool BehaviorTree::load(const char* filename) {
-	TiXmlDocument doc(filename);
-	if (!doc.LoadFile())
-	{
-		fprintf(stderr, "Couldn't read behavior tree configuration from %s", filename);
+bool CBehaviorTreeComponent::loadFromXML(const char* _psFilename) {
+	ASSERT(_psFilename);
+	TiXmlDocument doc(_psFilename);
+	if (!doc.LoadFile()) {
+		fprintf(stderr, "Couldn't read behavior tree configuration from %s", _psFilename);
 		return false;
 	}
-
 	TiXmlHandle hDoc(&doc);
+	m_pRootBehavior = createBehavior(hDoc.FirstChild("root").FirstChild("behavior").Element());
 
-	TiXmlElement* pElem;
-	pElem = hDoc.FirstChildElement().Element();
-	if (!pElem)
-	{
-		fprintf(stderr, "Invalid format for %s", filename);
-		return false;
-	}
-
-	TiXmlHandle hRoot(pElem);
-
-	TiXmlHandle hParams = hRoot.FirstChildElement("behavior");
-	TiXmlElement* rootElem = hParams.Element();
-	mRootBehavior = createBehavior(rootElem);
 	return true;
 }
 
-void BehaviorTree::run(float deltaTime)
+void CBehaviorTreeComponent::run(float deltaTime)
 {
 	Component::run(deltaTime);
 	if (!m_isActive)
 		return;
 	
-	if (mRootBehavior) {
-		mRootBehavior->tick(deltaTime);
+	if (m_pRootBehavior) {
+		m_pRootBehavior->tick(deltaTime);
 	}
 }
 
-Behavior* BehaviorTree::createBehavior(TiXmlElement* behaviorElem) {
+Behavior* CBehaviorTreeComponent::createBehavior(TiXmlElement* behaviorElem) {
+	ASSERT(behaviorElem);
 	Behavior* behavior = nullptr;
 	if (behaviorElem) {
 		std::string type = behaviorElem->Attribute("type");

@@ -1,6 +1,7 @@
 #pragma once
 
-class BehaviorTree;
+class CBehaviorTreeComponent;
+class Entity;
 
 enum Status {
 	eInvalid,
@@ -11,16 +12,18 @@ enum Status {
 
 class Behavior {
 public:
-	Behavior(BehaviorTree* owner) : mOwner(owner), mStatus(eInvalid) {}
+	Behavior(CBehaviorTreeComponent* owner) : mOwner(owner), mStatus(eInvalid) {}
 	virtual ~Behavior() {}
 	virtual Status tick(float step);
+
+	Entity* getOwnerEntity();
 
 protected:
 	virtual Status update(float step) = 0;
 	virtual void onEnter() {}
 	virtual void onExit()  {}
 
-	BehaviorTree* mOwner;
+	CBehaviorTreeComponent* mOwner;
 
 private:
 	Status mStatus;

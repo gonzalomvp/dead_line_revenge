@@ -1,11 +1,11 @@
 #pragma once
 #include "entities/components/behavior_tree/behavior.h"
 
-class BehaviorTree;
+class CBehaviorTreeComponent;
 
 class Hit : public Behavior {
 public:
-	Hit(BehaviorTree* owner) : Behavior(owner) {}
+	Hit(CBehaviorTreeComponent* owner) : Behavior(owner) {}
 
 protected:
 	virtual void onEnter() override;

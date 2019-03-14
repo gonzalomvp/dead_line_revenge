@@ -5,7 +5,7 @@
 #include "entities/message.h"
 
 Status Idle::update(float step) {
-	Entity* self = mOwner->getCharacter();
+	Entity* self = getOwnerEntity();
 	MessageEnableAI messageEnableAI;
 	messageEnableAI.enable = mEnabled;
 	self->receiveMessage(&messageEnableAI);

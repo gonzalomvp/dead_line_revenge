@@ -1,11 +1,11 @@
 #pragma once
 #include "group.h"
 
-class BehaviorTree;
+class CBehaviorTreeComponent;
 
 class Repeat : public Group {
 public:
-	Repeat(BehaviorTree* owner, int numRepeats) : Group(owner), mNumRepeats(numRepeats) {}
+	Repeat(CBehaviorTreeComponent* owner, int numRepeats) : Group(owner), mNumRepeats(numRepeats) {}
 
 protected:
 	virtual void onEnter() override;

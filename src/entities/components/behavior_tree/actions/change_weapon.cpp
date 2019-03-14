@@ -10,7 +10,7 @@
 
 Status ChangeWeapon::update(float step) {
 
-	Entity* self = mOwner->getCharacter();
+	Entity* self = getOwnerEntity();
 	MessageWeaponChange messageWeaponChange;
 	messageWeaponChange.weaponData = g_pEntitiesFactory->getWeaponDef(ComponentWeapon::getWeaponTypeByName(mWeaponName));
 	self->receiveMessage(&messageWeaponChange);

@@ -7,7 +7,7 @@
 #include "entities/components/behavior_tree/blackboard.h"
 
 Status CheckDistance::update(float step) {
-	Entity* self = mOwner->getCharacter();
+	Entity* self = getOwnerEntity();
 	Entity* player = g_pWorld->getPlayer();
 	MessageGetTransform messageSelfPos;
 	self->receiveMessage(&messageSelfPos);

@@ -1,11 +1,11 @@
 #pragma once
 #include "entities/components/behavior_tree/behavior.h"
 
-class BehaviorTree;
+class CBehaviorTreeComponent;
 
 class ChangeWeapon : public Behavior {
 public:
-	ChangeWeapon(BehaviorTree* owner, const std::string& weaponName) : Behavior(owner), mWeaponName(weaponName) {}
+	ChangeWeapon(CBehaviorTreeComponent* owner, const std::string& weaponName) : Behavior(owner), mWeaponName(weaponName) {}
 
 protected:
 	virtual Status update(float step) override;

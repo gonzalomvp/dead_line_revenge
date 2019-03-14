@@ -5,10 +5,10 @@
 //=============================================================================
 // BossIAComponent class
 //=============================================================================
-class BossIAComponent : public BehaviorTree {
+class BossIAComponent : public CBehaviorTreeComponent {
 public:
 	BossIAComponent(Entity* owner, const char* filename) :
-		BehaviorTree(owner),
+		CBehaviorTreeComponent(owner),
 		m_btFilename(filename) {}
 
 	virtual void init();
