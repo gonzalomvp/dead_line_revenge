@@ -28,12 +28,12 @@ Slider::~Slider() {
 }
 
 void Slider::init(const char* spriteLeftNormal, const char* spriteLeftPush, const char* spriteRightNormal, const char* spriteRightPush, const char* spriteBar, const char* spriteBall, float value) {
-	m_leftButton = NEW(CButton, m_sName, vmake(m_v2Pos.x - (m_v2Size.x + 32) / 2, m_v2Pos.y), vmake(32, 32));
-	m_leftButton->init("data/ui/Slider_Left_Normal.png", "data/ui/Slider_Left_Push.png", "", true);
+	m_leftButton = NEW(CButton, m_sName, vmake(m_v2Pos.x - (m_v2Size.x + 32) / 2, m_v2Pos.y), vmake(32, 32), "data/ui/Slider_Left_Normal.png", "data/ui/Slider_Left_Push.png", "", true);
+	m_leftButton->init();
 	m_leftButton->addListener(this);
 
-	m_rightButton = NEW(CButton, m_sName, vmake(m_v2Pos.x + (m_v2Size.x + 32) / 2, m_v2Pos.y), vmake(32, 32));
-	m_rightButton->init("data/ui/Slider_Right_Normal.png", "data/ui/Slider_Right_Push.png", "", true);
+	m_rightButton = NEW(CButton, m_sName, vmake(m_v2Pos.x + (m_v2Size.x + 32) / 2, m_v2Pos.y), vmake(32, 32), "data/ui/Slider_Right_Normal.png", "data/ui/Slider_Right_Push.png", "", true);
+	m_rightButton->init();
 	m_rightButton->addListener(this);
 
 	m_spriteBar = NEW(Sprite, g_pGraphicsEngine->getTexture("data/ui/Slider_bar.png"), m_v2Pos, vmake(m_v2Size.x, 5), 0.f, 1.f, 2);

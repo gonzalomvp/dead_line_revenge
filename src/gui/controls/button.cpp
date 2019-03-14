@@ -4,19 +4,27 @@
 #include "engine/graphics_engine.h"
 #include "gui/string_manager.h"
 
-//=============================================================================
-// Button class
-//=============================================================================
+CButton::CButton(const std::string& _sName, const vec2& _v2Pos, const vec2& _v2Size, const char* _psNormalImage, const char* _psPushImage, const std::string& _sText, bool _bNotifyHold, float _fHoldTime, bool _bIsActive)
+: CControl(_sName, _v2Pos, _v2Size, _bIsActive)
+, m_psNormalImage(_psNormalImage)
+, m_psPushImage(_psPushImage)
+, m_sText(_sText)
+, m_bNotifyHold(_bNotifyHold)
+, m_fHoldTime(_fHoldTime)
+, m_pSpriteNormal(nullptr)
+, m_pSpritePush(nullptr)
+, m_pButtonText(nullptr)
+{}
 
 CButton::~CButton() {
 	if (g_pGraphicsEngine) {
-		g_pGraphicsEngine->removeGfxEntity(m_spriteNormal);
-		g_pGraphicsEngine->removeGfxEntity(m_spritePush);
-		g_pGraphicsEngine->removeGfxEntity(m_buttonText);
+		g_pGraphicsEngine->removeGfxEntity(m_pSpriteNormal);
+		g_pGraphicsEngine->removeGfxEntity(m_pSpritePush);
+		g_pGraphicsEngine->removeGfxEntity(m_pButtonText);
 	}
-	DELETE(m_spriteNormal);
-	DELETE(m_spritePush);
-	DELETE(m_buttonText);
+	DELETE(m_pSpriteNormal);
+	DELETE(m_pSpritePush);
+	DELETE(m_pButtonText);
 
 	if (g_pInputManager) {
 		g_pInputManager->unregisterEvent(this, IInputManager::EMouseButtonDown);
@@ -25,29 +33,26 @@ CButton::~CButton() {
 	}
 }
 
-void CButton::init(const char* normalImage, const char* pushImage, const std::string& text, bool notifyHold, unsigned int holdTime) {
-	m_spriteNormal = NEW(Sprite, g_pGraphicsEngine->getTexture(normalImage), m_v2Pos, m_v2Size, 0.f, 1.f, 2);
-	g_pGraphicsEngine->addGfxEntity(m_spriteNormal);
-	m_spritePush = NEW(Sprite, g_pGraphicsEngine->getTexture(pushImage) , m_v2Pos, m_v2Size, 0.f, 1.f, 2);
-	g_pGraphicsEngine->addGfxEntity(m_spritePush);
-	m_text = text;
-	m_buttonText = NEW(Text, m_text, vmake(m_v2Pos.x - (m_text.length() / 2.0f * 16), m_v2Pos.y - 6), 1);
-	g_pGraphicsEngine->addGfxEntity(m_buttonText);
-	m_notifyHold = notifyHold;
-	m_holdTime = holdTime;
+void CButton::init() {
+	m_pSpriteNormal = NEW(Sprite, g_pGraphicsEngine->getTexture(m_psNormalImage), m_v2Pos, m_v2Size, 0.f, 1.f, 2);
+	g_pGraphicsEngine->addGfxEntity(m_pSpriteNormal);
+	m_pSpritePush = NEW(Sprite, g_pGraphicsEngine->getTexture(m_psPushImage) , m_v2Pos, m_v2Size, 0.f, 1.f, 2);
+	g_pGraphicsEngine->addGfxEntity(m_pSpritePush);
+	m_pButtonText = NEW(Text, m_sText, vmake(m_v2Pos.x - (m_sText.length() / 2.0f * 16), m_v2Pos.y - 6), 1);
+	g_pGraphicsEngine->addGfxEntity(m_pButtonText);
 }
 
 void CButton::activate() {
 	CControl::activate();
 
-	m_spriteNormal->activate();
-	m_spritePush->deactivate();
-	m_buttonText->activate();
-	m_buttonText->setPos(vmake(m_v2Pos.x - (m_text.length() / 2.0f * 16), m_v2Pos.y - 6));
+	m_pSpriteNormal->activate();
+	m_pSpritePush->deactivate();
+	m_pButtonText->activate();
+	m_pButtonText->setPos(vmake(m_v2Pos.x - (m_sText.length() / 2.0f * 16), m_v2Pos.y - 6));
 
-	m_isPushed = false;
-	m_isHold = false;
-	m_holdTimer = 0;
+	m_bIsPushed = false;
+	m_bIsHold = false;
+	m_fHoldTimer = 0.0f;
 
 	g_pInputManager->registerEvent(this, IInputManager::EMouseButtonDown);
 	g_pInputManager->registerEvent(this, IInputManager::EMouseButtonUp);
@@ -57,9 +62,9 @@ void CButton::activate() {
 void CButton::deactivate() {
 	CControl::deactivate();
 
-	m_spriteNormal->deactivate();
-	m_spritePush->deactivate();
-	m_buttonText->deactivate();
+	m_pSpriteNormal->deactivate();
+	m_pSpritePush->deactivate();
+	m_pButtonText->deactivate();
 
 	g_pInputManager->unregisterEvent(this, IInputManager::EMouseButtonDown);
 	g_pInputManager->unregisterEvent(this, IInputManager::EMouseButtonUp);
@@ -70,18 +75,18 @@ void CButton::run(float _fDeltaTime) {
 	if (m_bIsActive) {
 		CControl::run(_fDeltaTime);
 
-		std::string textToDraw = g_pStringManager->getText(m_text);
-		m_buttonText->setText(textToDraw.c_str());
-		vec2 currentPos = m_buttonText->getPos();
+		std::string textToDraw = g_pStringManager->getText(m_sText);
+		m_pButtonText->setText(textToDraw.c_str());
+		vec2 currentPos = m_pButtonText->getPos();
 		currentPos.x = m_v2Pos.x - (textToDraw.length() / 2.0f * 16);
-		m_buttonText->setPos(currentPos);
+		m_pButtonText->setPos(currentPos);
 
-		if (m_isPushed && m_notifyHold) {
-			++m_holdTimer;
-			if (m_holdTimer >= m_holdTime) {
-				m_isHold = true;
-				m_holdTimer = 0;
-				for (auto itListener = m_listeners.begin(); itListener != m_listeners.end(); ++itListener) {
+		if (m_bIsPushed && m_bNotifyHold) {
+			m_fHoldTimer += _fDeltaTime;
+			if (m_fHoldTimer >= m_fHoldTime) {
+				m_bIsHold = true;
+				m_fHoldTimer = 0.0f;
+				for (auto itListener = m_vListeners.begin(); itListener != m_vListeners.end(); ++itListener) {
 					(*itListener)->onClick(this);
 				}
 			}
@@ -99,32 +104,32 @@ bool CButton::onEvent(const IInputManager::CEvent& event) {
 		switch (mouseEvent.getType()) {
 			case IInputManager::EMouseButtonDown:
 				if (isMouseOverButton) {
-					m_isPushed = true;
-					m_holdTimer = 0;
-					m_spritePush->activate();
-					m_spriteNormal->deactivate();
-					m_buttonText->setPos(vmake(m_v2Pos.x - (m_text.length() / 2.0f * 16), m_v2Pos.y - 8));
+					m_bIsPushed = true;
+					m_fHoldTimer = 0.0f;
+					m_pSpritePush->activate();
+					m_pSpriteNormal->deactivate();
+					m_pButtonText->setPos(vmake(m_v2Pos.x - (m_sText.length() / 2.0f * 16), m_v2Pos.y - 8));
 				}
 				break;
 			case IInputManager::EMouseButtonUp:
-				m_spriteNormal->activate();
-				m_spritePush->deactivate();
-				m_buttonText->setPos(vmake(m_v2Pos.x - (m_text.length() / 2.0f * 16), m_v2Pos.y - 6));
-				if (m_isPushed && !m_isHold) {
-					for (auto itListener = m_listeners.begin(); itListener != m_listeners.end(); ++itListener) {
+				m_pSpriteNormal->activate();
+				m_pSpritePush->deactivate();
+				m_pButtonText->setPos(vmake(m_v2Pos.x - (m_sText.length() / 2.0f * 16), m_v2Pos.y - 6));
+				if (m_bIsPushed && !m_bIsHold) {
+					for (auto itListener = m_vListeners.begin(); itListener != m_vListeners.end(); ++itListener) {
 						(*itListener)->onClick(this);
 					}
 				}
-				m_isPushed = false;
-				m_isHold = false;
+				m_bIsPushed = false;
+				m_bIsHold = false;
 				break;
 			case IInputManager::EMouseButtonHold:
 				if (!isMouseOverButton) {
-					m_spriteNormal->activate();
-					m_spritePush->deactivate();
-					m_buttonText->setPos(vmake(m_v2Pos.x - (m_text.length() / 2.0f * 16), m_v2Pos.y - 6));
-					m_isPushed = false;
-					m_isHold = false;
+					m_pSpriteNormal->activate();
+					m_pSpritePush->deactivate();
+					m_pButtonText->setPos(vmake(m_v2Pos.x - (m_sText.length() / 2.0f * 16), m_v2Pos.y - 6));
+					m_bIsPushed = false;
+					m_bIsHold = false;
 				}
 				break;
 			default:

@@ -7,11 +7,10 @@ public:
 	CControl(const std::string& _sName, const vec2& _v2Pos, const vec2& _v2Size, bool _bIsActive = true) : m_sName(_sName), m_v2Pos(_v2Pos), m_v2Size(_v2Size), m_bIsActive(_bIsActive) {}
 	virtual ~CControl() {}
 
-	virtual void run       (float _fDeltaTime) {}
-	virtual void activate  () { m_bIsActive = true;  }
-	virtual void deactivate() { m_bIsActive = false; }
-
-	virtual bool onEvent(const IInputManager::CEvent& _event) { return true; }
+	virtual void run       (float _fDeltaTime)                   {                      }
+	virtual void activate  ()                                    { m_bIsActive = true;  }
+	virtual void deactivate()                                    { m_bIsActive = false; }
+	virtual bool onEvent   (const IInputManager::CEvent& _event) { return true;         }
 	
 	std::string getName () const { return m_sName;     }
 	vec2        getPos  () const { return m_v2Pos;     }

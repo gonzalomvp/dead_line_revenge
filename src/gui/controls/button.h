@@ -14,29 +14,30 @@ public:
 		virtual void onClick(CButton* _pButton) = 0;
 	};
 
-	CButton(const std::string& name, const vec2& pos, const vec2& size, bool isActive = true) : CControl(name, pos, size, isActive) {}
+	CButton(const std::string& _sName, const vec2& _v2Pos, const vec2& _v2Size, const char* _psNormalImage, const char* _psPushImage, const std::string& _sText, bool _bNotifyHold = false, float _fHoldTime = 0.15f, bool _bIsActive = true);
 	~CButton();
 
-	void init(const char* normalImage, const char* pushImage, const std::string& text, bool notifyHold = false, unsigned int holdTimer = 10);
+	void init();
+	void addListener(IListener* _pListener) { m_vListeners.push_back(_pListener); }
 
-	void addListener(IListener* listener) { m_listeners.push_back(listener); }
-
-	// Control Interface
-	virtual void activate  () override;
-	virtual void deactivate() override;
-	virtual void run       (float _fDeltaTime) override;
-	virtual bool onEvent(const IInputManager::CEvent&) override;
+	// Control
+	virtual void run       (float _fDeltaTime)                   override;
+	virtual void activate  ()                                    override;
+	virtual void deactivate()                                    override;
+	virtual bool onEvent   (const IInputManager::CEvent& _event) override;
 
 private:
-	Sprite*      m_spriteNormal;
-	Sprite*      m_spritePush;
-	std::string  m_text;
-	Text*        m_buttonText;
-	bool         m_isPushed;
-	bool         m_isHold;
-	unsigned int m_holdTime;
-	unsigned int m_holdTimer;
-	bool         m_notifyHold;
+	const char*  m_psNormalImage;
+	const char*  m_psPushImage;
+	std::string  m_sText;
+	bool         m_bIsPushed;
+	bool         m_bIsHold;
+	float        m_fHoldTime;
+	float        m_fHoldTimer;
+	bool         m_bNotifyHold;
+	Sprite*      m_pSpriteNormal;
+	Sprite*      m_pSpritePush;
+	Text*        m_pButtonText;
 
-	std::vector<IListener*> m_listeners;
+	std::vector<IListener*> m_vListeners;
 };
