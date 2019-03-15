@@ -1,11 +1,11 @@
 #include "common/stdafx.h"
 #include "selector.h"
 
-void Selector::onEnter() {
+void CSelector::onEnter() {
 	mCurrentChild = 0;
 }
 
-Status Selector::update(float step) {
+Status CSelector::update(float step) {
 	while (true) {
 		Status s = mChildren[mCurrentChild]->tick(step);
 		if (s != eFail) {

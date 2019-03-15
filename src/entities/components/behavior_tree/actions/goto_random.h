@@ -3,9 +3,11 @@
 
 class CBehaviorTreeComponent;
 
-class GoToRandomPosition : public Behavior {
+class CGoToRandomPosition : public Behavior {
 public:
-	GoToRandomPosition(CBehaviorTreeComponent* owner, float speed) : Behavior(owner), mSpeed(speed) {}
+	CGoToRandomPosition(CBehaviorTreeComponent* owner) : Behavior(owner) {}
+	
+	virtual void init(TiXmlElement* behaviorElem) override;
 
 protected:
 	virtual void onEnter() override;

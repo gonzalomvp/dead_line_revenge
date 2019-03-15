@@ -3,9 +3,9 @@
 
 class CBehaviorTreeComponent;
 
-class Selector : public Group {
+class CSelector : public Group {
 public:
-	Selector(CBehaviorTreeComponent* owner) : Group(owner) {}
+	CSelector(CBehaviorTreeComponent* owner) : Group(owner) {}
 
 protected:
 	virtual void onEnter() override;

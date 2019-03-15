@@ -39,7 +39,7 @@ bool CBehaviorTreeComponent::loadFromXML(const char* _psFilename) {
 		return false;
 	}
 	TiXmlHandle hDoc(&doc);
-	m_pRootBehavior = createBehavior(hDoc.FirstChild("root").FirstChild("behavior").Element());
+	m_pRootBehavior = createBehaviorFromXML(hDoc.FirstChild("root").FirstChild("behavior").Element());
 
 	return true;
 }
@@ -55,96 +55,108 @@ void CBehaviorTreeComponent::run(float deltaTime)
 	}
 }
 
-Behavior* CBehaviorTreeComponent::createBehavior(TiXmlElement* behaviorElem) {
+Behavior* CBehaviorTreeComponent::createBehaviorFromXML(TiXmlElement* behaviorElem) {
 	ASSERT(behaviorElem);
 	Behavior* behavior = nullptr;
-	if (behaviorElem) {
-		std::string type = behaviorElem->Attribute("type");
-		std::vector<std::string> params;
-		TiXmlElement* paramElem = behaviorElem->FirstChildElement("param");
-		for (paramElem; paramElem; paramElem = paramElem->NextSiblingElement()) {
-			params.push_back(paramElem->Attribute("value"));
-		}
+	
+	std::string type = behaviorElem->Attribute("type");
+	std::vector<std::string> params;
+	TiXmlElement* paramElem = behaviorElem->FirstChildElement("param");
+	for (paramElem; paramElem; paramElem = paramElem->NextSiblingElement()) {
+		params.push_back(paramElem->Attribute("value"));
+	}
 
-		std::vector<Behavior*> childBehaviors;
-		TiXmlElement* childElem = behaviorElem->FirstChildElement("behavior");
-		for (childElem; childElem; childElem = childElem->NextSiblingElement()) {
-			Behavior* childBehavior = createBehavior(childElem);
-			if (childBehavior) {
-				childBehaviors.push_back(childBehavior);
-			}
-		}
-
-		if (type == "selector") {
-			Selector* selector = new Selector(this);
-			for (size_t i = 0; i < childBehaviors.size(); ++i) {
-				selector->AddBehavior(childBehaviors[i]);
-			}
-			behavior = selector;
-		}
-		else if (type == "sequence") {
-			Sequence* sequence = new Sequence(this);
-			for (size_t i = 0; i < childBehaviors.size(); ++i) {
-				sequence->AddBehavior(childBehaviors[i]);
-			}
-			behavior = sequence;
-		}
-		else if (type == "repeat") {
-			int numRepeats = std::stoi(behaviorElem->Attribute("numRepeats"));
-			Repeat* sequence = new Repeat(this, numRepeats);
-			for (size_t i = 0; i < childBehaviors.size(); ++i) {
-				sequence->AddBehavior(childBehaviors[i]);
-			}
-			behavior = sequence;
-		}
-		else if (type == "changeSprite") {
-			behavior = new ChangeSprite(this, params[0]);
-		}
-		else if (type == "checkDead") {
-			behavior = new CheckDead(this);
-		}
-		else if (type == "death") {
-			behavior = new Death(this);
-		}
-		else if (type == "checkHit") {
-			behavior = new CheckHit(this);
-		}
-		else if (type == "hit") {
-			behavior = new Hit(this);
-		}
-		else if (type == "checkDistance") {
-			behavior = new CheckDistance(this, std::stof(params[0]));
-		}
-		else if (type == "chase") {
-			behavior = new Chase(this, std::stof(params[0]), std::stof(params[1]));
-		}
-		else if (type == "idle") {
-			behavior = new Idle(this, std::stoi(params[0]));
-		}
-		else if (type == "goToRandomPosition") {
-			behavior = new GoToRandomPosition(this, std::stof(params[0]));
-		}
-		else if (type == "goToPlayerPosition") {
-			behavior = new GoToPlayerPosition(this, std::stof(params[0]));
-		}
-		else if (type == "wait") {
-			behavior = new Wait(this, std::stoi(params[0]));
-		}
-		else if (type == "fire") {
-			behavior = new Fire(this);
-		}
-		else if (type == "changeWeapon") {
-			behavior = new ChangeWeapon(this, params[0]);
-		}
-		else if (type == "checkLife") {
-			behavior = new CheckLife(this, std::stoi(params[0]));
-		}
-		else if (type == "rotateAim") {
-			behavior = new RotateAim(this, std::stof(params[0]));
-		}
-		else if (type == "aimPlayer") {
-			behavior = new AimPlayer(this);
+	std::vector<Behavior*> childBehaviors;
+	TiXmlElement* childElem = behaviorElem->FirstChildElement("behavior");
+	for (childElem; childElem; childElem = childElem->NextSiblingElement()) {
+		Behavior* childBehavior = createBehaviorFromXML(childElem);
+		if (childBehavior) {
+			childBehaviors.push_back(childBehavior);
 		}
 	}
+
+	Behavior::EType eBehaviorType = Behavior::getBehaviorTypeByName(type);
+
+	switch (eBehaviorType) {
+#define REG_BEHAVIOR(val, name) \
+		case Behavior::E##val: \
+			behavior = new C##val(this); \
+			behavior->init(behaviorElem); \
+			break;
+#include "REG_BEHAVIORS.h"
+#undef REG_BEHAVIOR
+	}
+
+	if (type == "selector") {
+		//Selector* selector = new Selector(this);
+		//for (size_t i = 0; i < childBehaviors.size(); ++i) {
+		//	selector->AddBehavior(childBehaviors[i]);
+		//}
+		//behavior = selector;
+	}
+	else if (type == "sequence") {
+		//Sequence* sequence = new Sequence(this);
+		//for (size_t i = 0; i < childBehaviors.size(); ++i) {
+		//	sequence->AddBehavior(childBehaviors[i]);
+		//}
+		//behavior = sequence;
+	}
+	else if (type == "repeat") {
+		int numRepeats = std::stoi(behaviorElem->Attribute("numRepeats"));
+		Repeat* sequence = new Repeat(this, numRepeats);
+		for (size_t i = 0; i < childBehaviors.size(); ++i) {
+			sequence->AddBehavior(childBehaviors[i]);
+		}
+		behavior = sequence;
+	}
+	else if (type == "changeSprite") {
+		behavior = new ChangeSprite(this, params[0]);
+	}
+	else if (type == "checkDead") {
+		behavior = new CheckDead(this);
+	}
+	else if (type == "death") {
+		behavior = new Death(this);
+	}
+	else if (type == "checkHit") {
+		behavior = new CheckHit(this);
+	}
+	else if (type == "hit") {
+		behavior = new Hit(this);
+	}
+	else if (type == "checkDistance") {
+		behavior = new CheckDistance(this, std::stof(params[0]));
+	}
+	else if (type == "chase") {
+		behavior = new Chase(this, std::stof(params[0]), std::stof(params[1]));
+	}
+	else if (type == "idle") {
+		behavior = new Idle(this, std::stoi(params[0]));
+	}
+	else if (type == "goToRandomPosition") {
+		//behavior = new GoToRandomPosition(this, behaviorElem);
+	}
+	else if (type == "goToPlayerPosition") {
+		behavior = new GoToPlayerPosition(this, std::stof(params[0]));
+	}
+	else if (type == "wait") {
+		behavior = new Wait(this, std::stoi(params[0]));
+	}
+	else if (type == "fire") {
+		behavior = new Fire(this);
+	}
+	else if (type == "changeWeapon") {
+		behavior = new ChangeWeapon(this, params[0]);
+	}
+	else if (type == "checkLife") {
+		behavior = new CheckLife(this, std::stoi(params[0]));
+	}
+	else if (type == "rotateAim") {
+		behavior = new RotateAim(this, std::stof(params[0]));
+	}
+	else if (type == "aimPlayer") {
+		behavior = new AimPlayer(this);
+	}
+
 	return behavior;
 }

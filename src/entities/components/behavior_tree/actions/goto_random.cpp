@@ -5,7 +5,16 @@
 #include "entities/message.h"
 #include "scenes/world.h"
 
-void GoToRandomPosition::onEnter() {
+void CGoToRandomPosition::init(TiXmlElement* behaviorElem) {
+	std::vector<std::string> params;
+	TiXmlElement* paramElem = behaviorElem->FirstChildElement("param");
+	for (paramElem; paramElem; paramElem = paramElem->NextSiblingElement()) {
+		params.push_back(paramElem->Attribute("value"));
+	}
+	mSpeed = std::stof(params[0]);
+}
+
+void CGoToRandomPosition::onEnter() {
 	Entity* self = getOwnerEntity();
 	MessageGetTransform messageSelfPos;
 	self->receiveMessage(&messageSelfPos);
@@ -13,7 +22,7 @@ void GoToRandomPosition::onEnter() {
 	mTargetPos = vmake(CORE_FRand(0.0f + messageSelfPos.size.x * 0.5f, WORLD_WIDTH - messageSelfPos.size.x * 0.5f), CORE_FRand(80 + messageSelfPos.size.y * 0.5f, WORLD_HEIGHT - 80 - messageSelfPos.size.y * 0.5f));
 }
 
-Status GoToRandomPosition::update(float step) {
+Status CGoToRandomPosition::update(float step) {
 
 	Entity* self = getOwnerEntity();
 

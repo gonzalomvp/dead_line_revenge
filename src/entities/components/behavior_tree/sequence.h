@@ -3,9 +3,9 @@
 
 class CBehaviorTreeComponent;
 
-class Sequence : public Group {
+class CSequence : public Group {
 public:
-	Sequence(CBehaviorTreeComponent* owner) : Group(owner) {}
+	CSequence(CBehaviorTreeComponent* owner) : Group(owner) {}
 
 protected:
 	virtual void onEnter() override;

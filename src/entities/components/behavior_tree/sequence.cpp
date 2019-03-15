@@ -1,11 +1,11 @@
 #include "common/stdafx.h"
 #include "sequence.h"
 
-void Sequence::onEnter() {
+void CSequence::onEnter() {
 	mCurrentChild = 0;
 }
 
-Status Sequence::update(float step) {
+Status CSequence::update(float step) {
 	while (true) {
 		Status s = mChildren[mCurrentChild]->tick(step);
 		if (s != eSuccess) {
