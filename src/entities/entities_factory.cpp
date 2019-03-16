@@ -12,8 +12,8 @@
 using namespace rapidjson;
 
 CEntitiesFactory::TEntityInfo CEntitiesFactory::s_aEntityInfo[] = {
-#define REG_ENTITY(Val, name) \
-	{Entity::E##Val, name},
+#define REG_ENTITY(val, name) \
+	{Entity::E##val, name},
 #include "REG_ENTITIES.h"
 #undef REG_ENTITY
 };

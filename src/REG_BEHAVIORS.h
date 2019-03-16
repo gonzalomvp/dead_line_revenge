@@ -1,3 +1,16 @@
-REG_BEHAVIOR(Selector, "selector")
-REG_BEHAVIOR(Sequence, "sequence")
-REG_BEHAVIOR(GoToRandomPosition, "goToRandomPosition")
+// Composite nodes
+REG_BEHAVIOR(SelectorNode, "selector")
+REG_BEHAVIOR(SequenceNode, "sequence")
+REG_BEHAVIOR(RepeatNode,   "repeat")
+
+// Conditions
+REG_BEHAVIOR(CheckLifeCondition, "checkLife")
+
+// Actions
+REG_BEHAVIOR(ChangeWeaponAction,       "changeWeapon")
+REG_BEHAVIOR(GoToRandomPositionAction, "goToRandomPosition")
+REG_BEHAVIOR(GoToPlayerPositionAction, "goToPlayerPosition")
+REG_BEHAVIOR(AimToPlayerAction,        "aimToPlayer")
+REG_BEHAVIOR(FireAction,               "fire")
+REG_BEHAVIOR(WaitAction,               "wait")
+REG_BEHAVIOR(RotateAimAction,          "rotateAim")

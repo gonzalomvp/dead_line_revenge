@@ -1,11 +1,14 @@
 #pragma once
 #include "entities/components/behavior_tree/behavior.h"
 
-class CBehaviorTreeComponent;
+class CBehaviorNodeTreeComponent;
 
-class ChangeWeapon : public Behavior {
+class CChangeWeaponAction : public CBehaviorNode {
 public:
-	ChangeWeapon(CBehaviorTreeComponent* owner, const std::string& weaponName) : Behavior(owner), mWeaponName(weaponName) {}
+	CChangeWeaponAction(CBehaviorNodeTreeComponent* owner) : CBehaviorNode(owner) {}
+
+	// CBehaviorNode
+	virtual void init(TiXmlElement* behaviorElem) override;
 
 protected:
 	virtual Status update(float step) override;

@@ -3,18 +3,18 @@
 #include "entities/components/component.h"
 #include "blackboard.h"
 
-class Behavior;
+class CBehaviorNode;
 class TiXmlElement;
 
-class CBehaviorTreeComponent : public Component {
+class CBehaviorNodeTreeComponent : public Component {
 public:
 
-	CBehaviorTreeComponent(Entity* _pOwner) : Component(_pOwner), m_pRootBehavior(nullptr) {}
-	~CBehaviorTreeComponent();
+	CBehaviorNodeTreeComponent(Entity* _pOwner) : Component(_pOwner), m_pRootBehavior(nullptr) {}
+	~CBehaviorNodeTreeComponent();
 	
 	bool         loadFromXML(const char* _psFilename);
 	CBlackboard& getBlackboard() { return m_blackboard; }
-	Behavior* createBehaviorFromXML(TiXmlElement* _pBehaviorElem);
+	CBehaviorNode*   createBehaviorFromXML(TiXmlElement* _pBehaviorElem);
 
 	// CComponent
 	virtual void run(float _fDeltaTime) override;
@@ -22,6 +22,6 @@ public:
 private:
 	
 
-	Behavior*   m_pRootBehavior;
-	CBlackboard m_blackboard;
+	CBehaviorNode *   m_pRootBehavior;
+	CBlackboard   m_blackboard;
 };

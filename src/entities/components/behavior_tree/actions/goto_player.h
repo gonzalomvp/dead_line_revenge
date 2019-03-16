@@ -1,18 +1,21 @@
 #pragma once
 #include "entities/components/behavior_tree/behavior.h"
 
-class CBehaviorTreeComponent;
+class CBehaviorNodeTreeComponent;
 
-class GoToPlayerPosition : public Behavior {
+class CGoToPlayerPositionAction : public CBehaviorNode {
 public:
-	GoToPlayerPosition(CBehaviorTreeComponent* owner, float speed) : Behavior(owner), mSpeed(speed) {}
+	CGoToPlayerPositionAction(CBehaviorNodeTreeComponent* owner) : CBehaviorNode(owner), m_fSpeed(0.0f) {}
 
 protected:
 	virtual void onEnter() override;
 	virtual Status update(float step) override;
 
+	// CBehaviorNode
+	virtual void init(TiXmlElement* behaviorElem) override;
+
 private:
 	vec2 mTargetPos;
-	float mSpeed;
+	float m_fSpeed;
 };
 

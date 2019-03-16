@@ -5,7 +5,7 @@
 #include "tinyxml/tinyxml.h"
 #pragma pack(pop)
 
-class CBehaviorTreeComponent;
+class CBehaviorNodeTreeComponent;
 class Entity;
 
 enum Status {
@@ -15,7 +15,7 @@ enum Status {
 	eRunning,
 };
 
-class Behavior {
+class CBehaviorNode {
 public:
 	enum EType {
 #define REG_BEHAVIOR(val, name) \
@@ -29,8 +29,8 @@ public:
 	static const int NUM_BEHAVIORS = EInvalid;
 	static EType getBehaviorTypeByName(const std::string& name);
 
-	Behavior(CBehaviorTreeComponent* owner) : mOwner(owner), mStatus(eInvalid) {}
-	virtual ~Behavior() {}
+	CBehaviorNode(CBehaviorNodeTreeComponent* owner) : mOwner(owner), mStatus(eInvalid) {}
+	virtual ~CBehaviorNode() {}
 
 	virtual void init(TiXmlElement* behaviorElem) {}
 
@@ -43,7 +43,7 @@ protected:
 	virtual void onEnter() {}
 	virtual void onExit()  {}
 
-	CBehaviorTreeComponent* mOwner;
+	CBehaviorNodeTreeComponent* mOwner;
 
 private:
 	struct SBehaviorInfo {

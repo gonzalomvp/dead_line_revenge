@@ -4,7 +4,7 @@
 #include "entities/entity.h"
 #include "entities/components/behavior_tree/behavior_tree.h"
 
-Chase::Chase(CBehaviorTreeComponent* owner, float arriveDistance, float lostDistance) : Behavior(owner), mArriveDistance(arriveDistance), mLostDistance(lostDistance) {
+Chase::Chase(CBehaviorNodeTreeComponent* owner, float arriveDistance, float lostDistance) : CBehaviorNode(owner), mArriveDistance(arriveDistance), mLostDistance(lostDistance) {
 
 }
 

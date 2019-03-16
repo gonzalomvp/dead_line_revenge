@@ -1,18 +1,21 @@
 #pragma once
 #include "entities/components/behavior_tree/behavior.h"
 
-class CBehaviorTreeComponent;
+class CBehaviorNodeTreeComponent;
 
-class Wait : public Behavior {
+class CWaitAction : public CBehaviorNode {
 public:
-	Wait(CBehaviorTreeComponent* owner, int waitTime) : Behavior(owner), mWaitTime(waitTime) {}
+	CWaitAction(CBehaviorNodeTreeComponent* owner) : CBehaviorNode(owner), m_fWaitTime(0.0f), m_fWaitTimer(0.0f) {}
+
+	// CBehaviorNode
+	virtual void init(TiXmlElement* behaviorElem) override;
 
 protected:
 	virtual void onEnter() override;
 	virtual Status update(float step) override;
 
 private:
-	int mWaitTime;
-	int mWaitTimer;
+	float m_fWaitTime;
+	float m_fWaitTimer;
 };
 

@@ -4,16 +4,30 @@
 #include "scenes/world.h"
 #include "entities/components/behavior_tree/behavior_tree.h"
 
-void Wait::onEnter() {
-	mWaitTimer = 0;
+void CWaitAction::init(TiXmlElement* behaviorElem) {
+	ASSERT(behaviorElem);
+
+	std::vector<std::string> vParams;
+	TiXmlElement* paramElem = behaviorElem->FirstChildElement("param");
+	for (paramElem; paramElem; paramElem = paramElem->NextSiblingElement()) {
+		ASSERT(paramElem->Attribute("value"), "Missing value attribute in param");
+		vParams.push_back(paramElem->Attribute("value"));
+	}
+
+	ASSERT(vParams.size() == 1, "CWaitAction must have 1 param");
+	m_fWaitTime = std::stof(vParams[0]);
 }
 
-Status Wait::update(float step) {
-	if (mWaitTimer >= mWaitTime) {
+void CWaitAction::onEnter() {
+	m_fWaitTimer = 0;
+}
+
+Status CWaitAction::update(float step) {
+	if (m_fWaitTimer >= m_fWaitTime) {
 		return eSuccess;
 	}
 
-	++mWaitTimer;
+	m_fWaitTimer += step;
 
 	return eRunning;
 }

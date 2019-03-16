@@ -27,11 +27,11 @@
 #include "tinyxml/tinyxml.h"
 #pragma pack(pop)
 
-CBehaviorTreeComponent::~CBehaviorTreeComponent() {
+CBehaviorNodeTreeComponent::~CBehaviorNodeTreeComponent() {
 	delete m_pRootBehavior;
 }
 
-bool CBehaviorTreeComponent::loadFromXML(const char* _psFilename) {
+bool CBehaviorNodeTreeComponent::loadFromXML(const char* _psFilename) {
 	ASSERT(_psFilename);
 	TiXmlDocument doc(_psFilename);
 	if (!doc.LoadFile()) {
@@ -44,7 +44,7 @@ bool CBehaviorTreeComponent::loadFromXML(const char* _psFilename) {
 	return true;
 }
 
-void CBehaviorTreeComponent::run(float deltaTime)
+void CBehaviorNodeTreeComponent::run(float deltaTime)
 {
 	Component::run(deltaTime);
 	if (!m_isActive)
@@ -55,107 +55,26 @@ void CBehaviorTreeComponent::run(float deltaTime)
 	}
 }
 
-Behavior* CBehaviorTreeComponent::createBehaviorFromXML(TiXmlElement* behaviorElem) {
+CBehaviorNode* CBehaviorNodeTreeComponent::createBehaviorFromXML(TiXmlElement* behaviorElem) {
 	ASSERT(behaviorElem);
-	Behavior* behavior = nullptr;
+	CBehaviorNode* behavior = nullptr;
 	
+	ASSERT(behaviorElem->Attribute("type"), "Missing type in Behavior element");
 	std::string type = behaviorElem->Attribute("type");
-	std::vector<std::string> params;
-	TiXmlElement* paramElem = behaviorElem->FirstChildElement("param");
-	for (paramElem; paramElem; paramElem = paramElem->NextSiblingElement()) {
-		params.push_back(paramElem->Attribute("value"));
-	}
-
-	std::vector<Behavior*> childBehaviors;
-	TiXmlElement* childElem = behaviorElem->FirstChildElement("behavior");
-	for (childElem; childElem; childElem = childElem->NextSiblingElement()) {
-		Behavior* childBehavior = createBehaviorFromXML(childElem);
-		if (childBehavior) {
-			childBehaviors.push_back(childBehavior);
-		}
-	}
-
-	Behavior::EType eBehaviorType = Behavior::getBehaviorTypeByName(type);
+	CBehaviorNode::EType eBehaviorType = CBehaviorNode::getBehaviorTypeByName(type);
 
 	switch (eBehaviorType) {
 #define REG_BEHAVIOR(val, name) \
-		case Behavior::E##val: \
+		case CBehaviorNode::E##val: \
 			behavior = new C##val(this); \
 			behavior->init(behaviorElem); \
 			break;
 #include "REG_BEHAVIORS.h"
 #undef REG_BEHAVIOR
-	}
 
-	if (type == "selector") {
-		//Selector* selector = new Selector(this);
-		//for (size_t i = 0; i < childBehaviors.size(); ++i) {
-		//	selector->AddBehavior(childBehaviors[i]);
-		//}
-		//behavior = selector;
-	}
-	else if (type == "sequence") {
-		//Sequence* sequence = new Sequence(this);
-		//for (size_t i = 0; i < childBehaviors.size(); ++i) {
-		//	sequence->AddBehavior(childBehaviors[i]);
-		//}
-		//behavior = sequence;
-	}
-	else if (type == "repeat") {
-		int numRepeats = std::stoi(behaviorElem->Attribute("numRepeats"));
-		Repeat* sequence = new Repeat(this, numRepeats);
-		for (size_t i = 0; i < childBehaviors.size(); ++i) {
-			sequence->AddBehavior(childBehaviors[i]);
-		}
-		behavior = sequence;
-	}
-	else if (type == "changeSprite") {
-		behavior = new ChangeSprite(this, params[0]);
-	}
-	else if (type == "checkDead") {
-		behavior = new CheckDead(this);
-	}
-	else if (type == "death") {
-		behavior = new Death(this);
-	}
-	else if (type == "checkHit") {
-		behavior = new CheckHit(this);
-	}
-	else if (type == "hit") {
-		behavior = new Hit(this);
-	}
-	else if (type == "checkDistance") {
-		behavior = new CheckDistance(this, std::stof(params[0]));
-	}
-	else if (type == "chase") {
-		behavior = new Chase(this, std::stof(params[0]), std::stof(params[1]));
-	}
-	else if (type == "idle") {
-		behavior = new Idle(this, std::stoi(params[0]));
-	}
-	else if (type == "goToRandomPosition") {
-		//behavior = new GoToRandomPosition(this, behaviorElem);
-	}
-	else if (type == "goToPlayerPosition") {
-		behavior = new GoToPlayerPosition(this, std::stof(params[0]));
-	}
-	else if (type == "wait") {
-		behavior = new Wait(this, std::stoi(params[0]));
-	}
-	else if (type == "fire") {
-		behavior = new Fire(this);
-	}
-	else if (type == "changeWeapon") {
-		behavior = new ChangeWeapon(this, params[0]);
-	}
-	else if (type == "checkLife") {
-		behavior = new CheckLife(this, std::stoi(params[0]));
-	}
-	else if (type == "rotateAim") {
-		behavior = new RotateAim(this, std::stof(params[0]));
-	}
-	else if (type == "aimPlayer") {
-		behavior = new AimPlayer(this);
+		default:
+			ASSERT(false, "Invalid Behavior type: %s", type.c_str());
+			break;
 	}
 
 	return behavior;

@@ -1,11 +1,11 @@
 #pragma once
 #include "entities/components/behavior_tree/behavior.h"
 
-class CBehaviorTreeComponent;
+class CBehaviorNodeTreeComponent;
 
-class Fire : public Behavior {
+class CFireAction : public CBehaviorNode {
 public:
-	Fire(CBehaviorTreeComponent* owner) : Behavior(owner) {}
+	CFireAction(CBehaviorNodeTreeComponent* owner) : CBehaviorNode(owner) {}
 
 protected:
 	virtual Status update(float step) override;

@@ -140,10 +140,10 @@ bool CWorld::init(uint16_t _uLevel) {
 		}
 
 		ASSERT(turrets[i].HasMember("aimDirections"));
-		const Value& directions = turrets[i]["aimDirections"];
-		for (SizeType j = 0; j < directions.Size(); j++) {
-			ASSERT(directions[j].Size() == 2);
-			vAimDirections.push_back(vmake(directions[j][0].GetFloat(), directions[j][1].GetFloat()));
+		const Value& aimDirections = turrets[i]["aimDirections"];
+		for (SizeType j = 0; j < aimDirections.Size(); j++) {
+			ASSERT(aimDirections[j].Size() == 2);
+			vAimDirections.push_back(vmake(aimDirections[j][0].GetFloat(), aimDirections[j][1].GetFloat()));
 		}
 
 		// Create turrets
@@ -204,12 +204,12 @@ void CWorld::run(float _fDeltaTime) {
 			// Show Game Over Menu with the score
 			CMenu* pGameOverMenu = g_pMenuManager->getMenu(CMenuManager::EGameOverMenu);
 			ASSERT(pGameOverMenu);
-			std::string scoreMessage = g_pStringManager->getText(menu::constants::s_psScoreText) + std::to_string(m_uScore);
+			std::string sScoreMessage = g_pStringManager->getText(menu::constants::s_psScoreText) + std::to_string(m_uScore);
 			CControl* pControl = pGameOverMenu->getControlByName(menu::constants::s_psScoreLabelName);
 			if (pControl) {
 				Label* pLabel = dynamic_cast<Label*>(pControl);
 				if (pLabel) {
-					pLabel->setText(scoreMessage);
+					pLabel->setText(sScoreMessage);
 				}
 			}
 			g_pMenuManager->activateMenu(CMenuManager::EGameOverMenu);
@@ -261,8 +261,8 @@ void CWorld::checkCollisions() {
 
 void CWorld::removePendingEntities() {
 	for (auto it = m_vEntitiesToRemove.begin(); it != m_vEntitiesToRemove.end(); ++it) {
-		Entity::EType type = (*it)->getType();
-		switch (type) {
+		Entity::EType eEntityType = (*it)->getType();
+		switch (eEntityType) {
 			case Entity::EPLAYER: {
 				m_bIsGameOver = true;
 				break;

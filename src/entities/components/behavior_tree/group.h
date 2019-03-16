@@ -2,18 +2,18 @@
 #include "behavior.h"
 #include <vector>
 
-class CBehaviorTreeComponent;
+class CBehaviorNodeTreeComponent;
 
-class Group : public Behavior {
+class CGroupNode : public CBehaviorNode {
 public:
-	Group(CBehaviorTreeComponent* owner) : Behavior(owner) {}
-	~Group();
-	void AddBehavior(Behavior* behavior) { mChildren.push_back(behavior); }
+	CGroupNode(CBehaviorNodeTreeComponent* owner) : CBehaviorNode(owner) {}
+	~CGroupNode();
+	void AddBehavior(CBehaviorNode* behavior) { mChildren.push_back(behavior); }
 
-	// CBehavior
+	// CBehaviorNode
 	virtual void init(TiXmlElement* behaviorElem) override;
 
 protected:
-	typedef std::vector<Behavior*> Behaviors;
+	typedef std::vector<CBehaviorNode*> Behaviors;
 	Behaviors mChildren;
 };

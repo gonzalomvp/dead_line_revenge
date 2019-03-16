@@ -6,7 +6,7 @@
 #include "entities/components/behavior_tree/behavior_tree.h"
 
 
-Status AimPlayer::update(float step) {
+Status CAimToPlayerAction::update(float step) {
 	Entity* self = getOwnerEntity();
 	Entity* player = g_pWorld->getPlayer();
 	MessageGetTransform messageSelfPos;

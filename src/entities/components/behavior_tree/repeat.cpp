@@ -1,21 +1,28 @@
 #include "common/stdafx.h"
 #include "repeat.h"
 
-void Repeat::onEnter() {
-	mCount = 0;
+void CRepeatNode::init(TiXmlElement* behaviorElem) {
+	CGroupNode::init(behaviorElem);
+
+	ASSERT(mChildren.size() == 1, "Repeat decorators must only have one child behavior node");
+
+	ASSERT(behaviorElem->Attribute("times"), "Missing times attribute in CRepeatNode");
+	m_iTimes = std::stoi(behaviorElem->Attribute("times"));
 }
 
-Status Repeat::update(float step) {
-	ASSERT(mChildren.size() == 1, "Repeat decorators must only have one child behavior node");
-	
-	if (mCount < mNumRepeats) {
+void CRepeatNode::onEnter() {
+	m_iCounter = 0;
+}
+
+Status CRepeatNode::update(float step) {
+	if (m_iCounter < m_iTimes) {
 		Status s = mChildren[0]->tick(step);
 		
 		if (s == eFail) {
 			return eFail;
 		}
 		else if (s == eSuccess) {
-			++mCount;
+			++m_iCounter;
 		}
 		return eRunning;
 	}

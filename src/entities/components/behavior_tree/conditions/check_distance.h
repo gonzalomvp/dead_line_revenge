@@ -1,11 +1,11 @@
 #pragma once
 #include "entities/components/behavior_tree/behavior.h"
 
-class CBehaviorTreeComponent;
+class CBehaviorNodeTreeComponent;
 
-class CheckDistance : public Behavior {
+class CheckDistance : public CBehaviorNode {
 public:
-	CheckDistance(CBehaviorTreeComponent* owner, float minDistance) : Behavior(owner), mMinDistance(minDistance) {}
+	CheckDistance(CBehaviorNodeTreeComponent* owner, float minDistance) : CBehaviorNode(owner), mMinDistance(minDistance) {}
 
 protected:
 	virtual Status update(float step) override;

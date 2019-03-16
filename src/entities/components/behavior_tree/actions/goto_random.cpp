@@ -5,24 +5,32 @@
 #include "entities/message.h"
 #include "scenes/world.h"
 
-void CGoToRandomPosition::init(TiXmlElement* behaviorElem) {
-	std::vector<std::string> params;
+void CGoToRandomPositionAction::init(TiXmlElement* behaviorElem) {
+	ASSERT(behaviorElem);
+
+	std::vector<std::string> vParams;
 	TiXmlElement* paramElem = behaviorElem->FirstChildElement("param");
 	for (paramElem; paramElem; paramElem = paramElem->NextSiblingElement()) {
-		params.push_back(paramElem->Attribute("value"));
+		ASSERT(paramElem->Attribute("value"), "Missing value attribute in param");
+		vParams.push_back(paramElem->Attribute("value"));
 	}
-	mSpeed = std::stof(params[0]);
+
+	ASSERT(vParams.size() == 1, "CGoToRandomPosition must have 1 param");
+	mSpeed = std::stof(vParams[0]);
 }
 
-void CGoToRandomPosition::onEnter() {
+void CGoToRandomPositionAction::onEnter() {
 	Entity* self = getOwnerEntity();
 	MessageGetTransform messageSelfPos;
 	self->receiveMessage(&messageSelfPos);
 
-	mTargetPos = vmake(CORE_FRand(0.0f + messageSelfPos.size.x * 0.5f, WORLD_WIDTH - messageSelfPos.size.x * 0.5f), CORE_FRand(80 + messageSelfPos.size.y * 0.5f, WORLD_HEIGHT - 80 - messageSelfPos.size.y * 0.5f));
+	mTargetPos = vmake(CORE_FRand(0.0f, WORLD_WIDTH), CORE_FRand(0.0f, WORLD_HEIGHT));
+
+	mTargetPos.x = clamp(mTargetPos.x, messageSelfPos.size.x * 0.5f, WORLD_WIDTH - messageSelfPos.size.x * 0.5f);
+	mTargetPos.y = clamp(mTargetPos.y, messageSelfPos.size.y * 0.5f, WORLD_HEIGHT - messageSelfPos.size.y * 0.5f);
 }
 
-Status CGoToRandomPosition::update(float step) {
+Status CGoToRandomPositionAction::update(float step) {
 
 	Entity* self = getOwnerEntity();
 

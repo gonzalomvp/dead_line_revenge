@@ -1,16 +1,19 @@
 #pragma once
 #include "entities/components/behavior_tree/behavior.h"
 
-class CBehaviorTreeComponent;
+class CBehaviorNodeTreeComponent;
 
-class RotateAim : public Behavior {
+class CRotateAimAction : public CBehaviorNode {
 public:
-	RotateAim(CBehaviorTreeComponent* owner, float angle) : Behavior(owner), mAngle(angle) {}
+	CRotateAimAction(CBehaviorNodeTreeComponent* owner) : CBehaviorNode(owner), m_fAngle(0.0f) {}
 
 protected:
 	virtual Status update(float step) override;
 
+	// CBehaviorNode
+	virtual void init(TiXmlElement* behaviorElem) override;
+
 private:
-	float mAngle;
+	float m_fAngle;
 };
 

@@ -1,12 +1,13 @@
 #pragma once
 #include "entities/components/behavior_tree/behavior.h"
 
-class CBehaviorTreeComponent;
+class CBehaviorNodeTreeComponent;
 
-class CGoToRandomPosition : public Behavior {
+class CGoToRandomPositionAction : public CBehaviorNode {
 public:
-	CGoToRandomPosition(CBehaviorTreeComponent* owner) : Behavior(owner) {}
+	CGoToRandomPositionAction(CBehaviorNodeTreeComponent* owner) : CBehaviorNode(owner) {}
 	
+	// CBehaviorNode
 	virtual void init(TiXmlElement* behaviorElem) override;
 
 protected:

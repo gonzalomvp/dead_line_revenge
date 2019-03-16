@@ -337,8 +337,8 @@ bool ComponentPlayerController::onEvent(const IInputManager::CEvent& event) {
 
 ComponentWeapon::TWeaponInfo ComponentWeapon::s_aWeaponInfo[] =
 {
-#define REG_WEAPON(Val, name) \
-	{E##Val, name},
+#define REG_WEAPON(val, name) \
+	{E##val, name},
 #include "REG_WEAPONS.h"
 #undef REG_WEAPON
 };

@@ -6,7 +6,7 @@
 #include "scenes/world.h"
 
 
-Status Fire::update(float step) {
+Status CFireAction::update(float step) {
 
 	Entity* self = getOwnerEntity();
 	MessageFire messageFire;

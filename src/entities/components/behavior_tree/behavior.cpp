@@ -3,14 +3,14 @@
 
 #include "entities/components/behavior_tree/behavior_tree.h"
 
-Behavior::SBehaviorInfo Behavior::s_aBehaviorInfo[] = {
-#define REG_BEHAVIOR(Val, name) \
-	{E##Val, name},
+CBehaviorNode::SBehaviorInfo CBehaviorNode::s_aBehaviorInfo[] = {
+#define REG_BEHAVIOR(val, name) \
+	{E##val, name},
 #include "REG_BEHAVIORS.h"
 #undef REG_BEHAVIOR
 };
 
-Behavior::EType Behavior::getBehaviorTypeByName(const std::string& name) {
+CBehaviorNode::EType CBehaviorNode::getBehaviorTypeByName(const std::string& name) {
 	EType etype = EType::EInvalid;
 	int i = 0;
 	while ((etype == EType::EInvalid) && (i < NUM_BEHAVIORS))
@@ -23,12 +23,12 @@ Behavior::EType Behavior::getBehaviorTypeByName(const std::string& name) {
 	return etype;
 }
 
-Entity* Behavior::getOwnerEntity() {
+Entity* CBehaviorNode::getOwnerEntity() {
 	ASSERT(mOwner);
 	return mOwner->getOwner();
 }
 
-Status Behavior::tick(float step) {
+Status CBehaviorNode::tick(float step) {
 	if (mStatus != eRunning) {
 		onEnter();
 	}

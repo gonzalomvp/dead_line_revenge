@@ -1,16 +1,19 @@
 #pragma once
 #include "entities/components/behavior_tree/behavior.h"
 
-class CBehaviorTreeComponent;
+class CBehaviorNodeTreeComponent;
 
-class CheckLife : public Behavior {
+class CCheckLifeCondition : public CBehaviorNode {
 public:
-	CheckLife(CBehaviorTreeComponent* owner, int life) : Behavior(owner), mLife(life) {}
+	CCheckLifeCondition(CBehaviorNodeTreeComponent* owner) : CBehaviorNode(owner), m_iLife(0) {}
+
+	// CBehaviorNode
+	virtual void init(TiXmlElement* behaviorElem) override;
 
 protected:
 	virtual Status update(float step) override;
 
 private:
-	int mLife;
+	int m_iLife;
 };
 
