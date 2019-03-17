@@ -26,6 +26,7 @@
     <ClInclude Include="..\src\common\font.h" />
     <ClInclude Include="..\src\common\leaks.h" />
     <ClInclude Include="..\src\common\lodepng.h" />
+    <ClInclude Include="..\src\common\math_utils.h" />
     <ClInclude Include="..\src\common\stdafx.h" />
     <ClInclude Include="..\src\common\sys.h" />
     <ClInclude Include="..\src\engine\graphics_engine.h" />
@@ -71,6 +72,9 @@
     <ClInclude Include="..\src\gui\string_manager.h" />
     <ClInclude Include="..\src\input\iinput_manager.h" />
     <ClInclude Include="..\src\input\input_manager.h" />
+    <ClInclude Include="..\src\REG_BEHAVIORS.h" />
+    <ClInclude Include="..\src\REG_ENEMIES.h" />
+    <ClInclude Include="..\src\REG_ENTITIES.h" />
     <ClInclude Include="..\src\REG_WEAPONS.h" />
     <ClInclude Include="..\src\scenes\game_scene.h" />
     <ClInclude Include="..\src\scenes\menu_scene.h" />
@@ -89,6 +93,7 @@
     <ClCompile Include="..\src\common\leaks.cpp" />
     <ClCompile Include="..\src\common\leaks_windows.cpp" />
     <ClCompile Include="..\src\common\lodepng.cpp" />
+    <ClCompile Include="..\src\common\math_utils.cpp" />
     <ClCompile Include="..\src\common\stdafx.cpp" />
     <ClCompile Include="..\src\common\sys_win.cpp" />
     <ClCompile Include="..\src\engine\graphics_engine.cpp" />
@@ -139,7 +144,7 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>{CC0EB618-AC99-4DFE-A4E1-534AD384C3A1}</ProjectGuid>
     <RootNamespace>dead_line_revenge</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.17134.0</WindowsTargetPlatformVersion>
     <ProjectName>dead_line_revenge</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />

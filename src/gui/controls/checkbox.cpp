@@ -9,6 +9,9 @@ CCheckbox::CCheckbox(const std::string& _sName, const vec2& _v2Pos, const vec2& 
 , m_psCheckedImage(_psCheckedImage)
 , m_psUncheckedImage(_psUncheckedImage)
 , m_bIsChecked(_bIsChecked)
+, m_pSpriteChecked(nullptr)
+, m_pSpriteUnchecked(nullptr)
+, m_bIsPushed(false)
 {}
 
 CCheckbox::~CCheckbox() {

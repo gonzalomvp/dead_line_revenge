@@ -191,7 +191,7 @@ void CMenuManager::onClick(CCheckbox* _pCheckbox) {
 	}
 }
 
-void CMenuManager::onValueChange(Slider* _pSlider) {
+void CMenuManager::onValueChange(CSlider* _pSlider) {
 	ASSERT(_pSlider);
 	ASSERT(g_pSoundEngine);
 
@@ -272,8 +272,8 @@ void CMenuManager::createOptionsMenu() {
 	label->init();
 	menu->addControl(label);
 
-	Slider* slider = NEW(Slider, s_psSettingsVolumeSliderName, vmake(SCR_WIDTH / 2 + 100, SCR_HEIGHT * 0.5), vmake(100, 32));
-	slider->init(s_psSliderLeftButtonNormalImage, s_psSliderLeftButtonPushImage, s_psSliderRightButtonNormalImage, s_psSliderRightButtonPushImage, s_psSliderBarImage, s_psSliderBallImage, g_settings.volume);
+	CSlider* slider = NEW(CSlider, s_psSettingsVolumeSliderName, vmake(SCR_WIDTH / 2 + 100, SCR_HEIGHT * 0.5), vmake(100, 32), s_psSliderLeftButtonNormalImage, s_psSliderLeftButtonPushImage, s_psSliderRightButtonNormalImage, s_psSliderRightButtonPushImage, s_psSliderBarImage, s_psSliderBallImage, g_settings.volume, 0.1f);
+	slider->init();
 	slider->addListener(this);
 	menu->addControl(slider);
 

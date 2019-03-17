@@ -15,9 +15,12 @@ CButton::CButton(const std::string& _sName, const vec2& _v2Pos, const vec2& _v2S
 , m_psPushImage(_psPushImage)
 , m_sText(_sText)
 , m_fHoldTime(_fHoldTime)
+, m_fHoldTimer(0.0f)
 , m_pSpriteNormal(nullptr)
 , m_pSpritePush(nullptr)
 , m_pButtonText(nullptr)
+, m_bIsPushed(false)
+, m_bIsHold(false)
 {}
 
 CButton::~CButton() {

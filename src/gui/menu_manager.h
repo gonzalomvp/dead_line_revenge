@@ -71,7 +71,7 @@ namespace menu { namespace constants {
 	extern const char* s_psScoreText;
 } }
 
-class CMenuManager : public CButton::IListener, public CCheckbox::IListener, public Slider::IListener {
+class CMenuManager : public CButton::IListener, public CCheckbox::IListener, public CSlider::IListener {
 public:
 	enum EMenu {
 		EMainMenu,
@@ -92,7 +92,7 @@ public:
 
 	virtual void onClick       (CButton* _pButton)     override;
 	virtual void onClick       (CCheckbox* _pCheckbox) override;
-	virtual void onValueChange (Slider* _pSlider)     override;
+	virtual void onValueChange (CSlider* _pSlider)     override;
 
 
 private:

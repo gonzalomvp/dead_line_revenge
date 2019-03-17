@@ -1,52 +1,53 @@
 #pragma once
 
-#include "button.h"
-#include "control.h"
-
+#include "gui/controls/control.h"
+#include "gui/controls/button.h"
 #include <vector>
 
 class Sprite;
 class Text;
 
-//=============================================================================
-// Button class
-//=============================================================================
-class Slider : public CControl, CButton::IListener {
+class CSlider : public CControl, public CButton::IListener {
 public:
 	class IListener {
 	public:
-		virtual void onValueChange(Slider* slider) = 0;
+		virtual void onValueChange(CSlider* _pSlider) = 0;
 	};
 
-	Slider(const std::string& name, const vec2& pos, const vec2& size, bool isActive = true) : CControl(name, pos, size, isActive) {}
-	~Slider();
+	CSlider(const std::string& _sName, const vec2& _v2Pos, const vec2& _v2Size, const char* _psLeftNormalImage, const char* _psLeftPushImage, const char* _psRightNormalImage, const char* _psRightPushImage, const char* _psBarImage, const char* _psBallImage, float _fValue, float _fIncrement, bool _bIsActive = true);
+	~CSlider();
 
-	void init(const char* spriteLeftNormal, const char* spriteLeftPush, const char* spriteRightNormal, const char* spriteRightPush, const char* spriteBar, const char* spriteBall, float value);
+	void addListener(IListener* _pListener) { m_vListeners.push_back(_pListener); }
 
-	void  addListener(IListener* listener) { m_listeners.push_back(listener); }
-	float getValue()                           { return m_value;                  }
+	float getValue () const        { return m_fValue;    }
+	void  setValue (float _fValue);
 
-	// Control Interface
-	virtual void activate()   override;
-	virtual void deactivate() override;
-	virtual void run(float _fDeltaTime)        override;
-	virtual bool onEvent(const IInputManager::CEvent&) override;
+	// Control
+	virtual void init      ()                                    override;
+	virtual void run       (float _fDeltaTime)                   override;
+	virtual void activate  ()                                    override;
+	virtual void deactivate()                                    override;
+	virtual bool onEvent   (const IInputManager::CEvent& _event) override;
 
-	// Button::IListener Interface
-	virtual void onClick(CButton* button) override;
+	// CButton::IListener
+	virtual void onClick(CButton* _pButton) override;
 
 private:
-	void calculateValueFromPosition();
-	void setValue(float value);
+	const char* m_psLeftNormalImage;
+	const char* m_psLeftPushImage;
+	const char* m_psRightNormalImage;
+	const char* m_psRightPushImage;
+	const char* m_psBarImage;
+	const char* m_psBallImage;
+	float       m_fValue;
+	float       m_fIncrement;
+	bool        m_bIsBallPushed;
+	bool        m_bIsBarPushed;
+	CButton*    m_pLeftButton;
+	CButton*    m_pRightButton;
+	Sprite*     m_pSpriteBar;
+	Sprite*     m_pSpriteBall;
+	Text*       m_pSliderText;
 
-	CButton* m_leftButton;
-	CButton* m_rightButton;
-	Sprite* m_spriteBar;
-	Sprite* m_spriteBall;
-	Text*   m_sliderText;
-	bool        m_isBallPushed;
-	bool        m_isBarPushed;
-	float       m_value;
-
-	std::vector<IListener*> m_listeners;
+	std::vector<IListener*> m_vListeners;
 };

@@ -231,6 +231,9 @@
     <ClInclude Include="..\src\REG_ENTITIES.h">
       <Filter>src</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\common\math_utils.h">
+      <Filter>src\common</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\main.cpp">
@@ -400,6 +403,9 @@
     </ClCompile>
     <ClCompile Include="..\src\gui\controls\slider.cpp">
       <Filter>src\gui\controls</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\common\math_utils.cpp">
+      <Filter>src\common</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

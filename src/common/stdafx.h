@@ -74,6 +74,7 @@
 #include "sys.h"
 #include "core.h"
 #include "font.h"
+#include "math_utils.h"
 
 #include "../globals.h"
 

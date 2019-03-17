@@ -17,8 +17,8 @@ public:
 	CCheckbox(const std::string& _sName, const vec2& _v2Pos, const vec2& _v2Size, const char* _psCheckedImage, const char* _psUncheckedImage, bool _bIsChecked, bool _bIsActive = true);
 	~CCheckbox();
 
-	void addListener(IListener* listener) { m_listeners.push_back(listener); }
-	bool isChecked() { return m_bIsChecked; }
+	void addListener(IListener* _pListener) { m_listeners.push_back(_pListener); }
+	bool isChecked() const { return m_bIsChecked; }
 
 	// Control
 	virtual void init      ()                                    override;
