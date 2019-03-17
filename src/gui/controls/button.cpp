@@ -53,6 +53,7 @@ void CButton::init() {
 void CButton::activate() {
 	CControl::activate();
 
+	ASSERT(m_pSpriteNormal && m_pSpritePush && m_pButtonText);
 	m_pSpriteNormal->activate();
 	m_pSpritePush->deactivate();
 	m_pButtonText->activate();
@@ -71,6 +72,7 @@ void CButton::activate() {
 void CButton::deactivate() {
 	CControl::deactivate();
 
+	ASSERT(m_pSpriteNormal && m_pSpritePush && m_pButtonText);
 	m_pSpriteNormal->deactivate();
 	m_pSpritePush->deactivate();
 	m_pButtonText->deactivate();
@@ -85,6 +87,7 @@ void CButton::run(float _fDeltaTime) {
 	if (m_bIsActive) {
 		CControl::run(_fDeltaTime);
 
+		ASSERT(m_pSpriteNormal && m_pSpritePush && m_pButtonText);
 		ASSERT(g_pStringManager);
 		float fTextVerticalOffset = s_fNormalTextVerticalOffset;
 		if (m_bIsPushed) {
@@ -106,6 +109,7 @@ void CButton::run(float _fDeltaTime) {
 }
 
 bool CButton::onEvent(const IInputManager::CEvent& _event) {
+	ASSERT(m_pSpriteNormal && m_pSpritePush && m_pButtonText);
 	bool bConsumed = false;
 	const IInputManager::CMouseEvent* pMouseEvent = dynamic_cast<const IInputManager::CMouseEvent*>(&_event);
 	if (pMouseEvent) {

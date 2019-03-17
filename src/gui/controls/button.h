@@ -17,7 +17,6 @@ public:
 	CButton(const std::string& _sName, const vec2& _v2Pos, const vec2& _v2Size, const char* _psNormalImage, const char* _psPushImage, const std::string& _sText, float _fHoldTime = 0.0f, bool _bIsActive = true);
 	~CButton();
 
-	
 	void addListener(IListener* _pListener) { m_vListeners.push_back(_pListener); }
 
 	// Control

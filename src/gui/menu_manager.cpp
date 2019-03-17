@@ -173,7 +173,7 @@ void CMenuManager::onClick(CButton* _pButton) {
 	}
 }
 
-void CMenuManager::onClick(Checkbox* _pCheckbox) {
+void CMenuManager::onClick(CCheckbox* _pCheckbox) {
 	ASSERT(_pCheckbox);
 	ASSERT(g_pSoundEngine);
 
@@ -254,8 +254,8 @@ void CMenuManager::createOptionsMenu() {
 	label->init();
 	menu->addControl(label);
 
-	Checkbox* checkbox = NEW(Checkbox, s_psSettingsMusicCheckboxName, vmake(SCR_WIDTH / 2 + 100, SCR_HEIGHT * 0.8), vmake(35, 35));
-	checkbox->init(s_psCheckboxEnabledImage, s_psCheckboxDisabledImage, g_settings.music);
+	CCheckbox* checkbox = NEW(CCheckbox, s_psSettingsMusicCheckboxName, vmake(SCR_WIDTH / 2 + 100, SCR_HEIGHT * 0.8), vmake(35, 35), s_psCheckboxEnabledImage, s_psCheckboxDisabledImage, g_settings.music);
+	checkbox->init();
 	checkbox->addListener(this);
 	menu->addControl(checkbox);
 
@@ -263,8 +263,8 @@ void CMenuManager::createOptionsMenu() {
 	label->init();
 	menu->addControl(label);
 
-	checkbox = NEW(Checkbox, s_psSettingsSFXCheckboxName, vmake(SCR_WIDTH / 2 + 100, SCR_HEIGHT * 0.65), vmake(35, 35));
-	checkbox->init(s_psCheckboxEnabledImage, s_psCheckboxDisabledImage, g_settings.sfx);
+	checkbox = NEW(CCheckbox, s_psSettingsSFXCheckboxName, vmake(SCR_WIDTH / 2 + 100, SCR_HEIGHT * 0.65), vmake(35, 35), s_psCheckboxEnabledImage, s_psCheckboxDisabledImage, g_settings.sfx);
+	checkbox->init();
 	checkbox->addListener(this);
 	menu->addControl(checkbox);
 

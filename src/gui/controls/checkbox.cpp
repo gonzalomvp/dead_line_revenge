@@ -4,16 +4,20 @@
 #include "engine/graphics_engine.h"
 #include "gui/string_manager.h"
 
-//=============================================================================
-// Checkbox class
-//=============================================================================
-Checkbox::~Checkbox() {
+CCheckbox::CCheckbox(const std::string& _sName, const vec2& _v2Pos, const vec2& _v2Size, const char* _psCheckedImage, const char* _psUncheckedImage, bool _bIsChecked, bool _bIsActive)
+: CControl(_sName, _v2Pos, _v2Size, _bIsActive)
+, m_psCheckedImage(_psCheckedImage)
+, m_psUncheckedImage(_psUncheckedImage)
+, m_bIsChecked(_bIsChecked)
+{}
+
+CCheckbox::~CCheckbox() {
 	if (g_pGraphicsEngine) {
-		g_pGraphicsEngine->removeGfxEntity(m_spriteChecked);
-		g_pGraphicsEngine->removeGfxEntity(m_spriteUnchecked);
+		g_pGraphicsEngine->removeGfxEntity(m_pSpriteChecked);
+		g_pGraphicsEngine->removeGfxEntity(m_pSpriteUnchecked);
 	}
-	DELETE(m_spriteChecked);
-	DELETE(m_spriteUnchecked);
+	DELETE(m_pSpriteChecked);
+	DELETE(m_pSpriteUnchecked);
 
 	if (g_pInputManager) {
 		g_pInputManager->unregisterEvent(this, IInputManager::EMouseButtonDown);
@@ -23,86 +27,98 @@ Checkbox::~Checkbox() {
 }
 
 
-void Checkbox::init(const char* spriteChecked, const char* spriteUnchecked, bool isChecked) {
-	m_spriteChecked = NEW(Sprite, g_pGraphicsEngine->getTexture(spriteChecked), m_v2Pos, m_v2Size, 0.f, 1.f, 1);
-	g_pGraphicsEngine->addGfxEntity(m_spriteChecked);
-	m_spriteUnchecked = NEW(Sprite, g_pGraphicsEngine->getTexture(spriteUnchecked), m_v2Pos, m_v2Size, 0.f, 1.f, 1);
-	g_pGraphicsEngine->addGfxEntity(m_spriteUnchecked);
-	m_isChecked = isChecked;
+void CCheckbox::init() {
+	CControl::init();
+
+	ASSERT(g_pGraphicsEngine);
+
+	m_pSpriteChecked = NEW(Sprite, g_pGraphicsEngine->getTexture(m_psCheckedImage), m_v2Pos, m_v2Size, 0.f, 1.f, 1);
+	g_pGraphicsEngine->addGfxEntity(m_pSpriteChecked);
+	m_pSpriteUnchecked = NEW(Sprite, g_pGraphicsEngine->getTexture(m_psUncheckedImage), m_v2Pos, m_v2Size, 0.f, 1.f, 1);
+	g_pGraphicsEngine->addGfxEntity(m_pSpriteUnchecked);
 	deactivate();
 }
 
-void Checkbox::activate() {
+void CCheckbox::activate() {
 	CControl::activate();
 
-	if (m_isChecked) {
-		m_spriteChecked->activate();
-		m_spriteUnchecked->deactivate();
+	ASSERT(m_pSpriteChecked && m_pSpriteUnchecked);
+	if (m_bIsChecked) {
+		m_pSpriteChecked->activate();
+		m_pSpriteUnchecked->deactivate();
 	}
 	else {
-		m_spriteUnchecked->activate();
-		m_spriteChecked->deactivate();
+		m_pSpriteUnchecked->activate();
+		m_pSpriteChecked->deactivate();
 	}
 
-	m_isPushed = false;
+	m_bIsPushed = false;
 
+	ASSERT(g_pInputManager);
 	g_pInputManager->registerEvent(this, IInputManager::EMouseButtonDown);
 	g_pInputManager->registerEvent(this, IInputManager::EMouseButtonUp);
 	g_pInputManager->registerEvent(this, IInputManager::EMouseButtonHold);
 }
 
-void Checkbox::deactivate() {
+void CCheckbox::deactivate() {
 	CControl::deactivate();
 
-	m_spriteChecked->deactivate();
-	m_spriteUnchecked->deactivate();
+	ASSERT(m_pSpriteChecked && m_pSpriteUnchecked);
+	m_pSpriteChecked->deactivate();
+	m_pSpriteUnchecked->deactivate();
 
+	ASSERT(g_pInputManager);
 	g_pInputManager->unregisterEvent(this, IInputManager::EMouseButtonDown);
 	g_pInputManager->unregisterEvent(this, IInputManager::EMouseButtonUp);
 	g_pInputManager->unregisterEvent(this, IInputManager::EMouseButtonHold);
 }
 
-bool Checkbox::onEvent(const IInputManager::CEvent& event) {
-	const IInputManager::CMouseEvent mouseEvent = *static_cast<const IInputManager::CMouseEvent*>(&event);
-	//assert(mouseEvent);
+bool CCheckbox::onEvent(const IInputManager::CEvent& _event) {
+	ASSERT(m_pSpriteChecked && m_pSpriteUnchecked);
+	bool bConsumed = false;
+	const IInputManager::CMouseEvent* pMouseEvent = dynamic_cast<const IInputManager::CMouseEvent*>(&_event);
+	if (pMouseEvent) {
+		// Check if MouseEvent happened over the checkbox
+		bool bIsMouseOverButton = pMouseEvent->getPos().x >= m_v2Pos.x - m_v2Size.x * 0.5 && pMouseEvent->getPos().x <= m_v2Pos.x + m_v2Size.x * 0.5
+			&& pMouseEvent->getPos().y >= m_v2Pos.y - m_v2Size.y * 0.5 && pMouseEvent->getPos().y <= m_v2Pos.y + m_v2Size.y * 0.5;
 
-	bool isMouseOverButton = mouseEvent.getPos().x >= m_v2Pos.x - m_v2Size.x * 0.5 && mouseEvent.getPos().x <= m_v2Pos.x + m_v2Size.x * 0.5 && mouseEvent.getPos().y >= m_v2Pos.y - m_v2Size.y * 0.5 && mouseEvent.getPos().y <= m_v2Pos.y + m_v2Size.y * 0.5;
+		if (pMouseEvent->getButton() == SYS_MB_LEFT) {
+			bConsumed = true;
+			switch (pMouseEvent->getType()) {
+				case IInputManager::EMouseButtonDown:
+					if (bIsMouseOverButton) {
+						m_bIsPushed = true;
+					}
+					break;
+				case IInputManager::EMouseButtonUp:
+					if (m_bIsPushed) {
+						m_bIsPushed = false;
+						m_bIsChecked = !m_bIsChecked;
 
-	if (mouseEvent.getButton() == SYS_MB_LEFT) {
-		switch (mouseEvent.getType()) {
-		case IInputManager::EMouseButtonDown:
-			if (isMouseOverButton) {
-				m_isPushed = true;
-			}
-			break;
-		case IInputManager::EMouseButtonUp:
-			if (m_isPushed) {
-				m_isPushed = false;
-				m_isChecked = !m_isChecked;
-				
-				if (m_isChecked) {
-					m_spriteChecked->activate();
-					m_spriteUnchecked->deactivate();
-				}
-				else {
-					m_spriteUnchecked->activate();
-					m_spriteChecked->deactivate();
-				}
+						if (m_bIsChecked) {
+							m_pSpriteChecked->activate();
+							m_pSpriteUnchecked->deactivate();
+						}
+						else {
+							m_pSpriteUnchecked->activate();
+							m_pSpriteChecked->deactivate();
+						}
 
-				for (auto itListener = m_listeners.begin(); itListener != m_listeners.end(); ++itListener) {
-					(*itListener)->onClick(this);
-				}
+						for (auto itListener = m_listeners.begin(); itListener != m_listeners.end(); ++itListener) {
+							(*itListener)->onClick(this);
+						}
+					}
+					break;
+				case IInputManager::EMouseButtonHold:
+					if (!bIsMouseOverButton) {
+						m_bIsPushed = false;
+					}
+					break;
+				default:
+					break;
 			}
-			
-			break;
-		case IInputManager::EMouseButtonHold:
-			if (!isMouseOverButton) {
-				m_isPushed = false;
-			}
-			break;
-		default:
-			break;
 		}
 	}
-	return true;
+
+	return bConsumed;
 }

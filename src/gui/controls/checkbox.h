@@ -1,40 +1,38 @@
 #pragma once
 
-#include "control.h"
+#include "gui/controls/control.h"
+
 #include <vector>
 
 class Sprite;
 class Text;
 
-//=============================================================================
-// Checkbox class
-//=============================================================================
-class Checkbox : public CControl {
+class CCheckbox : public CControl {
 public:
 	class IListener {
 	public:
-		virtual void onClick(Checkbox* button) = 0;
+		virtual void onClick(CCheckbox* _pCheckbox) = 0;
 	};
 
-	Checkbox(const std::string& name, const vec2& pos, const vec2& size, bool isActive = true) : CControl(name, pos, size, isActive) {}
-	~Checkbox();
-
-	void init(const char* spriteChecked, const char* spriteUnchecked, bool isChecked);
+	CCheckbox(const std::string& _sName, const vec2& _v2Pos, const vec2& _v2Size, const char* _psCheckedImage, const char* _psUncheckedImage, bool _bIsChecked, bool _bIsActive = true);
+	~CCheckbox();
 
 	void addListener(IListener* listener) { m_listeners.push_back(listener); }
-	bool isChecked() { return m_isChecked; }
+	bool isChecked() { return m_bIsChecked; }
 
-	// Control Interface
-	virtual void activate  () override;
-	virtual void deactivate() override;
-	virtual bool onEvent(const IInputManager::CEvent&) override;
+	// Control
+	virtual void init      ()                                    override;
+	virtual void activate  ()                                    override;
+	virtual void deactivate()                                    override;
+	virtual bool onEvent   (const IInputManager::CEvent& _event) override;
 
 private:
-	Sprite* m_spriteChecked;
-	Sprite* m_spriteUnchecked;
+	const char* m_psCheckedImage;
+	const char* m_psUncheckedImage;
+	bool        m_bIsPushed;
+	bool        m_bIsChecked;
+	Sprite*     m_pSpriteChecked;
+	Sprite*     m_pSpriteUnchecked;
 	
-	bool m_isPushed;
-	bool m_isChecked;
-
 	std::vector<IListener*> m_listeners;
 };
