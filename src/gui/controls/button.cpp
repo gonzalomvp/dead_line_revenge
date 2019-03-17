@@ -57,6 +57,7 @@ void CButton::activate() {
 	m_pSpriteNormal->activate();
 	m_pSpritePush->deactivate();
 	m_pButtonText->activate();
+	ASSERT(g_pStringManager);
 	m_pButtonText->setPos(vmake(m_v2Pos.x - g_pStringManager->calculateTextHalfWidth(m_sText), m_v2Pos.y + s_fNormalTextVerticalOffset));
 
 	m_bIsPushed = false;

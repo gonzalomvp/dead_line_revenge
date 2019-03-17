@@ -1,29 +1,25 @@
 #pragma once
 
-#include "control.h"
+#include "gui/controls/control.h"
+
 #include <vector>
 
 class Text;
 
-//=============================================================================
-// Label class
-//=============================================================================
-class Label : public CControl {
+class CLabel : public CControl {
 public:
-	Label(const std::string& name, const vec2& pos, const vec2& size, const std::string& text, bool isActive = true) : CControl(name, pos, size, isActive), m_text(text), m_labelText(nullptr) {}
-	~Label();
+	CLabel(const std::string& _sName, const vec2& _v2Pos, const vec2& _v2Size, const std::string& _sText, bool _bIsActive = true);
+	~CLabel();
 
-	void init();
+	void setText(const std::string& _sText) { m_sText = _sText; }
 
-	// Control Interface
-	virtual void activate  () override;
-	virtual void deactivate() override;
-	virtual void run       (float _fDeltaTime) override;
-	virtual bool onEvent(const IInputManager::CEvent&) override { return true; }
-
-	void setText(const std::string& text) { m_text = text; }
+	// Control
+	virtual void init      ()                                    override;
+	virtual void run       (float _fDeltaTime)                   override;
+	virtual void activate  ()                                    override;
+	virtual void deactivate()                                    override;
 
 private:
-	std::string m_text;
-	Text*   m_labelText;
+	std::string m_sText;
+	Text*       m_pLabelText;
 };

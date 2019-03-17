@@ -207,7 +207,7 @@ void CWorld::run(float _fDeltaTime) {
 			std::string sScoreMessage = g_pStringManager->getText(menu::constants::s_psScoreText) + std::to_string(m_uScore);
 			CControl* pControl = pGameOverMenu->getControlByName(menu::constants::s_psScoreLabelName);
 			if (pControl) {
-				Label* pLabel = dynamic_cast<Label*>(pControl);
+				CLabel* pLabel = dynamic_cast<CLabel*>(pControl);
 				if (pLabel) {
 					pLabel->setText(sScoreMessage);
 				}

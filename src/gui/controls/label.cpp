@@ -4,40 +4,54 @@
 #include "engine/graphics_engine.h"
 #include "gui/string_manager.h"
 
-//=============================================================================
-// Label class
-//=============================================================================
-Label::~Label() {
-	g_pGraphicsEngine->removeGfxEntity(m_labelText);
-	DELETE(m_labelText);
+namespace {
+	const float s_fTextVerticalOffset = -6.0f;
 }
 
-void Label::init() {
-	m_labelText = NEW(Text, m_text, vmake(m_v2Pos.x - g_pStringManager->calculateTextHalfWidth(m_text), m_v2Pos.y - 6), 1);
-	g_pGraphicsEngine->addGfxEntity(m_labelText);
+CLabel::CLabel(const std::string& _sName, const vec2& _v2Pos, const vec2& _v2Size, const std::string& _sText, bool _bIsActive) 
+: CControl(_sName, _v2Pos, _v2Size, _bIsActive)
+, m_sText(_sText)
+, m_pLabelText(nullptr)
+{}
+
+CLabel::~CLabel() {
+	if (g_pGraphicsEngine) {
+		g_pGraphicsEngine->removeGfxEntity(m_pLabelText);
+	}
+	DELETE(m_pLabelText);
 }
 
-void Label::activate() {
+void CLabel::init() {
+	CControl::init();
+
+	ASSERT(g_pGraphicsEngine && g_pStringManager);
+
+	m_pLabelText = NEW(Text, m_sText, vmake(m_v2Pos.x - g_pStringManager->calculateTextHalfWidth(m_sText), m_v2Pos.y + s_fTextVerticalOffset), 1);
+	g_pGraphicsEngine->addGfxEntity(m_pLabelText);
+}
+
+void CLabel::activate() {
 	CControl::activate();
 
-	m_labelText->activate();
-	m_labelText->setPos(vmake(m_v2Pos.x - g_pStringManager->calculateTextHalfWidth(m_text), m_v2Pos.y - 6));
+	ASSERT(m_pLabelText);
+	m_pLabelText->activate();
+	ASSERT(g_pStringManager);
+	m_pLabelText->setPos(vmake(m_v2Pos.x - g_pStringManager->calculateTextHalfWidth(m_sText), m_v2Pos.y + s_fTextVerticalOffset));
 }
 
-void Label::deactivate() {
+void CLabel::deactivate() {
 	CControl::deactivate();
 
-	m_labelText->deactivate();
+	ASSERT(m_pLabelText);
+	m_pLabelText->deactivate();
 }
 
-void Label::run(float _fDeltaTime) {
+void CLabel::run(float _fDeltaTime) {
 	if (m_bIsActive) {
 		CControl::run(_fDeltaTime);
 
-		std::string textToDraw = g_pStringManager->getText(m_text);
-		m_labelText->setText(textToDraw.c_str());
-		vec2 currentPos = m_labelText->getPos();
-		currentPos.x = m_v2Pos.x - g_pStringManager->calculateTextHalfWidth(m_text);
-		m_labelText->setPos(currentPos);
+		ASSERT(m_pLabelText);
+		ASSERT(g_pStringManager);
+		m_pLabelText->setPos(vmake(m_v2Pos.x - g_pStringManager->calculateTextHalfWidth(m_sText), m_v2Pos.y + s_fTextVerticalOffset));
 	}
 }

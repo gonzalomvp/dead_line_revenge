@@ -250,7 +250,7 @@ void CMenuManager::createOptionsMenu() {
 	CMenu* menu = NEW(CMenu, s_psOptionsMenuName, vmake(0.0f, 0.0f), vmake(0.0f, 0.0f), false);
 	m_mMenus[EOptionsMenu] = menu;
 
-	Label* label = NEW(Label, s_psSettingsMusicLabelName, vmake(SCR_WIDTH / 2 - 100, SCR_HEIGHT * 0.8), vmake(0.0, 0.0), s_psMusicText);
+	CLabel* label = NEW(CLabel, s_psSettingsMusicLabelName, vmake(SCR_WIDTH / 2 - 100, SCR_HEIGHT * 0.8), vmake(0.0, 0.0), s_psMusicText);
 	label->init();
 	menu->addControl(label);
 
@@ -259,7 +259,7 @@ void CMenuManager::createOptionsMenu() {
 	checkbox->addListener(this);
 	menu->addControl(checkbox);
 
-	label = NEW(Label, s_psSettingsSFXLabelName, vmake(SCR_WIDTH / 2 - 100, SCR_HEIGHT * 0.65), vmake(0.0, 0.0), s_psSFXText);
+	label = NEW(CLabel, s_psSettingsSFXLabelName, vmake(SCR_WIDTH / 2 - 100, SCR_HEIGHT * 0.65), vmake(0.0, 0.0), s_psSFXText);
 	label->init();
 	menu->addControl(label);
 
@@ -268,7 +268,7 @@ void CMenuManager::createOptionsMenu() {
 	checkbox->addListener(this);
 	menu->addControl(checkbox);
 
-	label = NEW(Label, s_psSettingsVolumeLabelName, vmake(SCR_WIDTH / 2 - 100, SCR_HEIGHT * 0.5), vmake(0.0, 0.0), s_psVolumeText);
+	label = NEW(CLabel, s_psSettingsVolumeLabelName, vmake(SCR_WIDTH / 2 - 100, SCR_HEIGHT * 0.5), vmake(0.0, 0.0), s_psVolumeText);
 	label->init();
 	menu->addControl(label);
 
@@ -277,7 +277,7 @@ void CMenuManager::createOptionsMenu() {
 	slider->addListener(this);
 	menu->addControl(slider);
 
-	label = NEW(Label, s_psSettingsLanguageLabelName, vmake(SCR_WIDTH / 2 - 100, SCR_HEIGHT * 0.35), vmake(0.0, 0.0), s_psLanguageText);
+	label = NEW(CLabel, s_psSettingsLanguageLabelName, vmake(SCR_WIDTH / 2 - 100, SCR_HEIGHT * 0.35), vmake(0.0, 0.0), s_psLanguageText);
 	label->init();
 	menu->addControl(label);
 
@@ -321,7 +321,7 @@ void CMenuManager::createGameOverMenu() {
 	button->addListener(this);
 	menu->addControl(button);
 
-	Label* pLabel = NEW(Label, s_psScoreLabelName, vmake(SCR_WIDTH / 2, SCR_HEIGHT * 0.8), vmake(0.0, 0.0), "");
+	CLabel* pLabel = NEW(CLabel, s_psScoreLabelName, vmake(SCR_WIDTH / 2, SCR_HEIGHT * 0.8), vmake(0.0, 0.0), "");
 	pLabel->init();
 	menu->addControl(pLabel);
 }
