@@ -796,7 +796,7 @@ void ComponentWeaponPickup::receiveMessage(Message* message) {
 				break;
 		}
 
-		g_pWorld->addEntity(g_pEntitiesFactory->createHUDMessage(hudMessage, vmake((WORLD_WIDTH / 2) - (hudMessage.length() / 2.0f * 16), 20), 100));
+		g_pWorld->addEntity(g_pEntitiesFactory->createHUDMessage(hudMessage, vmake((WORLD_WIDTH / 2) - g_pStringManager->calculateTextHalfWidth(hudMessage), 20), 100));
 	}
 }
 

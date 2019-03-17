@@ -222,6 +222,15 @@
     <ClInclude Include="..\src\gui\controls\slider.h">
       <Filter>src\gui\controls</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\REG_BEHAVIORS.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\REG_ENEMIES.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\REG_ENTITIES.h">
+      <Filter>src</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\main.cpp">

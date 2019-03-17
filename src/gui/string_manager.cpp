@@ -6,6 +6,10 @@
 
 using namespace rapidjson;
 
+float StringManager::calculateTextHalfWidth(const std::string& _sLabel) {
+	return getText(_sLabel).length() / 2.0f * 16.0f;
+}
+
 bool StringManager::loadLanguage(ELanguage language) {
 	m_texts.clear();
 	char* filename;

@@ -18,6 +18,7 @@ public:
 	class CEvent {
 	public:
 		CEvent(EEventType _eEventType) : m_eType(_eEventType) {}
+		virtual ~CEvent() {}
 
 		EEventType getType() const                 { return m_eType;        };
 		void       setType(EEventType _eEventType) { m_eType = _eEventType; };

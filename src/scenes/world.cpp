@@ -66,18 +66,18 @@ bool CWorld::init(uint16_t _uLevel) {
 	// Parse level file
 	const char* psFileName = "";
 	switch (_uLevel) {
-	case 1:
-		psFileName = "data/level1.json";
-		break;
-	case 2:
-		psFileName = "data/level2.json";
-		break;
-	case 3:
-		psFileName = "data/level3.json";
-		break;
-	default:
-		// Invalid level
-		return false;
+		case 1:
+			psFileName = "data/level1.json";
+			break;
+		case 2:
+			psFileName = "data/level2.json";
+			break;
+		case 3:
+			psFileName = "data/level3.json";
+			break;
+		default:
+			// Invalid level
+			return false;
 	}
 
 	// Force test level
@@ -232,8 +232,10 @@ void CWorld::removeEntity(Entity* _pEntity) {
 }
 
 bool CWorld::onEvent(const IInputManager::CEvent& _event) {
+	bool bConsumed = false;
 	IInputManager::EEventType eEventType = _event.getType();
 	if (eEventType == IInputManager::EEventType::EPause) {
+		bConsumed = true;
 		m_bIsPaused = !m_bIsPaused;
 		if (m_bIsPaused) {
 			m_pPlayer->deactivate();
@@ -244,7 +246,7 @@ bool CWorld::onEvent(const IInputManager::CEvent& _event) {
 			g_pMenuManager->deactivateMenu();
 		}
 	}
-	return true;
+	return bConsumed;
 }
 
 void CWorld::checkCollisions() {
