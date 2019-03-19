@@ -1,4 +1,4 @@
-#include "../../common/stdafx.h"
+#include "common/stdafx.h"
 #include "bossIAComponent.h"
 
 void BossIAComponent::init() {

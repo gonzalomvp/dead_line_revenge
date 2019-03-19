@@ -1,6 +1,6 @@
 #pragma once
 #include "common/stdafx.h"
-#include "../globals.h"
+#include "globals.h"
 #include <map>
 
 class StringManager {

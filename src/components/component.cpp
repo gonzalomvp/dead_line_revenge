@@ -1,15 +1,15 @@
-#include "../../common/stdafx.h"
+#include "common/stdafx.h"
 #include "component.h"
 
-#include "../../engine/graphics_engine.h"
+#include "engine/graphics_engine.h"
 #include "engine/sprite.h"
 #include "engine/text.h"
-#include "../../engine/sound_engine.h"
-#include "../../gui/string_manager.h"
-#include "../../scenes/world.h"
-#include "../entity.h"
+#include "engine/sound_engine.h"
+#include "gui/string_manager.h"
+#include "scenes/world.h"
+#include "entities/entity.h"
 #include "entities/entities_factory.h"
-#include "../message.h"
+#include "entities/message.h"
 
 #include <algorithm>
 

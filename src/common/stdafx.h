@@ -76,6 +76,6 @@
 #include "font.h"
 #include "math_utils.h"
 
-#include "../globals.h"
+#include "globals.h"
 
 #endif
