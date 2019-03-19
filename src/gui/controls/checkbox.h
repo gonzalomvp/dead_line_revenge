@@ -4,8 +4,7 @@
 
 #include <vector>
 
-class Sprite;
-class Text;
+class CSprite;
 
 class CCheckbox : public CControl {
 public:
@@ -31,8 +30,8 @@ private:
 	const char* m_psUncheckedImage;
 	bool        m_bIsPushed;
 	bool        m_bIsChecked;
-	Sprite*     m_pSpriteChecked;
-	Sprite*     m_pSpriteUnchecked;
+	CSprite*    m_pSpriteChecked;
+	CSprite*    m_pSpriteUnchecked;
 	
 	std::vector<IListener*> m_listeners;
 };

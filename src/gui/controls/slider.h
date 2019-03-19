@@ -4,8 +4,8 @@
 #include "gui/controls/button.h"
 #include <vector>
 
-class Sprite;
-class Text;
+class CSprite;
+class CText;
 
 class CSlider : public CControl, public CButton::IListener {
 public:
@@ -45,9 +45,9 @@ private:
 	bool        m_bIsBarPushed;
 	CButton*    m_pLeftButton;
 	CButton*    m_pRightButton;
-	Sprite*     m_pSpriteBar;
-	Sprite*     m_pSpriteBall;
-	Text*       m_pSliderText;
+	CSprite*    m_pSpriteBar;
+	CSprite*    m_pSpriteBall;
+	CText*      m_pSliderText;
 
 	std::vector<IListener*> m_vListeners;
 };

@@ -2,6 +2,8 @@
 #include "slider.h"
 
 #include "engine/graphics_engine.h"
+#include "engine/sprite.h"
+#include "engine/text.h"
 #include "gui/string_manager.h"
 
 namespace {
@@ -60,13 +62,13 @@ void CSlider::init() {
 	m_pRightButton->init();
 	m_pRightButton->addListener(this);
 
-	m_pSpriteBar = NEW(Sprite, g_pGraphicsEngine->getTexture(m_psBarImage), m_v2Pos, vmake(m_v2Size.x, 5.0f), 0.f, 1.f, 2);
+	m_pSpriteBar = NEW(CSprite, g_pGraphicsEngine->getTexture(m_psBarImage), m_v2Pos, vmake(m_v2Size.x, 5.0f), 0.f, 1.f, 2);
 	g_pGraphicsEngine->addGfxEntity(m_pSpriteBar);
 
-	m_pSpriteBall = NEW(Sprite, g_pGraphicsEngine->getTexture(m_psBallImage), m_v2Pos, vmake(20.0f, 20.0f), 0.f, 1.f, 1);
+	m_pSpriteBall = NEW(CSprite, g_pGraphicsEngine->getTexture(m_psBallImage), m_v2Pos, vmake(20.0f, 20.0f), 0.f, 1.f, 1);
 	g_pGraphicsEngine->addGfxEntity(m_pSpriteBall);
 
-	m_pSliderText = NEW(Text, "", vmake(m_v2Pos.x + m_v2Size.x * 0.5f + m_pRightButton->getSize().x, m_v2Pos.y + s_fTextVerticalOffset), 1);
+	m_pSliderText = NEW(CText, "", vmake(m_v2Pos.x + m_v2Size.x * 0.5f + m_pRightButton->getSize().x, m_v2Pos.y + s_fTextVerticalOffset), 1);
 	g_pGraphicsEngine->addGfxEntity(m_pSliderText);
 }
 

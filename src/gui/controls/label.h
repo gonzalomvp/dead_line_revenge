@@ -4,7 +4,7 @@
 
 #include <vector>
 
-class Text;
+class CText;
 
 class CLabel : public CControl {
 public:
@@ -21,5 +21,5 @@ public:
 
 private:
 	std::string m_sText;
-	Text*       m_pLabelText;
+	CText*      m_pLabelText;
 };

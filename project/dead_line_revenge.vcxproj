@@ -30,7 +30,10 @@
     <ClInclude Include="..\src\common\stdafx.h" />
     <ClInclude Include="..\src\common\sys.h" />
     <ClInclude Include="..\src\engine\graphics_engine.h" />
+    <ClInclude Include="..\src\engine\graphics_entitiy.h" />
     <ClInclude Include="..\src\engine\sound_engine.h" />
+    <ClInclude Include="..\src\engine\sprite.h" />
+    <ClInclude Include="..\src\engine\text.h" />
     <ClInclude Include="..\src\entities\components\behavior_tree\actions\aim_player.h" />
     <ClInclude Include="..\src\entities\components\behavior_tree\actions\change_sprite.h" />
     <ClInclude Include="..\src\entities\components\behavior_tree\actions\change_weapon.h" />
@@ -97,7 +100,10 @@
     <ClCompile Include="..\src\common\stdafx.cpp" />
     <ClCompile Include="..\src\common\sys_win.cpp" />
     <ClCompile Include="..\src\engine\graphics_engine.cpp" />
+    <ClCompile Include="..\src\engine\graphics_entity.cpp" />
     <ClCompile Include="..\src\engine\sound_engine.cpp" />
+    <ClCompile Include="..\src\engine\sprite.cpp" />
+    <ClCompile Include="..\src\engine\text.cpp" />
     <ClCompile Include="..\src\entities\components\behavior_tree\actions\aim_player.cpp" />
     <ClCompile Include="..\src\entities\components\behavior_tree\actions\change_sprite.cpp" />
     <ClCompile Include="..\src\entities\components\behavior_tree\actions\change_weapon.cpp" />
@@ -144,7 +150,7 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>{CC0EB618-AC99-4DFE-A4E1-534AD384C3A1}</ProjectGuid>
     <RootNamespace>dead_line_revenge</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.17134.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
     <ProjectName>dead_line_revenge</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />

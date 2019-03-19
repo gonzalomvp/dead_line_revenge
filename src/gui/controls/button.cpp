@@ -2,6 +2,8 @@
 #include "button.h"
 
 #include "engine/graphics_engine.h"
+#include "engine/sprite.h"
+#include "engine/text.h"
 #include "gui/string_manager.h"
 
 namespace {
@@ -45,11 +47,11 @@ void CButton::init() {
 
 	ASSERT(g_pGraphicsEngine && g_pStringManager);
 
-	m_pSpriteNormal = NEW(Sprite, g_pGraphicsEngine->getTexture(m_psNormalImage), m_v2Pos, m_v2Size, 0.f, 1.f, 2);
+	m_pSpriteNormal = NEW(CSprite, g_pGraphicsEngine->getTexture(m_psNormalImage), m_v2Pos, m_v2Size, 0.f, 1.f, 2);
 	g_pGraphicsEngine->addGfxEntity(m_pSpriteNormal);
-	m_pSpritePush = NEW(Sprite, g_pGraphicsEngine->getTexture(m_psPushImage) , m_v2Pos, m_v2Size, 0.f, 1.f, 2);
+	m_pSpritePush = NEW(CSprite, g_pGraphicsEngine->getTexture(m_psPushImage) , m_v2Pos, m_v2Size, 0.f, 1.f, 2);
 	g_pGraphicsEngine->addGfxEntity(m_pSpritePush);
-	m_pButtonText = NEW(Text, m_sText, vmake(m_v2Pos.x - g_pStringManager->calculateTextHalfWidth(m_sText), m_v2Pos.y + s_fNormalTextVerticalOffset), 1);
+	m_pButtonText = NEW(CText, m_sText, vmake(m_v2Pos.x - g_pStringManager->calculateTextHalfWidth(m_sText), m_v2Pos.y + s_fNormalTextVerticalOffset), 1);
 	g_pGraphicsEngine->addGfxEntity(m_pButtonText);
 }
 

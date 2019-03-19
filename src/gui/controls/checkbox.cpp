@@ -2,6 +2,7 @@
 #include "checkbox.h"
 
 #include "engine/graphics_engine.h"
+#include "engine/sprite.h"
 #include "gui/string_manager.h"
 
 CCheckbox::CCheckbox(const std::string& _sName, const vec2& _v2Pos, const vec2& _v2Size, const char* _psCheckedImage, const char* _psUncheckedImage, bool _bIsChecked, bool _bIsActive)
@@ -35,9 +36,9 @@ void CCheckbox::init() {
 
 	ASSERT(g_pGraphicsEngine);
 
-	m_pSpriteChecked = NEW(Sprite, g_pGraphicsEngine->getTexture(m_psCheckedImage), m_v2Pos, m_v2Size, 0.f, 1.f, 1);
+	m_pSpriteChecked = NEW(CSprite, g_pGraphicsEngine->getTexture(m_psCheckedImage), m_v2Pos, m_v2Size, 0.f, 1.f, 1);
 	g_pGraphicsEngine->addGfxEntity(m_pSpriteChecked);
-	m_pSpriteUnchecked = NEW(Sprite, g_pGraphicsEngine->getTexture(m_psUncheckedImage), m_v2Pos, m_v2Size, 0.f, 1.f, 1);
+	m_pSpriteUnchecked = NEW(CSprite, g_pGraphicsEngine->getTexture(m_psUncheckedImage), m_v2Pos, m_v2Size, 0.f, 1.f, 1);
 	g_pGraphicsEngine->addGfxEntity(m_pSpriteUnchecked);
 	deactivate();
 }

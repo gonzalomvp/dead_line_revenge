@@ -2,6 +2,7 @@
 #include "label.h"
 
 #include "engine/graphics_engine.h"
+#include "engine/text.h"
 #include "gui/string_manager.h"
 
 namespace {
@@ -26,7 +27,7 @@ void CLabel::init() {
 
 	ASSERT(g_pGraphicsEngine && g_pStringManager);
 
-	m_pLabelText = NEW(Text, m_sText, vmake(m_v2Pos.x - g_pStringManager->calculateTextHalfWidth(m_sText), m_v2Pos.y + s_fTextVerticalOffset), 1);
+	m_pLabelText = NEW(CText, m_sText, vmake(m_v2Pos.x - g_pStringManager->calculateTextHalfWidth(m_sText), m_v2Pos.y + s_fTextVerticalOffset), 1);
 	g_pGraphicsEngine->addGfxEntity(m_pLabelText);
 }
 

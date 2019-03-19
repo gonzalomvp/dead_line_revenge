@@ -1,12 +1,10 @@
 #include "common/stdafx.h"
 #include "graphics_engine.h"
 
-#include "gui/string_manager.h"
+#include "engine/graphics_entitiy.h"
+
 #include <algorithm>
 
-//=============================================================================
-// GraphicsEngine class
-//=============================================================================
 GraphicsEngine::GraphicsEngine() {
 	FONT_Init();
 	glViewport(0, 0, SCR_WIDTH, SCR_HEIGHT);
@@ -21,72 +19,51 @@ GraphicsEngine::GraphicsEngine() {
 }
 
 GraphicsEngine::~GraphicsEngine() {
-	for (auto itTextures = m_textures.begin(); itTextures != m_textures.end(); ++itTextures) {
-		CORE_UnloadPNG(itTextures->second);
+	for (auto itTexture = m_mTextures.begin(); itTexture != m_mTextures.end(); ++itTexture) {
+		CORE_UnloadPNG(itTexture->second);
 	}
 	FONT_End();
 }
 
-GLuint GraphicsEngine::getTexture(const std::string& fileName) {
-	GLuint textureId = m_textures[fileName];
-	if (!textureId) {
-		textureId = CORE_LoadPNG(fileName.c_str(), false);
-		m_textures[fileName] = textureId;
+GLuint GraphicsEngine::getTexture(const std::string& _sFileName) {
+	GLuint uTextureId = 0;
+	if (m_mTextures.count(_sFileName)) {
+		uTextureId = m_mTextures[_sFileName];
 	}
-	return textureId;
+	else {
+		uTextureId = CORE_LoadPNG(_sFileName.c_str(), false);
+		m_mTextures[_sFileName] = uTextureId;
+	}
+	ASSERT(uTextureId != 0, "Texture %s not found", _sFileName.c_str());
+	return uTextureId;
 }
 
-void GraphicsEngine::addGfxEntity(GfxEntity* gfxEntity) {
-	m_gfxEntities.push_back(gfxEntity);
+void GraphicsEngine::addGfxEntity(CGfxEntity* _pGfxEntity) {
+	m_vGfxEntities.push_back(_pGfxEntity);
 }
 
-void GraphicsEngine::removeGfxEntity(const GfxEntity* gfxEntity) {
-	for (auto itGfxEntity = m_gfxEntities.begin(); itGfxEntity != m_gfxEntities.end(); ++itGfxEntity) {
-		if (*itGfxEntity == gfxEntity) {
-			m_gfxEntities.erase(itGfxEntity);
-			break;
-		}
-	}
+void GraphicsEngine::removeGfxEntity(const CGfxEntity* _pGfxEntity) {
+	m_vGfxEntities.erase(
+		std::remove(m_vGfxEntities.begin(), m_vGfxEntities.end(), _pGfxEntity),
+		m_vGfxEntities.end()
+	);
 }
 
 void GraphicsEngine::render() {
 	glClear(GL_COLOR_BUFFER_BIT);
 
 	//sort by priority
-	std::sort(m_gfxEntities.begin(),
-		m_gfxEntities.end(),
-		[](const GfxEntity* lhs, const GfxEntity* rhs) {
+	std::sort(m_vGfxEntities.begin(),
+		m_vGfxEntities.end(),
+		[](const CGfxEntity* lhs, const CGfxEntity* rhs) {
 		return lhs->getPriority() > rhs->getPriority();
 	});
 
-	for (size_t i = 0; i < m_gfxEntities.size(); i++) {
-		if (m_gfxEntities[i]->isActive()) {
-			m_gfxEntities[i]->render();
+	for (size_t i = 0; i < m_vGfxEntities.size(); ++i) {
+		if (m_vGfxEntities[i]->isActive()) {
+			m_vGfxEntities[i]->render();
 		}
 	}
 	SYS_Show();
 }
 
-//=============================================================================
-// GfxEntity class
-//=============================================================================
-GfxEntity::~GfxEntity() {
-	if (g_pGraphicsEngine) {
-		g_pGraphicsEngine->removeGfxEntity(this);
-	}
-}
-
-//=============================================================================
-// Sprite class
-//=============================================================================
-void Sprite::render() {
-	CORE_RenderCenteredRotatedSprite(m_pos, m_size, DEG2RAD(m_angle), m_texture, rgbamake(255, 255, 255, static_cast<int>(255 * m_alpha)));
-}
-
-//=============================================================================
-// Text class
-//=============================================================================
-void Text::render() {
-	std::string textToDraw = g_pStringManager->getText(m_text);
-	FONT_DrawString(m_pos, textToDraw.c_str());
-}

@@ -4,8 +4,6 @@
 
 #include <map>
 
-class Text;
-
 class CMenu : public CControl {
 public:
 	CMenu(const std::string& _sName, const vec2& _v2Pos, const vec2& _v2Size, bool _bIsActive = true) : CControl(_sName, _v2Pos, _v2Size, _bIsActive) {}

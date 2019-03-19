@@ -234,6 +234,15 @@
     <ClInclude Include="..\src\common\math_utils.h">
       <Filter>src\common</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\engine\graphics_entitiy.h">
+      <Filter>src\engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\engine\sprite.h">
+      <Filter>src\engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\engine\text.h">
+      <Filter>src\engine</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\main.cpp">
@@ -406,6 +415,15 @@
     </ClCompile>
     <ClCompile Include="..\src\common\math_utils.cpp">
       <Filter>src\common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\engine\graphics_entity.cpp">
+      <Filter>src\engine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\engine\sprite.cpp">
+      <Filter>src\engine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\engine\text.cpp">
+      <Filter>src\engine</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

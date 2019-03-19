@@ -5,10 +5,10 @@
 #define SHOTGUN_DISP_ANGLE 15.0f
 
 class  Entity;
-class  GfxEntity;
+class  CGfxEntity;
 struct Message;
-class  Sprite;
-class  Text;
+class  CSprite;
+class  CText;
 
 //=============================================================================
 // Component class
@@ -119,7 +119,7 @@ public:
 	virtual void run           (float deltaTime);
 	virtual void receiveMessage(Message* message);
 private:
-	Sprite* m_sprite;
+	CSprite* m_sprite;
 	std::string m_texture;
 	int         m_priority;
 	float       m_alpha;
@@ -363,7 +363,7 @@ public:
 private:
 	vec2        m_pos;
 	std::string m_messageText;
-	Text*   m_message;
+	CText*   m_message;
 };
 
 //=============================================================================
@@ -378,12 +378,12 @@ public:
 	virtual void run    (float deltaTime);
 	virtual bool onEvent(const IInputManager::CEvent&);
 private:
-	Text*                   m_life;
-	Text*                   m_uScore;
-	Text*                   m_ammo;
-	Sprite*                 m_target;
-	Sprite*                 m_reloadAnim;
-	std::vector<GfxEntity*> m_gfxEntities;
+	CText*                   m_life;
+	CText*                   m_uScore;
+	CText*                   m_ammo;
+	CSprite*                 m_target;
+	CSprite*                 m_reloadAnim;
+	std::vector<CGfxEntity*> m_gfxEntities;
 };
 
 //=============================================================================

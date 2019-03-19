@@ -4,8 +4,8 @@
 
 #include <vector>
 
-class Sprite;
-class Text;
+class CSprite;
+class CText;
 
 class CButton : public CControl {
 public:
@@ -34,9 +34,9 @@ private:
 	bool         m_bIsHold;
 	float        m_fHoldTime;
 	float        m_fHoldTimer;
-	Sprite*      m_pSpriteNormal;
-	Sprite*      m_pSpritePush;
-	Text*        m_pButtonText;
+	CSprite*     m_pSpriteNormal;
+	CSprite*     m_pSpritePush;
+	CText*       m_pButtonText;
 
 	std::vector<IListener*> m_vListeners;
 };

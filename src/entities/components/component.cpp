@@ -2,6 +2,8 @@
 #include "component.h"
 
 #include "../../engine/graphics_engine.h"
+#include "engine/sprite.h"
+#include "engine/text.h"
 #include "../../engine/sound_engine.h"
 #include "../../gui/string_manager.h"
 #include "../../scenes/world.h"
@@ -200,7 +202,7 @@ ComponentRenderable::~ComponentRenderable() {
 
 void ComponentRenderable::init() {
 	Component::init();
-	m_sprite = NEW(Sprite, g_pGraphicsEngine->getTexture(m_texture), vmake(0.0f, 0.0f), vmake(0.0f, 0.0f), m_angle, m_alpha, m_priority);
+	m_sprite = NEW(CSprite, g_pGraphicsEngine->getTexture(m_texture), vmake(0.0f, 0.0f), vmake(0.0f, 0.0f), m_angle, m_alpha, m_priority);
 	g_pGraphicsEngine->addGfxEntity(m_sprite);
 }
 
@@ -247,7 +249,7 @@ void ComponentRenderable::receiveMessage(Message* message) {
 			if (messageChangeSprite) {
 				DELETE(m_sprite);
 				m_texture = messageChangeSprite->texture;
-				m_sprite = NEW(Sprite, g_pGraphicsEngine->getTexture(m_texture), vmake(0.0f, 0.0f), vmake(0.0f, 0.0f), m_angle, m_alpha, m_priority);
+				m_sprite = NEW(CSprite, g_pGraphicsEngine->getTexture(m_texture), vmake(0.0f, 0.0f), vmake(0.0f, 0.0f), m_angle, m_alpha, m_priority);
 				g_pGraphicsEngine->addGfxEntity(m_sprite);
 				MessageGetTransform msgGetTransform;
 				m_owner->receiveMessage(&msgGetTransform);
@@ -809,7 +811,7 @@ ComponentHUDMessage::~ComponentHUDMessage() {
 
 void ComponentHUDMessage::init() {
 	Component::init();
-	m_message = NEW(Text, m_messageText, m_pos, 1);
+	m_message = NEW(CText, m_messageText, m_pos, 1);
 	g_pGraphicsEngine->addGfxEntity(m_message);
 }
 
@@ -829,39 +831,39 @@ void ComponentHUD::init() {
 	Component::init();
 	
 	// Life HUD
-	Text* title = NEW(Text, "LTEXT_GUI_LIFE_HUD", vmake(20, 450), 4);
+	CText* title = NEW(CText, "LTEXT_GUI_LIFE_HUD", vmake(20, 450), 4);
 	g_pGraphicsEngine->addGfxEntity(title);
 	m_gfxEntities.push_back(title);
 	float titleEndPos = title->getPos().x + g_pStringManager->getText(title->getText()).length() * 16.0f;
-	m_life = NEW(Text, "0", vmake(title->getPos().x, 430), 4);
+	m_life = NEW(CText, "0", vmake(title->getPos().x, 430), 4);
 	g_pGraphicsEngine->addGfxEntity(m_life);
 	m_gfxEntities.push_back(m_life);
 
 	// Score HUD
-	title = NEW(Text, "LTEXT_GUI_SCORE_HUD", vmake(titleEndPos + 20, 450), 4);
+	title = NEW(CText, "LTEXT_GUI_SCORE_HUD", vmake(titleEndPos + 20, 450), 4);
 	g_pGraphicsEngine->addGfxEntity(title);
 	m_gfxEntities.push_back(title);
 	titleEndPos = title->getPos().x + g_pStringManager->getText(title->getText()).length() * 16.0f;
-	m_uScore = NEW(Text, "0", vmake(title->getPos().x, 430), 4);
+	m_uScore = NEW(CText, "0", vmake(title->getPos().x, 430), 4);
 	g_pGraphicsEngine->addGfxEntity(m_uScore);
 	m_gfxEntities.push_back(m_uScore);
 
 	// AMMO HUD
-	title = NEW(Text, "LTEXT_GUI_AMMO_HUD", vmake(titleEndPos + 20, 450), 4);
+	title = NEW(CText, "LTEXT_GUI_AMMO_HUD", vmake(titleEndPos + 20, 450), 4);
 	g_pGraphicsEngine->addGfxEntity(title);
 	m_gfxEntities.push_back(title);
-	m_ammo = NEW(Text, "0/0", vmake(title->getPos().x, 430), 4);
+	m_ammo = NEW(CText, "0/0", vmake(title->getPos().x, 430), 4);
 	g_pGraphicsEngine->addGfxEntity(m_ammo);
 	m_gfxEntities.push_back(m_ammo);
 
 	// Target HUD
-	m_target = NEW(Sprite, g_pGraphicsEngine->getTexture("data/target.png"), vmake(0.0f, 0.0f), vmake(0.0f, 0.0f), 0.0f, 1.0f, 4);
+	m_target = NEW(CSprite, g_pGraphicsEngine->getTexture("data/target.png"), vmake(0.0f, 0.0f), vmake(0.0f, 0.0f), 0.0f, 1.0f, 4);
 	m_target->setSize(vmake(36, 36));
 	g_pGraphicsEngine->addGfxEntity(m_target);
 	m_gfxEntities.push_back(m_target);
 
 	// Reload Animation
-	m_reloadAnim = NEW(Sprite, g_pGraphicsEngine->getTexture("data/reload.png"), vmake(0.0f, 0.0f), vmake(0.0f, 0.0f), 0.0f, 1.0f, 4);
+	m_reloadAnim = NEW(CSprite, g_pGraphicsEngine->getTexture("data/reload.png"), vmake(0.0f, 0.0f), vmake(0.0f, 0.0f), 0.0f, 1.0f, 4);
 	g_pGraphicsEngine->addGfxEntity(m_reloadAnim);
 	m_gfxEntities.push_back(m_reloadAnim);
 
