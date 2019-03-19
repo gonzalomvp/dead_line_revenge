@@ -3,14 +3,17 @@
 
 class CBehaviorNodeTreeComponent;
 
-class ChangeSprite : public CBehaviorNode {
+class CChangeSpriteAction : public CBehaviorNode {
 public:
-	ChangeSprite(CBehaviorNodeTreeComponent* owner, std::string texture) : CBehaviorNode(owner), mTexture(texture) {}
+	CChangeSpriteAction(CBehaviorNodeTreeComponent* _pOwner) : CBehaviorNode(_pOwner) {}
+
+	// CBehaviorNode
+	virtual void init(TiXmlElement* behaviorElem) override;
 
 protected:
 	virtual Status update(float step) override;
 
 private:
-	std::string mTexture;
+	std::string m_sTextureFile;
 };
 

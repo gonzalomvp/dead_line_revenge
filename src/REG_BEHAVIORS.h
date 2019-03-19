@@ -2,6 +2,7 @@
 REG_BEHAVIOR(SelectorNode, "selector")
 REG_BEHAVIOR(SequenceNode, "sequence")
 REG_BEHAVIOR(RepeatNode,   "repeat")
+REG_BEHAVIOR(ParallelNode, "parallel")
 
 // Conditions
 REG_BEHAVIOR(CheckLifeCondition, "checkLife")
@@ -14,3 +15,4 @@ REG_BEHAVIOR(AimToPlayerAction,        "aimToPlayer")
 REG_BEHAVIOR(FireAction,               "fire")
 REG_BEHAVIOR(WaitAction,               "wait")
 REG_BEHAVIOR(RotateAimAction,          "rotateAim")
+REG_BEHAVIOR(ChangeSpriteAction,       "changeSprite")

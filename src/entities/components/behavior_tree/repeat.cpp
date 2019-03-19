@@ -15,7 +15,7 @@ void CRepeatNode::onEnter() {
 }
 
 Status CRepeatNode::update(float step) {
-	if (m_iCounter < m_iTimes) {
+	if (m_iCounter < m_iTimes || m_iTimes == -1) {
 		Status s = mChildren[0]->tick(step);
 		
 		if (s == eFail) {

@@ -243,6 +243,9 @@
     <ClInclude Include="..\src\engine\text.h">
       <Filter>src\engine</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\entities\components\behavior_tree\parallel.h">
+      <Filter>src\entities\components\behavior_tree</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\main.cpp">
@@ -424,6 +427,9 @@
     </ClCompile>
     <ClCompile Include="..\src\engine\text.cpp">
       <Filter>src\engine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\entities\components\behavior_tree\parallel.cpp">
+      <Filter>src\entities\components\behavior_tree</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

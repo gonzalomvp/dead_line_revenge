@@ -5,6 +5,7 @@
 #include "entities/components/behavior_tree/selector.h"
 #include "entities/components/behavior_tree/sequence.h"
 #include "entities/components/behavior_tree/repeat.h"
+#include "entities/components/behavior_tree/parallel.h"
 #include "entities/components/behavior_tree/actions/change_sprite.h"
 #include "entities/components/behavior_tree/actions/hit.h"
 #include "entities/components/behavior_tree/actions/idle.h"

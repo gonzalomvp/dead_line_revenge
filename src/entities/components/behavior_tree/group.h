@@ -12,6 +12,7 @@ public:
 
 	// CBehaviorNode
 	virtual void init(TiXmlElement* behaviorElem) override;
+	virtual void abort() override;
 
 protected:
 	typedef std::vector<CBehaviorNode*> Behaviors;

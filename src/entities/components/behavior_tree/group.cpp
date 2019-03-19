@@ -15,3 +15,9 @@ CGroupNode::~CGroupNode() {
 		delete mChildren[i];
 	}
 }
+
+void CGroupNode::abort() {
+	for (size_t i = 0; i < mChildren.size(); ++i) {
+		mChildren[i]->abort();
+	}
+}

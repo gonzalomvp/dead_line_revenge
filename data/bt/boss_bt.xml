@@ -1,37 +1,45 @@
 <root>
 	<behavior type="selector">
+    <behavior type="parallel">
+      <behavior type="checkLife">
+				<param value="35" />
+			</behavior>
+      <behavior type="sequence">
+        <behavior type="changeSprite">
+				  <param value="data/boss1shield.png" />
+			  </behavior>
+        <behavior type="changeWeapon">
+				  <param value="boss weapon2" />
+			  </behavior>
+			  <behavior type="goToRandomPosition">
+				  <param value="2.0" />
+			  </behavior>
+			  <behavior type="aimToPlayer"/>
+			  <behavior type="repeat" times="15">
+				  <behavior type="sequence">
+					  <behavior type="fire"/>
+					  <behavior type="wait">
+						  <param value="0.15" />
+					  </behavior>
+					  <behavior type="rotateAim">
+						  <param value="10.0" />
+					  </behavior>
+				  </behavior>
+			  </behavior>
+		  </behavior>
+    </behavior>
 		<behavior type="sequence">
-			<behavior type="checkLife">
-				<param value="10" />
-			</behavior>
-			<behavior type="goToRandomPosition">
-				<param value="2.0" />
-			</behavior>
-			<behavior type="changeWeapon">
-				<param value="boss weapon2" />
-			</behavior>
-			<behavior type="aimToPlayer"/>
-			<behavior type="repeat" times="15">
-				<behavior type="sequence">
-					<behavior type="fire"/>
-					<behavior type="wait">
-						<param value="0.15" />
-					</behavior>
-					<behavior type="rotateAim">
-						<param value="10.0" />
-					</behavior>
-				</behavior>
-			</behavior>
-		</behavior>
-		<behavior type="sequence">
-			<!--behavior type="changeSprite">
+			<behavior type="changeSprite">
 				<param value="data/boss1bis.png" />
-			</behavior-->
+			</behavior>
+      <behavior type="changeWeapon">
+				<param value="boss weapon1" />
+			</behavior>
+      <behavior type="wait">
+			  <param value="1.0" />
+			</behavior>
 			<behavior type="goToPlayerPosition">
 				<param value="6.0" />
-			</behavior>
-			<behavior type="changeWeapon">
-				<param value="boss weapon1" />
 			</behavior>
 			<behavior type="repeat" times="3">
 				<behavior type="sequence">

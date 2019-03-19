@@ -12,6 +12,7 @@ enum Status {
 	eInvalid,
 	eSuccess,
 	eFail,
+	eAborted,
 	eRunning,
 };
 
@@ -33,15 +34,18 @@ public:
 	virtual ~CBehaviorNode() {}
 
 	virtual void init(TiXmlElement* behaviorElem) {}
+	virtual void abort() { mStatus = eAborted; }
 
 	virtual Status tick(float step);
 
+	Status getStatus() const { return mStatus; }
 	Entity* getOwnerEntity();
 
 protected:
 	virtual Status update(float step) = 0;
-	virtual void onEnter() {}
-	virtual void onExit()  {}
+	
+	virtual void onEnter()  {}
+	virtual void onExit ()  {}
 
 	CBehaviorNodeTreeComponent* mOwner;
 
