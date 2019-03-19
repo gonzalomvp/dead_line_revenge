@@ -114,21 +114,6 @@
 	},
 	{
 		"name": "boss weapon1",
-		"fireRate": 30,
-		"reloadTime": 1,
-		"capacity": 1,
-		"bulletSpeed": 8,
-		"bulletDamage": -1,
-		"bulletLife": 1,
-		"bulletRange": 0,
-		"numBullets": 10,
-		"isAutomatic": false,
-		"isExplossive": false,
-		"isBouncy": false,
-		"soundFile": ""
-	},
-	{
-		"name": "boss weapon2",
 		"fireRate": 10,
 		"reloadTime": 1,
 		"capacity": 1,
@@ -137,6 +122,21 @@
 		"bulletLife": 1,
 		"bulletRange": 0,
 		"numBullets": 3,
+		"isAutomatic": false,
+		"isExplossive": false,
+		"isBouncy": false,
+		"soundFile": ""
+	},
+	{
+		"name": "boss weapon2",
+		"fireRate": 30,
+		"reloadTime": 1,
+		"capacity": 1,
+		"bulletSpeed": 8,
+		"bulletDamage": -1,
+		"bulletLife": 1,
+		"bulletRange": 0,
+		"numBullets": 10,
 		"isAutomatic": false,
 		"isExplossive": false,
 		"isBouncy": false,
@@ -184,9 +184,9 @@
 		"life": 40,
 		"speed": 2,
 		"collisionDamage": -2,
-		"weapon": "boss weapon2",
+		"weapon": "boss weapon1",
 		"size": [ 90 ,74 ],
-		"imageFile": "data/boss1.png"
+		"imageFile": "data/boss.png"
 	}
 	],
 	"pickups": [ "revolver", "machinegun", "shotgun", "mines", "c4", "rocket launcher", "nuclear bomb" ]

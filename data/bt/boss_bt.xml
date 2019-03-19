@@ -6,10 +6,10 @@
 			</behavior>
       <behavior type="sequence">
         <behavior type="changeSprite">
-				  <param value="data/boss1shield.png" />
+				  <param value="data/boss_shield.png" />
 			  </behavior>
         <behavior type="changeWeapon">
-				  <param value="boss weapon2" />
+				  <param value="boss weapon1" />
 			  </behavior>
 			  <behavior type="goToRandomPosition">
 				  <param value="2.0" />
@@ -30,10 +30,10 @@
     </behavior>
 		<behavior type="sequence">
 			<behavior type="changeSprite">
-				<param value="data/boss1bis.png" />
+				<param value="data/boss.png" />
 			</behavior>
       <behavior type="changeWeapon">
-				<param value="boss weapon1" />
+				<param value="boss weapon2" />
 			</behavior>
       <behavior type="wait">
 			  <param value="1.0" />

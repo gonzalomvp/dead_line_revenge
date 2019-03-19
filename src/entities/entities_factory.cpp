@@ -212,6 +212,8 @@ Entity* CEntitiesFactory::createEnemy(vec2 _v2Pos, Entity::EType _tEnemyType, En
 	if (tEnemyDef.eType == Entity::EENEMYBOSS) {
 		BossIAComponent* bossAI = NEW(BossIAComponent, enemy, "data/bt/boss_bt.xml");
 		bossAI->init();
+		ComponentExplossive* explossive = NEW(ComponentExplossive, enemy);
+		explossive->init();
 	}
 
 	ComponentCollider* collider = NEW(ComponentCollider, enemy, ComponentCollider::ERectCollider, tEnemyDef.iCollisionDamage, ComponentCollider::EEnemyCollider, ComponentCollider::EPlayerWeaponCollider);
