@@ -4,9 +4,15 @@
 #include "entities/components/behavior_tree/behavior_tree.h"
 
 CBehaviorNode::SBehaviorInfo CBehaviorNode::s_aBehaviorInfo[] = {
+#define REG_BEHAVIOR_NODE(val, name) REG_BEHAVIOR(val, name)
+#define REG_BEHAVIOR_CONDITION(val, name) REG_BEHAVIOR(val, name)
+#define REG_BEHAVIOR_ACTION(val, name) REG_BEHAVIOR(val, name)
 #define REG_BEHAVIOR(val, name) \
 	{E##val, name},
 #include "REG_BEHAVIORS.h"
+#undef REG_BEHAVIOR_NODE
+#undef REG_BEHAVIOR_CONDITION
+#undef REG_BEHAVIOR_ACTION
 #undef REG_BEHAVIOR
 };
 

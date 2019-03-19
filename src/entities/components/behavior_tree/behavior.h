@@ -19,9 +19,15 @@ enum Status {
 class CBehaviorNode {
 public:
 	enum EType {
+#define REG_BEHAVIOR_NODE(val, name) REG_BEHAVIOR(val, name)
+#define REG_BEHAVIOR_CONDITION(val, name) REG_BEHAVIOR(val, name)
+#define REG_BEHAVIOR_ACTION(val, name) REG_BEHAVIOR(val, name)
 #define REG_BEHAVIOR(val, name) \
 		E##val,
 #include "REG_BEHAVIORS.h"
+#undef REG_BEHAVIOR_NODE
+#undef REG_BEHAVIOR_CONDITION
+#undef REG_BEHAVIOR_ACTION
 #undef REG_BEHAVIOR
 
 		EInvalid,

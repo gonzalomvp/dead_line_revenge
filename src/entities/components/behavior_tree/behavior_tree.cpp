@@ -65,12 +65,18 @@ CBehaviorNode* CBehaviorNodeTreeComponent::createBehaviorFromXML(TiXmlElement* b
 	CBehaviorNode::EType eBehaviorType = CBehaviorNode::getBehaviorTypeByName(type);
 
 	switch (eBehaviorType) {
+#define REG_BEHAVIOR_NODE(val, name) REG_BEHAVIOR(val, name)
+#define REG_BEHAVIOR_CONDITION(val, name) REG_BEHAVIOR(val, name)
+#define REG_BEHAVIOR_ACTION(val, name) REG_BEHAVIOR(val, name)
 #define REG_BEHAVIOR(val, name) \
 		case CBehaviorNode::E##val: \
 			behavior = new C##val(this); \
 			behavior->init(behaviorElem); \
 			break;
 #include "REG_BEHAVIORS.h"
+#undef REG_BEHAVIOR_NODE
+#undef REG_BEHAVIOR_CONDITION
+#undef REG_BEHAVIOR_ACTION
 #undef REG_BEHAVIOR
 
 		default:
