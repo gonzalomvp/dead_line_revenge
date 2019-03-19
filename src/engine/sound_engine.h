@@ -1,6 +1,5 @@
 #pragma once
 
-#include "common/stdafx.h"
 #include <map>
 
 class SoundEngine {
@@ -8,11 +7,11 @@ public:
 	SoundEngine();
 	~SoundEngine();
 
-	void playSound(const char* soundFile);
-	void playMusic(const char* soundFile);
+	void playSound(const char* _psSoundFile);
+	void playMusic(const char* _psSoundFile);
 	void stopMusic();
-	void setVolume(float volume);
+	void setVolume(float _fVolume);
 
 private:
-	std::map<std::string, uint> m_sounds;
+	std::map<std::string, uint> m_mSounds;
 };
