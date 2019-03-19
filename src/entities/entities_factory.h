@@ -1,6 +1,6 @@
 #pragma once
 
-#include "entities/components/component.h"
+#include "components/component.h"
 #include "entities/entity.h"
 
 class CEntitiesFactory {

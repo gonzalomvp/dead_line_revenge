@@ -2,7 +2,7 @@
 #include "entities_factory.h"
 
 #include "engine/sound_engine.h"
-#include "entities/components/bossIAComponent.h"
+#include "components/bossIAComponent.h"
 #include "scenes/world.h"
 
 #include "rapidjson/document.h"
