@@ -57,71 +57,8 @@ void Component::run(float deltaTime) {
 //=============================================================================
 
 //=============================================================================
-// ComponentRenderable class
+// CRenderableComponent class
 //=============================================================================
-ComponentRenderable::~ComponentRenderable() {
-	DELETE(m_sprite);
-}
-
-void ComponentRenderable::init() {
-	Component::init();
-	m_sprite = NEW(CSprite, g_pGraphicsEngine->getTexture(m_texture), vmake(0.0f, 0.0f), vmake(0.0f, 0.0f), m_angle, m_alpha, m_priority);
-	g_pGraphicsEngine->addGfxEntity(m_sprite);
-}
-
-void ComponentRenderable::run(float deltaTime) {
-	Component::run(deltaTime);
-	if (!m_isActive)
-		return;
-
-	MessageGetTransform msgGetTransform;
-	m_owner->receiveMessage(&msgGetTransform);
-	m_sprite->setPos(msgGetTransform.pos);
-	m_sprite->setSize(msgGetTransform.size);
-
-	if (m_hitTimer < m_hitTime) {
-		++m_hitTimer;
-		int hitAnim = m_hitTimer % 2;
-		if (hitAnim) {
-			m_sprite->deactivate();
-		}
-		else {
-			m_sprite->activate();
-		}
-		if (m_hitTimer == m_hitTime) {
-			m_sprite->activate();
-		}
-	}
-}
-
-void ComponentRenderable::receiveMessage(Message* message) {
-	if (!m_isActive)
-		return;
-
-	MessageChangeLife* msgChangeLife = dynamic_cast<MessageChangeLife*>(message);
-	if (msgChangeLife && msgChangeLife->deltaLife < 0) {
-		m_hitTimer = 0;
-	}
-	else {
-		MessageSetAimDirection* messageSetAimDirection = dynamic_cast<MessageSetAimDirection*>(message);
-		if (messageSetAimDirection && messageSetAimDirection->changeAngle) {
-			m_sprite->setAngle(vangle(messageSetAimDirection->direction));
-		}
-		else {
-			MessageChangeSprite* messageChangeSprite = dynamic_cast<MessageChangeSprite*>(message);
-			if (messageChangeSprite) {
-				DELETE(m_sprite);
-				m_texture = messageChangeSprite->texture;
-				m_sprite = NEW(CSprite, g_pGraphicsEngine->getTexture(m_texture), vmake(0.0f, 0.0f), vmake(0.0f, 0.0f), m_angle, m_alpha, m_priority);
-				g_pGraphicsEngine->addGfxEntity(m_sprite);
-				MessageGetTransform msgGetTransform;
-				m_owner->receiveMessage(&msgGetTransform);
-				m_sprite->setPos(msgGetTransform.pos);
-				m_sprite->setSize(msgGetTransform.size);
-			}
-		}
-	}
-}
 
 //=============================================================================
 // ComponentPlayerController class

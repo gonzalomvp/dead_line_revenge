@@ -14,6 +14,7 @@ void CTransformComponent::run(float _fDeltaTime) {
 
 void CTransformComponent::receiveMessage(Message* _pMessage) {
 	ASSERT(_pMessage);
+	ASSERT(m_owner);
 
 	if (!m_isActive)
 		return;

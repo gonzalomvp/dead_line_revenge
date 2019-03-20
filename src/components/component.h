@@ -51,34 +51,8 @@ protected:
 
 
 //=============================================================================
-// ComponentRenderable class
+// CRenderableComponent class
 //=============================================================================
-class ComponentRenderable : public Component {
-public:
-	ComponentRenderable(Entity* owner, const std::string& texture, float angle, float alpha, int priority, int hitTime = 0) :
-		Component(owner),
-		m_texture(texture),
-		m_angle(angle),
-		m_alpha(alpha),
-		m_priority(priority),
-		m_hitTime(hitTime),
-		m_hitTimer(hitTime) {}
-	~ComponentRenderable();
-
-	virtual void init          ();
-	virtual void run           (float deltaTime);
-	virtual void receiveMessage(Message* message);
-private:
-	CSprite* m_sprite;
-	std::string m_texture;
-	int         m_priority;
-	float       m_alpha;
-	float       m_angle;
-	int         m_hitTime;
-
-	//Timers
-	int     m_hitTimer;
-};
 
 //=============================================================================
 // ComponentPlayerController class

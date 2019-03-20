@@ -3,12 +3,13 @@
 
 #include "entities/entity.h"
 #include "messages/message.h"
-#include "scenes/world.h"
 
 void CMovementComponent::run(float _fDeltaTime) {
 	Component::run(_fDeltaTime);
 	if (!m_isActive)
 		return;
+
+	ASSERT(m_owner);
 
 	if (vlen2(m_v2Direction) != 0) {
 		MessageGetTransform msgGetTransform;
@@ -27,6 +28,7 @@ void CMovementComponent::run(float _fDeltaTime) {
 
 void CMovementComponent::receiveMessage(Message* _pMessage) {
 	ASSERT(_pMessage);
+	ASSERT(m_owner);
 
 	if (!m_isActive)
 		return;

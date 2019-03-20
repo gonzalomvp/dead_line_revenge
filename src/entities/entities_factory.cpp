@@ -5,6 +5,7 @@
 
 #include "components/LifeComponent.h"
 #include "components/MovementComponent.h"
+#include "components/RenderableComponent.h"
 #include "components/TransformComponent.h"
 #include "components/bossIAComponent.h"
 
@@ -102,7 +103,7 @@ Entity* CEntitiesFactory::createPlayer(vec2 _v2Pos) {
 	Entity* player = NEW(Entity, Entity::EPLAYER);
 	CTransformComponent* transform = NEW(CTransformComponent, player, _v2Pos, vmake(30, 25));
 	transform->init();
-	ComponentRenderable* renderable = NEW(ComponentRenderable, player, "data/player.png", 0.0f, 1.0f, 5, 10);
+	CRenderableComponent* renderable = NEW(CRenderableComponent, player, "data/player.png", 0.0f, 1.0f, 5, 10);
 	renderable->init();
 	ComponentPlayerController* playerControl = NEW(ComponentPlayerController, player);
 	playerControl->init();
@@ -123,7 +124,7 @@ Entity* CEntitiesFactory::createBullet(vec2 _v2Pos, vec2 _v2Size, vec2 _v2Direct
 	Entity* bullet = NEW(Entity, Entity::EWEAPON);
 	CTransformComponent* transform = NEW(CTransformComponent, bullet, _v2Pos, _v2Size);
 	transform->init();
-	ComponentRenderable* renderable = NEW(ComponentRenderable, bullet, _psTexture, vangle(_v2Direction), 1.0f, 5);
+	CRenderableComponent* renderable = NEW(CRenderableComponent, bullet, _psTexture, vangle(_v2Direction), 1.0f, 5);
 	renderable->init();
 	CMovementComponent* movement = NEW(CMovementComponent, bullet, _v2Direction, _fSpeed, true, _bIsBouncy);
 	movement->init();
@@ -160,7 +161,7 @@ Entity* CEntitiesFactory::createExplossion(vec2 _v2Pos, vec2 _v2Size, vec2 _v2Si
 	Entity* explossion = NEW(Entity, _eEntityType);
 	CTransformComponent* transform = NEW(CTransformComponent, explossion, _v2Pos, _v2Size, _v2SizeIncrement);
 	transform->init();
-	ComponentRenderable* renderable = NEW(ComponentRenderable, explossion, "data/explossion.png", 0.0f, 0.5f, 5);
+	CRenderableComponent* renderable = NEW(CRenderableComponent, explossion, "data/explossion.png", 0.0f, 0.5f, 5);
 	renderable->init();
 
 	// Nuclear explossion has different collider than standard explosssion
@@ -188,7 +189,7 @@ Entity* CEntitiesFactory::createEnemy(vec2 _v2Pos, Entity::EType _tEnemyType, En
 
 	CTransformComponent* transform = NEW(CTransformComponent, enemy, _v2Pos, tEnemyDef.v2Size);
 	transform->init();
-	ComponentRenderable* renderable = NEW(ComponentRenderable, enemy, tEnemyDef.sImageFile.c_str(), 0.0f, 1.0f, 5, 10);
+	CRenderableComponent* renderable = NEW(CRenderableComponent, enemy, tEnemyDef.sImageFile.c_str(), 0.0f, 1.0f, 5, 10);
 	renderable->init();
 
 	// Melee and Big enemies follow player until contact
@@ -253,7 +254,7 @@ Entity* CEntitiesFactory::createWeaponPickup() {
 	Entity* weaponPickup = NEW(Entity, Entity::EPICKUP);
 	CTransformComponent* transform = NEW(CTransformComponent, weaponPickup, randomPos, vmake(20, 20));
 	transform->init();
-	ComponentRenderable* renderable = NEW(ComponentRenderable, weaponPickup, "data/crate-1.png", 0.0f, 1.0f, 5);
+	CRenderableComponent* renderable = NEW(CRenderableComponent, weaponPickup, "data/crate-1.png", 0.0f, 1.0f, 5);
 	renderable->init();
 	ComponentCollider* collider = NEW(ComponentCollider, weaponPickup, ComponentCollider::ERectCollider, 0, ComponentCollider::EPickupCollider, ComponentCollider::EPlayerCollider);
 	collider->init();

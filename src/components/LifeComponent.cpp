@@ -10,6 +10,8 @@ void CLifeComponent::run(float _fDeltaTime) {
 	if (!m_isActive)
 		return;
 
+	ASSERT(m_owner);
+
 	if (m_iInvencibleTimer < m_iInvencibleTime) {
 		++m_iInvencibleTimer;
 	}
