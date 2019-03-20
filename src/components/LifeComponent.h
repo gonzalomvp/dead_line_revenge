@@ -4,13 +4,14 @@
 
 class CLifeComponent : public Component {
 public:
-	CLifeComponent(Entity* _pOwner, int _iLife, int _iTimeToLive, int _iInvencibleTime) :
-		Component(_pOwner),
-		m_iLife(_iLife),
-		m_iTimeToLive(_iTimeToLive),
-		m_iInvencibleTime(_iInvencibleTime),
-		m_iLifeTimer(0),
-		m_iInvencibleTimer(0) {}
+	CLifeComponent(Entity* _pOwner, int _iLife, int _iTimeToLive, int _iInvencibleTime)
+	: Component(_pOwner)
+	, m_iLife(_iLife)
+	, m_iTimeToLive(_iTimeToLive)
+	, m_iInvencibleTime(_iInvencibleTime)
+	, m_iLifeTimer(0)
+	, m_iInvencibleTimer(0)
+	{}
 
 	// CComponent
 	virtual void run(float _fDeltaTime)             override;

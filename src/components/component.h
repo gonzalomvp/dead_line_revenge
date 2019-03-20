@@ -46,25 +46,9 @@ protected:
 
 
 //=============================================================================
-// ComponentMove class
+// CMovementComponent class
 //=============================================================================
-class ComponentMove : public Component {
-public:
-	ComponentMove(Entity* owner, const vec2& direction, float speed, bool hasInertia, bool hasBounce) :
-		Component(owner), 
-		m_direction(direction),
-		m_speed(speed),
-		m_hasInertia(hasInertia), 
-		m_hasBounce(hasBounce) {}
-	
-	virtual void run           (float deltaTime);
-	virtual void receiveMessage(Message* message);
-private:
-	vec2  m_direction;
-	float m_speed;
-	bool  m_hasInertia;
-	bool  m_hasBounce;
-};
+
 
 //=============================================================================
 // ComponentRenderable class

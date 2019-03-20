@@ -52,55 +52,9 @@ void Component::run(float deltaTime) {
 // CLifeComponent class
 //=============================================================================
 
-
 //=============================================================================
-// ComponentMove class
+// CMovementComponent class
 //=============================================================================
-void ComponentMove::run(float deltaTime) {
-	Component::run(deltaTime);
-	if (!m_isActive)
-		return;
-
-	if (vlen2(m_direction) != 0) {
-		MessageGetTransform msgGetTransform;
-		m_owner->receiveMessage(&msgGetTransform);
-
-		MessageSetTransform msgSetTransform;
-		msgSetTransform.pos = vadd(msgGetTransform.pos, vscale(vnorm(m_direction), m_speed));
-		msgSetTransform.size = msgGetTransform.size;
-		m_owner->receiveMessage(&msgSetTransform);
-	}
-	
-	if (!m_hasInertia) {
-		m_direction = vmake(0.0f, 0.0f);
-	}
-}
-
-void ComponentMove::receiveMessage(Message* message) {
-	if (!m_isActive)
-		return;
-
-	MessageAddMovement* msgAddMovement = dynamic_cast<MessageAddMovement*>(message);
-	if (msgAddMovement) {
-		m_direction = vadd(m_direction, msgAddMovement->dir);
-	}
-	else {
-		MessageCheckCollision* msgCheckCollision = dynamic_cast<MessageCheckCollision*>(message);
-		if (msgCheckCollision && msgCheckCollision->overlap && m_hasBounce) {
-			if (msgCheckCollision->bounceX) {
-				m_direction.x = -m_direction.x;
-			}
-			if (msgCheckCollision->bounceY) {
-				m_direction.y = -m_direction.y;
-			}
-
-			MessageSetAimDirection messageSetAimDirection;
-			messageSetAimDirection.changeAngle = true;
-			messageSetAimDirection.direction = m_direction;
-			m_owner->receiveMessage(&messageSetAimDirection);
-		}
-	}
-}
 
 //=============================================================================
 // ComponentRenderable class

@@ -2,9 +2,12 @@
 #include "entities_factory.h"
 
 #include "engine/sound_engine.h"
+
 #include "components/LifeComponent.h"
+#include "components/MovementComponent.h"
 #include "components/TransformComponent.h"
 #include "components/bossIAComponent.h"
+
 #include "scenes/world.h"
 
 #include "rapidjson/document.h"
@@ -103,7 +106,7 @@ Entity* CEntitiesFactory::createPlayer(vec2 _v2Pos) {
 	renderable->init();
 	ComponentPlayerController* playerControl = NEW(ComponentPlayerController, player);
 	playerControl->init();
-	ComponentMove* movement = NEW(ComponentMove, player, vmake(0.0f, 0.0f), g_pWorld->getPlayerSpeed(), false, false);
+	CMovementComponent* movement = NEW(CMovementComponent, player, vmake(0.0f, 0.0f), g_pWorld->getPlayerSpeed(), false, false);
 	movement->init();
 	ComponentWeapon* weapon = NEW(ComponentWeapon, player, m_mWeaponDef[ComponentWeapon::EREVOLVER]);
 	weapon->init();
@@ -122,7 +125,7 @@ Entity* CEntitiesFactory::createBullet(vec2 _v2Pos, vec2 _v2Size, vec2 _v2Direct
 	transform->init();
 	ComponentRenderable* renderable = NEW(ComponentRenderable, bullet, _psTexture, vangle(_v2Direction), 1.0f, 5);
 	renderable->init();
-	ComponentMove* movement = NEW(ComponentMove, bullet, _v2Direction, _fSpeed, true, _bIsBouncy);
+	CMovementComponent* movement = NEW(CMovementComponent, bullet, _v2Direction, _fSpeed, true, _bIsBouncy);
 	movement->init();
 
 	// Depending on the type of bullet it has different collider setup
@@ -231,7 +234,7 @@ Entity* CEntitiesFactory::createEnemy(vec2 _v2Pos, Entity::EType _tEnemyType, ve
 	Entity* enemy = createEnemy(_v2Pos, _tEnemyType, nullptr);
 	TEnemyDef tEnemyDef = m_mEnemyDef[_tEnemyType];
 
-	ComponentMove* movement = NEW(ComponentMove, enemy, _v2MoveDir, tEnemyDef.fSpeed, true, true);
+	CMovementComponent* movement = NEW(CMovementComponent, enemy, _v2MoveDir, tEnemyDef.fSpeed, true, true);
 	movement->init();
 
 	// Used by the turrets to fire in the given directions and use a delay to not shoot all at the same time

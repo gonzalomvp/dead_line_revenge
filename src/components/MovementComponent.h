@@ -2,25 +2,22 @@
 
 #include "components/component.h"
 
-#include "rapidjson/document.h"
-
-class Entity;
-
 class CMovementComponent : public Component {
 public:
-	static Component* loadComponent(Entity* _pOwner, const rapidjson::Value* _pComponentInfo);
+	CMovementComponent(Entity* _pOwner, const vec2& _v2Direction, float _fSpeed, bool _bHasInertia, bool _bHasBounce)
+	: Component(_pOwner)
+	, m_v2Direction(_v2Direction)
+	, m_fSpeed(_fSpeed)
+	, m_bHasInertia(_bHasInertia)
+	, m_bHasBounce(_bHasBounce)
+	{}
 
-	CMovementComponent(Entity* _pOwner, const vec2& _vDirection, float _fSpeed, bool _bHasInertia, bool _bHasBounce) :
-		Component(_pOwner),
-		m_vDirection(_vDirection),
-		m_fSpeed(_fSpeed),
-		m_bHasInertia(_bHasInertia),
-		m_bHasBounce(_bHasBounce) {}
+	// CComponent
+	virtual void run(float _fDeltaTime)             override;
+	virtual void receiveMessage(Message* _pMessage) override;
 
-	virtual void run(float _fDeltaTime);
-	virtual void receiveMessage(Message* _pMessage);
 private:
-	vec2  m_vDirection;
+	vec2  m_v2Direction;
 	float m_fSpeed;
 	bool  m_bHasInertia;
 	bool  m_bHasBounce;
