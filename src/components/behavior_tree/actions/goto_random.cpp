@@ -2,7 +2,7 @@
 #include "goto_random.h"
 #include "entities/entity.h"
 #include "components/behavior_tree/behavior_tree.h"
-#include "entities/message.h"
+#include "messages/message.h"
 #include "scenes/world.h"
 
 void CGoToRandomPositionAction::init(TiXmlElement* behaviorElem) {

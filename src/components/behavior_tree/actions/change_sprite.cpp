@@ -2,7 +2,7 @@
 #include "change_sprite.h"
 #include "entities/entity.h"
 #include "components/behavior_tree/behavior_tree.h"
-#include "entities/message.h"
+#include "messages/message.h"
 
 void CChangeSpriteAction::init(TiXmlElement* behaviorElem) {
 	ASSERT(behaviorElem);

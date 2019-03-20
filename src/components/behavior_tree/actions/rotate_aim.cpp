@@ -1,7 +1,7 @@
 #include "common/stdafx.h"
 #include "rotate_aim.h"
 #include "entities/entity.h"
-#include "entities/message.h"
+#include "messages/message.h"
 #include "scenes/world.h"
 #include "components/behavior_tree/behavior_tree.h"
 

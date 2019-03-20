@@ -2,7 +2,7 @@
 #include "LifeComponent.h"
 
 #include "entities/entity.h"
-#include "entities/message.h"
+#include "messages/message.h"
 #include "scenes/world.h"
 
 void CLifeComponent::run(float _fDeltaTime) {

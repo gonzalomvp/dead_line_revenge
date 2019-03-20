@@ -2,7 +2,7 @@
 #include "goto_player.h"
 #include "entities/entity.h"
 #include "components/behavior_tree/behavior_tree.h"
-#include "entities/message.h"
+#include "messages/message.h"
 #include "scenes/world.h"
 
 void CGoToPlayerPositionAction::init(TiXmlElement* behaviorElem) {

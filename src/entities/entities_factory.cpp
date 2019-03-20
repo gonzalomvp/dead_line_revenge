@@ -2,6 +2,7 @@
 #include "entities_factory.h"
 
 #include "engine/sound_engine.h"
+#include "components/TransformComponent.h"
 #include "components/bossIAComponent.h"
 #include "scenes/world.h"
 
@@ -95,7 +96,7 @@ bool CEntitiesFactory::init(const char* _sConfigFile) {
 
 Entity* CEntitiesFactory::createPlayer(vec2 _v2Pos) {
 	Entity* player = NEW(Entity, Entity::EPLAYER);
-	ComponentTransform* transform = NEW(ComponentTransform, player, _v2Pos, vmake(30, 25));
+	CTransformComponent* transform = NEW(CTransformComponent, player, _v2Pos, vmake(30, 25));
 	transform->init();
 	ComponentRenderable* renderable = NEW(ComponentRenderable, player, "data/player.png", 0.0f, 1.0f, 5, 10);
 	renderable->init();
@@ -116,7 +117,7 @@ Entity* CEntitiesFactory::createPlayer(vec2 _v2Pos) {
 
 Entity* CEntitiesFactory::createBullet(vec2 _v2Pos, vec2 _v2Size, vec2 _v2Direction, float _fSpeed, int _iDamage, int _iLife, int _iRange, bool _bIsExplossive, bool _bIsBouncy, Entity::EType _eEntityType, const char* _psTexture) {
 	Entity* bullet = NEW(Entity, Entity::EWEAPON);
-	ComponentTransform* transform = NEW(ComponentTransform, bullet, _v2Pos, _v2Size);
+	CTransformComponent* transform = NEW(CTransformComponent, bullet, _v2Pos, _v2Size);
 	transform->init();
 	ComponentRenderable* renderable = NEW(ComponentRenderable, bullet, _psTexture, vangle(_v2Direction), 1.0f, 5);
 	renderable->init();
@@ -153,7 +154,7 @@ Entity* CEntitiesFactory::createBullet(vec2 _v2Pos, vec2 _v2Size, vec2 _v2Direct
 
 Entity* CEntitiesFactory::createExplossion(vec2 _v2Pos, vec2 _v2Size, vec2 _v2SizeIncrement, int _iDuration, Entity::EType _eEntityType) {
 	Entity* explossion = NEW(Entity, _eEntityType);
-	ComponentTransform* transform = NEW(ComponentTransform, explossion, _v2Pos, _v2Size, _v2SizeIncrement);
+	CTransformComponent* transform = NEW(CTransformComponent, explossion, _v2Pos, _v2Size, _v2SizeIncrement);
 	transform->init();
 	ComponentRenderable* renderable = NEW(ComponentRenderable, explossion, "data/explossion.png", 0.0f, 0.5f, 5);
 	renderable->init();
@@ -181,7 +182,7 @@ Entity* CEntitiesFactory::createEnemy(vec2 _v2Pos, Entity::EType _tEnemyType, En
 	Entity* enemy = NEW(Entity, _tEnemyType);
 	TEnemyDef tEnemyDef = m_mEnemyDef[_tEnemyType];
 
-	ComponentTransform* transform = NEW(ComponentTransform, enemy, _v2Pos, tEnemyDef.v2Size);
+	CTransformComponent* transform = NEW(CTransformComponent, enemy, _v2Pos, tEnemyDef.v2Size);
 	transform->init();
 	ComponentRenderable* renderable = NEW(ComponentRenderable, enemy, tEnemyDef.sImageFile.c_str(), 0.0f, 1.0f, 5, 10);
 	renderable->init();
@@ -246,7 +247,7 @@ Entity* CEntitiesFactory::createWeaponPickup() {
 	vec2 randomPos = vmake(CORE_FRand(0.0, WORLD_WIDTH), CORE_FRand(80, WORLD_HEIGHT - 80));
 
 	Entity* weaponPickup = NEW(Entity, Entity::EPICKUP);
-	ComponentTransform* transform = NEW(ComponentTransform, weaponPickup, randomPos, vmake(20, 20));
+	CTransformComponent* transform = NEW(CTransformComponent, weaponPickup, randomPos, vmake(20, 20));
 	transform->init();
 	ComponentRenderable* renderable = NEW(ComponentRenderable, weaponPickup, "data/crate-1.png", 0.0f, 1.0f, 5);
 	renderable->init();

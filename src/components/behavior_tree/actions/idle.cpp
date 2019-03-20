@@ -2,7 +2,7 @@
 #include "idle.h"
 #include "entities/entity.h"
 #include "components/behavior_tree/behavior_tree.h"
-#include "entities/message.h"
+#include "messages/message.h"
 
 Status Idle::update(float step) {
 	Entity* self = getOwnerEntity();

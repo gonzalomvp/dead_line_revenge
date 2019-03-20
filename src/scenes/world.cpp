@@ -2,7 +2,7 @@
 #include "scenes/world.h"
 
 #include "entities/entities_factory.h"
-#include "entities/message.h"
+#include "messages/message.h"
 #include "gui/menu_manager.h"
 #include "gui/string_manager.h"
 #include "gui/controls/label.h"

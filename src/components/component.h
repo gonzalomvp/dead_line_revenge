@@ -36,23 +36,9 @@ protected:
 };
 
 //=============================================================================
-// ComponentTransform class
+// CTransformComponent class
 //=============================================================================
-class ComponentTransform : public Component {
-public:
-	ComponentTransform(Entity* owner, const vec2& pos, const vec2& size, const vec2& sizeIncrement = vmake(0.0f, 0.0f)) :
-		Component(owner),
-		m_pos(pos),
-		m_size(size),
-		m_sizeIncrement(sizeIncrement) {}
 
-	virtual void run           (float deltaTime);
-	virtual void receiveMessage(Message* message);
-private:
-	vec2 m_pos;
-	vec2 m_size;
-	vec2 m_sizeIncrement;
-};
 
 //=============================================================================
 // ComponentLife class

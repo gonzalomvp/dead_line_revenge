@@ -2,7 +2,7 @@
 #include "MovementComponent.h"
 
 #include "entities/entity.h"
-#include "entities/message.h"
+#include "messages/message.h"
 #include "scenes/world.h"
 
 void CMovementComponent::run(float _fDeltaTime) {
@@ -35,8 +35,9 @@ void CMovementComponent::receiveMessage(Message* _pMessage) {
 	}
 	else {
 		MessageCheckCollision* msgCheckCollision = dynamic_cast<MessageCheckCollision*>(_pMessage);
-		if (msgCheckCollision && msgCheckCollision->overlap && m_bHasBounce && vlen2(msgCheckCollision->bounceDirection) > 0) {
-			m_vDirection = vmake(m_vDirection.x * msgCheckCollision->bounceDirection.x, m_vDirection.y * msgCheckCollision->bounceDirection.y);
+		if (msgCheckCollision && msgCheckCollision->overlap && m_bHasBounce) {
+			m_vDirection.x *= -1.f * msgCheckCollision->bounceX;
+			m_vDirection.y *= -1.f * msgCheckCollision->bounceY;
 		}
 	}
 }

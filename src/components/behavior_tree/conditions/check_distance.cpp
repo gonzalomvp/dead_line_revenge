@@ -2,7 +2,7 @@
 #include "check_distance.h"
 #include "entities/entity.h"
 #include "components/behavior_tree/behavior_tree.h"
-#include "entities/message.h"
+#include "messages/message.h"
 #include "scenes/world.h"
 #include "components/behavior_tree/blackboard.h"
 

@@ -2,7 +2,7 @@
 #include "change_weapon.h"
 #include "entities/entity.h"
 #include "entities/entities_factory.h"
-#include "entities/message.h"
+#include "messages/message.h"
 #include "scenes/world.h"
 
 #include "components/behavior_tree/behavior_tree.h"

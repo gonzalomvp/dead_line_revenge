@@ -46,6 +46,9 @@
     <Filter Include="src\components\behavior_tree\conditions">
       <UniqueIdentifier>{0c481f85-943c-4147-980c-83b8c6610432}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\messages">
+      <UniqueIdentifier>{a5831c08-9339-411d-89eb-d81dbad4b88e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\globals.h">
@@ -61,9 +64,6 @@
       <Filter>src\gui</Filter>
     </ClInclude>
     <ClInclude Include="..\src\entities\entity.h">
-      <Filter>src\entities</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\entities\message.h">
       <Filter>src\entities</Filter>
     </ClInclude>
     <ClInclude Include="..\src\engine\graphics_engine.h">
@@ -245,6 +245,12 @@
     </ClInclude>
     <ClInclude Include="..\src\components\behavior_tree\conditions\check_hit.h">
       <Filter>src\components\behavior_tree\conditions</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\components\TransformComponent.h">
+      <Filter>src\components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\messages\message.h">
+      <Filter>src\messages</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -430,6 +436,9 @@
     </ClCompile>
     <ClCompile Include="..\src\components\behavior_tree\conditions\check_hit.cpp">
       <Filter>src\components\behavior_tree\conditions</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\components\TransformComponent.cpp">
+      <Filter>src\components</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

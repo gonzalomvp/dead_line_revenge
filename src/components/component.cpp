@@ -9,7 +9,7 @@
 #include "scenes/world.h"
 #include "entities/entity.h"
 #include "entities/entities_factory.h"
-#include "entities/message.h"
+#include "messages/message.h"
 
 #include <algorithm>
 
@@ -44,62 +44,9 @@ void Component::run(float deltaTime) {
 }
 
 //=============================================================================
-// ComponentTransform class
+// CTransformComponent class
 //=============================================================================
-void ComponentTransform::run(float deltaTime) {
-	Component::run(deltaTime);
-	m_size = vadd(m_size, m_sizeIncrement);
-}
 
-void ComponentTransform::receiveMessage(Message* message) {
-	if (!m_isActive)
-		return;
-
-	MessageSetTransform* msgSetTransform = dynamic_cast<MessageSetTransform*>(message);
-	if (msgSetTransform) {
-		m_pos = msgSetTransform->pos;
-		m_size = msgSetTransform->size;
-		bool outOfBounds = false;
-		vec2 bounceDirection;
-
-		if (m_pos.x > SCR_WIDTH - m_size.x * 0.5f) {
-			m_pos.x = WORLD_WIDTH - m_size.x * 0.5f;
-			outOfBounds = true;
-			bounceDirection = vmake(-1.0f , 1.0f);
-		}
-		else if (m_pos.x < 0 + m_size.x * 0.5f) {
-			m_pos.x = 0 + m_size.x * 0.5f;
-			outOfBounds = true;
-			bounceDirection = vmake(-1.0f, 1.0f);
-		}
-		if (m_pos.y > WORLD_HEIGHT - m_size.y * 0.5f) {
-			m_pos.y = WORLD_HEIGHT - m_size.y * 0.5f;
-			outOfBounds = true;
-			bounceDirection = vmake(1.0f, -1.0f);
-		}
-		else if (m_pos.y < 0 + m_size.y * 0.5f) {
-			m_pos.y = 0 + m_size.y * 0.5f;
-			outOfBounds = true;
-			bounceDirection = vmake(1.0f, -1.0f);
-		}
-
-		if (outOfBounds) {
-			MessageCheckCollision msgCheckCollision;
-			msgCheckCollision.overlap = true;
-			msgCheckCollision.deltaLife = -1;
-			msgCheckCollision.collisionChannel = ComponentCollider::EBoundariesCollider;
-			msgCheckCollision.bounceDirection = bounceDirection;
-			m_owner->receiveMessage(&msgCheckCollision);
-		}
-	}
-	else {
-		MessageGetTransform* msgGetTransform = dynamic_cast<MessageGetTransform*>(message);
-		if (msgGetTransform) {
-			msgGetTransform->pos = m_pos;
-			msgGetTransform->size = m_size;
-		}
-	}
-}
 
 //=============================================================================
 // ComponentLife class
@@ -187,8 +134,18 @@ void ComponentMove::receiveMessage(Message* message) {
 	}
 	else {
 		MessageCheckCollision* msgCheckCollision = dynamic_cast<MessageCheckCollision*>(message);
-		if (msgCheckCollision && msgCheckCollision->overlap && m_hasBounce && vlen2(msgCheckCollision->bounceDirection) > 0) {
-			m_direction = vmake(m_direction.x * msgCheckCollision->bounceDirection.x, m_direction.y * msgCheckCollision->bounceDirection.y);
+		if (msgCheckCollision && msgCheckCollision->overlap && m_hasBounce) {
+			if (msgCheckCollision->bounceX) {
+				m_direction.x = -m_direction.x;
+			}
+			if (msgCheckCollision->bounceY) {
+				m_direction.y = -m_direction.y;
+			}
+
+			MessageSetAimDirection messageSetAimDirection;
+			messageSetAimDirection.changeAngle = true;
+			messageSetAimDirection.direction = m_direction;
+			m_owner->receiveMessage(&messageSetAimDirection);
 		}
 	}
 }

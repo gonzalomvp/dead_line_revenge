@@ -57,6 +57,7 @@
     <ClInclude Include="..\src\components\component.h" />
     <ClInclude Include="..\src\components\LifeComponent.h" />
     <ClInclude Include="..\src\components\MovementComponent.h" />
+    <ClInclude Include="..\src\components\TransformComponent.h" />
     <ClInclude Include="..\src\engine\graphics_engine.h" />
     <ClInclude Include="..\src\engine\graphics_entitiy.h" />
     <ClInclude Include="..\src\engine\sound_engine.h" />
@@ -64,7 +65,6 @@
     <ClInclude Include="..\src\engine\text.h" />
     <ClInclude Include="..\src\entities\entities_factory.h" />
     <ClInclude Include="..\src\entities\entity.h" />
-    <ClInclude Include="..\src\entities\message.h" />
     <ClInclude Include="..\src\globals.h" />
     <ClInclude Include="..\src\gui\controls\button.h" />
     <ClInclude Include="..\src\gui\controls\checkbox.h" />
@@ -76,6 +76,7 @@
     <ClInclude Include="..\src\gui\string_manager.h" />
     <ClInclude Include="..\src\input\iinput_manager.h" />
     <ClInclude Include="..\src\input\input_manager.h" />
+    <ClInclude Include="..\src\messages\message.h" />
     <ClInclude Include="..\src\REG_BEHAVIORS.h" />
     <ClInclude Include="..\src\REG_ENEMIES.h" />
     <ClInclude Include="..\src\REG_ENTITIES.h" />
@@ -128,6 +129,7 @@
     <ClCompile Include="..\src\components\component.cpp" />
     <ClCompile Include="..\src\components\LifeComponent.cpp" />
     <ClCompile Include="..\src\components\MovementComponent.cpp" />
+    <ClCompile Include="..\src\components\TransformComponent.cpp" />
     <ClCompile Include="..\src\engine\graphics_engine.cpp" />
     <ClCompile Include="..\src\engine\graphics_entity.cpp" />
     <ClCompile Include="..\src\engine\sound_engine.cpp" />
@@ -152,7 +154,7 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>{CC0EB618-AC99-4DFE-A4E1-534AD384C3A1}</ProjectGuid>
     <RootNamespace>dead_line_revenge</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.17134.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
     <ProjectName>dead_line_revenge</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />

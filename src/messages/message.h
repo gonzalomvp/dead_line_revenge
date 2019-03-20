@@ -59,7 +59,9 @@ struct MessageCheckCollision : public Message {
 	int                              collisionChannelsResponse = 0;
 	Entity*                      other                     = nullptr;
 	bool                             overlap                   = false;
-	vec2                             bounceDirection           = vmake(0.0f, 0.0f);
+//	vec2                             bounceDirection           = vmake(0.0f, 0.0f);
+	bool                             bounceX                   = false;
+	bool                             bounceY                   = false;
 };
 
 struct MessageWeaponChange : public Message {
