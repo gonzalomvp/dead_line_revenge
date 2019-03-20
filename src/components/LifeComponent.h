@@ -2,10 +2,6 @@
 
 #include "components/component.h"
 
-#include "rapidjson/document.h"
-
-class Entity;
-
 class CLifeComponent : public Component {
 public:
 	CLifeComponent(Entity* _pOwner, int _iLife, int _iTimeToLive, int _iInvencibleTime) :
@@ -16,10 +12,10 @@ public:
 		m_iLifeTimer(0),
 		m_iInvencibleTimer(0) {}
 
-	virtual void run(float _fDeltaTime);
-	virtual void receiveMessage(Message* _pMessage);
+	// CComponent
+	virtual void run(float _fDeltaTime)             override;
+	virtual void receiveMessage(Message* _pMessage) override;
 
-	static Component* loadComponent(Entity* _pOwner, const rapidjson::Value* _pComponentInfo);
 private:
 	int m_iLife;
 	int m_iTimeToLive;

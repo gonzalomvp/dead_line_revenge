@@ -49,57 +49,9 @@ void Component::run(float deltaTime) {
 
 
 //=============================================================================
-// ComponentLife class
+// CLifeComponent class
 //=============================================================================
-void ComponentLife::run(float deltaTime) {
-	Component::run(deltaTime);
-	if (!m_isActive)
-		return;
 
-	if (m_invencibleTimer < m_invencibleTime) {
-		++m_invencibleTimer;
-	}
-
-	if (m_lifeTimer < m_timeToLive) {
-		++m_lifeTimer;
-		if (m_lifeTimer == m_timeToLive) {
-			m_life = 0;
-		}
-	}
-	if (m_life == 0) {
-		MessageDestroy msgDestroy;
-		m_owner->receiveMessage(&msgDestroy);
-		m_owner->deactivate();
-		g_pWorld->removeEntity(m_owner);
-	}
-}
-
-void ComponentLife::receiveMessage(Message* message) {
-	if (!m_isActive)
-		return;
-
-	MessageGetLife* msgGetLife = dynamic_cast<MessageGetLife*>(message);
-	if (msgGetLife) {
-		msgGetLife->currentLife = m_life;
-		
-	}
-	else {
-		MessageChangeLife* msgChangeLife = dynamic_cast<MessageChangeLife*>(message);
-		if (msgChangeLife && (m_life != -1) && (m_invencibleTimer >= m_invencibleTime)) {
-			m_life += msgChangeLife->deltaLife;
-			m_invencibleTimer = 0;
-			if (m_life <= 0) {
-				m_life = 0;
-			}
-		}
-		else {
-			MessageDestroy* msgdestroy = dynamic_cast<MessageDestroy*>(message);
-			if (msgdestroy) {
-				m_life = 0;
-			}
-		}
-	}
-}
 
 //=============================================================================
 // ComponentMove class

@@ -41,29 +41,9 @@ protected:
 
 
 //=============================================================================
-// ComponentLife class
+// CLifeComponent class
 //=============================================================================
-class ComponentLife: public Component {
-public:
-	ComponentLife(Entity* owner, int life, int timeToLive, int invencibleTime) :
-		Component(owner), 
-		m_life(life), 
-		m_timeToLive(timeToLive), 
-		m_invencibleTime(invencibleTime), 
-		m_lifeTimer(0), 
-		m_invencibleTimer(0) {}
 
-	virtual void run           (float deltaTime);
-	virtual void receiveMessage(Message* message);
-private:
-	int m_life;
-	int m_timeToLive;
-	int m_invencibleTime;
-
-	//Timers
-	int m_lifeTimer;
-	int m_invencibleTimer;
-};
 
 //=============================================================================
 // ComponentMove class

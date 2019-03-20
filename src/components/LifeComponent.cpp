@@ -34,53 +34,19 @@ void CLifeComponent::receiveMessage(Message* _pMmessage) {
 	if (!m_isActive)
 		return;
 
-	MessageGetLife*msgGetLife = dynamic_cast<MessageGetLife*>(_pMmessage);
-	if (msgGetLife) {
-		msgGetLife->currentLife = m_iLife;
-
+	if (MessageGetLife* pMessage = dynamic_cast<MessageGetLife*>(_pMmessage)) {
+		pMessage->currentLife = m_iLife;
 	}
-	else {
-		MessageChangeLife* msgChangeLife = dynamic_cast<MessageChangeLife*>(_pMmessage);
-		if (msgChangeLife && (m_iLife != -1) && (m_iInvencibleTimer >= m_iInvencibleTime)) {
-			m_iLife += msgChangeLife->deltaLife;
+	else if (MessageChangeLife* pMessage = dynamic_cast<MessageChangeLife*>(_pMmessage)) {
+		if ((m_iLife != -1) && (m_iInvencibleTimer >= m_iInvencibleTime)) {
+			m_iLife += pMessage->deltaLife;
 			m_iInvencibleTimer = 0;
 			if (m_iLife <= 0) {
 				m_iLife = 0;
 			}
 		}
-		else {
-			MessageDestroy* msgdestroy = dynamic_cast<MessageDestroy*>(_pMmessage);
-			if (msgdestroy) {
-				m_iLife = 0;
-			}
-		}
 	}
-}
-
-Component* CLifeComponent::loadComponent(Entity* _pOwner, const rapidjson::Value* _pComponentInfo) {
-	ASSERT(_pComponentInfo);
-
-	// Default values
-	int iLife = 1;
-	int iTimeToLive = 0;
-	int iInvencibleTime = 0;
-
-	if ((*_pComponentInfo).HasMember("life")) {
-		iLife = (*_pComponentInfo)["life"].GetInt();
+	else if (MessageDestroy* pMessage = dynamic_cast<MessageDestroy*>(_pMmessage)) {
+		m_iLife = 0;
 	}
-
-	if ((*_pComponentInfo).HasMember("timeToLive")) {
-		iTimeToLive = (*_pComponentInfo)["timeToLive"].GetInt();
-	}
-
-	if ((*_pComponentInfo).HasMember("timeToLive")) {
-		iInvencibleTime = (*_pComponentInfo)["invencibleTime"].GetInt();
-	}
-
-	Component* pComponent = NEW(CLifeComponent, _pOwner, iLife, iTimeToLive, iInvencibleTime);
-
-	ASSERT(pComponent);
-	pComponent->init();
-
-	return pComponent;
 }

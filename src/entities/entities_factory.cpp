@@ -2,6 +2,7 @@
 #include "entities_factory.h"
 
 #include "engine/sound_engine.h"
+#include "components/LifeComponent.h"
 #include "components/TransformComponent.h"
 #include "components/bossIAComponent.h"
 #include "scenes/world.h"
@@ -108,7 +109,7 @@ Entity* CEntitiesFactory::createPlayer(vec2 _v2Pos) {
 	weapon->init();
 	ComponentCollider* collider = NEW(ComponentCollider, player, ComponentCollider::ERectCollider, -1, ComponentCollider::EPlayerCollider, ComponentCollider::EEnemyCollider | ComponentCollider::EEnemyWeaponCollider);
 	collider->init();
-	ComponentLife* life = NEW(ComponentLife, player, g_pWorld->getPlayerLife(), 0, 20);
+	CLifeComponent* life = NEW(CLifeComponent, player, g_pWorld->getPlayerLife(), 0, 20);
 	life->init();
 	ComponentHUD* hudComponent = NEW(ComponentHUD, player);
 	hudComponent->init();
@@ -147,7 +148,7 @@ Entity* CEntitiesFactory::createBullet(vec2 _v2Pos, vec2 _v2Size, vec2 _v2Direct
 		ComponentExplossive* explossive = NEW(ComponentExplossive, bullet);
 		explossive->init();
 	}
-	ComponentLife* componentLife = NEW(ComponentLife, bullet, _iLife, _iRange, 0);
+	CLifeComponent* componentLife = NEW(CLifeComponent, bullet, _iLife, _iRange, 0);
 	componentLife->init();
 	return bullet;
 }
@@ -172,7 +173,7 @@ Entity* CEntitiesFactory::createExplossion(vec2 _v2Pos, vec2 _v2Size, vec2 _v2Si
 		break;
 	}
 	}
-	ComponentLife* life = NEW(ComponentLife, explossion, 1, _iDuration, 0);
+	CLifeComponent* life = NEW(CLifeComponent, explossion, 1, _iDuration, 0);
 	life->init();
 	g_pSoundEngine->playSound("data/explossion.wav");
 	return explossion;
@@ -219,7 +220,7 @@ Entity* CEntitiesFactory::createEnemy(vec2 _v2Pos, Entity::EType _tEnemyType, En
 
 	ComponentCollider* collider = NEW(ComponentCollider, enemy, ComponentCollider::ERectCollider, tEnemyDef.iCollisionDamage, ComponentCollider::EEnemyCollider, ComponentCollider::EPlayerWeaponCollider);
 	collider->init();
-	ComponentLife* life = NEW(ComponentLife, enemy, tEnemyDef.iLife, 0, 0);
+	CLifeComponent* life = NEW(CLifeComponent, enemy, tEnemyDef.iLife, 0, 0);
 	life->init();
 	ComponentPoints* points = NEW(ComponentPoints, enemy);
 	points->init();
@@ -257,7 +258,7 @@ Entity* CEntitiesFactory::createWeaponPickup() {
 	pickup->init();
 	ComponentPoints* points = NEW(ComponentPoints, weaponPickup);
 	points->init();
-	ComponentLife* life = NEW(ComponentLife, weaponPickup, 1, 0, 0);
+	CLifeComponent* life = NEW(CLifeComponent, weaponPickup, 1, 0, 0);
 	life->init();
 	return weaponPickup;
 }
@@ -266,7 +267,7 @@ Entity* CEntitiesFactory::createHUDMessage(const std::string& _sMessage, vec2 _v
 	Entity* hudMessage = NEW(Entity, Entity::EHUDMESSAGE);
 	ComponentHUDMessage* hudMessageComponent = NEW(ComponentHUDMessage, hudMessage, _v2Pos, _sMessage);
 	hudMessageComponent->init();
-	ComponentLife* life = NEW(ComponentLife, hudMessage, 1, _iDisplayTime, 0);
+	CLifeComponent* life = NEW(CLifeComponent, hudMessage, 1, _iDisplayTime, 0);
 	life->init();
 	return hudMessage;
 }

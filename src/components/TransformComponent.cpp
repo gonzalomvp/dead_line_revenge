@@ -21,7 +21,6 @@ void CTransformComponent::receiveMessage(Message* _pMessage) {
 	if (MessageSetTransform* pMessage = dynamic_cast<MessageSetTransform*>(_pMessage)) {
 		m_v2Pos = pMessage->pos;
 		m_v2Size = pMessage->size;
-		bool bIsOutOfBounds = false;
 
 		m_v2Pos.x = clamp(pMessage->pos.x, m_v2Size.x * 0.5f, WORLD_WIDTH  - m_v2Size.x * 0.5f);
 		m_v2Pos.y = clamp(pMessage->pos.y, m_v2Size.y * 0.5f, WORLD_HEIGHT - m_v2Size.y * 0.5f);
@@ -35,31 +34,6 @@ void CTransformComponent::receiveMessage(Message* _pMessage) {
 			msgCheckCollision.bounceY = m_v2Pos.y != pMessage->pos.y;
 			m_owner->receiveMessage(&msgCheckCollision);
 		}
-
-		/*if (m_v2Pos.x > SCR_WIDTH - m_v2Size.x * 0.5f) {
-			m_v2Pos.x = WORLD_WIDTH - m_v2Size.x * 0.5f;
-			bIsOutOfBounds = true;
-			v2BounceDirection = vmake(-1.0f, 1.0f);
-		}
-		else if (m_v2Pos.x < 0 + m_v2Size.x * 0.5f) {
-			m_v2Pos.x = 0 + m_v2Size.x * 0.5f;
-			bIsOutOfBounds = true;
-			v2BounceDirection = vmake(-1.0f, 1.0f);
-		}
-		if (m_v2Pos.y > WORLD_HEIGHT - m_v2Size.y * 0.5f) {
-			m_v2Pos.y = WORLD_HEIGHT - m_v2Size.y * 0.5f;
-			bIsOutOfBounds = true;
-			v2BounceDirection = vmake(1.0f, -1.0f);
-		}
-		else if (m_v2Pos.y < 0 + m_v2Size.y * 0.5f) {
-			m_v2Pos.y = 0 + m_v2Size.y * 0.5f;
-			bIsOutOfBounds = true;
-			v2BounceDirection = vmake(1.0f, -1.0f);
-		}*/
-
-		/*if (bIsOutOfBounds) {
-			
-		}*/
 	}
 	else if(MessageGetTransform* pMessage = dynamic_cast<MessageGetTransform*>(_pMessage)) {
 		pMessage->pos = m_v2Pos;
