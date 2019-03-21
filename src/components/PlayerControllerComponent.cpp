@@ -9,7 +9,6 @@ CPlayerControllerComponent::~CPlayerControllerComponent() {
 		g_pInputManager->unregisterEvent(this, IInputManager::EEventType::EKeyHold);
 		g_pInputManager->unregisterEvent(this, IInputManager::EEventType::EMouseButtonDown);
 		g_pInputManager->unregisterEvent(this, IInputManager::EEventType::EMouseButtonUp);
-		g_pInputManager->unregisterEvent(this, IInputManager::EEventType::EMouseButtonHold);
 	}
 }
 
@@ -20,7 +19,6 @@ void CPlayerControllerComponent::init() {
 	g_pInputManager->registerEvent(this, IInputManager::EEventType::EKeyHold);
 	g_pInputManager->registerEvent(this, IInputManager::EEventType::EMouseButtonDown);
 	g_pInputManager->registerEvent(this, IInputManager::EEventType::EMouseButtonUp);
-	g_pInputManager->registerEvent(this, IInputManager::EEventType::EMouseButtonHold);
 }
 
 bool CPlayerControllerComponent::onEvent(const IInputManager::CEvent& _event) {
@@ -28,55 +26,71 @@ bool CPlayerControllerComponent::onEvent(const IInputManager::CEvent& _event) {
 	if (!m_isActive)
 		return bConsumed;
 
+	ASSERT(m_owner);
+
+	// Process key inputs
 	if (const IInputManager::CKeyEvent* pEvent = dynamic_cast<const IInputManager::CKeyEvent*>(&_event)) {
 		if (pEvent->getType() == IInputManager::EEventType::EKeyHold) {
-			vec2 direction = vmake(0, 0);
+			vec2 v2MoveDirection = vmake(0.0f, 0.0f);
+			bConsumed = true;
 			switch (pEvent->getKey()) {
-				case 'A':
-					direction = vmake(-1, 0);
+				case 'A': {
+					v2MoveDirection = vmake(-1.0f, 0.0f);
 					break;
-				case 'D':
-					direction = vmake(1, 0);
+				}
+				case 'D': {
+					v2MoveDirection = vmake(1.0f, 0.0f);
 					break;
-				case 'W':
-					direction = vmake(0, 1);
+				}
+				case 'W': {
+					v2MoveDirection = vmake(0.0f, 1.0f);
 					break;
-				case 'S':
-					direction = vmake(0, -1);
+				}
+				case 'S': {
+					v2MoveDirection = vmake(0.0f, -1.0f);
 					break;
-				case VK_SPACE:
+				}	
+				case VK_SPACE: {
 					MessageReload msgReload;
 					m_owner->receiveMessage(&msgReload);
 					break;
+				}
+				default: {
+					bConsumed = false;
+					break;
+				}
 			}
-			if (vlen2(direction) != 0) {
-				bConsumed = true;
+			if (vlen2(v2MoveDirection) != 0) {
 				MessageAddMovement msgAddMovement;
-				msgAddMovement.dir = direction;
+				msgAddMovement.dir = v2MoveDirection;
 				m_owner->receiveMessage(&msgAddMovement);
 			}
 		}
 	}
 
+	// Process mouse inputs
 	else if (const IInputManager::CMouseEvent* pEvent = dynamic_cast<const IInputManager::CMouseEvent*>(&_event)) {
-		IInputManager::EEventType eEventType = pEvent->getType();
-		if (eEventType == IInputManager::EEventType::EMouseButtonDown || eEventType == IInputManager::EEventType::EMouseButtonUp) {
-			if (pEvent->getButton() == SYS_MB_LEFT) {
+		if (pEvent->getButton() == SYS_MB_LEFT) {
+			if (pEvent->getType() == IInputManager::EEventType::EMouseButtonDown) {
+				bConsumed = true;
 				MessageFire messageFire;
-				if (eEventType == IInputManager::EEventType::EMouseButtonDown) {
-					messageFire.isFiring = true;
-				}
-				else if (eEventType == IInputManager::EEventType::EMouseButtonUp) {
-					messageFire.isFiring = false;
-				}
+				messageFire.isFiring = true;
 				m_owner->receiveMessage(&messageFire);
 			}
-			else if (pEvent->getButton() == SYS_MB_RIGHT && eEventType == IInputManager::EEventType::EMouseButtonDown) {
+			else if (pEvent->getType() == IInputManager::EEventType::EMouseButtonUp) {
+				bConsumed = true;
+				MessageFire messageFire;
+				messageFire.isFiring = false;
+				m_owner->receiveMessage(&messageFire);
+			}
+		}
+		else if (pEvent->getButton() == SYS_MB_RIGHT) {
+			if (pEvent->getType() == IInputManager::EEventType::EMouseButtonDown) {
+				bConsumed = true;
 				MessageReload msgReload;
 				m_owner->receiveMessage(&msgReload);
 			}
 		}
 	}
-
 	return bConsumed;
 }

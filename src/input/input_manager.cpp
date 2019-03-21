@@ -51,6 +51,7 @@ void CInputManager::processKeyboard() {
 	checkKeyState('A');
 	checkKeyState('S');
 	checkKeyState('D');
+	checkKeyState(VK_SPACE);
 	checkKeyState(VK_ESCAPE);
 	//checkKeyState(VK_UP);
 	//checkKeyState(VK_DOWN);
