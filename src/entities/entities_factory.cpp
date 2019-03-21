@@ -77,6 +77,7 @@ bool CEntitiesFactory::init(const char* _sConfigFile) {
 		TEnemyDef enemy;
 		enemy.eType = getEntityTypeByName(enemies[i]["type"].GetString());
 		enemy.iLife = enemies[i]["life"].GetInt();
+		enemy.iInvencibleTime = enemies[i]["invencibleTime"].GetInt();
 		enemy.fSpeed = enemies[i]["speed"].GetFloat();
 		enemy.iCollisionDamage = enemies[i]["collisionDamage"].GetInt();
 		enemy.eWeapon = ComponentWeapon::EType::EInvalid;
@@ -189,7 +190,7 @@ Entity* CEntitiesFactory::createEnemy(vec2 _v2Pos, Entity::EType _tEnemyType, En
 
 	CTransformComponent* transform = NEW(CTransformComponent, enemy, _v2Pos, tEnemyDef.v2Size);
 	transform->init();
-	CRenderableComponent* renderable = NEW(CRenderableComponent, enemy, tEnemyDef.sImageFile.c_str(), 0.0f, 1.0f, 5, 10);
+	CRenderableComponent* renderable = NEW(CRenderableComponent, enemy, tEnemyDef.sImageFile.c_str(), 0.0f, 1.0f, 5, tEnemyDef.iInvencibleTime);
 	renderable->init();
 
 	// Melee and Big enemies follow player until contact
@@ -224,7 +225,7 @@ Entity* CEntitiesFactory::createEnemy(vec2 _v2Pos, Entity::EType _tEnemyType, En
 
 	ComponentCollider* collider = NEW(ComponentCollider, enemy, ComponentCollider::ERectCollider, tEnemyDef.iCollisionDamage, ComponentCollider::EEnemyCollider, ComponentCollider::EPlayerWeaponCollider);
 	collider->init();
-	CLifeComponent* life = NEW(CLifeComponent, enemy, tEnemyDef.iLife, 0, 0);
+	CLifeComponent* life = NEW(CLifeComponent, enemy, tEnemyDef.iLife, 0, tEnemyDef.iInvencibleTime);
 	life->init();
 	ComponentPoints* points = NEW(ComponentPoints, enemy);
 	points->init();

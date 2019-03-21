@@ -147,6 +147,7 @@
 	{
 		"type": "melee",
 		"life": 1,
+		"invencibleTime": 10,
 		"speed": 3,
 		"collisionDamage": -1,
 		"size": [ 25 ,25 ],
@@ -155,6 +156,7 @@
 	{
 		"type": "big",
 		"life": 4,
+		"invencibleTime": 20,
 		"speed": 2,
 		"collisionDamage": -2,
 		"size": [ 35 ,35 ],
@@ -163,6 +165,7 @@
 	{
 		"type": "range",
 		"life": 1,
+		"invencibleTime": 10,
 		"speed": 2,
 		"collisionDamage": -1,
 		"weapon": "enemy weapon",
@@ -172,6 +175,7 @@
 	{
 		"type": "turret",
 		"life": 3,
+		"invencibleTime": 10,
 		"speed": 2,
 		"collisionDamage": -1,
 		"weapon": "enemy weapon",
@@ -182,6 +186,7 @@
 	{
 		"type": "boss",
 		"life": 40,
+		"invencibleTime": 20,
 		"speed": 2,
 		"collisionDamage": -2,
 		"weapon": "boss weapon1",

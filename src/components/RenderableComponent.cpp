@@ -54,7 +54,7 @@ void CRenderableComponent::receiveMessage(Message* _pMessage) {
 		return;
 
 	if (MessageChangeLife* pMessage = dynamic_cast<MessageChangeLife*>(_pMessage)) {
-		if (pMessage->deltaLife < 0) {
+		if (m_iHitTimer <= 0 && pMessage->deltaLife < 0) {
 			m_iHitTimer = m_iHitTime;
 		}
 	}

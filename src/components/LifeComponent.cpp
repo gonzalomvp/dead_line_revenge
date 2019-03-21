@@ -12,8 +12,8 @@ void CLifeComponent::run(float _fDeltaTime) {
 
 	ASSERT(m_owner);
 
-	if (m_iInvencibleTimer < m_iInvencibleTime) {
-		++m_iInvencibleTimer;
+	if (m_iInvencibleTimer > 0) {
+		--m_iInvencibleTimer;
 	}
 
 	if (m_iLifeTimer < m_iTimeToLive) {
@@ -40,9 +40,9 @@ void CLifeComponent::receiveMessage(Message* _pMmessage) {
 		pMessage->currentLife = m_iLife;
 	}
 	else if (MessageChangeLife* pMessage = dynamic_cast<MessageChangeLife*>(_pMmessage)) {
-		if ((m_iLife != -1) && (m_iInvencibleTimer >= m_iInvencibleTime)) {
+		if ((m_iLife != -1) && (m_iInvencibleTimer <= 0)) {
 			m_iLife += pMessage->deltaLife;
-			m_iInvencibleTimer = 0;
+			m_iInvencibleTimer = m_iInvencibleTime;
 			if (m_iLife <= 0) {
 				m_iLife = 0;
 			}
