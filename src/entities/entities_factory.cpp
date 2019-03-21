@@ -5,6 +5,7 @@
 
 #include "components/LifeComponent.h"
 #include "components/MovementComponent.h"
+#include "components/PlayerControllerComponent.h"
 #include "components/RenderableComponent.h"
 #include "components/TransformComponent.h"
 #include "components/bossIAComponent.h"
@@ -106,7 +107,7 @@ Entity* CEntitiesFactory::createPlayer(vec2 _v2Pos) {
 	transform->init();
 	CRenderableComponent* renderable = NEW(CRenderableComponent, player, "data/player.png", 0.0f, 1.0f, 5, 10);
 	renderable->init();
-	ComponentPlayerController* playerControl = NEW(ComponentPlayerController, player);
+	CPlayerControllerComponent* playerControl = NEW(CPlayerControllerComponent, player);
 	playerControl->init();
 	CMovementComponent* movement = NEW(CMovementComponent, player, vmake(0.0f, 0.0f), g_pWorld->getPlayerSpeed(), false, false);
 	movement->init();
@@ -168,12 +169,12 @@ Entity* CEntitiesFactory::createExplossion(vec2 _v2Pos, vec2 _v2Size, vec2 _v2Si
 	// Nuclear explossion has different collider than standard explosssion
 	switch (_eEntityType) {
 	case Entity::ENUCLEAREXPLOSSION: {
-		ComponentCollider* collider = NEW(ComponentCollider, explossion, ComponentCollider::ECircleCollider, -50, ComponentCollider::EPlayerWeaponCollider | ComponentCollider::EBoundariesCollider, ComponentCollider::ENoneCollider);
+		ComponentCollider* collider = NEW(ComponentCollider, explossion, ComponentCollider::ECircleCollider, -5, ComponentCollider::EPlayerWeaponCollider | ComponentCollider::EBoundariesCollider, ComponentCollider::ENoneCollider);
 		collider->init();
 		break;
 	}
 	default: {
-		ComponentCollider* collider = NEW(ComponentCollider, explossion, ComponentCollider::ECircleCollider, -1, ComponentCollider::EPlayerWeaponCollider | ComponentCollider::EEnemyWeaponCollider | ComponentCollider::EBoundariesCollider, ComponentCollider::ENoneCollider);
+		ComponentCollider* collider = NEW(ComponentCollider, explossion, ComponentCollider::ECircleCollider, -5, ComponentCollider::EPlayerWeaponCollider | ComponentCollider::EEnemyWeaponCollider | ComponentCollider::EBoundariesCollider, ComponentCollider::ENoneCollider);
 		collider->init();
 		break;
 	}

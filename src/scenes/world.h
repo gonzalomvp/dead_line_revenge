@@ -16,14 +16,15 @@ public:
 	void         run            (float _fDeltaTime);
 	void         addEntity      (Entity* _pEntity);
 	void         removeEntity   (Entity* _pEntity);
-	uint16_t     getLevel       () const                             { return m_uLevel;        }
-	uint16_t     getScore       () const                             { return m_uScore;        }
-	Entity*      getPlayer      () const                             { return m_pPlayer;       }
-	int	         getPlayerLife  () const                             { return m_iPlayerLife;   }
-	float	     getPlayerSpeed () const                             { return m_fPlayerSpeed;  }
+	uint16_t     getLevel       () const                     { return m_uLevel;                           }
+	uint16_t     getScore       () const                     { return m_uScore;                           }
+	Entity*      getPlayer      () const                     { return m_pPlayer;                          }
+	int	         getPlayerLife  () const                     { return m_iPlayerLife;                      }
+	float	     getPlayerSpeed () const                     { return m_fPlayerSpeed;                     }
+	void         addPoints      (Entity::EType _tEntityType) { m_uScore += m_mEntityPoints[_tEntityType]; }
 
-	void         addPoints    (Entity::EType _tEntityType)           { m_uScore += m_mEntityPoints[_tEntityType]; }
-	virtual bool onEvent      (const IInputManager::CEvent& _event);
+	// IInputManager::IListener
+	virtual bool onEvent (const IInputManager::CEvent& _event);
 
 private:
 	void checkCollisions      ();

@@ -23,11 +23,13 @@ public:
 	void  setValue (float _fValue);
 
 	// Control
-	virtual void init      ()                                    override;
-	virtual void run       (float _fDeltaTime)                   override;
-	virtual void activate  ()                                    override;
-	virtual void deactivate()                                    override;
-	virtual bool onEvent   (const IInputManager::CEvent& _event) override;
+	virtual void init      ()                  override;
+	virtual void run       (float _fDeltaTime) override;
+	virtual void activate  ()                  override;
+	virtual void deactivate()                  override;
+
+	// IInputManager::IListener
+	virtual bool onEvent (const IInputManager::CEvent& _event) override;
 
 	// CButton::IListener
 	virtual void onClick(CButton* _pButton) override;

@@ -57,14 +57,7 @@ protected:
 //=============================================================================
 // ComponentPlayerController class
 //=============================================================================
-class ComponentPlayerController : public Component, public IInputManager::IListener {
-public:
-	ComponentPlayerController(Entity* owner) : Component(owner) {}
-	~ComponentPlayerController();
 
-	virtual void init   ();
-	virtual bool onEvent(const IInputManager::CEvent&);
-};
 
 //=============================================================================
 // ComponentWeapon class

@@ -20,10 +20,12 @@ public:
 	bool isChecked() const { return m_bIsChecked; }
 
 	// Control
-	virtual void init      ()                                    override;
-	virtual void activate  ()                                    override;
-	virtual void deactivate()                                    override;
-	virtual bool onEvent   (const IInputManager::CEvent& _event) override;
+	virtual void init      () override;
+	virtual void activate  () override;
+	virtual void deactivate() override;
+
+	// IInputManager::IListener
+	virtual bool onEvent (const IInputManager::CEvent& _event) override;
 
 private:
 	const char* m_psCheckedImage;
