@@ -236,17 +236,7 @@ ComponentWeapon::EType ComponentWeapon::getWeaponTypeByName(const std::string& n
 //=============================================================================
 // ComponentExplossive class
 //=============================================================================
-void ComponentExplossive::receiveMessage(Message* message) {
-	if (!m_isActive)
-		return;
 
-	MessageDestroy* msgDestroy = dynamic_cast<MessageDestroy*>(message);
-	if (msgDestroy) {
-		MessageGetTransform messageSelfPos;
-		m_owner->receiveMessage(&messageSelfPos);
-		g_pWorld->addEntity(g_pEntitiesFactory->createExplossion(messageSelfPos.pos, vmake(10.0f, 10.0f), vmake(2.0f, 2.0f), 50, Entity::EEXPLOSSION));
-	}
-}
 
 //=============================================================================
 // ComponentAIMelee class

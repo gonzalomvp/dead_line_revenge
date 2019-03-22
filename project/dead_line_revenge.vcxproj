@@ -55,6 +55,7 @@
     <ClInclude Include="..\src\components\behavior_tree\sequence.h" />
     <ClInclude Include="..\src\components\bossIAComponent.h" />
     <ClInclude Include="..\src\components\component.h" />
+    <ClInclude Include="..\src\components\ExplossiveComponent.h" />
     <ClInclude Include="..\src\components\LifeComponent.h" />
     <ClInclude Include="..\src\components\MovementComponent.h" />
     <ClInclude Include="..\src\components\PlayerControllerComponent.h" />
@@ -129,6 +130,7 @@
     <ClCompile Include="..\src\components\behavior_tree\sequence.cpp" />
     <ClCompile Include="..\src\components\bossIAComponent.cpp" />
     <ClCompile Include="..\src\components\component.cpp" />
+    <ClCompile Include="..\src\components\ExplossiveComponent.cpp" />
     <ClCompile Include="..\src\components\LifeComponent.cpp" />
     <ClCompile Include="..\src\components\MovementComponent.cpp" />
     <ClCompile Include="..\src\components\PlayerControllerComponent.cpp" />

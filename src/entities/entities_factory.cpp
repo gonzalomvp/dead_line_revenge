@@ -3,6 +3,7 @@
 
 #include "engine/sound_engine.h"
 
+#include "components/ExplossiveComponent.h"
 #include "components/LifeComponent.h"
 #include "components/MovementComponent.h"
 #include "components/PlayerControllerComponent.h"
@@ -151,7 +152,7 @@ Entity* CEntitiesFactory::createBullet(vec2 _v2Pos, vec2 _v2Size, vec2 _v2Direct
 	}
 	}
 	if (_bIsExplossive) {
-		ComponentExplossive* explossive = NEW(ComponentExplossive, bullet);
+		CExplossiveComponent* explossive = NEW(CExplossiveComponent, bullet);
 		explossive->init();
 	}
 	CLifeComponent* componentLife = NEW(CLifeComponent, bullet, _iLife, _iRange, 0);
@@ -220,7 +221,7 @@ Entity* CEntitiesFactory::createEnemy(vec2 _v2Pos, Entity::EType _tEnemyType, En
 	if (tEnemyDef.eType == Entity::EENEMYBOSS) {
 		BossIAComponent* bossAI = NEW(BossIAComponent, enemy, "data/bt/boss_bt.xml");
 		bossAI->init();
-		ComponentExplossive* explossive = NEW(ComponentExplossive, enemy);
+		CExplossiveComponent* explossive = NEW(CExplossiveComponent, enemy);
 		explossive->init();
 	}
 

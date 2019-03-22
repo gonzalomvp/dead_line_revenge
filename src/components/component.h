@@ -142,12 +142,7 @@ private:
 //=============================================================================
 // ComponentExplossive class
 //=============================================================================
-class ComponentExplossive : public Component {
-public:
-	ComponentExplossive(Entity* owner) : Component(owner) {}
 
-	virtual void receiveMessage(Message* message);
-};
 
 //=============================================================================
 // ComponentAIMelee class
