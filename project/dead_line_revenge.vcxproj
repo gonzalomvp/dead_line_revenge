@@ -61,7 +61,6 @@
     <ClInclude Include="..\src\components\component.h" />
     <ClInclude Include="..\src\components\ExplossiveComponent.h" />
     <ClInclude Include="..\src\components\HUDComponent.h" />
-    <ClInclude Include="..\src\components\HUDMessageComponent.h" />
     <ClInclude Include="..\src\components\LifeComponent.h" />
     <ClInclude Include="..\src\components\MovementComponent.h" />
     <ClInclude Include="..\src\components\PlayerControllerComponent.h" />
@@ -144,7 +143,6 @@
     <ClCompile Include="..\src\components\component.cpp" />
     <ClCompile Include="..\src\components\ExplossiveComponent.cpp" />
     <ClCompile Include="..\src\components\HUDComponent.cpp" />
-    <ClCompile Include="..\src\components\HUDMessageComponent.cpp" />
     <ClCompile Include="..\src\components\LifeComponent.cpp" />
     <ClCompile Include="..\src\components\MovementComponent.cpp" />
     <ClCompile Include="..\src\components\PlayerControllerComponent.cpp" />

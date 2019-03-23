@@ -34,7 +34,10 @@ void CWeaponPickupComponent::receiveMessage(Message* _pMessage) {
 		default:
 			break;
 		}
-		Entity* pHudMessage = g_pEntitiesFactory->createHUDMessage(sHudMessageText, 100);
-		g_pWorld->addEntity(pHudMessage);
+
+		MessageShowHUDMessage msgShowHUDMessage;
+		msgShowHUDMessage.message = sHudMessageText;
+		msgShowHUDMessage.time = 100;
+		g_pWorld->getPlayer()->receiveMessage(&msgShowHUDMessage);
 	}
 }

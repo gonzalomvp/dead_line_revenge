@@ -78,3 +78,8 @@ struct MessageChangeSprite: public Message {
 struct MessageEnableAI: public Message {
 	bool enable = true;
 };
+
+struct MessageShowHUDMessage : public Message {
+	std::string message = "";
+	int         time = 0;
+};

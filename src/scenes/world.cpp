@@ -18,7 +18,6 @@ using namespace rapidjson;
 CWorld::CWorld() 
 : m_uLevel(0)
 , m_pPlayer(nullptr)
-, m_pHudMessage(nullptr)
 , m_bIsGameOver(false)
 , m_bIsPaused(false)
 , m_uScore(0)
@@ -39,7 +38,6 @@ CWorld::~CWorld() {
 bool CWorld::init(uint16_t _uLevel) {
 	m_uLevel = _uLevel;
 	m_pPlayer = nullptr;
-	m_pHudMessage = nullptr;
 	m_bIsGameOver = false;
 	m_bIsPaused = false;
 	m_uScore = 0;
@@ -281,12 +279,6 @@ void CWorld::removePendingEntities() {
 #include "REG_ENEMIES.h"
 #undef REG_ENTITY
 
-			case Entity::EHUDMESSAGE: {
-				if (m_pHudMessage == *it) {
-					m_pHudMessage = nullptr;
-				}
-				break;
-			}
 		}
 
 		m_vEntities.erase(
@@ -301,15 +293,6 @@ void CWorld::removePendingEntities() {
 void CWorld::addPendingEntities() {
 	for (size_t i = 0; i < m_vEntitiesToAdd.size(); ++i) {
 		m_vEntities.push_back(m_vEntitiesToAdd[i]);
-		switch (m_vEntitiesToAdd[i]->getType()){
-			case Entity::EHUDMESSAGE:
-				// Remove any previous HUD message still on screen
-				if (m_pHudMessage) {
-					g_pWorld->removeEntity(m_pHudMessage);
-				}
-				m_pHudMessage = m_vEntitiesToAdd[i];
-				break;
-		}
 	}
 	m_vEntitiesToAdd.clear();
 }

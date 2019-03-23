@@ -279,9 +279,6 @@
     <ClInclude Include="..\src\components\WeaponPickupComponent.h">
       <Filter>src\components</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\components\HUDMessageComponent.h">
-      <Filter>src\components</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\components\HUDComponent.h">
       <Filter>src\components</Filter>
     </ClInclude>
@@ -498,9 +495,6 @@
       <Filter>src\components</Filter>
     </ClCompile>
     <ClCompile Include="..\src\components\WeaponPickupComponent.cpp">
-      <Filter>src\components</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\components\HUDMessageComponent.cpp">
       <Filter>src\components</Filter>
     </ClCompile>
     <ClCompile Include="..\src\components\HUDComponent.cpp">

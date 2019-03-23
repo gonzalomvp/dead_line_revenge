@@ -4,5 +4,4 @@ REG_ENTITY(WEAPON, "weapon")
 REG_ENTITY(MINE, "mine")
 REG_ENTITY(EXPLOSSION, "explossion")
 REG_ENTITY(NUCLEAREXPLOSSION, "nuclear explossion")
-REG_ENTITY(HUDMESSAGE, "HUD message")
 #include "REG_ENEMIES.h"

@@ -34,7 +34,6 @@ private:
 
 	uint16_t              m_uLevel;
 	Entity*               m_pPlayer;
-	Entity*               m_pHudMessage;
 	std::vector <Entity*> m_vEntities;
 	std::vector <Entity*> m_vEntitiesToRemove;
 	std::vector <Entity*> m_vEntitiesToAdd;

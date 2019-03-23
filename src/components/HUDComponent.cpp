@@ -67,6 +67,11 @@ void CHUDComponent::init() {
 	g_pGraphicsEngine->addGfxEntity(m_pAmmoText);
 	m_vGfxEntities.push_back(m_pAmmoText);
 
+	// MESSAGE HUD
+	m_pMessageText = NEW(CText, "", vmake((WORLD_WIDTH * 0.5f), 20.0f), 4);
+	g_pGraphicsEngine->addGfxEntity(m_pMessageText);
+	m_vGfxEntities.push_back(m_pMessageText);
+
 	// Target HUD
 	m_pTargetSprite = NEW(CSprite, g_pGraphicsEngine->getTexture(s_psTargetImage), vmake(0.0f, 0.0f), vmake(0.0f, 0.0f), 0.0f, 1.0f, 4);
 	m_pTargetSprite->setSize(vmake(36.0f, 36.0f));
@@ -86,7 +91,14 @@ void CHUDComponent::run(float _fDeltaTime) {
 	if (!m_isActive)
 		return;
 
-	ASSERT(m_owner && m_pLifeText && m_pScoreText && m_pAmmoText && m_pReloadSprite && g_pWorld);
+	ASSERT(m_owner && m_pMessageText && m_pLifeText && m_pScoreText && m_pAmmoText && m_pReloadSprite && g_pWorld);
+
+	if (m_iMessageTimer > 0) {
+		--m_iMessageTimer;
+		if (m_iMessageTimer <= 0) {
+			m_pMessageText->setText("");
+		}
+	}
 
 	MessageGetLife msgLife;
 	m_owner->receiveMessage(&msgLife);
@@ -112,6 +124,19 @@ void CHUDComponent::run(float _fDeltaTime) {
 	// Top sprite reload animation
 	//m_pReloadSprite->setPos(vmake(msgTransform.pos.x - msgTransform.size.x * msgAmmo.reloadPercent * 0.5f, msgTransform.pos.y + msgTransform.size.y * 0.5f + 5));
 	//m_pReloadSprite->setSize(vmake(msgTransform.size.x * (1.0f - msgAmmo.reloadPercent), 5));
+}
+
+void CHUDComponent::receiveMessage(Message* _pMessage) {
+	Component::receiveMessage(_pMessage);
+	if (!m_isActive)
+		return;
+
+	ASSERT(_pMessage && m_pMessageText);
+	if (MessageShowHUDMessage* pMessage = dynamic_cast<MessageShowHUDMessage*>(_pMessage)) {
+		m_pMessageText->setText(pMessage->message);
+		m_pMessageText->setPos(vmake((WORLD_WIDTH * 0.5f) - g_pStringManager->calculateTextHalfWidth(pMessage->message), m_pMessageText->getPos().y));
+		m_iMessageTimer = pMessage->time;
+	}
 }
 
 bool CHUDComponent::onEvent(const IInputManager::CEvent& _event) {
