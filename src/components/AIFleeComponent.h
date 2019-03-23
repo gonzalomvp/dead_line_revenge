@@ -1,10 +1,10 @@
 #pragma once
 
-#include "components/component.h"
+#include "components/AIComponent.h"
 
-class CAIFleeComponent : public Component {
+class CAIFleeComponent : public CAIComponent {
 public:
-	CAIFleeComponent(Entity* _pOwner, float _fSpeed, float _fRange) : Component(_pOwner), m_fSpeed(_fSpeed), m_fRange(_fRange) {}
+	CAIFleeComponent(Entity* _pOwner, float _fSpeed, float _fRange) : CAIComponent(_pOwner), m_fSpeed(_fSpeed), m_fRange(_fRange) {}
 
 	// CComponent
 	virtual void run(float _fDeltaTime)             override;

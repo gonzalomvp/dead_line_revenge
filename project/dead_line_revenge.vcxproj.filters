@@ -267,6 +267,12 @@
     <ClInclude Include="..\src\components\AIFleeComponent.h">
       <Filter>src\components</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\components\AIFireComponent.h">
+      <Filter>src\components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\components\AIComponent.h">
+      <Filter>src\components</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\main.cpp">
@@ -468,6 +474,12 @@
       <Filter>src\components</Filter>
     </ClCompile>
     <ClCompile Include="..\src\components\AIFleeComponent.cpp">
+      <Filter>src\components</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\components\AIFireComponent.cpp">
+      <Filter>src\components</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\components\AIComponent.cpp">
       <Filter>src\components</Filter>
     </ClCompile>
   </ItemGroup>

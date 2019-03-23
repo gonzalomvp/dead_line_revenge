@@ -1,14 +1,13 @@
 #pragma once
 
-#include "components/component.h"
+#include "components/AIComponent.h"
 
-class CAIMeleeComponent : public Component {
+class CAIMeleeComponent : public CAIComponent {
 public:
 	CAIMeleeComponent(Entity* _pOwner, float _fSpeed, float _fMaxDistance);
 
 	// CComponent
-	virtual void run(float _fDeltaTime)             override;
-	virtual void receiveMessage(Message* _pMessage) override;
+	virtual void run(float _fDeltaTime) override;
 
 private:
 	float m_fSpeed;

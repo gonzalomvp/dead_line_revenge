@@ -250,55 +250,7 @@ ComponentWeapon::EType ComponentWeapon::getWeaponTypeByName(const std::string& n
 //=============================================================================
 // ComponentAIFire class
 //=============================================================================
-void ComponentAIFire::init() {
-	Component::init();
-	if (m_fireDirections.size() > 0 && m_shuffle) {
-		std::random_shuffle(m_fireDirections.begin(), m_fireDirections.end());
-	}
-}
 
-void ComponentAIFire::run(float deltaTime) {
-	Component::run(deltaTime);
-	if (!m_isActive)
-		return;
-
-	MessageFire msgFire;
-	msgFire.isFiring = true;
-	m_owner->receiveMessage(&msgFire);
-
-	if (m_pPlayer) {
-		MessageGetTransform messageSelfPos;
-		m_owner->receiveMessage(&messageSelfPos);
-		MessageGetTransform messagePlayerPos;
-		m_pPlayer->receiveMessage(&messagePlayerPos);
-		MessageSetAimDirection messageSetAimDirection;
-		messageSetAimDirection.direction = vnorm(vsub(messagePlayerPos.pos, messageSelfPos.pos));
-		messageSetAimDirection.changeAngle = true;
-		m_owner->receiveMessage(&messageSetAimDirection);
-	}
-	else {
-		MessageSetAimDirection messageSetAimDirection;
-		messageSetAimDirection.direction = m_fireDirections[m_currentFireDirection];
-		messageSetAimDirection.changeAngle = true;
-		m_owner->receiveMessage(&messageSetAimDirection);
-	}
-}
-
-void ComponentAIFire::receiveMessage(Message* message) {
-	if (!m_isActive)
-		return;
-
-	MessageFire* msgFire = dynamic_cast<MessageFire*>(message);
-	if (msgFire && msgFire->isFireDone && ! m_pPlayer) {
-		++m_currentFireDirection;
-		if (m_currentFireDirection >= m_fireDirections.size()) {
-			m_currentFireDirection = 0;
-		}
-		//MessageAimDirection messageAimDirection;
-		//messageAimDirection.direction = m_fireDirections[m_currentFireDirection];
-		//m_owner->receiveMessage(&messageAimDirection);
-	}
-}
 
 //=============================================================================
 // ComponentCollider class

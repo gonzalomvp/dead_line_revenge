@@ -10,7 +10,7 @@ void CLifeComponent::run(float _fDeltaTime) {
 	if (!m_isActive)
 		return;
 
-	ASSERT(m_owner);
+	ASSERT(m_owner && g_pWorld);
 
 	if (m_iInvencibleTimer > 0) {
 		--m_iInvencibleTimer;
@@ -30,16 +30,17 @@ void CLifeComponent::run(float _fDeltaTime) {
 	}
 }
 
-void CLifeComponent::receiveMessage(Message* _pMmessage) {
-	ASSERT(_pMmessage);
-
+void CLifeComponent::receiveMessage(Message* _pMessage) {
+	Component::receiveMessage(_pMessage);
 	if (!m_isActive)
 		return;
 
-	if (MessageGetLife* pMessage = dynamic_cast<MessageGetLife*>(_pMmessage)) {
+	ASSERT(_pMessage);
+
+	if (MessageGetLife* pMessage = dynamic_cast<MessageGetLife*>(_pMessage)) {
 		pMessage->currentLife = m_iLife;
 	}
-	else if (MessageChangeLife* pMessage = dynamic_cast<MessageChangeLife*>(_pMmessage)) {
+	else if (MessageChangeLife* pMessage = dynamic_cast<MessageChangeLife*>(_pMessage)) {
 		if ((m_iLife != -1) && (m_iInvencibleTimer <= 0)) {
 			m_iLife += pMessage->deltaLife;
 			m_iInvencibleTimer = m_iInvencibleTime;
@@ -48,7 +49,7 @@ void CLifeComponent::receiveMessage(Message* _pMmessage) {
 			}
 		}
 	}
-	else if (MessageDestroy* pMessage = dynamic_cast<MessageDestroy*>(_pMmessage)) {
+	else if (MessageDestroy* pMessage = dynamic_cast<MessageDestroy*>(_pMessage)) {
 		m_iLife = 0;
 	}
 }

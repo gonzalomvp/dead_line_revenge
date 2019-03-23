@@ -13,11 +13,11 @@ void CTransformComponent::run(float _fDeltaTime) {
 }
 
 void CTransformComponent::receiveMessage(Message* _pMessage) {
-	ASSERT(_pMessage);
-	ASSERT(m_owner);
-
+	Component::receiveMessage(_pMessage);
 	if (!m_isActive)
 		return;
+
+	ASSERT(_pMessage && m_owner);
 
 	if (MessageSetTransform* pMessage = dynamic_cast<MessageSetTransform*>(_pMessage)) {
 		m_v2Pos = pMessage->pos;

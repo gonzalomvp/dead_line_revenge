@@ -23,7 +23,7 @@ void CRenderableComponent::run(float _fDeltaTime) {
 	if (!m_isActive)
 		return;
 
-	ASSERT(m_owner);
+	ASSERT(m_owner && m_pSprite);
 
 	// Update pos and size based on entity transform
 	MessageGetTransform msgGetTransform;
@@ -48,10 +48,11 @@ void CRenderableComponent::run(float _fDeltaTime) {
 }
 
 void CRenderableComponent::receiveMessage(Message* _pMessage) {
-	ASSERT(_pMessage);
-
+	Component::receiveMessage(_pMessage);
 	if (!m_isActive)
 		return;
+
+	ASSERT(_pMessage && m_pSprite && g_pGraphicsEngine);
 
 	if (MessageChangeLife* pMessage = dynamic_cast<MessageChangeLife*>(_pMessage)) {
 		if (m_iHitTimer <= 0 && pMessage->deltaLife < 0) {

@@ -155,24 +155,6 @@ private:
 //=============================================================================
 // ComponentAIFire class
 //=============================================================================
-class ComponentAIFire : public Component {
-public:
-	ComponentAIFire(Entity* owner, Entity* player) : Component(owner), m_pPlayer(player) {}
-	ComponentAIFire(Entity* owner, const std::vector<vec2>& fireDirections, bool shuffle) : 
-		Component(owner), 
-		m_fireDirections(fireDirections),
-		m_currentFireDirection(0),
-		m_shuffle(shuffle) {}
-	
-	virtual void init          ();
-	virtual void run           (float deltaTime);
-	virtual void receiveMessage(Message* message);
-private:
-	Entity*       m_pPlayer;
-	std::vector<vec2> m_fireDirections;
-	size_t            m_currentFireDirection;
-	bool              m_shuffle;
-};
 
 //=============================================================================
 // ComponentCollider class

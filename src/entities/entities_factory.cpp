@@ -3,6 +3,7 @@
 
 #include "engine/sound_engine.h"
 
+#include "components/AIFireComponent.h"
 #include "components/AIFleeComponent.h"
 #include "components/AIMeleeComponent.h"
 #include "components/ExplossiveComponent.h"
@@ -210,7 +211,7 @@ Entity* CEntitiesFactory::createEnemy(vec2 _v2Pos, Entity::EType _tEnemyType, En
 
 		// If a player is passed the enemy keep a distance between ComponentAIMelee and ComponentAIEvade distances and aim to it
 		if (_pPlayer && tEnemyDef.eType != Entity::EENEMYBOSS) {
-			ComponentAIFire* aiFire = NEW(ComponentAIFire, enemy, _pPlayer);
+			CAIFireComponent* aiFire = NEW(CAIFireComponent, enemy);
 			aiFire->init();
 			CAIMeleeComponent* aiMelee = NEW(CAIMeleeComponent, enemy, tEnemyDef.fSpeed, 200);
 			aiMelee->init();
@@ -244,7 +245,7 @@ Entity* CEntitiesFactory::createEnemy(vec2 _v2Pos, Entity::EType _tEnemyType, ve
 	movement->init();
 
 	// Used by the turrets to fire in the given directions and use a delay to not shoot all at the same time
-	ComponentAIFire* aiFire = NEW(ComponentAIFire, enemy, _vAimDirections, _bIshuffleAim);
+	CAIFireComponent* aiFire = NEW(CAIFireComponent, enemy, _vAimDirections, _bIshuffleAim);
 	aiFire->setActivationDelay(rand() % 100);
 	aiFire->init();
 	return enemy;

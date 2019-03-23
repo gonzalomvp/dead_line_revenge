@@ -4,7 +4,7 @@
 #include "messages/message.h"
 #include "scenes/world.h"
 
-CAIMeleeComponent::CAIMeleeComponent(Entity* _pOwner, float _fSpeed, float _fMaxDistance) : Component(_pOwner), m_fSpeed(_fSpeed), m_fMaxDistance(_fMaxDistance) {
+CAIMeleeComponent::CAIMeleeComponent(Entity* _pOwner, float _fSpeed, float _fMaxDistance) : CAIComponent(_pOwner), m_fSpeed(_fSpeed), m_fMaxDistance(_fMaxDistance) {
 	m_v2Offset = vmake(CORE_FRand(-20.0f, 20.0f), CORE_FRand(-20.0f, 20.0f));
 }
 
@@ -26,18 +26,5 @@ void CAIMeleeComponent::run(float _fDeltaTime) {
 		msgSetTransform.pos = vadd(messageSelfPos.pos, vscale(vnorm(v2EnemyToPlayer), m_fSpeed));
 		msgSetTransform.size = messageSelfPos.size;
 		m_owner->receiveMessage(&msgSetTransform);
-	}
-}
-
-void CAIMeleeComponent::receiveMessage(Message* _pMessage) {
-	ASSERT(_pMessage);
-
-	if (MessageEnableAI* pMessage = dynamic_cast<MessageEnableAI*>(_pMessage)) {
-		if (pMessage->enable) {
-			activate();
-		}
-		else {
-			deactivate();
-		}
 	}
 }

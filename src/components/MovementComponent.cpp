@@ -27,11 +27,11 @@ void CMovementComponent::run(float _fDeltaTime) {
 }
 
 void CMovementComponent::receiveMessage(Message* _pMessage) {
-	ASSERT(_pMessage);
-	ASSERT(m_owner);
-
+	Component::receiveMessage(_pMessage);
 	if (!m_isActive)
 		return;
+
+	ASSERT(_pMessage && m_owner);
 
 	if (MessageAddMovement* pMessage = dynamic_cast<MessageAddMovement*>(_pMessage)) {
 		m_v2Direction = vadd(m_v2Direction, pMessage->dir);

@@ -6,6 +6,7 @@
 #include "scenes/world.h"
 
 void CExplossiveComponent::receiveMessage(Message* _pMessage) {
+	Component::receiveMessage(_pMessage);
 	if (!m_isActive)
 		return;
 
