@@ -65,7 +65,7 @@ struct MessageCheckCollision : public Message {
 };
 
 struct MessageWeaponChange : public Message {
-	ComponentWeapon::TWeaponData weaponData;
+	ComponentWeapon::EType eWeaponType;
 };
 
 struct MessageDestroy : public Message {

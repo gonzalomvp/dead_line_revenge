@@ -202,14 +202,6 @@ private:
 //=============================================================================
 // ComponentWeaponPickup class
 //=============================================================================
-class ComponentWeaponPickup : public Component {
-public:
-	ComponentWeaponPickup(Entity* owner, ComponentWeapon::TWeaponData weaponData) : Component(owner), m_mWeaponData(weaponData) {}
-	
-	virtual void receiveMessage(Message* message);
-private:
-	ComponentWeapon::TWeaponData m_mWeaponData;
-};
 
 //=============================================================================
 // ComponentHUDMessage class

@@ -13,6 +13,7 @@
 #include "components/PointsComponent.h"
 #include "components/RenderableComponent.h"
 #include "components/TransformComponent.h"
+#include "components/WeaponPickupComponent.h"
 #include "components/bossIAComponent.h"
 
 #include "scenes/world.h"
@@ -265,7 +266,7 @@ Entity* CEntitiesFactory::createWeaponPickup() {
 	renderable->init();
 	ComponentCollider* collider = NEW(ComponentCollider, weaponPickup, ComponentCollider::ERectCollider, 0, ComponentCollider::EPickupCollider, ComponentCollider::EPlayerCollider);
 	collider->init();
-	ComponentWeaponPickup* pickup = NEW(ComponentWeaponPickup, weaponPickup, m_mWeaponDef[type]);
+	CWeaponPickupComponent* pickup = NEW(CWeaponPickupComponent, weaponPickup, type);
 	pickup->init();
 	CPointsComponent* points = NEW(CPointsComponent, weaponPickup);
 	points->init();

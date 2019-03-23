@@ -1,7 +1,6 @@
 #include "common/stdafx.h"
 #include "change_weapon.h"
 #include "entities/entity.h"
-#include "entities/entities_factory.h"
 #include "messages/message.h"
 #include "scenes/world.h"
 
@@ -25,7 +24,7 @@ Status CChangeWeaponAction::update(float step) {
 
 	Entity* self = getOwnerEntity();
 	MessageWeaponChange messageWeaponChange;
-	messageWeaponChange.weaponData = g_pEntitiesFactory->getWeaponDef(ComponentWeapon::getWeaponTypeByName(mWeaponName));
+	messageWeaponChange.eWeaponType = ComponentWeapon::getWeaponTypeByName(mWeaponName);
 	self->receiveMessage(&messageWeaponChange);
 
 	return eSuccess;

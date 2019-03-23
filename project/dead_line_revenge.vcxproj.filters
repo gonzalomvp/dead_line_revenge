@@ -276,6 +276,9 @@
     <ClInclude Include="..\src\components\PointsComponent.h">
       <Filter>src\components</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\components\WeaponPickupComponent.h">
+      <Filter>src\components</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\main.cpp">
@@ -486,6 +489,9 @@
       <Filter>src\components</Filter>
     </ClCompile>
     <ClCompile Include="..\src\components\PointsComponent.cpp">
+      <Filter>src\components</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\components\WeaponPickupComponent.cpp">
       <Filter>src\components</Filter>
     </ClCompile>
   </ItemGroup>

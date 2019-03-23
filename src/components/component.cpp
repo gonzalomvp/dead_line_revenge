@@ -175,7 +175,7 @@ void ComponentWeapon::receiveMessage(Message* message) {
 
 	MessageWeaponChange* msgWeaponChange = dynamic_cast<MessageWeaponChange*>(message);
 	if (msgWeaponChange) {
-		m_mWeaponData = msgWeaponChange->weaponData;
+		m_mWeaponData = g_pEntitiesFactory->getWeaponDef(msgWeaponChange->eWeaponType);
 		m_isFiring = false;
 		m_currentBullets = m_mWeaponData.capacity;
 		m_fireTimer = m_mWeaponData.fireRate;
@@ -338,32 +338,7 @@ void ComponentCollider::receiveMessage(Message* message) {
 //=============================================================================
 // ComponentWeaponPickup class
 //=============================================================================
-void ComponentWeaponPickup::receiveMessage(Message* message) {
-	if (!m_isActive)
-		return;
 
-	MessageDestroy* msgDestroy = dynamic_cast<MessageDestroy*>(message);
-	if (msgDestroy) {
-		MessageWeaponChange msgWeapon;
-		msgWeapon.weaponData = m_mWeaponData;
-		g_pWorld->getPlayer()->receiveMessage(&msgWeapon);
-
-		std::string hudMessage = g_pStringManager->getText("LTEXT_GUI_PICKUP_MESSAGE");
-		switch (m_mWeaponData.type)
-		{
-#define REG_WEAPON(val, name) \
-			case ComponentWeapon::E##val: \
-				hudMessage += g_pStringManager->getText("LTEXT_GUI_"#val"_MESSAGE"); \
-				break;
-#include "REG_WEAPONS.h"
-#undef REG_WEAPON
-			default:
-				break;
-		}
-
-		g_pWorld->addEntity(g_pEntitiesFactory->createHUDMessage(hudMessage, vmake((WORLD_WIDTH / 2) - g_pStringManager->calculateTextHalfWidth(hudMessage), 20), 100));
-	}
-}
 
 //=============================================================================
 // ComponentHUDMessage class
