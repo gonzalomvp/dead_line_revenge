@@ -63,6 +63,7 @@
     <ClInclude Include="..\src\components\LifeComponent.h" />
     <ClInclude Include="..\src\components\MovementComponent.h" />
     <ClInclude Include="..\src\components\PlayerControllerComponent.h" />
+    <ClInclude Include="..\src\components\PointsComponent.h" />
     <ClInclude Include="..\src\components\RenderableComponent.h" />
     <ClInclude Include="..\src\components\TransformComponent.h" />
     <ClInclude Include="..\src\engine\graphics_engine.h" />
@@ -142,6 +143,7 @@
     <ClCompile Include="..\src\components\LifeComponent.cpp" />
     <ClCompile Include="..\src\components\MovementComponent.cpp" />
     <ClCompile Include="..\src\components\PlayerControllerComponent.cpp" />
+    <ClCompile Include="..\src\components\PointsComponent.cpp" />
     <ClCompile Include="..\src\components\RenderableComponent.cpp" />
     <ClCompile Include="..\src\components\TransformComponent.cpp" />
     <ClCompile Include="..\src\engine\graphics_engine.cpp" />

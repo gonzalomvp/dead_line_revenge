@@ -198,12 +198,6 @@ private:
 //=============================================================================
 // ComponentPoints class
 //=============================================================================
-class ComponentPoints : public Component {
-public:
-	ComponentPoints(Entity* owner): Component(owner) {}
-
-	virtual void receiveMessage(Message* message);
-};
 
 //=============================================================================
 // ComponentWeaponPickup class

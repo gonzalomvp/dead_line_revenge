@@ -333,15 +333,7 @@ void ComponentCollider::receiveMessage(Message* message) {
 //=============================================================================
 // ComponentPoints class
 //=============================================================================
-void ComponentPoints::receiveMessage(Message* message) {
-	if (!m_isActive)
-		return;
 
-	MessageDestroy* msgDestroy = dynamic_cast<MessageDestroy*>(message);
-	if (msgDestroy) {
-		g_pWorld->addPoints(m_owner->getType());
-	}
-}
 
 //=============================================================================
 // ComponentWeaponPickup class

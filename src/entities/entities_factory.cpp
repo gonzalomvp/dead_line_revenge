@@ -10,6 +10,7 @@
 #include "components/LifeComponent.h"
 #include "components/MovementComponent.h"
 #include "components/PlayerControllerComponent.h"
+#include "components/PointsComponent.h"
 #include "components/RenderableComponent.h"
 #include "components/TransformComponent.h"
 #include "components/bossIAComponent.h"
@@ -232,7 +233,7 @@ Entity* CEntitiesFactory::createEnemy(vec2 _v2Pos, Entity::EType _tEnemyType, En
 	collider->init();
 	CLifeComponent* life = NEW(CLifeComponent, enemy, tEnemyDef.iLife, 0, tEnemyDef.iInvencibleTime);
 	life->init();
-	ComponentPoints* points = NEW(ComponentPoints, enemy);
+	CPointsComponent* points = NEW(CPointsComponent, enemy);
 	points->init();
 	return enemy;
 }
@@ -266,7 +267,7 @@ Entity* CEntitiesFactory::createWeaponPickup() {
 	collider->init();
 	ComponentWeaponPickup* pickup = NEW(ComponentWeaponPickup, weaponPickup, m_mWeaponDef[type]);
 	pickup->init();
-	ComponentPoints* points = NEW(ComponentPoints, weaponPickup);
+	CPointsComponent* points = NEW(CPointsComponent, weaponPickup);
 	points->init();
 	CLifeComponent* life = NEW(CLifeComponent, weaponPickup, 1, 0, 0);
 	life->init();

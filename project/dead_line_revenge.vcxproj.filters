@@ -273,6 +273,9 @@
     <ClInclude Include="..\src\components\AIComponent.h">
       <Filter>src\components</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\components\PointsComponent.h">
+      <Filter>src\components</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\main.cpp">
@@ -480,6 +483,9 @@
       <Filter>src\components</Filter>
     </ClCompile>
     <ClCompile Include="..\src\components\AIComponent.cpp">
+      <Filter>src\components</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\components\PointsComponent.cpp">
       <Filter>src\components</Filter>
     </ClCompile>
   </ItemGroup>
