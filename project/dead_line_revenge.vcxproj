@@ -58,6 +58,7 @@
     <ClInclude Include="..\src\components\behavior_tree\selector.h" />
     <ClInclude Include="..\src\components\behavior_tree\sequence.h" />
     <ClInclude Include="..\src\components\bossIAComponent.h" />
+    <ClInclude Include="..\src\components\ColliderComponent.h" />
     <ClInclude Include="..\src\components\component.h" />
     <ClInclude Include="..\src\components\ExplossiveComponent.h" />
     <ClInclude Include="..\src\components\HUDComponent.h" />
@@ -140,6 +141,7 @@
     <ClCompile Include="..\src\components\behavior_tree\selector.cpp" />
     <ClCompile Include="..\src\components\behavior_tree\sequence.cpp" />
     <ClCompile Include="..\src\components\bossIAComponent.cpp" />
+    <ClCompile Include="..\src\components\ColliderComponent.cpp" />
     <ClCompile Include="..\src\components\component.cpp" />
     <ClCompile Include="..\src\components\ExplossiveComponent.cpp" />
     <ClCompile Include="..\src\components\HUDComponent.cpp" />

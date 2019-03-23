@@ -158,42 +158,6 @@ private:
 //=============================================================================
 // ComponentCollider class
 //=============================================================================
-class ComponentCollider : public Component {
-public:
-	enum TColliderType {
-		ERectCollider,
-		ECircleCollider,
-	};
-
-	enum TColliderChannel {
-		EPlayerCollider       = 1 << 0,
-		EEnemyCollider        = 1 << 1,
-		EPlayerWeaponCollider = 1 << 2,
-		EEnemyWeaponCollider  = 1 << 3,
-		EBoundariesCollider   = 1 << 4,
-		EPickupCollider       = 1 << 5,
-		ENoneCollider         = 0,
-	};
-
-	ComponentCollider(Entity* owner, TColliderType type, int deltaLife, int collisionChannel, int collisionChannelsResponse) :
-		Component(owner),
-		m_type(type),
-		m_center(vmake(0.0f, 0.0f)),
-		m_size(vmake(0.0f, 0.0f)),
-		m_deltaLife(deltaLife), 
-		m_collisionChannel(collisionChannel),
-		m_collisionChannelsResponse(collisionChannelsResponse) {}
-	
-	virtual void run           (float deltaTime);
-	virtual void receiveMessage(Message* message);
-private:
-	TColliderType m_type;
-	int           m_collisionChannel;
-	int           m_collisionChannelsResponse;
-	vec2          m_center;
-	vec2          m_size;
-	int           m_deltaLife;
-};
 
 //=============================================================================
 // ComponentPoints class

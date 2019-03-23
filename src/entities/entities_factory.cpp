@@ -6,6 +6,7 @@
 #include "components/AIFireComponent.h"
 #include "components/AIFleeComponent.h"
 #include "components/AIMeleeComponent.h"
+#include "components/ColliderComponent.h"
 #include "components/ExplossiveComponent.h"
 #include "components/HUDComponent.h"
 #include "components/LifeComponent.h"
@@ -120,7 +121,7 @@ Entity* CEntitiesFactory::createPlayer(vec2 _v2Pos) {
 	movement->init();
 	ComponentWeapon* weapon = NEW(ComponentWeapon, player, m_mWeaponDef[ComponentWeapon::EREVOLVER]);
 	weapon->init();
-	ComponentCollider* collider = NEW(ComponentCollider, player, ComponentCollider::ERectCollider, -1, ComponentCollider::EPlayerCollider, ComponentCollider::EEnemyCollider | ComponentCollider::EEnemyWeaponCollider);
+	CColliderComponent* collider = NEW(CColliderComponent, player, CColliderComponent::ERectCollider, -1, CColliderComponent::EPlayerCollider, CColliderComponent::EEnemyCollider | CColliderComponent::EEnemyWeaponCollider);
 	collider->init();
 	CLifeComponent* life = NEW(CLifeComponent, player, g_pWorld->getPlayerLife(), 0, 20);
 	life->init();
@@ -141,18 +142,18 @@ Entity* CEntitiesFactory::createBullet(vec2 _v2Pos, vec2 _v2Size, vec2 _v2Direct
 	// Depending on the type of bullet it has different collider setup
 	switch (_eEntityType) {
 	case Entity::EPLAYER: {
-		ComponentCollider* collider = NEW(ComponentCollider, bullet, ComponentCollider::ECircleCollider, _iDamage, ComponentCollider::EPlayerWeaponCollider, ComponentCollider::EEnemyCollider | ComponentCollider::EBoundariesCollider);
+		CColliderComponent* collider = NEW(CColliderComponent, bullet, CColliderComponent::ECircleCollider, _iDamage, CColliderComponent::EPlayerWeaponCollider, CColliderComponent::EEnemyCollider | CColliderComponent::EBoundariesCollider);
 		collider->init();
 		break;
 	}
 	case Entity::EMINE: {
-		ComponentCollider* collider = NEW(ComponentCollider, bullet, ComponentCollider::ECircleCollider, 0, ComponentCollider::ENoneCollider, ComponentCollider::EPlayerCollider | ComponentCollider::EEnemyCollider | ComponentCollider::EPlayerWeaponCollider | ComponentCollider::EEnemyWeaponCollider);
+		CColliderComponent* collider = NEW(CColliderComponent, bullet, CColliderComponent::ECircleCollider, 0, CColliderComponent::ENoneCollider, CColliderComponent::EPlayerCollider | CColliderComponent::EEnemyCollider | CColliderComponent::EPlayerWeaponCollider | CColliderComponent::EEnemyWeaponCollider);
 		collider->setActivationDelay(20);
 		collider->init();
 		break;
 	}
 	default: {
-		ComponentCollider* collider = NEW(ComponentCollider, bullet, ComponentCollider::ECircleCollider, _iDamage, ComponentCollider::EEnemyWeaponCollider, ComponentCollider::EPlayerCollider | ComponentCollider::EBoundariesCollider);
+		CColliderComponent* collider = NEW(CColliderComponent, bullet, CColliderComponent::ECircleCollider, _iDamage, CColliderComponent::EEnemyWeaponCollider, CColliderComponent::EPlayerCollider | CColliderComponent::EBoundariesCollider);
 		collider->init();
 		break;
 	}
@@ -176,12 +177,12 @@ Entity* CEntitiesFactory::createExplossion(vec2 _v2Pos, vec2 _v2Size, vec2 _v2Si
 	// Nuclear explossion has different collider than standard explosssion
 	switch (_eEntityType) {
 	case Entity::ENUCLEAREXPLOSSION: {
-		ComponentCollider* collider = NEW(ComponentCollider, explossion, ComponentCollider::ECircleCollider, -5, ComponentCollider::EPlayerWeaponCollider | ComponentCollider::EBoundariesCollider, ComponentCollider::ENoneCollider);
+		CColliderComponent* collider = NEW(CColliderComponent, explossion, CColliderComponent::ECircleCollider, -5, CColliderComponent::EPlayerWeaponCollider | CColliderComponent::EBoundariesCollider, CColliderComponent::ENoneCollider);
 		collider->init();
 		break;
 	}
 	default: {
-		ComponentCollider* collider = NEW(ComponentCollider, explossion, ComponentCollider::ECircleCollider, -5, ComponentCollider::EPlayerWeaponCollider | ComponentCollider::EEnemyWeaponCollider | ComponentCollider::EBoundariesCollider, ComponentCollider::ENoneCollider);
+		CColliderComponent* collider = NEW(CColliderComponent, explossion, CColliderComponent::ECircleCollider, -5, CColliderComponent::EPlayerWeaponCollider | CColliderComponent::EEnemyWeaponCollider | CColliderComponent::EBoundariesCollider, CColliderComponent::ENoneCollider);
 		collider->init();
 		break;
 	}
@@ -231,7 +232,7 @@ Entity* CEntitiesFactory::createEnemy(vec2 _v2Pos, Entity::EType _tEnemyType, En
 		explossive->init();
 	}
 
-	ComponentCollider* collider = NEW(ComponentCollider, enemy, ComponentCollider::ERectCollider, tEnemyDef.iCollisionDamage, ComponentCollider::EEnemyCollider, ComponentCollider::EPlayerWeaponCollider);
+	CColliderComponent* collider = NEW(CColliderComponent, enemy, CColliderComponent::ERectCollider, tEnemyDef.iCollisionDamage, CColliderComponent::EEnemyCollider, CColliderComponent::EPlayerWeaponCollider);
 	collider->init();
 	CLifeComponent* life = NEW(CLifeComponent, enemy, tEnemyDef.iLife, 0, tEnemyDef.iInvencibleTime);
 	life->init();
@@ -265,7 +266,7 @@ Entity* CEntitiesFactory::createWeaponPickup() {
 	transform->init();
 	CRenderableComponent* renderable = NEW(CRenderableComponent, weaponPickup, "data/crate-1.png", 0.0f, 1.0f, 5);
 	renderable->init();
-	ComponentCollider* collider = NEW(ComponentCollider, weaponPickup, ComponentCollider::ERectCollider, 0, ComponentCollider::EPickupCollider, ComponentCollider::EPlayerCollider);
+	CColliderComponent* collider = NEW(CColliderComponent, weaponPickup, CColliderComponent::ERectCollider, 0, CColliderComponent::EPickupCollider, CColliderComponent::EPlayerCollider);
 	collider->init();
 	CWeaponPickupComponent* pickup = NEW(CWeaponPickupComponent, weaponPickup, type);
 	pickup->init();

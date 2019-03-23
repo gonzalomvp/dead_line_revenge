@@ -1,5 +1,5 @@
 #pragma once
-#include "./components/component.h"
+#include "./components/ColliderComponent.h"
 
 struct Message {
 	virtual ~Message() {}
@@ -51,17 +51,16 @@ struct MessageAmmoInfo : public Message {
 };
 
 struct MessageCheckCollision : public Message {
-	ComponentCollider::TColliderType type;
-	vec2                             center                    = vmake(0.0f, 0.0f);
-	vec2                             size                      = vmake(0.0f, 0.0f);
-	int                              deltaLife                 = 0;
-	int                              collisionChannel          = 0;
-	int                              collisionChannelsResponse = 0;
-	Entity*                      other                     = nullptr;
-	bool                             overlap                   = false;
-//	vec2                             bounceDirection           = vmake(0.0f, 0.0f);
-	bool                             bounceX                   = false;
-	bool                             bounceY                   = false;
+	CColliderComponent::EType type;
+	vec2                      center                    = vmake(0.0f, 0.0f);
+	vec2                      size                      = vmake(0.0f, 0.0f);
+	int                       deltaLife                 = 0;
+	int                       collisionChannel          = 0;
+	int                       collisionChannelsResponse = 0;
+	Entity*                   other                     = nullptr;
+	bool                      overlap                   = false;
+	bool                      bounceX                   = false;
+	bool                      bounceY                   = false;
 };
 
 struct MessageWeaponChange : public Message {

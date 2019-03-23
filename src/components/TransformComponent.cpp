@@ -1,6 +1,7 @@
 #include "common/stdafx.h"
 #include "TransformComponent.h"
 
+#include "components/ColliderComponent.h"
 #include "messages/message.h"
 #include "scenes/world.h"
 
@@ -30,7 +31,7 @@ void CTransformComponent::receiveMessage(Message* _pMessage) {
 			MessageCheckCollision msgCheckCollision;
 			msgCheckCollision.overlap = true;
 			msgCheckCollision.deltaLife = -1;
-			msgCheckCollision.collisionChannel = ComponentCollider::EBoundariesCollider;
+			msgCheckCollision.collisionChannel = CColliderComponent::EBoundariesCollider;
 			msgCheckCollision.bounceX = m_v2Pos.x != pMessage->pos.x;
 			msgCheckCollision.bounceY = m_v2Pos.y != pMessage->pos.y;
 			m_owner->receiveMessage(&msgCheckCollision);
