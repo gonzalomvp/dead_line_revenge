@@ -7,6 +7,7 @@
 #include "components/AIFleeComponent.h"
 #include "components/AIMeleeComponent.h"
 #include "components/ExplossiveComponent.h"
+#include "components/HUDMessageComponent.h"
 #include "components/LifeComponent.h"
 #include "components/MovementComponent.h"
 #include "components/PlayerControllerComponent.h"
@@ -275,9 +276,9 @@ Entity* CEntitiesFactory::createWeaponPickup() {
 	return weaponPickup;
 }
 
-Entity* CEntitiesFactory::createHUDMessage(const std::string& _sMessage, vec2 _v2Pos, int _iDisplayTime) {
+Entity* CEntitiesFactory::createHUDMessage(const std::string& _sMessage, int _iDisplayTime) {
 	Entity* hudMessage = NEW(Entity, Entity::EHUDMESSAGE);
-	ComponentHUDMessage* hudMessageComponent = NEW(ComponentHUDMessage, hudMessage, _v2Pos, _sMessage);
+	CHUDMessageComponent* hudMessageComponent = NEW(CHUDMessageComponent, hudMessage, _sMessage);
 	hudMessageComponent->init();
 	CLifeComponent* life = NEW(CLifeComponent, hudMessage, 1, _iDisplayTime, 0);
 	life->init();

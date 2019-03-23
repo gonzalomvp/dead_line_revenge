@@ -4,7 +4,11 @@
 
 class CAIFleeComponent : public CAIComponent {
 public:
-	CAIFleeComponent(Entity* _pOwner, float _fSpeed, float _fRange) : CAIComponent(_pOwner), m_fSpeed(_fSpeed), m_fRange(_fRange) {}
+	CAIFleeComponent(Entity* _pOwner, float _fSpeed, float _fRange)
+	: CAIComponent(_pOwner)
+	, m_fSpeed(_fSpeed)
+	, m_fRange(_fRange)
+	{}
 
 	// CComponent
 	virtual void run(float _fDeltaTime)             override;

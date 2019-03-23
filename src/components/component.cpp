@@ -343,15 +343,7 @@ void ComponentCollider::receiveMessage(Message* message) {
 //=============================================================================
 // ComponentHUDMessage class
 //=============================================================================
-ComponentHUDMessage::~ComponentHUDMessage() {
-	DELETE(m_message);
-}
 
-void ComponentHUDMessage::init() {
-	Component::init();
-	m_message = NEW(CText, m_messageText, m_pos, 1);
-	g_pGraphicsEngine->addGfxEntity(m_message);
-}
 
 //=============================================================================
 // ComponentHUD class

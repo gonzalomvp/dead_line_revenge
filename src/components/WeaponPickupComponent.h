@@ -4,7 +4,10 @@
 
 class CWeaponPickupComponent : public Component {
 public:
-	CWeaponPickupComponent(Entity* _pOwner, ComponentWeapon::EType _eWeaponType) : Component(_pOwner), m_eWeaponType(_eWeaponType) {}
+	CWeaponPickupComponent(Entity* _pOwner, ComponentWeapon::EType _eWeaponType)
+	: Component(_pOwner)
+	, m_eWeaponType(_eWeaponType)
+	{}
 
 	// CComponent
 	virtual void receiveMessage(Message* _pMessage) override;

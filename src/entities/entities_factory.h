@@ -29,7 +29,7 @@ public:
 	Entity* createEnemy(vec2 _v2Pos, Entity::EType _tEnemyType, Entity* _pPlayer);
 	Entity* createEnemy(vec2 _v2Pos, Entity::EType _tEnemyType, vec2 _v2MoveDir, std::vector<vec2> _vAimDirections, bool _bIshuffleAim);
 	Entity* createWeaponPickup();
-	Entity* createHUDMessage(const std::string& _sMessage, vec2 _v2Pos, int _iDisplayTime);
+	Entity* createHUDMessage(const std::string& _sMessage, int _iDisplayTime);
 
 	TEnemyDef getEnemyDef(const Entity::EType& _tEnemyType) { return m_mEnemyDef[_tEnemyType]; }
 	ComponentWeapon::TWeaponData getWeaponDef(const ComponentWeapon::EType& _tWeaponType) { return m_mWeaponDef[_tWeaponType]; }

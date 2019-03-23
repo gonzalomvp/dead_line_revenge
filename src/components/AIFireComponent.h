@@ -6,11 +6,12 @@
 
 class CAIFireComponent : public CAIComponent {
 public:
-	CAIFireComponent(Entity* _pOwner, const std::vector<vec2>& _vFireDirections = std::vector<vec2>(0), bool _bWantShuffle = false) :
-		CAIComponent(_pOwner),
-		m_vFireDirections(_vFireDirections),
-		m_uCurrentFireDirectionIndex(0),
-		m_bWantShuffle(_bWantShuffle) {}
+	CAIFireComponent(Entity* _pOwner, const std::vector<vec2>& _vFireDirections = std::vector<vec2>(0), bool _bWantShuffle = false)
+	: CAIComponent(_pOwner)
+	, m_vFireDirections(_vFireDirections)
+	, m_uCurrentFireDirectionIndex(0)
+	, m_bWantShuffle(_bWantShuffle)
+	{}
 
 	// CComponent
 	virtual void init()                             override;

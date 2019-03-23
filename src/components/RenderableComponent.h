@@ -13,6 +13,7 @@ public:
 	, m_iHitTime(_iHitTime)
 	, m_iHitTimer(0)
 	{}
+
 	~CRenderableComponent();
 
 	// CComponent

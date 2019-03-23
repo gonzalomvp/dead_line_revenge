@@ -34,7 +34,7 @@ void CWeaponPickupComponent::receiveMessage(Message* _pMessage) {
 		default:
 			break;
 		}
-		Entity* pHudMessage = g_pEntitiesFactory->createHUDMessage(sHudMessageText, vmake((WORLD_WIDTH * 0.5f) - g_pStringManager->calculateTextHalfWidth(sHudMessageText), 20.0f), 100);
+		Entity* pHudMessage = g_pEntitiesFactory->createHUDMessage(sHudMessageText, 100);
 		g_pWorld->addEntity(pHudMessage);
 	}
 }

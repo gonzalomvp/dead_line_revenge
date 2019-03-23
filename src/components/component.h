@@ -206,20 +206,7 @@ private:
 //=============================================================================
 // ComponentHUDMessage class
 //=============================================================================
-class ComponentHUDMessage : public Component {
-public:
-	ComponentHUDMessage(Entity* owner, vec2 pos, const std::string& messageText) : 
-		Component(owner), m_pos(pos),
-		m_messageText(messageText),
-		m_message(nullptr) {}
-	~ComponentHUDMessage();
 
-	virtual void init();
-private:
-	vec2        m_pos;
-	std::string m_messageText;
-	CText*   m_message;
-};
 
 //=============================================================================
 // ComponentHUD class

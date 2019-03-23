@@ -4,7 +4,10 @@
 #include "messages/message.h"
 #include "scenes/world.h"
 
-CAIMeleeComponent::CAIMeleeComponent(Entity* _pOwner, float _fSpeed, float _fMaxDistance) : CAIComponent(_pOwner), m_fSpeed(_fSpeed), m_fMaxDistance(_fMaxDistance) {
+CAIMeleeComponent::CAIMeleeComponent(Entity* _pOwner, float _fSpeed, float _fMaxDistance)
+: CAIComponent(_pOwner)
+, m_fSpeed(_fSpeed)
+, m_fMaxDistance(_fMaxDistance) {
 	m_v2Offset = vmake(CORE_FRand(-20.0f, 20.0f), CORE_FRand(-20.0f, 20.0f));
 }
 
