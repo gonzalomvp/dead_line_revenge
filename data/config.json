@@ -9,9 +9,11 @@
 		"bulletDamage": -2,
 		"bulletLife": 1,
 		"bulletRange": 60,
+		"bulletSize": [ 10 ,10 ],
 		"isAutomatic": false,
 		"isExplossive": false,
 		"isBouncy": false,
+		"imageFile": "data/bullet.png",
 		"soundFile": "data/shot.wav"
 	},
 	{
@@ -23,9 +25,11 @@
 		"bulletDamage": -1,
 		"bulletLife": 1,
 		"bulletRange": 0,
+		"bulletSize": [ 10 ,10 ],
 		"isAutomatic": true,
 		"isExplossive": false,
 		"isBouncy": false,
+		"imageFile": "data/bullet.png",
 		"soundFile": "data/shot.wav"
 	},
 	{
@@ -37,9 +41,11 @@
 		"bulletDamage": -1,
 		"bulletLife": 2,
 		"bulletRange": 40,
+		"bulletSize": [ 10 ,10 ],
 		"isAutomatic": false,
 		"isExplossive": false,
 		"isBouncy": true,
+		"imageFile": "data/shotgunBullet.png",
 		"soundFile": "data/shotgun.wav"
 	},
 	{
@@ -51,9 +57,11 @@
 		"bulletDamage": 0,
 		"bulletLife": 1,
 		"bulletRange": 0,
+		"bulletSize": [ 20 ,20 ],
 		"isAutomatic": false,
 		"isExplossive": true,
 		"isBouncy": false,
+		"imageFile": "data/mine.png",
 		"soundFile": "data/mine.wav"
 	},
 	{
@@ -65,9 +73,11 @@
 		"bulletDamage": 0,
 		"bulletLife": -1,
 		"bulletRange": 0,
+		"bulletSize": [ 20 ,20 ],
 		"isAutomatic": false,
 		"isExplossive": true,
 		"isBouncy": false,
+		"imageFile": "data/c4.png",
 		"soundFile": "data/mine.wav"
 	},
 	{
@@ -79,9 +89,11 @@
 		"bulletDamage": -1,
 		"bulletLife": 1,
 		"bulletRange": 0,
+		"bulletSize": [ 15 ,15 ],
 		"isAutomatic": false,
 		"isExplossive": true,
 		"isBouncy": false,
+		"imageFile": "data/rocket.png",
 		"soundFile": "data/rocketlauncher.wav"
 	},
 	{
@@ -93,9 +105,11 @@
 		"bulletDamage": 0,
 		"bulletLife": 0,
 		"bulletRange": 0,
+		"bulletSize": [ 0 ,0 ],
 		"isAutomatic": false,
 		"isExplossive": false,
 		"isBouncy": false,
+		"imageFile": "",
 		"soundFile": ""
 	},
 	{
@@ -107,9 +121,11 @@
 		"bulletDamage": -1,
 		"bulletLife": 1,
 		"bulletRange": 0,
+		"bulletSize": [ 10 ,10 ],
 		"isAutomatic": true,
 		"isExplossive": false,
 		"isBouncy": false,
+		"imageFile": "data/bullet.png",
 		"soundFile": ""
 	},
 	{
@@ -121,10 +137,12 @@
 		"bulletDamage": -1,
 		"bulletLife": 1,
 		"bulletRange": 0,
+		"bulletSize": [ 10 ,10 ],
 		"numBullets": 3,
 		"isAutomatic": false,
 		"isExplossive": false,
 		"isBouncy": false,
+		"imageFile": "data/bullet.png",
 		"soundFile": ""
 	},
 	{
@@ -136,10 +154,12 @@
 		"bulletDamage": -1,
 		"bulletLife": 1,
 		"bulletRange": 0,
+		"bulletSize": [ 10 ,10 ],
 		"numBullets": 10,
 		"isAutomatic": false,
 		"isExplossive": false,
 		"isBouncy": false,
+		"imageFile": "data/bullet.png",
 		"soundFile": ""
 	}
 	],

@@ -9,76 +9,81 @@
 
 #define SHOTGUN_DISP_ANGLE 15.0f
 
-CWeaponComponent::TWeaponInfo CWeaponComponent::s_aWeaponInfo[] =
-{
-#define REG_WEAPON(val, name) \
-	{E##val, name},
-#include "REG_WEAPONS.h"
-#undef REG_WEAPON
-};
+void CWeaponComponent::init() {
+	Component::init();
+
+	ASSERT(g_pEntitiesFactory);
+	CEntitiesFactory::TWeaponDef weaponData = g_pEntitiesFactory->getWeaponDef(m_eType);
+	m_iCurrentBullets = weaponData.iCapacity;
+	m_iFireTimer = weaponData.iFireRate;
+	m_iReloadTimer = weaponData.iReloadTime;
+}
 
 void CWeaponComponent::run(float deltaTime) {
 	Component::run(deltaTime);
 	if (!m_isActive)
 		return;
 
-	if (m_fireTimer < m_mWeaponData.iFireRate) {
-		++m_fireTimer;
+	ASSERT(g_pEntitiesFactory);
+
+	CEntitiesFactory::TWeaponDef weaponData = g_pEntitiesFactory->getWeaponDef(m_eType);
+	if (m_iFireTimer < weaponData.iFireRate) {
+		++m_iFireTimer;
 	}
-	if (m_reloadTimer <= m_mWeaponData.iReloadTime) {
-		++m_reloadTimer;
-		if (m_reloadTimer == m_mWeaponData.iReloadTime) {
-			m_currentBullets = m_mWeaponData.iCapacity;
-			m_isFiring = false;
+	if (m_iReloadTimer <= weaponData.iReloadTime) {
+		++m_iReloadTimer;
+		if (m_iReloadTimer == weaponData.iReloadTime) {
+			m_iCurrentBullets = weaponData.iCapacity;
+			m_bIsFiring = false;
 		}
 	}
 
-	if (m_isFiring && m_remoteBullet) {
+	if (m_bIsFiring && m_pRemoteBullet) {
 		MessageDestroy msgDestroy;
-		m_remoteBullet->receiveMessage(&msgDestroy);
-		m_remoteBullet = nullptr;
-		m_isFiring = false;
-		m_currentBullets = m_mWeaponData.iCapacity;
+		m_pRemoteBullet->receiveMessage(&msgDestroy);
+		m_pRemoteBullet = nullptr;
+		m_bIsFiring = false;
+		m_iCurrentBullets = weaponData.iCapacity;
 	}
 
-	else if (m_isFiring && m_fireTimer >= m_mWeaponData.iFireRate && m_reloadTimer >= m_mWeaponData.iReloadTime && m_currentBullets > 0) {
-		m_fireTimer = 0;
-		--m_currentBullets;
-		if (m_currentBullets == 0) {
-			m_reloadTimer = 0;
+	else if (m_bIsFiring && m_iFireTimer >= weaponData.iFireRate && m_iReloadTimer >= weaponData.iReloadTime && m_iCurrentBullets > 0) {
+		m_iFireTimer = 0;
+		--m_iCurrentBullets;
+		if (m_iCurrentBullets == 0) {
+			m_iReloadTimer = 0;
 		}
-		if (!m_mWeaponData.bIsAutomatic) {
-			m_isFiring = false;
+		if (!weaponData.bIsAutomatic) {
+			m_bIsFiring = false;
 		}
 
 		MessageGetTransform messageGetTranform;
 		m_owner->receiveMessage(&messageGetTranform);
 
-		switch (m_mWeaponData.eType) {
+		switch (weaponData.eType) {
 		case ESHOTGUN: {
-			vec2 bulletDir = m_aimDirection;
-			g_pWorld->addEntity(g_pEntitiesFactory->createBullet(messageGetTranform.pos, vmake(10.0f, 10.0f), bulletDir, m_mWeaponData.fBulletSpeed, m_mWeaponData.iBulletDamage, m_mWeaponData.iBulletLife, m_mWeaponData.iBulletRange, m_mWeaponData.bIsExplossive, m_mWeaponData.bIsBouncy, m_owner->getType(), "data/shotgunBullet.png"));
-			float angle = vangle(m_aimDirection);
+			vec2 bulletDir = m_v2AimDirection;
+			g_pWorld->addEntity(g_pEntitiesFactory->createBullet(m_eType, messageGetTranform.pos, bulletDir, m_owner->getType()));
+			float angle = vangle(m_v2AimDirection);
 			angle += SHOTGUN_DISP_ANGLE;
 			bulletDir = vunit(DEG2RAD(angle));
-			g_pWorld->addEntity(g_pEntitiesFactory->createBullet(messageGetTranform.pos, vmake(10.0f, 10.0f), bulletDir, m_mWeaponData.fBulletSpeed, m_mWeaponData.iBulletDamage, m_mWeaponData.iBulletLife, m_mWeaponData.iBulletRange, m_mWeaponData.bIsExplossive, m_mWeaponData.bIsBouncy, m_owner->getType(), "data/shotgunBullet.png"));
-			angle = vangle(m_aimDirection);
+			g_pWorld->addEntity(g_pEntitiesFactory->createBullet(m_eType, messageGetTranform.pos, bulletDir, m_owner->getType()));
+			angle = vangle(m_v2AimDirection);
 			angle -= SHOTGUN_DISP_ANGLE;
 			bulletDir = vunit(DEG2RAD(angle));
-			g_pWorld->addEntity(g_pEntitiesFactory->createBullet(messageGetTranform.pos, vmake(10.0f, 10.0f), bulletDir, m_mWeaponData.fBulletSpeed, m_mWeaponData.iBulletDamage, m_mWeaponData.iBulletLife, m_mWeaponData.iBulletRange, m_mWeaponData.bIsExplossive, m_mWeaponData.bIsBouncy, m_owner->getType(), "data/shotgunBullet.png"));
+			g_pWorld->addEntity(g_pEntitiesFactory->createBullet(m_eType, messageGetTranform.pos, bulletDir, m_owner->getType()));
 			break;
 		}
 		case EMINES: {
-			g_pWorld->addEntity(g_pEntitiesFactory->createBullet(messageGetTranform.pos, vmake(20.0f, 20.0f), m_aimDirection, m_mWeaponData.fBulletSpeed, m_mWeaponData.iBulletDamage, m_mWeaponData.iBulletLife, m_mWeaponData.iBulletRange, m_mWeaponData.bIsExplossive, m_mWeaponData.bIsBouncy, Entity::EMINE, "data/mine.png"));
+			g_pWorld->addEntity(g_pEntitiesFactory->createBullet(m_eType, messageGetTranform.pos, m_v2AimDirection, m_owner->getType()));
 			break;
 		}
 		case EC4: {
-			m_remoteBullet = g_pEntitiesFactory->createBullet(messageGetTranform.pos, vmake(20.0f, 20.0f), m_aimDirection, m_mWeaponData.fBulletSpeed, m_mWeaponData.iBulletDamage, m_mWeaponData.iBulletLife, m_mWeaponData.iBulletRange, m_mWeaponData.bIsExplossive, m_mWeaponData.bIsBouncy, m_owner->getType(), "data/c4.png");
-			g_pWorld->addEntity(m_remoteBullet);
+			m_pRemoteBullet = g_pEntitiesFactory->createBullet(m_eType, messageGetTranform.pos, m_v2AimDirection, m_owner->getType());
+			g_pWorld->addEntity(m_pRemoteBullet);
 			break;
 		}
 		case EROCKETLAUNCHER: {
-			g_pWorld->addEntity(g_pEntitiesFactory->createBullet(messageGetTranform.pos, vmake(15.0f, 15.0f), m_aimDirection, m_mWeaponData.fBulletSpeed, m_mWeaponData.iBulletDamage, m_mWeaponData.iBulletLife, m_mWeaponData.iBulletRange, m_mWeaponData.bIsExplossive, m_mWeaponData.bIsBouncy, m_owner->getType(), "data/rocket.png"));
+			g_pWorld->addEntity(g_pEntitiesFactory->createBullet(m_eType, messageGetTranform.pos, m_v2AimDirection, m_owner->getType()));
 			break;
 		}
 		case ENUCLEARBOMB: {
@@ -86,26 +91,26 @@ void CWeaponComponent::run(float deltaTime) {
 			break;
 		}
 		default: {
-			if (m_mWeaponData.uNumBullets > 1) {
-				for (size_t i = 0; i < m_mWeaponData.uNumBullets; i++) {
-					float angle = vangle(m_aimDirection) + (i * 360.f / m_mWeaponData.uNumBullets);
-					g_pWorld->addEntity(g_pEntitiesFactory->createBullet(messageGetTranform.pos, vmake(10.0f, 10.0f), vunit(DEG2RAD(angle)), m_mWeaponData.fBulletSpeed, m_mWeaponData.iBulletDamage, m_mWeaponData.iBulletLife, m_mWeaponData.iBulletRange, m_mWeaponData.bIsExplossive, m_mWeaponData.bIsBouncy, m_owner->getType(), "data/bullet.png"));
+			if (weaponData.uNumBullets > 1) {
+				for (size_t i = 0; i < weaponData.uNumBullets; i++) {
+					float angle = vangle(m_v2AimDirection) + (i * 360.f / weaponData.uNumBullets);
+					g_pWorld->addEntity(g_pEntitiesFactory->createBullet(m_eType, messageGetTranform.pos, vunit(DEG2RAD(angle)), m_owner->getType()));
 				}
 			}
 			else {
-				g_pWorld->addEntity(g_pEntitiesFactory->createBullet(messageGetTranform.pos, vmake(10.0f, 10.0f), m_aimDirection, m_mWeaponData.fBulletSpeed, m_mWeaponData.iBulletDamage, m_mWeaponData.iBulletLife, m_mWeaponData.iBulletRange, m_mWeaponData.bIsExplossive, m_mWeaponData.bIsBouncy, m_owner->getType(), "data/bullet.png"));
+				g_pWorld->addEntity(g_pEntitiesFactory->createBullet(m_eType, messageGetTranform.pos, m_v2AimDirection, m_owner->getType()));
 			}
 
 			break;
 		}
 		}
 
-		if (m_mWeaponData.sSoundFile != "") {
-			g_pSoundEngine->playSound(m_mWeaponData.sSoundFile.c_str());
+		if (weaponData.sSoundFile != "") {
+			g_pSoundEngine->playSound(weaponData.sSoundFile.c_str());
 		}
 
 		MessageFire messageFire;
-		messageFire.isFiring = m_isFiring;
+		messageFire.isFiring = m_bIsFiring;
 		messageFire.isFireDone = true;
 		m_owner->receiveMessage(&messageFire);
 	}
@@ -117,59 +122,48 @@ void CWeaponComponent::receiveMessage(Message* message) {
 
 	MessageWeaponChange* msgWeaponChange = dynamic_cast<MessageWeaponChange*>(message);
 	if (msgWeaponChange) {
-		m_mWeaponData = g_pEntitiesFactory->getWeaponDef(msgWeaponChange->eWeaponType);
-		m_isFiring = false;
-		m_currentBullets = m_mWeaponData.iCapacity;
-		m_fireTimer = m_mWeaponData.iFireRate;
-		m_reloadTimer = m_mWeaponData.iReloadTime;
+		CEntitiesFactory::TWeaponDef weaponData = g_pEntitiesFactory->getWeaponDef(msgWeaponChange->eWeaponType);
+		m_eType = msgWeaponChange->eWeaponType;
+		m_bIsFiring = false;
+		m_iCurrentBullets = weaponData.iCapacity;
+		m_iFireTimer = weaponData.iFireRate;
+		m_iReloadTimer = weaponData.iReloadTime;
 	}
 	else {
 		MessageFire* msgFire = dynamic_cast<MessageFire*>(message);
 		if (msgFire) {
-			m_isFiring = msgFire->isFiring;
+			m_bIsFiring = msgFire->isFiring;
 		}
 		else {
 			MessageSetAimDirection* messageSetAimDirection = dynamic_cast<MessageSetAimDirection*>(message);
 			if (messageSetAimDirection) {
-				m_aimDirection = messageSetAimDirection->direction;
+				m_v2AimDirection = messageSetAimDirection->direction;
 			}
 			else {
+				CEntitiesFactory::TWeaponDef weaponData = g_pEntitiesFactory->getWeaponDef(m_eType);
 				MessageGetAimDirection* messageGetAimDirection = dynamic_cast<MessageGetAimDirection*>(message);
 				if (messageGetAimDirection) {
-					messageGetAimDirection->direction = m_aimDirection;
+					messageGetAimDirection->direction = m_v2AimDirection;
 				}
 				else {
 					MessageAmmoInfo* msgAmmoInfo = dynamic_cast<MessageAmmoInfo*>(message);
 					if (msgAmmoInfo) {
-						msgAmmoInfo->currentAmmo = m_currentBullets;
-						msgAmmoInfo->totalAmmo = m_mWeaponData.iCapacity;
-						msgAmmoInfo->reloadPercent = m_reloadTimer * 1.0f / m_mWeaponData.iReloadTime;
+						msgAmmoInfo->currentAmmo = m_iCurrentBullets;
+						msgAmmoInfo->totalAmmo = weaponData.iCapacity;
+						msgAmmoInfo->reloadPercent = m_iReloadTimer * 1.0f / weaponData.iReloadTime;
 						if (msgAmmoInfo->reloadPercent > 1.0f) {
 							msgAmmoInfo->reloadPercent = 1.0f;
 						}
 					}
 					else {
 						MessageReload* msgReload = dynamic_cast<MessageReload*>(message);
-						if (msgReload && m_currentBullets < m_mWeaponData.iCapacity && m_reloadTimer >= m_mWeaponData.iReloadTime) {
-							m_isFiring = false;
-							m_reloadTimer = 0;
+						if (msgReload && m_iCurrentBullets < weaponData.iCapacity && m_iReloadTimer >= weaponData.iReloadTime) {
+							m_bIsFiring = false;
+							m_iReloadTimer = 0;
 						}
 					}
 				}
 			}
 		}
 	}
-}
-
-CWeaponComponent::EType CWeaponComponent::getWeaponTypeByName(const std::string& name) {
-	CWeaponComponent::EType etype = EInvalid;
-	int i = 0;
-	while ((etype == EInvalid) && (i < NUM_WEAPON_TYPES))
-	{
-		if (name == s_aWeaponInfo[i].sName) {
-			etype = s_aWeaponInfo[i].eType;
-		}
-		i++;
-	}
-	return etype;
 }

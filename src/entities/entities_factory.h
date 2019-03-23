@@ -7,6 +7,24 @@
 
 class CEntitiesFactory {
 public:
+	struct TWeaponDef {
+		CWeaponComponent::EType eType;
+		int                     iFireRate;
+		int                     iReloadTime;
+		int                     iCapacity;
+		float                   fBulletSpeed;
+		int                     iBulletDamage;
+		int                     iBulletLife;
+		int                     iBulletRange;
+		vec2                    v2BulletSize;
+		uint16_t                uNumBullets;
+		bool                    bIsAutomatic;
+		bool                    bIsExplossive;
+		bool                    bIsBouncy;
+		std::string             sImageFile;
+		std::string             sSoundFile;
+	};
+
 	struct TEnemyDef {
 		Entity::EType            eType;
 		int                      iLife;
@@ -21,29 +39,36 @@ public:
 	//CEntitiesFactory();
 	//~CEntitiesFactory();
 
-	static Entity::EType getEntityTypeByName(const std::string& name);
-
+	static CWeaponComponent::EType getWeaponTypeByName(const std::string& name);
+	static Entity::EType           getEntityTypeByName(const std::string& name);
+	
 	bool init(const char* _sConfigFile);
 
 	Entity* createPlayer(vec2 _v2Pos);
-	Entity* createBullet(vec2 _v2Pos, vec2 _v2Size, vec2 _v2Direction, float _fSpeed, int _iDamage, int _iLife, int _iRange, bool _bIsExplossive, bool _bIsBouncy, Entity::EType _eEntityType, const char* _psTexture);
+	Entity* createBullet(CWeaponComponent::EType _eWeaponType, vec2 _v2Pos, vec2 _v2Direction, Entity::EType _eOwnerType);
 	Entity* createExplossion(vec2 _v2Pos, vec2 _v2Size, vec2 _v2SizeIncrement, int _iDuration, Entity::EType _eEntityType);
 	Entity* createEnemy(vec2 _v2Pos, Entity::EType _tEnemyType, Entity* _pPlayer);
 	Entity* createEnemy(vec2 _v2Pos, Entity::EType _tEnemyType, vec2 _v2MoveDir, std::vector<vec2> _vAimDirections, bool _bIshuffleAim);
 	Entity* createWeaponPickup();
 
-	TEnemyDef getEnemyDef(const Entity::EType& _tEnemyType) { return m_mEnemyDef[_tEnemyType]; }
-	CWeaponComponent::TWeaponData getWeaponDef(const CWeaponComponent::EType& _tWeaponType) { return m_mWeaponDef[_tWeaponType]; }
+	TWeaponDef getWeaponDef(const CWeaponComponent::EType& _tWeaponType) { return m_mWeaponDef[_tWeaponType]; }
+	TEnemyDef  getEnemyDef(const Entity::EType& _tEnemyType)             { return m_mEnemyDef[_tEnemyType];   }
+	
 
-	std::map<Entity::EType, TEnemyDef> m_mEnemyDef;
-	std::map<CWeaponComponent::EType, CWeaponComponent::TWeaponData> m_mWeaponDef;
-	std::vector<CWeaponComponent::EType> m_vWeaponPickups;
+	std::map<CWeaponComponent::EType, TWeaponDef> m_mWeaponDef;
+	std::map<Entity::EType, TEnemyDef>            m_mEnemyDef;
+	std::vector<CWeaponComponent::EType>          m_vWeaponPickups;
 
 private:
+	struct TWeaponInfo {
+		CWeaponComponent::EType eType;
+		std::string sName;
+	};
+	static TWeaponInfo s_aWeaponInfo[];
+
 	struct TEntityInfo {
 		Entity::EType eType;
 		std::string sName;
 	};
-
 	static TEntityInfo s_aEntityInfo[];
 };

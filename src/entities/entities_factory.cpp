@@ -27,6 +27,13 @@
 
 using namespace rapidjson;
 
+CEntitiesFactory::TWeaponInfo CEntitiesFactory::s_aWeaponInfo[] = {
+#define REG_WEAPON(val, name) \
+	{CWeaponComponent::E##val, name},
+#include "REG_WEAPONS.h"
+#undef REG_WEAPON
+};
+
 CEntitiesFactory::TEntityInfo CEntitiesFactory::s_aEntityInfo[] = {
 #define REG_ENTITY(val, name) \
 	{Entity::E##val, name},
@@ -34,11 +41,23 @@ CEntitiesFactory::TEntityInfo CEntitiesFactory::s_aEntityInfo[] = {
 #undef REG_ENTITY
 };
 
+CWeaponComponent::EType CEntitiesFactory::getWeaponTypeByName(const std::string& name) {
+	CWeaponComponent::EType etype = CWeaponComponent::EInvalid;
+	int i = 0;
+	while ((etype == CWeaponComponent::EInvalid) && (i < CWeaponComponent::NUM_WEAPON_TYPES)) {
+		if (name == s_aWeaponInfo[i].sName) {
+			etype = s_aWeaponInfo[i].eType;
+		}
+		i++;
+	}
+	return etype;
+}
+
+
 Entity::EType CEntitiesFactory::getEntityTypeByName(const std::string& name) {
 	Entity::EType etype = Entity::EInvalid;
 	int i = 0;
-	while ((etype == Entity::EInvalid) && (i < Entity::NUM_ENTITIES))
-	{
+	while ((etype == Entity::EInvalid) && (i < Entity::NUM_ENTITIES)) {
 		if (name == s_aEntityInfo[i].sName) {
 			etype = s_aEntityInfo[i].eType;
 		}
@@ -61,8 +80,8 @@ bool CEntitiesFactory::init(const char* _sConfigFile) {
 	// Load weapon definitions
 	const Value& weapons = doc["weapons"];
 	for (SizeType i = 0; i < weapons.Size(); i++) {
-		CWeaponComponent::TWeaponData weapon;
-		weapon.eType = CWeaponComponent::getWeaponTypeByName(weapons[i]["name"].GetString());
+		TWeaponDef weapon;
+		weapon.eType = getWeaponTypeByName(weapons[i]["name"].GetString());
 		weapon.iFireRate = weapons[i]["fireRate"].GetInt();
 		weapon.iReloadTime = weapons[i]["reloadTime"].GetInt();
 		weapon.iCapacity = weapons[i]["capacity"].GetInt();
@@ -70,6 +89,10 @@ bool CEntitiesFactory::init(const char* _sConfigFile) {
 		weapon.iBulletDamage = weapons[i]["bulletDamage"].GetInt();
 		weapon.iBulletLife = weapons[i]["bulletLife"].GetInt();
 		weapon.iBulletRange = weapons[i]["bulletRange"].GetInt();
+
+		ASSERT(weapons[i].HasMember("bulletSize") && weapons[i]["bulletSize"].Size() == 2);
+		weapon.v2BulletSize = vmake(weapons[i]["bulletSize"][0].GetFloat(), weapons[i]["bulletSize"][1].GetFloat());
+
 		weapon.uNumBullets = 1;
 		if (weapons[i].HasMember("numBullets")) {
 			weapon.uNumBullets = weapons[i]["numBullets"].GetUint();
@@ -77,6 +100,10 @@ bool CEntitiesFactory::init(const char* _sConfigFile) {
 		weapon.bIsAutomatic = weapons[i]["isAutomatic"].GetBool();
 		weapon.bIsExplossive = weapons[i]["isExplossive"].GetBool();
 		weapon.bIsBouncy = weapons[i]["isBouncy"].GetBool();
+
+		ASSERT(weapons[i].HasMember("imageFile"));
+		weapon.sImageFile = weapons[i]["imageFile"].GetString();
+
 		weapon.sSoundFile = weapons[i]["soundFile"].GetString();
 		m_mWeaponDef[weapon.eType] = weapon;
 	}
@@ -92,7 +119,7 @@ bool CEntitiesFactory::init(const char* _sConfigFile) {
 		enemy.iCollisionDamage = enemies[i]["collisionDamage"].GetInt();
 		enemy.eWeapon = CWeaponComponent::EType::EInvalid;
 		if (enemies[i].HasMember("weapon")) {
-			enemy.eWeapon = CWeaponComponent::getWeaponTypeByName(enemies[i]["weapon"].GetString());
+			enemy.eWeapon = getWeaponTypeByName(enemies[i]["weapon"].GetString());
 		}
 		enemy.v2Size = vmake(enemies[i]["size"][0].GetFloat(), enemies[i]["size"][1].GetFloat());
 		enemy.sImageFile = enemies[i]["imageFile"].GetString();
@@ -102,7 +129,7 @@ bool CEntitiesFactory::init(const char* _sConfigFile) {
 	// Load weapon pickups
 	const Value& pickups = doc["pickups"];
 	for (SizeType i = 0; i < pickups.Size(); i++) {
-		m_vWeaponPickups.push_back(CWeaponComponent::getWeaponTypeByName(pickups[i].GetString()));
+		m_vWeaponPickups.push_back(getWeaponTypeByName(pickups[i].GetString()));
 	}
 
 	fclose(file);
@@ -120,7 +147,7 @@ Entity* CEntitiesFactory::createPlayer(vec2 _v2Pos) {
 	playerControl->init();
 	CMovementComponent* movement = NEW(CMovementComponent, player, vmake(0.0f, 0.0f), g_pWorld->getPlayerSpeed(), false, false);
 	movement->init();
-	CWeaponComponent* weapon = NEW(CWeaponComponent, player, m_mWeaponDef[CWeaponComponent::EREVOLVER]);
+	CWeaponComponent* weapon = NEW(CWeaponComponent, player, CWeaponComponent::EREVOLVER);
 	weapon->init();
 	CColliderComponent* collider = NEW(CColliderComponent, player, CColliderComponent::ERectCollider, -1, CColliderComponent::EPlayerCollider, CColliderComponent::EEnemyCollider | CColliderComponent::EEnemyWeaponCollider);
 	collider->init();
@@ -131,39 +158,47 @@ Entity* CEntitiesFactory::createPlayer(vec2 _v2Pos) {
 	return player;
 }
 
-Entity* CEntitiesFactory::createBullet(vec2 _v2Pos, vec2 _v2Size, vec2 _v2Direction, float _fSpeed, int _iDamage, int _iLife, int _iRange, bool _bIsExplossive, bool _bIsBouncy, Entity::EType _eEntityType, const char* _psTexture) {
+Entity* CEntitiesFactory::createBullet(CWeaponComponent::EType _eWeaponType, vec2 _v2Pos, vec2 _v2Direction, Entity::EType _eOwnerType) {
 	Entity* bullet = NEW(Entity, Entity::EWEAPON);
-	CTransformComponent* transform = NEW(CTransformComponent, bullet, _v2Pos, _v2Size);
+
+	if (!m_mWeaponDef.count(_eWeaponType)) {
+		ASSERT(false, "Weapon definition not found");
+		return nullptr;
+	}
+	TWeaponDef weaponData = m_mWeaponDef[_eWeaponType];
+
+	CTransformComponent* transform = NEW(CTransformComponent, bullet, _v2Pos, weaponData.v2BulletSize);
 	transform->init();
-	CRenderableComponent* renderable = NEW(CRenderableComponent, bullet, _psTexture, vangle(_v2Direction), 1.0f, 5);
+	CRenderableComponent* renderable = NEW(CRenderableComponent, bullet, weaponData.sImageFile, vangle(_v2Direction), 1.0f, 5);
 	renderable->init();
-	CMovementComponent* movement = NEW(CMovementComponent, bullet, _v2Direction, _fSpeed, true, _bIsBouncy);
+	CMovementComponent* movement = NEW(CMovementComponent, bullet, _v2Direction, weaponData.fBulletSpeed, true, weaponData.bIsBouncy);
 	movement->init();
 
 	// Depending on the type of bullet it has different collider setup
-	switch (_eEntityType) {
+	switch (_eOwnerType) {
 	case Entity::EPLAYER: {
-		CColliderComponent* collider = NEW(CColliderComponent, bullet, CColliderComponent::ECircleCollider, _iDamage, CColliderComponent::EPlayerWeaponCollider, CColliderComponent::EEnemyCollider | CColliderComponent::EBoundariesCollider);
-		collider->init();
-		break;
-	}
-	case Entity::EMINE: {
-		CColliderComponent* collider = NEW(CColliderComponent, bullet, CColliderComponent::ECircleCollider, 0, CColliderComponent::ENoneCollider, CColliderComponent::EPlayerCollider | CColliderComponent::EEnemyCollider | CColliderComponent::EPlayerWeaponCollider | CColliderComponent::EEnemyWeaponCollider);
-		collider->setActivationDelay(20);
-		collider->init();
+		if (_eWeaponType == CWeaponComponent::EMINES) {
+			CColliderComponent* collider = NEW(CColliderComponent, bullet, CColliderComponent::ECircleCollider, 0, CColliderComponent::ENoneCollider, CColliderComponent::EPlayerCollider | CColliderComponent::EEnemyCollider | CColliderComponent::EPlayerWeaponCollider | CColliderComponent::EEnemyWeaponCollider);
+			collider->setActivationDelay(20);
+			collider->init();
+		}
+		else {
+			CColliderComponent* collider = NEW(CColliderComponent, bullet, CColliderComponent::ECircleCollider, weaponData.iBulletDamage, CColliderComponent::EPlayerWeaponCollider, CColliderComponent::EEnemyCollider | CColliderComponent::EBoundariesCollider);
+			collider->init();
+		}
 		break;
 	}
 	default: {
-		CColliderComponent* collider = NEW(CColliderComponent, bullet, CColliderComponent::ECircleCollider, _iDamage, CColliderComponent::EEnemyWeaponCollider, CColliderComponent::EPlayerCollider | CColliderComponent::EBoundariesCollider);
+		CColliderComponent* collider = NEW(CColliderComponent, bullet, CColliderComponent::ECircleCollider, weaponData.iBulletDamage, CColliderComponent::EEnemyWeaponCollider, CColliderComponent::EPlayerCollider | CColliderComponent::EBoundariesCollider);
 		collider->init();
 		break;
 	}
 	}
-	if (_bIsExplossive) {
+	if (weaponData.bIsExplossive) {
 		CExplossiveComponent* explossive = NEW(CExplossiveComponent, bullet);
 		explossive->init();
 	}
-	CLifeComponent* componentLife = NEW(CLifeComponent, bullet, _iLife, _iRange, 0);
+	CLifeComponent* componentLife = NEW(CLifeComponent, bullet, weaponData.iBulletLife, weaponData.iBulletRange, 0);
 	componentLife->init();
 	return bullet;
 }
@@ -211,7 +246,7 @@ Entity* CEntitiesFactory::createEnemy(vec2 _v2Pos, Entity::EType _tEnemyType, En
 
 	// Range and Turrets have a fire weapon
 	if (tEnemyDef.eWeapon != CWeaponComponent::EType::EInvalid) {
-		CWeaponComponent* gun = NEW(CWeaponComponent, enemy, m_mWeaponDef[tEnemyDef.eWeapon]);
+		CWeaponComponent* gun = NEW(CWeaponComponent, enemy, tEnemyDef.eWeapon);
 		gun->init();
 
 		// If a player is passed the enemy keep a distance between ComponentAIMelee and ComponentAIEvade distances and aim to it
