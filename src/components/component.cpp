@@ -241,39 +241,7 @@ ComponentWeapon::EType ComponentWeapon::getWeaponTypeByName(const std::string& n
 //=============================================================================
 // ComponentAIMelee class
 //=============================================================================
-ComponentAIMelee::ComponentAIMelee(Entity* owner, Entity* player, float speed, float maxDistance) : Component(owner), m_pPlayer(player), m_speed(speed), m_maxDistance(maxDistance) {
-	m_offset = vmake(CORE_FRand(-20, 20), CORE_FRand(-20, 20));
-}
-void ComponentAIMelee::run(float deltaTime) {
-	Component::run(deltaTime);
-	if (!m_isActive)
-		return;
 
-	MessageGetTransform messageSelfPos;
-	m_owner->receiveMessage(&messageSelfPos);
-	MessageGetTransform messagePlayerPos;
-	m_pPlayer->receiveMessage(&messagePlayerPos);
-	vec2 direction = vsub(vadd(messagePlayerPos.pos, m_offset), messageSelfPos.pos);
-
-	if (vlen(direction) > m_maxDistance) {
-		MessageSetTransform msgSetTransform;
-		msgSetTransform.pos = vadd(messageSelfPos.pos, vscale(vnorm(direction), m_speed));
-		msgSetTransform.size = messageSelfPos.size;
-		m_owner->receiveMessage(&msgSetTransform);
-	}
-}
-
-void ComponentAIMelee::receiveMessage(Message* message) {
-	MessageEnableAI* msgEnableAI = dynamic_cast<MessageEnableAI*>(message);
-	if (msgEnableAI) {
-		if (msgEnableAI->enable) {
-			activate();
-		}
-		else {
-			deactivate();
-		}
-	}
-}
 
 //=============================================================================
 // ComponentAIEvade class

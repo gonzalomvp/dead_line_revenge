@@ -29,6 +29,7 @@
     <ClInclude Include="..\src\common\math_utils.h" />
     <ClInclude Include="..\src\common\stdafx.h" />
     <ClInclude Include="..\src\common\sys.h" />
+    <ClInclude Include="..\src\components\AIMeleeComponent.h" />
     <ClInclude Include="..\src\components\behavior_tree\actions\aim_player.h" />
     <ClInclude Include="..\src\components\behavior_tree\actions\change_sprite.h" />
     <ClInclude Include="..\src\components\behavior_tree\actions\change_weapon.h" />
@@ -104,6 +105,7 @@
     <ClCompile Include="..\src\common\math_utils.cpp" />
     <ClCompile Include="..\src\common\stdafx.cpp" />
     <ClCompile Include="..\src\common\sys_win.cpp" />
+    <ClCompile Include="..\src\components\AIMeleeComponent.cpp" />
     <ClCompile Include="..\src\components\behavior_tree\actions\aim_player.cpp" />
     <ClCompile Include="..\src\components\behavior_tree\actions\change_sprite.cpp" />
     <ClCompile Include="..\src\components\behavior_tree\actions\change_weapon.cpp" />
