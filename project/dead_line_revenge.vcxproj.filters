@@ -264,6 +264,9 @@
     <ClInclude Include="..\src\components\AIMeleeComponent.h">
       <Filter>src\components</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\components\AIFleeComponent.h">
+      <Filter>src\components</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\main.cpp">
@@ -462,6 +465,9 @@
       <Filter>src\components</Filter>
     </ClCompile>
     <ClCompile Include="..\src\components\AIMeleeComponent.cpp">
+      <Filter>src\components</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\components\AIFleeComponent.cpp">
       <Filter>src\components</Filter>
     </ClCompile>
   </ItemGroup>

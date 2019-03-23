@@ -13,7 +13,7 @@ void CAIMeleeComponent::run(float _fDeltaTime) {
 	if (!m_isActive)
 		return;
 
-	ASSERT(g_pWorld && g_pWorld->getPlayer());
+	ASSERT(m_owner && g_pWorld && g_pWorld->getPlayer());
 
 	MessageGetTransform messageSelfPos;
 	m_owner->receiveMessage(&messageSelfPos);

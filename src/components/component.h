@@ -147,34 +147,10 @@ private:
 //=============================================================================
 // ComponentAIMelee class
 //=============================================================================
-class ComponentAIMelee : public Component {
-public:
-	ComponentAIMelee(Entity* owner, Entity* player, float speed, float maxDistance);
-	
-	virtual void run(float deltaTime);
-	virtual void receiveMessage(Message* message);
-private:
-	Entity* m_pPlayer;
-	float       m_speed;
-	float       m_maxDistance;
-	vec2        m_offset;
-};
 
 //=============================================================================
 // ComponentAIEvade class
 //=============================================================================
-class ComponentAIEvade: public Component {
-public:
-	ComponentAIEvade(Entity* owner, Entity* player, float speed, float range) : Component(owner), m_pPlayer(player), m_speed(speed), m_range(range) {}
-	
-	virtual void run(float deltaTime);
-private:
-	vec2 calculatIntersectionWithWall(const vec2& position, float angle);
-
-	Entity* m_pPlayer;
-	float       m_speed;
-	float       m_range;
-};
 
 //=============================================================================
 // ComponentAIFire class

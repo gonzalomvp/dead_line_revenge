@@ -13,8 +13,7 @@
 
 #include <algorithm>
 
-#define EVASION_ANGLE         45.0f
-#define EVASION_MIN_WALL_DIST 20.0f
+
 
 //=============================================================================
 // Component class
@@ -246,76 +245,7 @@ ComponentWeapon::EType ComponentWeapon::getWeaponTypeByName(const std::string& n
 //=============================================================================
 // ComponentAIEvade class
 //=============================================================================
-void ComponentAIEvade::run(float deltaTime) {
-	Component::run(deltaTime);
-	if (!m_isActive)
-		return;
 
-	MessageGetTransform messageSelfPos;
-	m_owner->receiveMessage(&messageSelfPos);
-	MessageGetTransform messagePlayerPos;
-	m_pPlayer->receiveMessage(&messagePlayerPos);
-
-	//Move in opposite direction
-	vec2 escapeDirection = vsub(messageSelfPos.pos, messagePlayerPos.pos);
-	float playerDistance = vlen(escapeDirection);
-
-	//Keep min distance with player
-	if (playerDistance < m_range) {
-		vec2 moveDir = vmake(0, 0);
-		float angle1 = vangle(escapeDirection);
-		float angle2 = angle1;
-
-		//Find the best direction for evasion using different angles
-		while (vlen2(moveDir) == 0) {
-			angle1 += EVASION_ANGLE;
-			angle2 -= EVASION_ANGLE;
-
-			//Calculate the distance to the screen limits with both directions
-			vec2 intersectiontWithWall1 = calculatIntersectionWithWall(messageSelfPos.pos, angle1);
-			float distToWall1 = vlen(vsub(intersectiontWithWall1, messageSelfPos.pos));
-			vec2 intersectiontWithWall2 = calculatIntersectionWithWall(messageSelfPos.pos, angle2);
-			float distToWall2 = vlen(vsub(intersectiontWithWall2, messageSelfPos.pos));
-
-			//Pick a direction if it is not too close to the screen limits
-			if (distToWall1 > distToWall2 && distToWall1 > EVASION_MIN_WALL_DIST) {
-				moveDir = vsub(intersectiontWithWall1, messageSelfPos.pos);
-			}
-			else if (distToWall2 > distToWall1 && distToWall2 > EVASION_MIN_WALL_DIST) {
-				moveDir = vsub(intersectiontWithWall2, messageSelfPos.pos);
-			}
-		}
-
-		MessageSetTransform msgSetTransform;
-		msgSetTransform.pos = vadd(messageSelfPos.pos, vscale(vnorm(moveDir), m_speed));
-		msgSetTransform.size = messageSelfPos.size;
-		m_owner->receiveMessage(&msgSetTransform);
-	}
-}
-
-vec2 ComponentAIEvade::calculatIntersectionWithWall(const vec2& position, float angle) {
-	vec2 moveDir = vunit(DEG2RAD(angle));
-	vec2 intersection1;
-	vec2 intersection2;
-
-	if (moveDir.y > 0)
-		LineLineIntersect(position, vadd(position, moveDir), vmake(0, WORLD_HEIGHT), vmake(WORLD_WIDTH, WORLD_HEIGHT), intersection1);
-	else
-		LineLineIntersect(position, vadd(position, moveDir), vmake(0, 0), vmake(WORLD_WIDTH, 0), intersection1);
-
-	if (moveDir.x > 0)
-		LineLineIntersect(position, vadd(position, moveDir), vmake(WORLD_WIDTH, 0), vmake(WORLD_WIDTH, WORLD_HEIGHT), intersection2);
-	else
-		LineLineIntersect(position, vadd(position, moveDir), vmake(0, 0), vmake(0, WORLD_HEIGHT), intersection2);
-
-	float distUpDownMargin = vlen(vsub(intersection1, position));
-	float distLeftRight = vlen(vsub(intersection2, position));
-
-	if (distUpDownMargin < distLeftRight)
-		return intersection1;
-	else
-		return intersection2;
-}
 
 //=============================================================================
 // ComponentAIFire class

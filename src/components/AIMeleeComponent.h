@@ -11,7 +11,7 @@ public:
 	virtual void receiveMessage(Message* _pMessage) override;
 
 private:
-	float       m_fSpeed;
-	float       m_fMaxDistance;
-	vec2        m_v2Offset;
+	float m_fSpeed;
+	float m_fMaxDistance;
+	vec2  m_v2Offset;
 };

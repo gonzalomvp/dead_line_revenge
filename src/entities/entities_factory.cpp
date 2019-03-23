@@ -3,6 +3,7 @@
 
 #include "engine/sound_engine.h"
 
+#include "components/AIFleeComponent.h"
 #include "components/AIMeleeComponent.h"
 #include "components/ExplossiveComponent.h"
 #include "components/LifeComponent.h"
@@ -213,7 +214,7 @@ Entity* CEntitiesFactory::createEnemy(vec2 _v2Pos, Entity::EType _tEnemyType, En
 			aiFire->init();
 			CAIMeleeComponent* aiMelee = NEW(CAIMeleeComponent, enemy, tEnemyDef.fSpeed, 200);
 			aiMelee->init();
-			ComponentAIEvade* aiEvade = NEW(ComponentAIEvade, enemy, _pPlayer, tEnemyDef.fSpeed, 150);
+			CAIFleeComponent* aiEvade = NEW(CAIFleeComponent, enemy, tEnemyDef.fSpeed, 150);
 			aiEvade->init();
 		}
 	}
