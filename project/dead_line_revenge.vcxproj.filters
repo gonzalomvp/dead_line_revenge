@@ -282,6 +282,9 @@
     <ClInclude Include="..\src\components\HUDMessageComponent.h">
       <Filter>src\components</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\components\HUDComponent.h">
+      <Filter>src\components</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\main.cpp">
@@ -498,6 +501,9 @@
       <Filter>src\components</Filter>
     </ClCompile>
     <ClCompile Include="..\src\components\HUDMessageComponent.cpp">
+      <Filter>src\components</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\components\HUDComponent.cpp">
       <Filter>src\components</Filter>
     </ClCompile>
   </ItemGroup>

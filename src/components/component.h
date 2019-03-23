@@ -211,22 +211,7 @@ private:
 //=============================================================================
 // ComponentHUD class
 //=============================================================================
-class ComponentHUD : public Component, public IInputManager::IListener {
-public:
-	ComponentHUD(Entity* owner) : Component(owner) {}
-	~ComponentHUD();
 
-	virtual void init   ();
-	virtual void run    (float deltaTime);
-	virtual bool onEvent(const IInputManager::CEvent&);
-private:
-	CText*                   m_life;
-	CText*                   m_uScore;
-	CText*                   m_ammo;
-	CSprite*                 m_target;
-	CSprite*                 m_reloadAnim;
-	std::vector<CGfxEntity*> m_gfxEntities;
-};
 
 //=============================================================================
 // Collision check utils

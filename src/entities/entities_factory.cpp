@@ -7,6 +7,7 @@
 #include "components/AIFleeComponent.h"
 #include "components/AIMeleeComponent.h"
 #include "components/ExplossiveComponent.h"
+#include "components/HUDComponent.h"
 #include "components/HUDMessageComponent.h"
 #include "components/LifeComponent.h"
 #include "components/MovementComponent.h"
@@ -124,7 +125,7 @@ Entity* CEntitiesFactory::createPlayer(vec2 _v2Pos) {
 	collider->init();
 	CLifeComponent* life = NEW(CLifeComponent, player, g_pWorld->getPlayerLife(), 0, 20);
 	life->init();
-	ComponentHUD* hudComponent = NEW(ComponentHUD, player);
+	CHUDComponent* hudComponent = NEW(CHUDComponent, player);
 	hudComponent->init();
 	return player;
 }
