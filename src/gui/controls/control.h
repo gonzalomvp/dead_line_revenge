@@ -5,7 +5,7 @@
 class CControl : public IInputManager::IListener {
 public:
 	CControl(const std::string& _sName, const vec2& _v2Pos, const vec2& _v2Size, bool _bIsActive = true) : m_sName(_sName), m_v2Pos(_v2Pos), m_v2Size(_v2Size), m_bIsActive(_bIsActive) {}
-	virtual ~CControl() {}
+	virtual ~CControl() = 0 {};
 
 	virtual void init      ()                  {                      }
 	virtual void run       (float _fDeltaTime) {                      }

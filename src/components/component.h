@@ -15,7 +15,8 @@ class  CText;
 //=============================================================================
 class Component {
 public:
-	virtual ~Component() {}
+	Component(Entity* owner) : m_owner(owner), m_isActive(false), m_activationDelay(0), m_activationTimer(0) {}
+	virtual ~Component() = 0 {};
 
 	virtual void init          ();
 	virtual void activate      ();
@@ -27,8 +28,6 @@ public:
 	Entity* getOwner() { return m_owner; }
 
 protected:
-	Component(Entity* owner) : m_owner(owner), m_isActive(false), m_activationDelay(0), m_activationTimer(0) {}
-
 	Entity* m_owner;
 	bool        m_isActive;
 	int         m_activationDelay;
