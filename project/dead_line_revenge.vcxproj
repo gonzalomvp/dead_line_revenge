@@ -68,6 +68,7 @@
     <ClInclude Include="..\src\components\PointsComponent.h" />
     <ClInclude Include="..\src\components\RenderableComponent.h" />
     <ClInclude Include="..\src\components\TransformComponent.h" />
+    <ClInclude Include="..\src\components\WeaponComponent.h" />
     <ClInclude Include="..\src\components\WeaponPickupComponent.h" />
     <ClInclude Include="..\src\engine\graphics_engine.h" />
     <ClInclude Include="..\src\engine\graphics_entitiy.h" />
@@ -151,6 +152,7 @@
     <ClCompile Include="..\src\components\PointsComponent.cpp" />
     <ClCompile Include="..\src\components\RenderableComponent.cpp" />
     <ClCompile Include="..\src\components\TransformComponent.cpp" />
+    <ClCompile Include="..\src\components\WeaponComponent.cpp" />
     <ClCompile Include="..\src\components\WeaponPickupComponent.cpp" />
     <ClCompile Include="..\src\engine\graphics_engine.cpp" />
     <ClCompile Include="..\src\engine\graphics_entity.cpp" />

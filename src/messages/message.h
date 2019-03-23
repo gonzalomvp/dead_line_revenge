@@ -1,5 +1,6 @@
 #pragma once
 #include "./components/ColliderComponent.h"
+#include "./components/WeaponComponent.h"
 
 struct Message {
 	virtual ~Message() {}
@@ -64,7 +65,7 @@ struct MessageCheckCollision : public Message {
 };
 
 struct MessageWeaponChange : public Message {
-	ComponentWeapon::EType eWeaponType;
+	CWeaponComponent::EType eWeaponType;
 };
 
 struct MessageDestroy : public Message {

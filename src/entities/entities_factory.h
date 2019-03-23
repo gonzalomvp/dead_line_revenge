@@ -1,7 +1,9 @@
 #pragma once
 
-#include "components/component.h"
+#include "components/WeaponComponent.h"
 #include "entities/entity.h"
+
+#include <map>
 
 class CEntitiesFactory {
 public:
@@ -11,7 +13,7 @@ public:
 		int                      iInvencibleTime;
 		float                    fSpeed;
 		int                      iCollisionDamage;
-		ComponentWeapon::EType   eWeapon;
+		CWeaponComponent::EType  eWeapon;
 		vec2                     v2Size;
 		std::string              sImageFile;
 	};
@@ -29,14 +31,13 @@ public:
 	Entity* createEnemy(vec2 _v2Pos, Entity::EType _tEnemyType, Entity* _pPlayer);
 	Entity* createEnemy(vec2 _v2Pos, Entity::EType _tEnemyType, vec2 _v2MoveDir, std::vector<vec2> _vAimDirections, bool _bIshuffleAim);
 	Entity* createWeaponPickup();
-	Entity* createHUDMessage(const std::string& _sMessage, int _iDisplayTime);
 
 	TEnemyDef getEnemyDef(const Entity::EType& _tEnemyType) { return m_mEnemyDef[_tEnemyType]; }
-	ComponentWeapon::TWeaponData getWeaponDef(const ComponentWeapon::EType& _tWeaponType) { return m_mWeaponDef[_tWeaponType]; }
+	CWeaponComponent::TWeaponData getWeaponDef(const CWeaponComponent::EType& _tWeaponType) { return m_mWeaponDef[_tWeaponType]; }
 
 	std::map<Entity::EType, TEnemyDef> m_mEnemyDef;
-	std::map<ComponentWeapon::EType, ComponentWeapon::TWeaponData> m_mWeaponDef;
-	std::vector<ComponentWeapon::EType> m_vWeaponPickups;
+	std::map<CWeaponComponent::EType, CWeaponComponent::TWeaponData> m_mWeaponDef;
+	std::vector<CWeaponComponent::EType> m_vWeaponPickups;
 
 private:
 	struct TEntityInfo {

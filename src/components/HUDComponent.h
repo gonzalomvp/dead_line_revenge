@@ -3,6 +3,10 @@
 #include "components/component.h"
 #include "input/input_manager.h"
 
+class CGfxEntity;
+class CSprite;
+class CText;
+
 class CHUDComponent : public Component, public IInputManager::IListener {
 public:
 	CHUDComponent(Entity* owner)

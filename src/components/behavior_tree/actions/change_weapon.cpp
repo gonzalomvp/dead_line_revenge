@@ -24,7 +24,7 @@ Status CChangeWeaponAction::update(float step) {
 
 	Entity* self = getOwnerEntity();
 	MessageWeaponChange messageWeaponChange;
-	messageWeaponChange.eWeaponType = ComponentWeapon::getWeaponTypeByName(mWeaponName);
+	messageWeaponChange.eWeaponType = CWeaponComponent::getWeaponTypeByName(mWeaponName);
 	self->receiveMessage(&messageWeaponChange);
 
 	return eSuccess;

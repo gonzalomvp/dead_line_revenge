@@ -2,6 +2,8 @@
 
 #include "components/component.h"
 
+class CSprite;
+
 class CRenderableComponent : public Component {
 public:
 	CRenderableComponent(Entity* _pOwner, const std::string& _sTexture, float _fAngle, float _fAlpha, int _iPriority, int _iHitTime = 0)

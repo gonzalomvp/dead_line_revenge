@@ -26,7 +26,7 @@ void CWeaponPickupComponent::receiveMessage(Message* _pMessage) {
 		std::string sHudMessageText = g_pStringManager->getText(s_sPickupText);
 		switch (m_eWeaponType) {
 #define REG_WEAPON(val, name) \
-			case ComponentWeapon::E##val: \
+			case CWeaponComponent::E##val: \
 				sHudMessageText += g_pStringManager->getText("LTEXT_GUI_"#val"_MESSAGE"); \
 				break;
 #include "REG_WEAPONS.h"

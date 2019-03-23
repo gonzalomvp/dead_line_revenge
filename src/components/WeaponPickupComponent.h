@@ -1,10 +1,11 @@
 #pragma once
 
 #include "components/component.h"
+#include "components/WeaponComponent.h"
 
 class CWeaponPickupComponent : public Component {
 public:
-	CWeaponPickupComponent(Entity* _pOwner, ComponentWeapon::EType _eWeaponType)
+	CWeaponPickupComponent(Entity* _pOwner, CWeaponComponent::EType _eWeaponType)
 	: Component(_pOwner)
 	, m_eWeaponType(_eWeaponType)
 	{}
@@ -13,5 +14,5 @@ public:
 	virtual void receiveMessage(Message* _pMessage) override;
 
 private:
-	ComponentWeapon::EType m_eWeaponType;
+	CWeaponComponent::EType m_eWeaponType;
 };

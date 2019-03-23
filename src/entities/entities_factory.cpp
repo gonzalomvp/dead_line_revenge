@@ -15,6 +15,7 @@
 #include "components/PointsComponent.h"
 #include "components/RenderableComponent.h"
 #include "components/TransformComponent.h"
+#include "components/WeaponComponent.h"
 #include "components/WeaponPickupComponent.h"
 #include "components/bossIAComponent.h"
 
@@ -60,24 +61,24 @@ bool CEntitiesFactory::init(const char* _sConfigFile) {
 	// Load weapon definitions
 	const Value& weapons = doc["weapons"];
 	for (SizeType i = 0; i < weapons.Size(); i++) {
-		ComponentWeapon::TWeaponData weapon;
-		weapon.type = ComponentWeapon::getWeaponTypeByName(weapons[i]["name"].GetString());
-		weapon.fireRate = weapons[i]["fireRate"].GetInt();
-		weapon.reloadTime = weapons[i]["reloadTime"].GetInt();
-		weapon.capacity = weapons[i]["capacity"].GetInt();
-		weapon.bulletSpeed = weapons[i]["bulletSpeed"].GetFloat();
-		weapon.bulletDamage = weapons[i]["bulletDamage"].GetInt();
-		weapon.bulletLife = weapons[i]["bulletLife"].GetInt();
-		weapon.bulletRange = weapons[i]["bulletRange"].GetInt();
-		weapon.numBullets = 1;
+		CWeaponComponent::TWeaponData weapon;
+		weapon.eType = CWeaponComponent::getWeaponTypeByName(weapons[i]["name"].GetString());
+		weapon.iFireRate = weapons[i]["fireRate"].GetInt();
+		weapon.iReloadTime = weapons[i]["reloadTime"].GetInt();
+		weapon.iCapacity = weapons[i]["capacity"].GetInt();
+		weapon.fBulletSpeed = weapons[i]["bulletSpeed"].GetFloat();
+		weapon.iBulletDamage = weapons[i]["bulletDamage"].GetInt();
+		weapon.iBulletLife = weapons[i]["bulletLife"].GetInt();
+		weapon.iBulletRange = weapons[i]["bulletRange"].GetInt();
+		weapon.uNumBullets = 1;
 		if (weapons[i].HasMember("numBullets")) {
-			weapon.numBullets = weapons[i]["numBullets"].GetUint();
+			weapon.uNumBullets = weapons[i]["numBullets"].GetUint();
 		}
-		weapon.isAutomatic = weapons[i]["isAutomatic"].GetBool();
-		weapon.isExplossive = weapons[i]["isExplossive"].GetBool();
-		weapon.isBouncy = weapons[i]["isBouncy"].GetBool();
-		weapon.soundFile = weapons[i]["soundFile"].GetString();
-		m_mWeaponDef[weapon.type] = weapon;
+		weapon.bIsAutomatic = weapons[i]["isAutomatic"].GetBool();
+		weapon.bIsExplossive = weapons[i]["isExplossive"].GetBool();
+		weapon.bIsBouncy = weapons[i]["isBouncy"].GetBool();
+		weapon.sSoundFile = weapons[i]["soundFile"].GetString();
+		m_mWeaponDef[weapon.eType] = weapon;
 	}
 
 	// Load enemy definitions
@@ -89,9 +90,9 @@ bool CEntitiesFactory::init(const char* _sConfigFile) {
 		enemy.iInvencibleTime = enemies[i]["invencibleTime"].GetInt();
 		enemy.fSpeed = enemies[i]["speed"].GetFloat();
 		enemy.iCollisionDamage = enemies[i]["collisionDamage"].GetInt();
-		enemy.eWeapon = ComponentWeapon::EType::EInvalid;
+		enemy.eWeapon = CWeaponComponent::EType::EInvalid;
 		if (enemies[i].HasMember("weapon")) {
-			enemy.eWeapon = ComponentWeapon::getWeaponTypeByName(enemies[i]["weapon"].GetString());
+			enemy.eWeapon = CWeaponComponent::getWeaponTypeByName(enemies[i]["weapon"].GetString());
 		}
 		enemy.v2Size = vmake(enemies[i]["size"][0].GetFloat(), enemies[i]["size"][1].GetFloat());
 		enemy.sImageFile = enemies[i]["imageFile"].GetString();
@@ -101,7 +102,7 @@ bool CEntitiesFactory::init(const char* _sConfigFile) {
 	// Load weapon pickups
 	const Value& pickups = doc["pickups"];
 	for (SizeType i = 0; i < pickups.Size(); i++) {
-		m_vWeaponPickups.push_back(ComponentWeapon::getWeaponTypeByName(pickups[i].GetString()));
+		m_vWeaponPickups.push_back(CWeaponComponent::getWeaponTypeByName(pickups[i].GetString()));
 	}
 
 	fclose(file);
@@ -119,7 +120,7 @@ Entity* CEntitiesFactory::createPlayer(vec2 _v2Pos) {
 	playerControl->init();
 	CMovementComponent* movement = NEW(CMovementComponent, player, vmake(0.0f, 0.0f), g_pWorld->getPlayerSpeed(), false, false);
 	movement->init();
-	ComponentWeapon* weapon = NEW(ComponentWeapon, player, m_mWeaponDef[ComponentWeapon::EREVOLVER]);
+	CWeaponComponent* weapon = NEW(CWeaponComponent, player, m_mWeaponDef[CWeaponComponent::EREVOLVER]);
 	weapon->init();
 	CColliderComponent* collider = NEW(CColliderComponent, player, CColliderComponent::ERectCollider, -1, CColliderComponent::EPlayerCollider, CColliderComponent::EEnemyCollider | CColliderComponent::EEnemyWeaponCollider);
 	collider->init();
@@ -209,8 +210,8 @@ Entity* CEntitiesFactory::createEnemy(vec2 _v2Pos, Entity::EType _tEnemyType, En
 	}
 
 	// Range and Turrets have a fire weapon
-	if (tEnemyDef.eWeapon != ComponentWeapon::EType::EInvalid) {
-		ComponentWeapon* gun = NEW(ComponentWeapon, enemy, m_mWeaponDef[tEnemyDef.eWeapon]);
+	if (tEnemyDef.eWeapon != CWeaponComponent::EType::EInvalid) {
+		CWeaponComponent* gun = NEW(CWeaponComponent, enemy, m_mWeaponDef[tEnemyDef.eWeapon]);
 		gun->init();
 
 		// If a player is passed the enemy keep a distance between ComponentAIMelee and ComponentAIEvade distances and aim to it
@@ -257,7 +258,7 @@ Entity* CEntitiesFactory::createEnemy(vec2 _v2Pos, Entity::EType _tEnemyType, ve
 
 Entity* CEntitiesFactory::createWeaponPickup() {
 	// Calculate a random weapon type
-	ComponentWeapon::EType type = m_vWeaponPickups[rand() % m_vWeaponPickups.size()];
+	CWeaponComponent::EType type = m_vWeaponPickups[rand() % m_vWeaponPickups.size()];
 	// Calculate a random spawn position
 	vec2 randomPos = vmake(CORE_FRand(0.0, WORLD_WIDTH), CORE_FRand(80, WORLD_HEIGHT - 80));
 

@@ -285,6 +285,9 @@
     <ClInclude Include="..\src\components\ColliderComponent.h">
       <Filter>src\components</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\components\WeaponComponent.h">
+      <Filter>src\components</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\main.cpp">
@@ -504,6 +507,9 @@
       <Filter>src\components</Filter>
     </ClCompile>
     <ClCompile Include="..\src\components\ColliderComponent.cpp">
+      <Filter>src\components</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\components\WeaponComponent.cpp">
       <Filter>src\components</Filter>
     </ClCompile>
   </ItemGroup>
