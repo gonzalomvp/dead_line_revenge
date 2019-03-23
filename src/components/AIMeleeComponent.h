@@ -4,13 +4,14 @@
 
 class CAIMeleeComponent : public Component {
 public:
-	CAIMeleeComponent(Entity* _oowner, float speed, float maxDistance);
+	CAIMeleeComponent(Entity* _pOwner, float _fSpeed, float _fMaxDistance);
 
-	virtual void run(float deltaTime);
-	virtual void receiveMessage(Message* message);
+	// CComponent
+	virtual void run(float _fDeltaTime)             override;
+	virtual void receiveMessage(Message* _pMessage) override;
+
 private:
-	Entity* m_pPlayer;
-	float       m_speed;
-	float       m_maxDistance;
-	vec2        m_offset;
+	float       m_fSpeed;
+	float       m_fMaxDistance;
+	vec2        m_v2Offset;
 };
