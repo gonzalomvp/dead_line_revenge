@@ -11,13 +11,13 @@ public:
 		CWeaponComponent::EType eType;
 		int                     iFireRate;
 		int                     iReloadTime;
-		int                     iCapacity;
+		int                     iMaxBullets;
 		float                   fBulletSpeed;
 		int                     iBulletDamage;
 		int                     iBulletLife;
 		int                     iBulletRange;
 		vec2                    v2BulletSize;
-		uint16_t                uNumBullets;
+		uint16_t                uBulletsPerShot;
 		bool                    bIsAutomatic;
 		bool                    bIsExplossive;
 		bool                    bIsBouncy;

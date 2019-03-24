@@ -84,7 +84,7 @@ bool CEntitiesFactory::init(const char* _sConfigFile) {
 		weapon.eType = getWeaponTypeByName(weapons[i]["name"].GetString());
 		weapon.iFireRate = weapons[i]["fireRate"].GetInt();
 		weapon.iReloadTime = weapons[i]["reloadTime"].GetInt();
-		weapon.iCapacity = weapons[i]["capacity"].GetInt();
+		weapon.iMaxBullets = weapons[i]["maxBullets"].GetInt();
 		weapon.fBulletSpeed = weapons[i]["bulletSpeed"].GetFloat();
 		weapon.iBulletDamage = weapons[i]["bulletDamage"].GetInt();
 		weapon.iBulletLife = weapons[i]["bulletLife"].GetInt();
@@ -93,9 +93,9 @@ bool CEntitiesFactory::init(const char* _sConfigFile) {
 		ASSERT(weapons[i].HasMember("bulletSize") && weapons[i]["bulletSize"].Size() == 2);
 		weapon.v2BulletSize = vmake(weapons[i]["bulletSize"][0].GetFloat(), weapons[i]["bulletSize"][1].GetFloat());
 
-		weapon.uNumBullets = 1;
-		if (weapons[i].HasMember("numBullets")) {
-			weapon.uNumBullets = weapons[i]["numBullets"].GetUint();
+		weapon.uBulletsPerShot = 1;
+		if (weapons[i].HasMember("bulletsPerShot")) {
+			weapon.uBulletsPerShot = weapons[i]["bulletsPerShot"].GetUint();
 		}
 		weapon.bIsAutomatic = weapons[i]["isAutomatic"].GetBool();
 		weapon.bIsExplossive = weapons[i]["isExplossive"].GetBool();

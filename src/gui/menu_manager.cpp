@@ -48,7 +48,7 @@ namespace menu { namespace constants {
 	const char* s_psSliderRightButtonPushImage   = "data/ui/Slider_Right_Push.png";
 	const char* s_psSliderBarImage               = "data/ui/Slider_bar.png";
 	const char* s_psSliderBallImage              = "data/ui/Slider_ball.png";
-	const char* s_psMusicFile                    = "data/audio/menu.wav";
+	const char* s_psMusicFile                    = "data/audio/music.wav";
 
 	// Texts
 	const char* s_psPlayText          = "LTEXT_GUI_PLAY";
