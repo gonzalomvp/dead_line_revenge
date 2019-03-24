@@ -46,7 +46,7 @@ public:
 
 	Entity* createPlayer(vec2 _v2Pos);
 	Entity* createBullet(CWeaponComponent::EType _eWeaponType, vec2 _v2Pos, vec2 _v2Direction, Entity::EType _eOwnerType);
-	Entity* createExplossion(vec2 _v2Pos, vec2 _v2Size, vec2 _v2SizeIncrement, int _iDuration, Entity::EType _eEntityType);
+	Entity* createExplossion(vec2 _v2Pos, CWeaponComponent::EType _eWeaponType = CWeaponComponent::EInvalid);
 	Entity* createEnemy(vec2 _v2Pos, Entity::EType _tEnemyType, Entity* _pPlayer);
 	Entity* createEnemy(vec2 _v2Pos, Entity::EType _tEnemyType, vec2 _v2MoveDir, std::vector<vec2> _vAimDirections, bool _bIshuffleAim);
 	Entity* createWeaponPickup();

@@ -105,7 +105,7 @@ void CWeaponComponent::run(float _fDeltaTime) {
 				break;
 			}
 			case ENUCLEARBOMB: {
-				Entity* pExplossion = g_pEntitiesFactory->createExplossion(messageGetTranform.pos, vmake(20.0f, 20.0f), vmake(8.0f, 8.0f), 100, Entity::ENUCLEAREXPLOSSION);
+				Entity* pExplossion = g_pEntitiesFactory->createExplossion(messageGetTranform.pos, m_eType);
 				g_pWorld->addEntity(pExplossion);
 				break;
 			}

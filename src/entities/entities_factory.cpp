@@ -203,28 +203,38 @@ Entity* CEntitiesFactory::createBullet(CWeaponComponent::EType _eWeaponType, vec
 	return bullet;
 }
 
-Entity* CEntitiesFactory::createExplossion(vec2 _v2Pos, vec2 _v2Size, vec2 _v2SizeIncrement, int _iDuration, Entity::EType _eEntityType) {
-	Entity* explossion = NEW(Entity, _eEntityType);
-	CTransformComponent* transform = NEW(CTransformComponent, explossion, _v2Pos, _v2Size, _v2SizeIncrement);
-	transform->init();
+Entity* CEntitiesFactory::createExplossion(vec2 _v2Pos, CWeaponComponent::EType _eWeaponType) {
+	Entity* explossion = NEW(Entity, Entity::EWEAPON);
+
+	vec2 v2Size = vmake(0.0f, 0.0f);
+	vec2 v2SizeIncrement = vmake(0.0f, 0.0f);
+	int iDuration = 0;
+	int iColliderMask = 0;
+
+	switch (_eWeaponType) {
+		case CWeaponComponent::ENUCLEARBOMB:
+			v2Size = vmake(20.0f, 20.0f);
+			v2SizeIncrement = vmake(8.0f, 8.0f);
+			iDuration = 100;
+			iColliderMask = CColliderComponent::EPlayerWeaponCollider | CColliderComponent::EBoundariesCollider;
+			break;
+		default:
+			v2Size = vmake(10.0f, 10.0f);
+			v2SizeIncrement = vmake(2.0f, 2.0f);
+			iDuration = 50;
+			iColliderMask = CColliderComponent::EPlayerWeaponCollider | CColliderComponent::EEnemyWeaponCollider | CColliderComponent::EBoundariesCollider;
+			break;
+	}
+
 	CRenderableComponent* renderable = NEW(CRenderableComponent, explossion, "data/explossion.png", 0.0f, 0.5f, 5);
 	renderable->init();
-
-	// Nuclear explossion has different collider than standard explosssion
-	switch (_eEntityType) {
-	case Entity::ENUCLEAREXPLOSSION: {
-		CColliderComponent* collider = NEW(CColliderComponent, explossion, CColliderComponent::ECircleCollider, -5, CColliderComponent::EPlayerWeaponCollider | CColliderComponent::EBoundariesCollider, CColliderComponent::ENoneCollider);
-		collider->init();
-		break;
-	}
-	default: {
-		CColliderComponent* collider = NEW(CColliderComponent, explossion, CColliderComponent::ECircleCollider, -5, CColliderComponent::EPlayerWeaponCollider | CColliderComponent::EEnemyWeaponCollider | CColliderComponent::EBoundariesCollider, CColliderComponent::ENoneCollider);
-		collider->init();
-		break;
-	}
-	}
-	CLifeComponent* life = NEW(CLifeComponent, explossion, 1, _iDuration, 0);
+	CTransformComponent* transform = NEW(CTransformComponent, explossion, _v2Pos, v2Size, v2SizeIncrement);
+	transform->init();
+	CColliderComponent* collider = NEW(CColliderComponent, explossion, CColliderComponent::ECircleCollider, -5, iColliderMask, CColliderComponent::ENoneCollider);
+	collider->init();
+	CLifeComponent* life = NEW(CLifeComponent, explossion, 1, iDuration, 0);
 	life->init();
+	
 	g_pSoundEngine->playSound("data/explossion.wav");
 	return explossion;
 }
