@@ -130,45 +130,34 @@ void CWeaponComponent::run(float _fDeltaTime) {
 	}
 }
 
-void CWeaponComponent::receiveMessage(Message* message) {
+void CWeaponComponent::receiveMessage(Message* _pMessage) {
+	Component::receiveMessage(_pMessage);
 	if (!m_isActive)
 		return;
 
-	MessageWeaponChange* msgWeaponChange = dynamic_cast<MessageWeaponChange*>(message);
-	if (msgWeaponChange) {
-		equipWeapon(msgWeaponChange->eWeaponType);
+	ASSERT(_pMessage);
+
+	if (MessageWeaponChange* pMessage = dynamic_cast<MessageWeaponChange*>(_pMessage)) {
+		equipWeapon(pMessage->eWeaponType);
 	}
-	else {
-		MessageFire* msgFire = dynamic_cast<MessageFire*>(message);
-		if (msgFire) {
-			m_bIsFiring = msgFire->isFiring;
-		}
-		else {
-			MessageSetAimDirection* messageSetAimDirection = dynamic_cast<MessageSetAimDirection*>(message);
-			if (messageSetAimDirection) {
-				m_v2AimDirection = messageSetAimDirection->direction;
-			}
-			else {
-				MessageGetAimDirection* messageGetAimDirection = dynamic_cast<MessageGetAimDirection*>(message);
-				if (messageGetAimDirection) {
-					messageGetAimDirection->direction = m_v2AimDirection;
-				}
-				else {
-					MessageAmmoInfo* msgAmmoInfo = dynamic_cast<MessageAmmoInfo*>(message);
-					if (msgAmmoInfo) {
-						msgAmmoInfo->currentAmmo = m_iCurrentBullets;
-						msgAmmoInfo->totalAmmo = m_iMaxBullets;
-						msgAmmoInfo->reloadPercent = clamp((m_iReloadTime - m_iReloadTimer) * 1.0f / m_iReloadTime, 0.0f, 1.0f);
-					}
-					else {
-						MessageReload* msgReload = dynamic_cast<MessageReload*>(message);
-						if (msgReload && m_iCurrentBullets < m_iMaxBullets && m_iReloadTimer <= 0) {
-							m_bIsFiring = false;
-							m_iReloadTimer = m_iReloadTime;
-						}
-					}
-				}
-			}
+	else if (MessageFire* pMessage = dynamic_cast<MessageFire*>(_pMessage)) {
+		m_bIsFiring = pMessage->isFiring;
+	}
+	else if (MessageSetAimDirection* pMessage = dynamic_cast<MessageSetAimDirection*>(_pMessage)) {
+		m_v2AimDirection = pMessage->direction;
+	}
+	else if (MessageGetAimDirection* pMessage = dynamic_cast<MessageGetAimDirection*>(_pMessage)) {
+		pMessage->direction = m_v2AimDirection;
+	}
+	else if (MessageAmmoInfo* pMessage = dynamic_cast<MessageAmmoInfo*>(_pMessage)) {
+		pMessage->currentAmmo = m_iCurrentBullets;
+		pMessage->totalAmmo = m_iMaxBullets;
+		pMessage->reloadPercent = clamp((m_iReloadTime - m_iReloadTimer) * 1.0f / m_iReloadTime, 0.0f, 1.0f);
+	}
+	else if (MessageReload* pMessage = dynamic_cast<MessageReload*>(_pMessage)) {
+		if (m_iCurrentBullets < m_iMaxBullets && m_iReloadTimer <= 0) {
+			m_bIsFiring = false;
+			m_iReloadTimer = m_iReloadTime;
 		}
 	}
 }
