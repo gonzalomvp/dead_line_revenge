@@ -318,7 +318,7 @@ void CWorld::spawnNewEntities(float _fDeltaTime) {
 			float fEnemyTypeProb = CORE_FRand(0.0f, 1.0f);
 			for (auto itEnemyProbability = m_mEnemyProbabilities.begin(); itEnemyProbability != m_mEnemyProbabilities.end(); ++itEnemyProbability) {
 				if (fEnemyTypeProb <= itEnemyProbability->second) {
-					Entity* enemy = g_pEntitiesFactory->createEnemy(v2SpawnLocation, itEnemyProbability->first, m_pPlayer);
+					Entity* enemy = g_pEntitiesFactory->createEnemy(v2SpawnLocation, itEnemyProbability->first);
 					addEntity(enemy);
 					++m_iCurrentEnemies;
 					m_fEnemySpawnTimer = 0.0f;

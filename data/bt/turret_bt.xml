@@ -1,0 +1,12 @@
+<root>
+	<behavior type="sequence">
+		<behavior type="changeAimDirection"/>
+		<behavior type="wait">
+			<param value="0.5" />
+		</behavior>
+		<behavior type="fire"/>
+		<behavior type="wait">
+			<param value="0.5" />
+		</behavior>
+	</behavior>
+</root>

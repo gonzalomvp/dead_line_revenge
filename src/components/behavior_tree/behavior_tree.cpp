@@ -22,6 +22,7 @@
 #include "components/behavior_tree/actions/check_life.h"
 #include "components/behavior_tree/actions/rotate_aim.h"
 #include "components/behavior_tree/actions/aim_player.h"
+#include "components/behavior_tree/actions/change_aim_direction.h"
 
 #pragma pack(push)
 #pragma pack()

@@ -6,10 +6,11 @@
 
 class CAIFireComponent : public CAIComponent {
 public:
-	CAIFireComponent(Entity* _pOwner, const std::vector<vec2>& _vFireDirections = std::vector<vec2>(0), bool _bWantShuffle = false)
+	CAIFireComponent(Entity* _pOwner, const std::vector<vec2>& _vAimDirections = std::vector<vec2>(0), bool _bWantShuffle = false)
 	: CAIComponent(_pOwner)
-	, m_vFireDirections(_vFireDirections)
-	, m_uCurrentFireDirectionIndex(0)
+	, m_v2AimDirection(vmake(0.0f, 0.0f))
+	, m_vAimDirections(_vAimDirections)
+	, m_uCurrentAimDirectionIndex(0)
 	, m_bWantShuffle(_bWantShuffle)
 	{}
 
@@ -19,7 +20,8 @@ public:
 	virtual void receiveMessage(Message* _pMessage) override;
 
 private:
-	std::vector<vec2> m_vFireDirections;
-	size_t            m_uCurrentFireDirectionIndex;
+	vec2              m_v2AimDirection;
+	std::vector<vec2> m_vAimDirections;
+	size_t            m_uCurrentAimDirectionIndex;
 	bool              m_bWantShuffle;
 };

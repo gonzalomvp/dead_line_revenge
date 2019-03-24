@@ -239,7 +239,7 @@ Entity* CEntitiesFactory::createExplossion(vec2 _v2Pos, CWeaponComponent::EType 
 	return explossion;
 }
 
-Entity* CEntitiesFactory::createEnemy(vec2 _v2Pos, Entity::EType _tEnemyType, Entity* _pPlayer) {
+Entity* CEntitiesFactory::createEnemy(vec2 _v2Pos, Entity::EType _tEnemyType, vec2 _v2MoveDir, std::vector<vec2> _vAimDirections, bool _bIshuffleAim) {
 	Entity* enemy = NEW(Entity, _tEnemyType);
 	TEnemyDef tEnemyDef = m_mEnemyDef[_tEnemyType];
 
@@ -247,57 +247,61 @@ Entity* CEntitiesFactory::createEnemy(vec2 _v2Pos, Entity::EType _tEnemyType, En
 	transform->init();
 	CRenderableComponent* renderable = NEW(CRenderableComponent, enemy, tEnemyDef.sImageFile.c_str(), 0.0f, 1.0f, 5, tEnemyDef.iInvencibleTime);
 	renderable->init();
-
-	// Melee and Big enemies follow player until contact
-	if (tEnemyDef.eType == Entity::EENEMYMELEE || tEnemyDef.eType == Entity::EENEMYBIG) {
-		CAIMeleeComponent* aiMelee = NEW(CAIMeleeComponent, enemy, tEnemyDef.fSpeed, 0);
-		aiMelee->init();
-	}
-
-	// Range and Turrets have a fire weapon
-	if (tEnemyDef.eWeapon != CWeaponComponent::EType::EInvalid) {
-		CWeaponComponent* gun = NEW(CWeaponComponent, enemy, tEnemyDef.eWeapon);
-		gun->init();
-
-		// If a player is passed the enemy keep a distance between ComponentAIMelee and ComponentAIEvade distances and aim to it
-		if (_pPlayer && tEnemyDef.eType != Entity::EENEMYBOSS) {
-			CAIFireComponent* aiFire = NEW(CAIFireComponent, enemy);
-			aiFire->init();
-			CAIMeleeComponent* aiMelee = NEW(CAIMeleeComponent, enemy, tEnemyDef.fSpeed, 200);
-			aiMelee->init();
-			CAIFleeComponent* aiEvade = NEW(CAIFleeComponent, enemy, tEnemyDef.fSpeed, 150);
-			aiEvade->init();
-		}
-	}
-
-	// Boss AI
-	if (tEnemyDef.eType == Entity::EENEMYBOSS) {
-		BossIAComponent* bossAI = NEW(BossIAComponent, enemy, "data/bt/boss_bt.xml");
-		bossAI->init();
-		CExplossiveComponent* explossive = NEW(CExplossiveComponent, enemy);
-		explossive->init();
-	}
-
 	CColliderComponent* collider = NEW(CColliderComponent, enemy, CColliderComponent::ERectCollider, tEnemyDef.iCollisionDamage, CColliderComponent::EEnemyCollider, CColliderComponent::EPlayerWeaponCollider);
 	collider->init();
 	CLifeComponent* life = NEW(CLifeComponent, enemy, tEnemyDef.iLife, 0, tEnemyDef.iInvencibleTime);
 	life->init();
 	CPointsComponent* points = NEW(CPointsComponent, enemy);
 	points->init();
-	return enemy;
-}
 
-Entity* CEntitiesFactory::createEnemy(vec2 _v2Pos, Entity::EType _tEnemyType, vec2 _v2MoveDir, std::vector<vec2> _vAimDirections, bool _bIshuffleAim) {
-	Entity* enemy = createEnemy(_v2Pos, _tEnemyType, nullptr);
-	TEnemyDef tEnemyDef = m_mEnemyDef[_tEnemyType];
+	if (tEnemyDef.eWeapon != CWeaponComponent::EType::EInvalid) {
+		CWeaponComponent* gun = NEW(CWeaponComponent, enemy, tEnemyDef.eWeapon);
+		gun->init();
+	}
 
-	CMovementComponent* movement = NEW(CMovementComponent, enemy, _v2MoveDir, tEnemyDef.fSpeed, true, true);
-	movement->init();
+	switch (tEnemyDef.eType)
+	{
+	case Entity::EENEMYMELEE: {
+		CAIMeleeComponent * aiMelee = NEW(CAIMeleeComponent, enemy, tEnemyDef.fSpeed, 0);
+		aiMelee->init();
+		break;
+	}
+	case Entity::EENEMYBIG: {
+		CAIMeleeComponent * aiMelee = NEW(CAIMeleeComponent, enemy, tEnemyDef.fSpeed, 0);
+		aiMelee->init();
+		break;
+	}	
+	case Entity::EENEMYRANGE: {
+		CAIMeleeComponent* aiMelee = NEW(CAIMeleeComponent, enemy, tEnemyDef.fSpeed, 200);
+		aiMelee->init();
+		CAIFleeComponent* aiEvade = NEW(CAIFleeComponent, enemy, tEnemyDef.fSpeed, 150);
+		aiEvade->init();
+		CAIFireComponent * aiFire = NEW(CAIFireComponent, enemy);
+		aiFire->init();
+		break;
+	}
+	case Entity::EENEMYTURRET: {
+		CMovementComponent * movement = NEW(CMovementComponent, enemy, _v2MoveDir, tEnemyDef.fSpeed, true, true);
+		movement->init();
+		// Used by the turrets to fire in the given directions and use a delay to not shoot all at the same time
+		CAIFireComponent* aiFire = NEW(CAIFireComponent, enemy, _vAimDirections, _bIshuffleAim);
+		aiFire->setActivationDelay(rand() % 100);
+		aiFire->init();
+		BossIAComponent * bossAI = NEW(BossIAComponent, enemy, "data/bt/turret_bt.xml");
+		bossAI->init();
+		break;
+	}
+	case Entity::EENEMYBOSS: {
+		BossIAComponent * bossAI = NEW(BossIAComponent, enemy, "data/bt/boss_bt.xml");
+		bossAI->init();
+		CExplossiveComponent* explossive = NEW(CExplossiveComponent, enemy);
+		explossive->init();
+		break;
+	}
+	default:
+		break;
+	}
 
-	// Used by the turrets to fire in the given directions and use a delay to not shoot all at the same time
-	CAIFireComponent* aiFire = NEW(CAIFireComponent, enemy, _vAimDirections, _bIshuffleAim);
-	aiFire->setActivationDelay(rand() % 100);
-	aiFire->init();
 	return enemy;
 }
 

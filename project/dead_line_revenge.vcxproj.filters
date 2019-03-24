@@ -288,6 +288,9 @@
     <ClInclude Include="..\src\components\WeaponComponent.h">
       <Filter>src\components</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\components\behavior_tree\actions\change_aim_direction.h">
+      <Filter>src\components\behavior_tree\actions</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\main.cpp">
@@ -511,6 +514,9 @@
     </ClCompile>
     <ClCompile Include="..\src\components\WeaponComponent.cpp">
       <Filter>src\components</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\components\behavior_tree\actions\change_aim_direction.cpp">
+      <Filter>src\components\behavior_tree\actions</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
