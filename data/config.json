@@ -114,7 +114,7 @@
 	},
 	{
 		"name": "enemy weapon",
-		"fireRate": 100,
+		"fireRate": -1,
 		"reloadTime": 1,
 		"maxBullets": 1,
 		"bulletSpeed": 6,

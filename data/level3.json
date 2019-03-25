@@ -31,20 +31,17 @@
 	{
 		"position": [ 600 ,400 ],
 		"moveDirection": [ -1, 0 ],
-		"aimDirections": [[ 0, -1 ]],
-		"shuffleAim": true
+		"aimDirection": [ 0, -1 ]
 	},
 	{
 		"position": [ 600 ,40 ],
 		"moveDirection": [ 0, 1 ],
-		"aimDirections": [[ -1, 0 ]],
-		"shuffleAim": true
+		"aimDirection": [ -1, 0 ]
 	},
 	{
 		"position": [ 150 ,300 ],
-		"moveDirection": [ 0, 0 ],
-		"aimDirections": [[ 1, 0 ], [ 0, -1 ]],
-		"shuffleAim": true
+		"aimDirection": [ 1, 0 ],
+		"behaviorTree": "data/bt/rotating-turret_bt.xml"
 	}
 	]
 }

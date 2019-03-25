@@ -74,15 +74,15 @@ void CWeaponComponent::run(float _fDeltaTime) {
 
 		switch (m_eType) {
 			case ESHOTGUN: {
-				vec2 v2bulletDir = m_v2AimDirection;
+				vec2 v2bulletDir = m_v2AimDir;
 				Entity* pBullet = g_pEntitiesFactory->createBullet(m_eType, messageGetTranform.pos, v2bulletDir, m_owner->getType());
 				g_pWorld->addEntity(pBullet);
-				float fAngle = vangle(m_v2AimDirection);
+				float fAngle = vangle(m_v2AimDir);
 				fAngle += s_fShotgunAngle;
 				v2bulletDir = vunit(DEG2RAD(fAngle));
 				pBullet = g_pEntitiesFactory->createBullet(m_eType, messageGetTranform.pos, v2bulletDir, m_owner->getType());
 				g_pWorld->addEntity(pBullet);
-				fAngle = vangle(m_v2AimDirection);
+				fAngle = vangle(m_v2AimDir);
 				fAngle -= s_fShotgunAngle;
 				v2bulletDir = vunit(DEG2RAD(fAngle));
 				pBullet = g_pEntitiesFactory->createBullet(m_eType, messageGetTranform.pos, v2bulletDir, m_owner->getType());
@@ -90,17 +90,17 @@ void CWeaponComponent::run(float _fDeltaTime) {
 				break;
 			}
 			case EMINES: {
-				Entity* pBullet = g_pEntitiesFactory->createBullet(m_eType, messageGetTranform.pos, m_v2AimDirection, m_owner->getType());
+				Entity* pBullet = g_pEntitiesFactory->createBullet(m_eType, messageGetTranform.pos, m_v2AimDir, m_owner->getType());
 				g_pWorld->addEntity(pBullet);
 				break;
 			}
 			case EC4: {
-				m_pRemoteBullet = g_pEntitiesFactory->createBullet(m_eType, messageGetTranform.pos, m_v2AimDirection, m_owner->getType());
+				m_pRemoteBullet = g_pEntitiesFactory->createBullet(m_eType, messageGetTranform.pos, m_v2AimDir, m_owner->getType());
 				g_pWorld->addEntity(m_pRemoteBullet);
 				break;
 			}
 			case EROCKETLAUNCHER: {
-				Entity* pBullet = g_pEntitiesFactory->createBullet(m_eType, messageGetTranform.pos, m_v2AimDirection, m_owner->getType());
+				Entity* pBullet = g_pEntitiesFactory->createBullet(m_eType, messageGetTranform.pos, m_v2AimDir, m_owner->getType());
 				g_pWorld->addEntity(pBullet);
 				break;
 			}
@@ -111,7 +111,7 @@ void CWeaponComponent::run(float _fDeltaTime) {
 			}
 			default: {
 				for (size_t i = 0; i < m_uBulletsPerShot; i++) {
-					float fAngle = vangle(m_v2AimDirection) + (i * 360.f / m_uBulletsPerShot);
+					float fAngle = vangle(m_v2AimDir) + (i * 360.f / m_uBulletsPerShot);
 					Entity* pBullet = g_pEntitiesFactory->createBullet(m_eType, messageGetTranform.pos, vunit(DEG2RAD(fAngle)), m_owner->getType());
 					g_pWorld->addEntity(pBullet);
 				}
@@ -144,10 +144,10 @@ void CWeaponComponent::receiveMessage(Message* _pMessage) {
 		m_bIsFiring = pMessage->isFiring;
 	}
 	else if (MessageSetAimDirection* pMessage = dynamic_cast<MessageSetAimDirection*>(_pMessage)) {
-		m_v2AimDirection = pMessage->direction;
+		m_v2AimDir = pMessage->direction;
 	}
 	else if (MessageGetAimDirection* pMessage = dynamic_cast<MessageGetAimDirection*>(_pMessage)) {
-		pMessage->direction = m_v2AimDirection;
+		pMessage->direction = m_v2AimDir;
 	}
 	else if (MessageAmmoInfo* pMessage = dynamic_cast<MessageAmmoInfo*>(_pMessage)) {
 		pMessage->currentAmmo = m_iCurrentBullets;

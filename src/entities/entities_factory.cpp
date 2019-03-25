@@ -141,7 +141,7 @@ Entity* CEntitiesFactory::createPlayer(vec2 _v2Pos) {
 	Entity* player = NEW(Entity, Entity::EPLAYER);
 	CTransformComponent* transform = NEW(CTransformComponent, player, _v2Pos, vmake(30, 25));
 	transform->init();
-	CRenderableComponent* renderable = NEW(CRenderableComponent, player, "data/player.png", 0.0f, 1.0f, 5, 10);
+	CRenderableComponent* renderable = NEW(CRenderableComponent, player, "data/player.png", 0.0f, 1.0f, 5, true, 10);
 	renderable->init();
 	CPlayerControllerComponent* playerControl = NEW(CPlayerControllerComponent, player);
 	playerControl->init();
@@ -239,14 +239,13 @@ Entity* CEntitiesFactory::createExplossion(vec2 _v2Pos, CWeaponComponent::EType 
 	return explossion;
 }
 
-Entity* CEntitiesFactory::createEnemy(vec2 _v2Pos, Entity::EType _tEnemyType, vec2 _v2MoveDir, std::vector<vec2> _vAimDirections, bool _bIshuffleAim) {
+Entity* CEntitiesFactory::createEnemy(vec2 _v2Pos, Entity::EType _tEnemyType, const std::string& _sBTFile, vec2 _v2MoveDir, vec2 _vAimDir) {
 	Entity* enemy = NEW(Entity, _tEnemyType);
 	TEnemyDef tEnemyDef = m_mEnemyDef[_tEnemyType];
+	bool bAlignToAim = false;
 
 	CTransformComponent* transform = NEW(CTransformComponent, enemy, _v2Pos, tEnemyDef.v2Size);
 	transform->init();
-	CRenderableComponent* renderable = NEW(CRenderableComponent, enemy, tEnemyDef.sImageFile.c_str(), 0.0f, 1.0f, 5, tEnemyDef.iInvencibleTime);
-	renderable->init();
 	CColliderComponent* collider = NEW(CColliderComponent, enemy, CColliderComponent::ERectCollider, tEnemyDef.iCollisionDamage, CColliderComponent::EEnemyCollider, CColliderComponent::EPlayerWeaponCollider);
 	collider->init();
 	CLifeComponent* life = NEW(CLifeComponent, enemy, tEnemyDef.iLife, 0, tEnemyDef.iInvencibleTime);
@@ -255,7 +254,7 @@ Entity* CEntitiesFactory::createEnemy(vec2 _v2Pos, Entity::EType _tEnemyType, ve
 	points->init();
 
 	if (tEnemyDef.eWeapon != CWeaponComponent::EType::EInvalid) {
-		CWeaponComponent* gun = NEW(CWeaponComponent, enemy, tEnemyDef.eWeapon);
+		CWeaponComponent* gun = NEW(CWeaponComponent, enemy, tEnemyDef.eWeapon, _vAimDir);
 		gun->init();
 	}
 
@@ -272,6 +271,7 @@ Entity* CEntitiesFactory::createEnemy(vec2 _v2Pos, Entity::EType _tEnemyType, ve
 		break;
 	}	
 	case Entity::EENEMYRANGE: {
+		bAlignToAim = true;
 		CAIMeleeComponent* aiMelee = NEW(CAIMeleeComponent, enemy, tEnemyDef.fSpeed, 200);
 		aiMelee->init();
 		CAIFleeComponent* aiEvade = NEW(CAIFleeComponent, enemy, tEnemyDef.fSpeed, 150);
@@ -281,13 +281,19 @@ Entity* CEntitiesFactory::createEnemy(vec2 _v2Pos, Entity::EType _tEnemyType, ve
 		break;
 	}
 	case Entity::EENEMYTURRET: {
+		bAlignToAim = true;
+		std::string sBTFile = "data/bt/turret_bt.xml";
+		if (_sBTFile != "") {
+			sBTFile = _sBTFile;
+		}
 		CMovementComponent * movement = NEW(CMovementComponent, enemy, _v2MoveDir, tEnemyDef.fSpeed, true, true);
 		movement->init();
 		// Used by the turrets to fire in the given directions and use a delay to not shoot all at the same time
-		CAIFireComponent* aiFire = NEW(CAIFireComponent, enemy, _vAimDirections, _bIshuffleAim);
-		aiFire->setActivationDelay(rand() % 100);
-		aiFire->init();
-		BossIAComponent * bossAI = NEW(BossIAComponent, enemy, "data/bt/turret_bt.xml");
+		//CAIFireComponent* aiFire = NEW(CAIFireComponent, enemy, _vAimDirections, _bIshuffleAim);
+		//aiFire->setActivationDelay(rand() % 100);
+		//aiFire->init();
+		BossIAComponent * bossAI = NEW(BossIAComponent, enemy, sBTFile.c_str());
+		bossAI->setActivationDelay(rand() % 100);
 		bossAI->init();
 		break;
 	}
@@ -301,6 +307,9 @@ Entity* CEntitiesFactory::createEnemy(vec2 _v2Pos, Entity::EType _tEnemyType, ve
 	default:
 		break;
 	}
+
+	CRenderableComponent* renderable = NEW(CRenderableComponent, enemy, tEnemyDef.sImageFile.c_str(), 0.0f, 1.0f, 5, bAlignToAim, tEnemyDef.iInvencibleTime);
+	renderable->init();
 
 	return enemy;
 }

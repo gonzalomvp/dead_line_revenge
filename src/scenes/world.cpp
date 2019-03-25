@@ -122,7 +122,6 @@ bool CWorld::init(uint16_t _uLevel) {
 	// Load turret level configuration
 	const Value& turrets = doc["turrets"];
 	for (SizeType i = 0; i < turrets.Size(); i++) {
-		std::vector<vec2> vAimDirections;
 		ASSERT(turrets[i].HasMember("position") && turrets[i]["position"].Size() == 2);
 		vec2 v2Pos = vmake(turrets[i]["position"][0].GetFloat(), turrets[i]["position"][1].GetFloat());
 
@@ -137,15 +136,19 @@ bool CWorld::init(uint16_t _uLevel) {
 			bShuffleAim = turrets[i]["shuffleAim"].GetBool();
 		}
 
-		ASSERT(turrets[i].HasMember("aimDirections"));
-		const Value& aimDirections = turrets[i]["aimDirections"];
-		for (SizeType j = 0; j < aimDirections.Size(); j++) {
-			ASSERT(aimDirections[j].Size() == 2);
-			vAimDirections.push_back(vmake(aimDirections[j][0].GetFloat(), aimDirections[j][1].GetFloat()));
+		vec2 v2AimDirection = vmake(1.0f, 0.0f);
+		if (turrets[i].HasMember("aimDirection")) {
+			ASSERT(turrets[i]["aimDirection"].Size() == 2);
+			v2AimDirection = vmake(turrets[i]["aimDirection"][0].GetFloat(), turrets[i]["aimDirection"][1].GetFloat());
+		}
+
+		std::string sBTFile = "";
+		if (turrets[i].HasMember("behaviorTree")) {
+			sBTFile = turrets[i]["behaviorTree"].GetString();
 		}
 
 		// Create turrets
-		Entity* pTurret = g_pEntitiesFactory->createEnemy(v2Pos, Entity::EENEMYTURRET, v2MoveDirection, vAimDirections, bShuffleAim);
+		Entity* pTurret = g_pEntitiesFactory->createEnemy(v2Pos, Entity::EENEMYTURRET, sBTFile, v2MoveDirection, v2AimDirection);
 		addEntity(pTurret);
 		++m_iCurrentEnemies;
 	}

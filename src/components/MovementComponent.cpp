@@ -47,7 +47,7 @@ void CMovementComponent::receiveMessage(Message* _pMessage) {
 			MessageSetAimDirection messageSetAimDirection;
 			messageSetAimDirection.changeAngle = true;
 			messageSetAimDirection.direction = m_v2Direction;
-			m_owner->receiveMessage(&messageSetAimDirection);
+			//m_owner->receiveMessage(&messageSetAimDirection);
 		}
 	}
 }

@@ -31,6 +31,12 @@ void CRenderableComponent::run(float _fDeltaTime) {
 	m_pSprite->setPos(msgGetTransform.pos);
 	m_pSprite->setSize(msgGetTransform.size);
 
+	if (m_bAlignToAim) {
+		MessageGetAimDirection messageGetAimDirection;
+		m_owner->receiveMessage(&messageGetAimDirection);
+		m_pSprite->setAngle(vangle(messageGetAimDirection.direction));
+	}
+
 	// Blink effect when receiving a hit
 	if (m_iHitTimer > 0) {
 		--m_iHitTimer;
@@ -57,11 +63,6 @@ void CRenderableComponent::receiveMessage(Message* _pMessage) {
 	if (MessageChangeLife* pMessage = dynamic_cast<MessageChangeLife*>(_pMessage)) {
 		if (m_iHitTimer <= 0 && pMessage->deltaLife < 0) {
 			m_iHitTimer = m_iHitTime;
-		}
-	}
-	else if (MessageSetAimDirection* pMessage = dynamic_cast<MessageSetAimDirection*>(_pMessage)) {
-		if (pMessage->changeAngle) {
-			m_pSprite->setAngle(vangle(pMessage->direction));
 		}
 	}
 	else if (MessageChangeSprite* pMessage = dynamic_cast<MessageChangeSprite*>(_pMessage)) {

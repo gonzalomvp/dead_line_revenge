@@ -15,11 +15,11 @@ public:
 	};
 	static const int NUM_WEAPON_TYPES = EInvalid;
 
-	CWeaponComponent(Entity* owner, EType _eType)
+	CWeaponComponent(Entity* owner, EType _eType, vec2 _v2AimDir = vmake(0.0f, 0.0f))
 	: Component(owner)
 	, m_eType(_eType)
+	, m_v2AimDir(_v2AimDir)
 	, m_pRemoteBullet(nullptr)
-	, m_v2AimDirection(vmake(0.0f, 0.0f))
 	, m_iMaxBullets(0)
 	, m_iCurrentBullets(0)
 	, m_uBulletsPerShot(0)
@@ -41,8 +41,8 @@ public:
 
 private:
 	EType       m_eType;
+	vec2        m_v2AimDir;
 	Entity*     m_pRemoteBullet;
-	vec2        m_v2AimDirection;
 	int         m_iMaxBullets;
 	int         m_iCurrentBullets;
 	uint16_t    m_uBulletsPerShot;
