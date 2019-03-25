@@ -16,17 +16,30 @@ public:
 
 	static const int NUM_ENTITIES = EInvalid;
 
-	Entity(EType type) : m_type(type) {}
+	Entity(EType type, const vec2& _v2Pos, const vec2& _v2Size)
+	: m_type(type)
+	, m_v2Pos(_v2Pos)
+	, m_v2Size(_v2Size)
+	{}
 	~Entity();
 
 	void  activate  ();
 	void  deactivate();
+
 	EType getType   () const { return m_type; }
+
+	vec2 getPos () const       { return m_v2Pos;     }
+	void setPos (vec2 _v2Pos)  { m_v2Pos = _v2Pos;   }
+	vec2 getSize() const       { return m_v2Size;    }
+	void setSize(vec2 _v2Size) { m_v2Size = _v2Size; }
 
 	void run            (float deltaTime);
 	void receiveMessage (Message* message);
 	void addComponent   (Component* component);
-private:
+
+protected:
+	vec2 m_v2Pos;
+	vec2 m_v2Size;
 	EType                       m_type;
 	std::vector<Component*> m_components;
 };

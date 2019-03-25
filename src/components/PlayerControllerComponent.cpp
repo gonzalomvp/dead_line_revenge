@@ -21,6 +21,18 @@ void CPlayerControllerComponent::init() {
 	g_pInputManager->registerEvent(this, IInputManager::EEventType::EMouseButtonUp);
 }
 
+void CPlayerControllerComponent::run(float _fDeltaTime) {
+	Component::run(_fDeltaTime);
+	if (!m_isActive)
+		return;
+
+	MessageSetMovementDir msgSetMovementDir;
+	msgSetMovementDir.dir = m_v2InputDir;
+	m_owner->receiveMessage(&msgSetMovementDir);
+
+	m_v2InputDir = vmake(0.0f, 0.0f);
+}
+
 bool CPlayerControllerComponent::onEvent(const IInputManager::CEvent& _event) {
 	bool bConsumed = false;
 	if (!m_isActive)
@@ -31,23 +43,22 @@ bool CPlayerControllerComponent::onEvent(const IInputManager::CEvent& _event) {
 	// Process key inputs
 	if (const IInputManager::CKeyEvent* pEvent = dynamic_cast<const IInputManager::CKeyEvent*>(&_event)) {
 		if (pEvent->getType() == IInputManager::EEventType::EKeyHold) {
-			vec2 v2MoveDirection = vmake(0.0f, 0.0f);
 			bConsumed = true;
 			switch (pEvent->getKey()) {
 				case 'A': {
-					v2MoveDirection = vmake(-1.0f, 0.0f);
+					m_v2InputDir = vadd(m_v2InputDir, vmake(-1.0f, 0.0f));
 					break;
 				}
 				case 'D': {
-					v2MoveDirection = vmake(1.0f, 0.0f);
+					m_v2InputDir = vadd(m_v2InputDir, vmake(1.0f, 0.0f));
 					break;
 				}
 				case 'W': {
-					v2MoveDirection = vmake(0.0f, 1.0f);
+					m_v2InputDir = vadd(m_v2InputDir, vmake(0.0f, 1.0f));
 					break;
 				}
 				case 'S': {
-					v2MoveDirection = vmake(0.0f, -1.0f);
+					m_v2InputDir = vadd(m_v2InputDir, vmake(0.0f, -1.0f));
 					break;
 				}	
 				case VK_SPACE: {
@@ -59,11 +70,6 @@ bool CPlayerControllerComponent::onEvent(const IInputManager::CEvent& _event) {
 					bConsumed = false;
 					break;
 				}
-			}
-			if (vlen2(v2MoveDirection) != 0) {
-				MessageAddMovement msgAddMovement;
-				msgAddMovement.dir = v2MoveDirection;
-				m_owner->receiveMessage(&msgAddMovement);
 			}
 		}
 	}

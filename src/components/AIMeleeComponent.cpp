@@ -18,16 +18,16 @@ void CAIMeleeComponent::run(float _fDeltaTime) {
 
 	ASSERT(m_owner && g_pWorld && g_pWorld->getPlayer());
 
-	MessageGetTransform messageSelfPos;
-	m_owner->receiveMessage(&messageSelfPos);
-	MessageGetTransform messagePlayerPos;
-	g_pWorld->getPlayer()->receiveMessage(&messagePlayerPos);
-	vec2 v2EnemyToPlayer = vsub(vadd(messagePlayerPos.pos, m_v2Offset), messageSelfPos.pos);
+	//MessageGetTransform messageSelfPos;
+	//m_owner->receiveMessage(&messageSelfPos);
+	//MessageGetTransform messagePlayerPos;
+	//g_pWorld->getPlayer()->receiveMessage(&messagePlayerPos);
+	//vec2 v2EnemyToPlayer = vsub(vadd(messagePlayerPos.pos, m_v2Offset), messageSelfPos.pos);
 
-	if (vlen2(v2EnemyToPlayer) > m_fMaxDistance * m_fMaxDistance) {
-		MessageSetTransform msgSetTransform;
-		msgSetTransform.pos = vadd(messageSelfPos.pos, vscale(vnorm(v2EnemyToPlayer), m_fSpeed));
-		msgSetTransform.size = messageSelfPos.size;
-		m_owner->receiveMessage(&msgSetTransform);
-	}
+	//if (vlen2(v2EnemyToPlayer) > m_fMaxDistance * m_fMaxDistance) {
+	//	MessageSetTransform msgSetTransform;
+	//	msgSetTransform.pos = vadd(messageSelfPos.pos, vscale(vnorm(v2EnemyToPlayer), m_fSpeed));
+	//	msgSetTransform.size = messageSelfPos.size;
+	//	m_owner->receiveMessage(&msgSetTransform);
+	//}
 }

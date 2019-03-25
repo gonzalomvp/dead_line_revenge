@@ -11,9 +11,6 @@ protected:
 	virtual void onEnter() override;
 	virtual Status update(float step) override;
 
-	// CBehaviorNode
-	virtual void init(TiXmlElement* behaviorElem) override;
-
 private:
 	vec2 mTargetPos;
 	float m_fSpeed;

@@ -110,20 +110,20 @@ void CHUDComponent::run(float _fDeltaTime) {
 	m_owner->receiveMessage(&msgAmmo);
 	m_pAmmoText->setText(std::to_string(msgAmmo.currentAmmo) + "/" + std::to_string(msgAmmo.totalAmmo));
 
-	MessageGetTransform msgTransform;
-	m_owner->receiveMessage(&msgTransform);
+	vec2 v2Pos = m_owner->getPos();
+	vec2 v2Size = m_owner->getSize();
 
 	// Full sprite reload animation
-	//m_pReloadSprite->setPos(vmake(msgTransform.pos.x, msgTransform.pos.y - msgTransform.size.y * msgAmmo.reloadPercent * 0.5f));
-	//m_pReloadSprite->setSize(vmake(msgTransform.size.x, msgTransform.size.y * (1.0f - msgAmmo.reloadPercent)));
+	//m_pReloadSprite->setPos(vmake(v2Pos.x, v2Pos.y - v2Size.y * msgAmmo.reloadPercent * 0.5f));
+	//m_pReloadSprite->setSize(vmake(v2Size.x, v2Size.y * (1.0f - msgAmmo.reloadPercent)));
 
 	// Right sprite reload animation
-	m_pReloadSprite->setPos(vmake(msgTransform.pos.x + msgTransform.size.x * 0.5f + 5.0f, msgTransform.pos.y - msgTransform.size.y * msgAmmo.reloadPercent * 0.5f));
-	m_pReloadSprite->setSize(vmake(5, msgTransform.size.y * (1 - msgAmmo.reloadPercent)));
+	m_pReloadSprite->setPos(vmake(v2Pos.x + v2Size.x * 0.5f + 5.0f, v2Pos.y - v2Size.y * msgAmmo.reloadPercent * 0.5f));
+	m_pReloadSprite->setSize(vmake(5, v2Size.y * (1 - msgAmmo.reloadPercent)));
 
 	// Top sprite reload animation
-	//m_pReloadSprite->setPos(vmake(msgTransform.pos.x - msgTransform.size.x * msgAmmo.reloadPercent * 0.5f, msgTransform.pos.y + msgTransform.size.y * 0.5f + 5));
-	//m_pReloadSprite->setSize(vmake(msgTransform.size.x * (1.0f - msgAmmo.reloadPercent), 5));
+	//m_pReloadSprite->setPos(vmake(v2Pos.x - v2Size.x * msgAmmo.reloadPercent * 0.5f, v2Pos.y + v2Size.y * 0.5f + 5));
+	//m_pReloadSprite->setSize(vmake(v2Size.x * (1.0f - msgAmmo.reloadPercent), 5));
 }
 
 void CHUDComponent::receiveMessage(Message* _pMessage) {
@@ -152,12 +152,8 @@ bool CHUDComponent::onEvent(const IInputManager::CEvent& _event) {
 			vec2 v2TargetPos = pEvent->getPos();
 			m_pTargetSprite->setPos(v2TargetPos);
 
-			MessageGetTransform messagePos;
-			m_owner->receiveMessage(&messagePos);
-
 			MessageSetAimDirection messageSetAimDirection;
-			messageSetAimDirection.direction = vnorm(vsub(v2TargetPos, messagePos.pos));
-			messageSetAimDirection.changeAngle = true;
+			messageSetAimDirection.direction = vnorm(vsub(v2TargetPos, m_owner->getPos()));
 			m_owner->receiveMessage(&messageSetAimDirection);
 		}
 	}

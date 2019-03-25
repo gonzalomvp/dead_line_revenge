@@ -3,6 +3,7 @@
 
 #include "entities/entity.h"
 #include "messages/message.h"
+#include "scenes/world.h"
 
 void CMovementComponent::run(float _fDeltaTime) {
 	Component::run(_fDeltaTime);
@@ -11,18 +12,29 @@ void CMovementComponent::run(float _fDeltaTime) {
 
 	ASSERT(m_owner);
 
-	if (vlen2(m_v2Direction) != 0) {
-		MessageGetTransform msgGetTransform;
-		m_owner->receiveMessage(&msgGetTransform);
+	if (vlen2(m_v2Direction) != 0.0f) {
+		vec2 v2NewPos = vadd(m_owner->getPos(), vscale(vnorm(m_v2Direction), m_fSpeed * _fDeltaTime));
+		vec2 v2Size = m_owner->getSize();
 
-		MessageSetTransform msgSetTransform;
-		msgSetTransform.pos = vadd(msgGetTransform.pos, vscale(vnorm(m_v2Direction), m_fSpeed));
-		msgSetTransform.size = msgGetTransform.size;
-		m_owner->receiveMessage(&msgSetTransform);
-	}
+		vec2 v2ValidPos = v2NewPos;
+		v2ValidPos.x = clamp(v2ValidPos.x, v2Size.x * 0.5f, WORLD_WIDTH - v2Size.x * 0.5f);
+		v2ValidPos.y = clamp(v2ValidPos.y, v2Size.y * 0.5f, WORLD_HEIGHT - v2Size.y * 0.5f);
 
-	if (!m_bHasInertia) {
-		m_v2Direction = vmake(0.0f, 0.0f);
+		if (v2ValidPos.x != v2NewPos.x || v2ValidPos.y != v2NewPos.y) {
+			MessageCheckCollision msgCheckCollision;
+			msgCheckCollision.overlap = true;
+			msgCheckCollision.deltaLife = -1;
+			msgCheckCollision.collisionChannel = CColliderComponent::EBoundariesCollider;
+			m_owner->receiveMessage(&msgCheckCollision);
+
+			if (m_bHasBounce && v2ValidPos.x != v2NewPos.x) {
+				m_v2Direction.x = -m_v2Direction.x;
+			}
+			if (m_bHasBounce && v2ValidPos.y != v2NewPos.y) {
+				m_v2Direction.y = -m_v2Direction.y;
+			}
+		}
+		m_owner->setPos(v2ValidPos);
 	}
 }
 
@@ -31,23 +43,12 @@ void CMovementComponent::receiveMessage(Message* _pMessage) {
 	if (!m_isActive)
 		return;
 
-	ASSERT(_pMessage && m_owner);
+	ASSERT(_pMessage);
 
-	if (MessageAddMovement* pMessage = dynamic_cast<MessageAddMovement*>(_pMessage)) {
-		m_v2Direction = vadd(m_v2Direction, pMessage->dir);
+	if (MessageSetMovementDir* pMessage = dynamic_cast<MessageSetMovementDir*>(_pMessage)) {
+		m_v2Direction = pMessage->dir;
 	}
-	else if (MessageCheckCollision* pMessage = dynamic_cast<MessageCheckCollision*>(_pMessage)) {
-		if (pMessage->overlap && m_bHasBounce) {
-			if (pMessage->bounceX) {
-				m_v2Direction.x = -m_v2Direction.x;
-			}
-			if (pMessage->bounceY) {
-				m_v2Direction.y = -m_v2Direction.y;
-			}
-			MessageSetAimDirection messageSetAimDirection;
-			messageSetAimDirection.changeAngle = true;
-			messageSetAimDirection.direction = m_v2Direction;
-			//m_owner->receiveMessage(&messageSetAimDirection);
-		}
+	else if (MessageSetMovementSpeed* pMessage = dynamic_cast<MessageSetMovementSpeed*>(_pMessage)) {
+		m_fSpeed = pMessage->speed;
 	}
 }

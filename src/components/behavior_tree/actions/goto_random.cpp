@@ -21,33 +21,26 @@ void CGoToRandomPositionAction::init(TiXmlElement* behaviorElem) {
 
 void CGoToRandomPositionAction::onEnter() {
 	Entity* self = getOwnerEntity();
-	MessageGetTransform messageSelfPos;
-	self->receiveMessage(&messageSelfPos);
+	vec2 selfSize = self->getSize();
 
 	mTargetPos = vmake(CORE_FRand(0.0f, WORLD_WIDTH), CORE_FRand(0.0f, WORLD_HEIGHT));
 
-	mTargetPos.x = clamp(mTargetPos.x, messageSelfPos.size.x * 0.5f, WORLD_WIDTH - messageSelfPos.size.x * 0.5f);
-	mTargetPos.y = clamp(mTargetPos.y, messageSelfPos.size.y * 0.5f, WORLD_HEIGHT - messageSelfPos.size.y * 0.5f);
+	mTargetPos.x = clamp(mTargetPos.x, selfSize.x * 0.5f, WORLD_WIDTH - selfSize.x * 0.5f);
+	mTargetPos.y = clamp(mTargetPos.y, selfSize.y * 0.5f, WORLD_HEIGHT - selfSize.y * 0.5f);
 }
 
 Status CGoToRandomPositionAction::update(float step) {
-
 	Entity* self = getOwnerEntity();
-
-	MessageGetTransform messageSelfPos;
-	self->receiveMessage(&messageSelfPos);
-
-	vec2 direction = vsub(mTargetPos, messageSelfPos.pos);
+	vec2 direction = vsub(mTargetPos, self->getPos());
 
 	if (vlen2(direction) <= 20 * 20)
 	{
 		return eSuccess;
 	}
 
-	MessageSetTransform msgSetTransform;
-	msgSetTransform.pos = vadd(messageSelfPos.pos, vscale(vnorm(direction), mSpeed));
-	msgSetTransform.size = messageSelfPos.size;
-	self->receiveMessage(&msgSetTransform);
+	MessageSetMovementDir msgSetMovementDir;
+	msgSetMovementDir.dir = direction;
+	self->receiveMessage(&msgSetMovementDir);
 
 	return eRunning;
 }

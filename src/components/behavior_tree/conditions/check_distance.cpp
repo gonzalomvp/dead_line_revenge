@@ -9,12 +9,8 @@
 Status CheckDistance::update(float step) {
 	Entity* self = getOwnerEntity();
 	Entity* player = g_pWorld->getPlayer();
-	MessageGetTransform messageSelfPos;
-	self->receiveMessage(&messageSelfPos);
-	MessageGetTransform messagePlayerPos;
-	player->receiveMessage(&messagePlayerPos);
 
-	float dist2 = vdist2(messageSelfPos.pos, messagePlayerPos.pos);
+	float dist2 = vdist2(self->getPos(), player->getPos());
 
 	mOwner->getBlackboard().setValueFloat("distance", dist2);
 	mOwner->getBlackboard().setValueEntity("player", player);

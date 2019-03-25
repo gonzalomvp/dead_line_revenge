@@ -9,13 +9,9 @@
 Status CAimToPlayerAction::update(float step) {
 	Entity* self = getOwnerEntity();
 	Entity* player = g_pWorld->getPlayer();
-	MessageGetTransform messageSelfPos;
-	self->receiveMessage(&messageSelfPos);
-	MessageGetTransform messagePlayerPos;
-	player->receiveMessage(&messagePlayerPos);
 
 	MessageSetAimDirection messageSetAimDirection;
-	messageSetAimDirection.direction = vnorm(vsub(messagePlayerPos.pos, messageSelfPos.pos));
+	messageSetAimDirection.direction = vnorm(vsub(player->getPos(), self->getPos()));
 	self->receiveMessage(&messageSetAimDirection);
 
 	return eSuccess;

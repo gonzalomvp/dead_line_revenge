@@ -14,10 +14,8 @@ void CColliderComponent::receiveMessage(Message* _pMessage) {
 	if (MessageCheckCollision* pMessage = dynamic_cast<MessageCheckCollision*>(_pMessage)) {
 		bool bIsOverlapping = false;
 
-		MessageGetTransform msgGetTransform;
-		m_owner->receiveMessage(&msgGetTransform);
-		vec2 v2Center = msgGetTransform.pos;
-		vec2 v2Size = msgGetTransform.size;
+		vec2 v2Center = m_owner->getPos();
+		vec2 v2Size = m_owner->getSize();
 
 		Entity* pOther = pMessage->other;
 

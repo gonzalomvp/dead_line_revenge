@@ -27,7 +27,7 @@ void CAIFireComponent::run(float _fDeltaTime) {
 
 	MessageSetAimDirection messageSetAimDirection;
 	messageSetAimDirection.direction = m_v2AimDirection;
-	messageSetAimDirection.changeAngle = true;
+	//messageSetAimDirection.changeAngle = true;
 	m_owner->receiveMessage(&messageSetAimDirection);
 
 	////MessageFire msgFire;

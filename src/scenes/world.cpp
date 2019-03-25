@@ -66,7 +66,6 @@ bool CWorld::init(uint16_t _uLevel) {
 	switch (_uLevel) {
 		case 1:
 			psFileName = "data/level1.json";
-
 			// Force test level
 			psFileName = "data/levelTest.json";
 			break;

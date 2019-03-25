@@ -25,11 +25,9 @@ void CRenderableComponent::run(float _fDeltaTime) {
 
 	ASSERT(m_owner && m_pSprite);
 
-	// Update pos and size based on entity transform
-	MessageGetTransform msgGetTransform;
-	m_owner->receiveMessage(&msgGetTransform);
-	m_pSprite->setPos(msgGetTransform.pos);
-	m_pSprite->setSize(msgGetTransform.size);
+	// Update pos and size
+	m_pSprite->setPos(m_owner->getPos());
+	m_pSprite->setSize(m_owner->getSize());
 
 	if (m_bAlignToAim) {
 		MessageGetAimDirection messageGetAimDirection;

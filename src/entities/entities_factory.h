@@ -34,6 +34,7 @@ public:
 		CWeaponComponent::EType  eWeapon;
 		vec2                     v2Size;
 		std::string              sImageFile;
+		std::string              sBTFile;
 	};
 
 	//CEntitiesFactory();
