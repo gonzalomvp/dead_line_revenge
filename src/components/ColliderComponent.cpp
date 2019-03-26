@@ -13,6 +13,7 @@ void CColliderComponent::receiveMessage(Message* _pMessage) {
 
 	if (MessageCheckCollision* pMessage = dynamic_cast<MessageCheckCollision*>(_pMessage)) {
 		bool bIsOverlapping = false;
+		int iCollisionDamage = 0;
 
 		vec2 v2Center = m_owner->getPos();
 		vec2 v2Size = m_owner->getSize();
@@ -29,12 +30,16 @@ void CColliderComponent::receiveMessage(Message* _pMessage) {
 			pMessage->collisionChannelsResponse = m_iCollisionChannelsResponse;
 			pMessage->other = nullptr;
 			pOther->receiveMessage(pMessage);
+
+			// Second entity response
 			bIsOverlapping = pMessage->overlap;
+			iCollisionDamage = pMessage->deltaLife;
 		}
 
 		// Second entity check
 		else if ((m_iCollisionChannelsResponse & pMessage->collisionChannel) || (pMessage->collisionChannelsResponse & m_iChannelMask)) {
 			bIsOverlapping = pMessage->overlap;
+			iCollisionDamage = pMessage->deltaLife;
 			if (!bIsOverlapping) {
 				switch (m_eType) {
 					case ECircleCollider:
@@ -72,7 +77,7 @@ void CColliderComponent::receiveMessage(Message* _pMessage) {
 		}
 		if (bIsOverlapping) {
 			MessageChangeLife mgsChangeLife;
-			mgsChangeLife.deltaLife = pMessage->deltaLife;
+			mgsChangeLife.deltaLife = iCollisionDamage;
 			m_owner->receiveMessage(&mgsChangeLife);
 		}
 	}

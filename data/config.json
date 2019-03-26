@@ -71,7 +71,7 @@
 		"maxBullets": 1,
 		"bulletSpeed": 0.0,
 		"bulletDamage": 0,
-		"bulletLife": -1,
+		"bulletLife": 1,
 		"bulletRange": 0,
 		"bulletSize": [ 20 ,20 ],
 		"isAutomatic": false,
@@ -219,5 +219,5 @@
 		"behaviorTree": "data/bt/boss_bt.xml"
 	}
 	],
-	"pickups": [ "revolver", "machinegun", "shotgun", "mines", "c4", "rocket launcher", "nuclear bomb" ]
+	"pickups": [ "c4" ]
 }

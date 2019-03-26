@@ -1,0 +1,38 @@
+{
+	"playerLife": -1,
+	"playerSpeed": 300,
+	"pickupPoints": 10,
+	"pickupSpawnWait": 0.2,
+	"enemySpawnWait": 2.0,
+	"maxEnemies": 1,
+	"enemies": [
+	{
+		"type": "melee",
+		"spawnProbability": 0,
+		"points": 1
+	},
+	{
+		"type": "big",
+		"spawnProbability": 1,
+		"points": 2
+	},
+	{
+		"type": "range",
+		"spawnProbability": 0,
+		"points": 4
+	},
+	{
+		"type": "turret",
+		"spawnProbability": 0,
+		"points": 3
+	},
+	{
+		"type": "boss",
+		"spawnProbability": 0,
+		"points": 3
+	}
+	],
+	"turrets": [
+	
+	]
+}

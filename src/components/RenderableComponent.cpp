@@ -58,8 +58,8 @@ void CRenderableComponent::receiveMessage(Message* _pMessage) {
 
 	ASSERT(_pMessage && m_pSprite && g_pGraphicsEngine);
 
-	if (MessageChangeLife* pMessage = dynamic_cast<MessageChangeLife*>(_pMessage)) {
-		if (m_iHitTimer <= 0 && pMessage->deltaLife < 0) {
+	if (MessageDamaged* pMessage = dynamic_cast<MessageDamaged*>(_pMessage)) {
+		if (m_iHitTimer <= 0) {
 			m_iHitTimer = m_iHitTime;
 		}
 	}

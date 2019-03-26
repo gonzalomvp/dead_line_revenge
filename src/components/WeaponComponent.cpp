@@ -53,8 +53,9 @@ void CWeaponComponent::run(float _fDeltaTime) {
 	}
 
 	if (m_bIsFiring && m_pRemoteBullet) {
-		MessageDestroy msgDestroy;
-		m_pRemoteBullet->receiveMessage(&msgDestroy);
+		MessageChangeLife msgChangeLife;
+		msgChangeLife.deltaLife = -9999999;
+		m_pRemoteBullet->receiveMessage(&msgChangeLife);
 		m_pRemoteBullet = nullptr;
 		m_bIsFiring = false;
 		m_iCurrentBullets = m_iMaxBullets;

@@ -182,7 +182,7 @@ Entity* CEntitiesFactory::createBullet(CWeaponComponent::EType _eWeaponType, vec
 	switch (_eOwnerType) {
 	case Entity::EPLAYER: {
 		if (_eWeaponType == CWeaponComponent::EMINES) {
-			CColliderComponent* collider = NEW(CColliderComponent, bullet, CColliderComponent::ECircleCollider, 0, CColliderComponent::ENoneCollider, CColliderComponent::EPlayerCollider | CColliderComponent::EEnemyCollider | CColliderComponent::EPlayerWeaponCollider | CColliderComponent::EEnemyWeaponCollider);
+			CColliderComponent* collider = NEW(CColliderComponent, bullet, CColliderComponent::ECircleCollider, weaponData.iBulletDamage, CColliderComponent::ENoneCollider, CColliderComponent::EPlayerCollider | CColliderComponent::EEnemyCollider | CColliderComponent::EPlayerWeaponCollider | CColliderComponent::EEnemyWeaponCollider);
 			collider->setActivationDelay(20);
 			collider->init();
 		}
