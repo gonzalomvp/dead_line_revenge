@@ -5,7 +5,7 @@ class CBehaviorNodeTreeComponent;
 
 class CGoToRandomPositionAction : public CBehaviorNode {
 public:
-	CGoToRandomPositionAction(CBehaviorNodeTreeComponent* owner) : CBehaviorNode(owner) {}
+	CGoToRandomPositionAction(CBehaviorNodeTreeComponent* owner) : CBehaviorNode(owner), m_fArriveDistance(0.0f) {}
 	
 	// CBehaviorNode
 	virtual void init(TiXmlElement* behaviorElem) override;
@@ -16,6 +16,6 @@ protected:
 
 private:
 	vec2 mTargetPos;
-	float mSpeed;
+	float m_fArriveDistance;
 };
 

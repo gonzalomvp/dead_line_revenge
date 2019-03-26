@@ -23,6 +23,7 @@
 #include "components/behavior_tree/actions/rotate_aim.h"
 #include "components/behavior_tree/actions/aim_player.h"
 #include "components/behavior_tree/actions/change_aim_direction.h"
+#include "components/behavior_tree/actions/change_speed.h"
 
 #pragma pack(push)
 #pragma pack()

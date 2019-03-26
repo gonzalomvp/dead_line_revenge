@@ -35,6 +35,7 @@
     <ClInclude Include="..\src\components\AIMeleeComponent.h" />
     <ClInclude Include="..\src\components\behavior_tree\actions\aim_player.h" />
     <ClInclude Include="..\src\components\behavior_tree\actions\change_aim_direction.h" />
+    <ClInclude Include="..\src\components\behavior_tree\actions\change_speed.h" />
     <ClInclude Include="..\src\components\behavior_tree\actions\change_sprite.h" />
     <ClInclude Include="..\src\components\behavior_tree\actions\change_weapon.h" />
     <ClInclude Include="..\src\components\behavior_tree\actions\chase.h" />
@@ -120,6 +121,7 @@
     <ClCompile Include="..\src\components\AIMeleeComponent.cpp" />
     <ClCompile Include="..\src\components\behavior_tree\actions\aim_player.cpp" />
     <ClCompile Include="..\src\components\behavior_tree\actions\change_aim_direction.cpp" />
+    <ClCompile Include="..\src\components\behavior_tree\actions\change_speed.cpp" />
     <ClCompile Include="..\src\components\behavior_tree\actions\change_sprite.cpp" />
     <ClCompile Include="..\src\components\behavior_tree\actions\change_weapon.cpp" />
     <ClCompile Include="..\src\components\behavior_tree\actions\chase.cpp" />
@@ -180,7 +182,7 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>{CC0EB618-AC99-4DFE-A4E1-534AD384C3A1}</ProjectGuid>
     <RootNamespace>dead_line_revenge</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.17134.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
     <ProjectName>dead_line_revenge</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />

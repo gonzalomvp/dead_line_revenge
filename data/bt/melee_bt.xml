@@ -1,6 +1,9 @@
 <root>
   <behavior type="sequence">
-	<behavior type="goToPlayerPosition" />
+    <behavior type="goToPlayerPosition">
+      <param value="20.0" />
+      <param value="1" />
+    </behavior>
     <behavior type="wait">
       <param value="0.5" />
     </behavior>

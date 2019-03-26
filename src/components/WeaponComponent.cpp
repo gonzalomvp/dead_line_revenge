@@ -59,7 +59,7 @@ void CWeaponComponent::run(float _fDeltaTime) {
 		m_bIsFiring = false;
 		m_iCurrentBullets = m_iMaxBullets;
 	}
-	else if (m_bIsFiring && m_iFireTimer <= 0 && m_iReloadTimer <= 0 && m_iCurrentBullets > 0) {
+	else if (m_bIsFiring && m_iFireTimer <= 0 && m_iReloadTimer <= 0 && m_iCurrentBullets != 0) {
 		m_iFireTimer = m_iFireRate;
 		--m_iCurrentBullets;
 		if (m_iCurrentBullets == 0) {

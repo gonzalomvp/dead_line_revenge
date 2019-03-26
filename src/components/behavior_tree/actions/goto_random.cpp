@@ -16,7 +16,7 @@ void CGoToRandomPositionAction::init(TiXmlElement* behaviorElem) {
 	}
 
 	ASSERT(vParams.size() == 1, "CGoToRandomPosition must have 1 param");
-	mSpeed = std::stof(vParams[0]);
+	m_fArriveDistance = std::stof(vParams[0]);
 }
 
 void CGoToRandomPositionAction::onEnter() {
@@ -33,8 +33,9 @@ Status CGoToRandomPositionAction::update(float step) {
 	Entity* self = getOwnerEntity();
 	vec2 direction = vsub(mTargetPos, self->getPos());
 
-	if (vlen2(direction) <= 20 * 20)
-	{
+	if (vlen2(direction) <= m_fArriveDistance * m_fArriveDistance) {
+		MessageSetMovementDir msgSetMovementDir;
+		self->receiveMessage(&msgSetMovementDir);
 		return eSuccess;
 	}
 

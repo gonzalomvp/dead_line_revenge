@@ -10,7 +10,7 @@ void CTransformComponent::run(float _fDeltaTime) {
 	if (!m_isActive)
 		return;
 
-	m_v2Size = vadd(m_v2Size, m_v2SizeIncrement);
+	m_owner->setSize(vadd(m_owner->getSize(), m_v2SizeIncrement));
 }
 
 void CTransformComponent::receiveMessage(Message* _pMessage) {
