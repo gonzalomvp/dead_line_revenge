@@ -29,10 +29,21 @@ void CRenderableComponent::run(float _fDeltaTime) {
 	m_pSprite->setPos(m_owner->getPos());
 	m_pSprite->setSize(m_owner->getSize());
 
-	if (m_bAlignToAim) {
+	// Update angle
+	vec2 v2Orientation = vmake(0.0f, 0.0f);
+	if (m_bAlignToMovement) {
+		MessageGetMovementDir messageGetMovementDirection;
+		m_owner->receiveMessage(&messageGetMovementDirection);
+		v2Orientation = messageGetMovementDirection.dir;
+		
+	}
+	if (m_bAlignToAim && vlen2(v2Orientation) == 0.0f) {
 		MessageGetAimDirection messageGetAimDirection;
 		m_owner->receiveMessage(&messageGetAimDirection);
-		m_pSprite->setAngle(vangle(messageGetAimDirection.direction));
+		v2Orientation = messageGetAimDirection.direction;
+	}
+	if (vlen2(v2Orientation) != 0.0f) {
+		m_pSprite->setAngle(vangle(v2Orientation));
 	}
 
 	// Blink effect when receiving a hit

@@ -145,7 +145,7 @@ Entity* CEntitiesFactory::createPlayer(vec2 _v2Pos) {
 	Entity* player = NEW(Entity, Entity::EPLAYER, _v2Pos, vmake(30.0f, 25.0f));
 	//CTransformComponent* transform = NEW(CTransformComponent, player, _v2Pos, vmake(30, 25));
 	//transform->init();
-	CRenderableComponent* renderable = NEW(CRenderableComponent, player, "data/player.png", 0.0f, 1.0f, 5, true, 10);
+	CRenderableComponent* renderable = NEW(CRenderableComponent, player, "data/player.png", 0.0f, 1.0f, 5, false, true, 10);
 	renderable->init();
 	CPlayerControllerComponent* playerControl = NEW(CPlayerControllerComponent, player);
 	playerControl->init();
@@ -173,7 +173,7 @@ Entity* CEntitiesFactory::createBullet(CWeaponComponent::EType _eWeaponType, vec
 
 	CTransformComponent* transform = NEW(CTransformComponent, bullet, _v2Pos, weaponData.v2BulletSize);
 	transform->init();
-	CRenderableComponent* renderable = NEW(CRenderableComponent, bullet, weaponData.sImageFile, vangle(_v2Direction), 1.0f, 5);
+	CRenderableComponent* renderable = NEW(CRenderableComponent, bullet, weaponData.sImageFile, vangle(_v2Direction), 1.0f, 5, true, false);
 	renderable->init();
 	CMovementComponent* movement = NEW(CMovementComponent, bullet, _v2Direction, weaponData.fBulletSpeed, weaponData.bIsBouncy);
 	movement->init();
@@ -260,6 +260,7 @@ Entity* CEntitiesFactory::createEnemy(vec2 _v2Pos, Entity::EType _tEnemyType, co
 
 	Entity* enemy = NEW(Entity, _tEnemyType, _v2Pos, tEnemyDef.v2Size);
 	
+	bool bAlignToMovement = false;
 	bool bAlignToAim = false;
 	std::string sBTFile = tEnemyDef.sBTFile;
 	if (_sBTFile != "") {
@@ -295,13 +296,9 @@ Entity* CEntitiesFactory::createEnemy(vec2 _v2Pos, Entity::EType _tEnemyType, co
 		break;
 	}	
 	case Entity::EENEMYRANGE: {
-		bAlignToAim = true;
-		CAIMeleeComponent* aiMelee = NEW(CAIMeleeComponent, enemy, tEnemyDef.fSpeed, 200);
-		aiMelee->init();
-		CAIFleeComponent* aiEvade = NEW(CAIFleeComponent, enemy, tEnemyDef.fSpeed, 150);
-		aiEvade->init();
-		CAIFireComponent * aiFire = NEW(CAIFireComponent, enemy);
-		aiFire->init();
+		bAlignToMovement = true;
+		BossIAComponent * bossAI = NEW(BossIAComponent, enemy, sBTFile.c_str());
+		bossAI->init();
 		break;
 	}
 	case Entity::EENEMYTURRET: {
@@ -327,7 +324,7 @@ Entity* CEntitiesFactory::createEnemy(vec2 _v2Pos, Entity::EType _tEnemyType, co
 		break;
 	}
 
-	CRenderableComponent* renderable = NEW(CRenderableComponent, enemy, tEnemyDef.sImageFile.c_str(), 0.0f, 1.0f, 5, bAlignToAim, 5);
+	CRenderableComponent* renderable = NEW(CRenderableComponent, enemy, tEnemyDef.sImageFile.c_str(), 0.0f, 1.0f, 5, bAlignToMovement, bAlignToAim, 5);
 	renderable->init();
 
 	return enemy;

@@ -45,7 +45,10 @@ void CMovementComponent::receiveMessage(Message* _pMessage) {
 
 	ASSERT(_pMessage);
 
-	if (MessageSetMovementDir* pMessage = dynamic_cast<MessageSetMovementDir*>(_pMessage)) {
+	if (MessageGetMovementDir* pMessage = dynamic_cast<MessageGetMovementDir*>(_pMessage)) {
+		pMessage->dir = m_v2Direction;
+	}
+	else if (MessageSetMovementDir* pMessage = dynamic_cast<MessageSetMovementDir*>(_pMessage)) {
 		m_v2Direction = pMessage->dir;
 	}
 	else if (MessageSetMovementSpeed* pMessage = dynamic_cast<MessageSetMovementSpeed*>(_pMessage)) {
