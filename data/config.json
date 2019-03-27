@@ -188,10 +188,10 @@
 		"type": "range",
 		"life": 1,
 		"invencibleTime": 0,
-		"speed": 120.0,
+		"speed": 200.0,
 		"collisionDamage": -1,
 		"weapon": "enemy weapon",
-		"size": [ 25 ,25 ],
+		"size": [ 40 ,40 ],
 		"imageFile": "data/rangeEnemy.png",
 		"behaviorTree": "data/bt/range_bt.xml"
 	},

@@ -52,7 +52,7 @@
             <param value="20.0" />
           </behavior>
           <behavior type="wait">
-            <param value="1.0" />
+            <param value="0.2" />
           </behavior>
         </behavior>
         

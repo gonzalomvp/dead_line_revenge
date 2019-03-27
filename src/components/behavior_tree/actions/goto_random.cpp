@@ -27,6 +27,25 @@ void CGoToRandomPositionAction::onEnter() {
 
 	mTargetPos.x = clamp(mTargetPos.x, selfSize.x * 0.5f, WORLD_WIDTH - selfSize.x * 0.5f);
 	mTargetPos.y = clamp(mTargetPos.y, selfSize.y * 0.5f, WORLD_HEIGHT - selfSize.y * 0.5f);
+
+
+	vec2 playerPos = g_pWorld->getPlayer()->getPos();
+
+	vec2 playerToEnemy = vnorm(vsub(self->getPos(),playerPos));
+	mTargetPos = vadd(self->getPos(), vscale(playerToEnemy, 300.0f));
+
+	float fAngleStep = 10.f * (rand() % 2 - 0.5f) * 2.0f;
+	int iStep = 0;
+	float fInitAngle = vangle(playerToEnemy);
+	while (mTargetPos.x < selfSize.x * 0.5f || mTargetPos.x > WORLD_WIDTH - selfSize.x * 0.5f 
+		|| mTargetPos.y < selfSize.y * 0.5f || mTargetPos.y > WORLD_HEIGHT - selfSize.y * 0.5f) {
+		int iNumStep = iStep / 2 + 1;
+		float fSign = (iStep % 2 - 0.5f) * 2.0f;
+
+		float fAngle = fInitAngle + fAngleStep * iNumStep * fSign;
+		mTargetPos = vadd(self->getPos(), vscale(vunit(DEG2RAD(fAngle)), 300.0f));
+		++iStep;
+	}
 }
 
 Status CGoToRandomPositionAction::update(float step) {
