@@ -71,7 +71,7 @@
 		"maxBullets": 1,
 		"bulletSpeed": 0.0,
 		"bulletDamage": 0,
-		"bulletLife": 1,
+		"bulletLife": -1,
 		"bulletRange": 0,
 		"bulletSize": [ 20 ,20 ],
 		"isAutomatic": false,
@@ -167,7 +167,7 @@
 	{
 		"type": "melee",
 		"life": 1,
-		"invencibleTime": 10,
+		"invencibleTime": 0,
 		"speed": 180.0,
 		"collisionDamage": -1,
 		"size": [ 25 ,25 ],
@@ -177,7 +177,7 @@
 	{
 		"type": "big",
 		"life": 4,
-		"invencibleTime": 20,
+		"invencibleTime": 0,
 		"speed": 120.0,
 		"collisionDamage": -2,
 		"size": [ 35 ,35 ],
@@ -187,7 +187,7 @@
 	{
 		"type": "range",
 		"life": 1,
-		"invencibleTime": 10,
+		"invencibleTime": 0,
 		"speed": 120.0,
 		"collisionDamage": -1,
 		"weapon": "enemy weapon",
@@ -198,7 +198,7 @@
 	{
 		"type": "turret",
 		"life": 3,
-		"invencibleTime": 10,
+		"invencibleTime": 0,
 		"speed": 120.0,
 		"collisionDamage": -1,
 		"weapon": "enemy weapon",
@@ -219,5 +219,5 @@
 		"behaviorTree": "data/bt/boss_bt.xml"
 	}
 	],
-	"pickups": [ "c4" ]
+	"pickups": [ "revolver", "machinegun", "shotgun", "mines", "c4", "rocket launcher", "nuclear bomb" ]
 }

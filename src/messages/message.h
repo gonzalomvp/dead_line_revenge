@@ -14,10 +14,6 @@ struct MessageChangeLife : public Message {
 	int deltaLife = 0;
 };
 
-struct MessageDamaged : public Message {
-	int deltaLife = 0;
-};
-
 struct MessageSetMovementDir : public Message {
 	vec2 dir = vmake(0.0f, 0.0f);
 };

@@ -168,7 +168,7 @@ Entity* CEntitiesFactory::createBullet(CWeaponComponent::EType _eWeaponType, vec
 		return nullptr;
 	}
 	TWeaponDef weaponData = m_mWeaponDef[_eWeaponType];
-
+	
 	Entity* bullet = NEW(Entity, Entity::EWEAPON, _v2Pos, weaponData.v2BulletSize);
 
 	CTransformComponent* transform = NEW(CTransformComponent, bullet, _v2Pos, weaponData.v2BulletSize);
@@ -179,25 +179,37 @@ Entity* CEntitiesFactory::createBullet(CWeaponComponent::EType _eWeaponType, vec
 	movement->init();
 
 	// Depending on the type of bullet it has different collider setup
-	switch (_eOwnerType) {
-	case Entity::EPLAYER: {
-		if (_eWeaponType == CWeaponComponent::EMINES) {
-			CColliderComponent* collider = NEW(CColliderComponent, bullet, CColliderComponent::ECircleCollider, weaponData.iBulletDamage, CColliderComponent::ENoneCollider, CColliderComponent::EPlayerCollider | CColliderComponent::EEnemyCollider | CColliderComponent::EPlayerWeaponCollider | CColliderComponent::EEnemyWeaponCollider);
-			collider->setActivationDelay(20);
-			collider->init();
-		}
-		else {
-			CColliderComponent* collider = NEW(CColliderComponent, bullet, CColliderComponent::ECircleCollider, weaponData.iBulletDamage, CColliderComponent::EPlayerWeaponCollider, CColliderComponent::EEnemyCollider | CColliderComponent::EBoundariesCollider);
-			collider->init();
-		}
-		break;
+	int iColliderChannelMask = CColliderComponent::ENoneCollider;
+	int iColliderChannelMaskResponse = CColliderComponent::ENoneCollider;
+	int iActivationDelay = 0;
+
+	switch (_eWeaponType) {
+		case CWeaponComponent::EMINES:
+			iColliderChannelMask = CColliderComponent::ENoneCollider;
+			iColliderChannelMaskResponse = CColliderComponent::EPlayerCollider | CColliderComponent::EEnemyCollider | CColliderComponent::EPlayerWeaponCollider | CColliderComponent::EEnemyWeaponCollider;
+			iActivationDelay = 20;
+			break;
+		case CWeaponComponent::EC4:
+			iColliderChannelMask = CColliderComponent::ENoneCollider;
+			iColliderChannelMaskResponse = CColliderComponent::ENoneCollider;
+			break;
+		default:
+			switch (_eOwnerType) {
+				case Entity::EPLAYER:
+					iColliderChannelMask = CColliderComponent::EPlayerWeaponCollider;
+					iColliderChannelMaskResponse = CColliderComponent::EEnemyCollider | CColliderComponent::EBoundariesCollider;
+					break;
+				default:
+					iColliderChannelMask = CColliderComponent::EEnemyWeaponCollider;
+					iColliderChannelMaskResponse = CColliderComponent::EPlayerCollider | CColliderComponent::EBoundariesCollider;
+					break;
+			}
+			break;
 	}
-	default: {
-		CColliderComponent* collider = NEW(CColliderComponent, bullet, CColliderComponent::ECircleCollider, weaponData.iBulletDamage, CColliderComponent::EEnemyWeaponCollider, CColliderComponent::EPlayerCollider | CColliderComponent::EBoundariesCollider);
-		collider->init();
-		break;
-	}
-	}
+	CColliderComponent* collider = NEW(CColliderComponent, bullet, CColliderComponent::ECircleCollider, weaponData.iBulletDamage, iColliderChannelMask, iColliderChannelMaskResponse);
+	collider->setActivationDelay(iActivationDelay);
+	collider->init();
+
 	if (weaponData.bIsExplossive) {
 		CExplossiveComponent* explossive = NEW(CExplossiveComponent, bullet);
 		explossive->init();
@@ -211,20 +223,20 @@ Entity* CEntitiesFactory::createExplossion(vec2 _v2Pos, CWeaponComponent::EType 
 	vec2 v2Size = vmake(0.0f, 0.0f);
 	vec2 v2SizeIncrement = vmake(0.0f, 0.0f);
 	int iDuration = 0;
-	int iColliderMask = 0;
+	int iColliderChannelMask = CColliderComponent::ENoneCollider;
 
 	switch (_eWeaponType) {
 		case CWeaponComponent::ENUCLEARBOMB:
 			v2Size = vmake(20.0f, 20.0f);
 			v2SizeIncrement = vmake(8.0f, 8.0f);
 			iDuration = 100;
-			iColliderMask = CColliderComponent::EPlayerWeaponCollider | CColliderComponent::EBoundariesCollider;
+			iColliderChannelMask = CColliderComponent::EPlayerWeaponCollider | CColliderComponent::EBoundariesCollider;
 			break;
 		default:
 			v2Size = vmake(10.0f, 10.0f);
 			v2SizeIncrement = vmake(2.0f, 2.0f);
 			iDuration = 50;
-			iColliderMask = CColliderComponent::EPlayerWeaponCollider | CColliderComponent::EEnemyWeaponCollider | CColliderComponent::EBoundariesCollider;
+			iColliderChannelMask = CColliderComponent::EPlayerWeaponCollider | CColliderComponent::EEnemyWeaponCollider | CColliderComponent::EBoundariesCollider;
 			break;
 	}
 
@@ -234,7 +246,7 @@ Entity* CEntitiesFactory::createExplossion(vec2 _v2Pos, CWeaponComponent::EType 
 	renderable->init();
 	CTransformComponent* transform = NEW(CTransformComponent, explossion, _v2Pos, v2Size, v2SizeIncrement);
 	transform->init();
-	CColliderComponent* collider = NEW(CColliderComponent, explossion, CColliderComponent::ECircleCollider, -5, iColliderMask, CColliderComponent::ENoneCollider);
+	CColliderComponent* collider = NEW(CColliderComponent, explossion, CColliderComponent::ECircleCollider, -5, iColliderChannelMask, CColliderComponent::ENoneCollider);
 	collider->init();
 	CLifeComponent* life = NEW(CLifeComponent, explossion, 1, iDuration, 0);
 	life->init();
@@ -315,7 +327,7 @@ Entity* CEntitiesFactory::createEnemy(vec2 _v2Pos, Entity::EType _tEnemyType, co
 		break;
 	}
 
-	CRenderableComponent* renderable = NEW(CRenderableComponent, enemy, tEnemyDef.sImageFile.c_str(), 0.0f, 1.0f, 5, bAlignToAim, tEnemyDef.iInvencibleTime);
+	CRenderableComponent* renderable = NEW(CRenderableComponent, enemy, tEnemyDef.sImageFile.c_str(), 0.0f, 1.0f, 5, bAlignToAim, 5);
 	renderable->init();
 
 	return enemy;

@@ -19,12 +19,12 @@ public:
 		ENoneCollider = 0,
 	};
 
-	CColliderComponent(Entity* _pOwner, EType _eType, int _iDamage, int _iChannelMask, int _iCollisionChannelsResponse)
+	CColliderComponent(Entity* _pOwner, EType _eType, int _iDamage, int _iChannelMask, int _iChannelMaskResponse)
 	: Component(_pOwner)
 	, m_eType(_eType)
 	, m_iDamage(_iDamage)
 	, m_iChannelMask(_iChannelMask)
-	, m_iCollisionChannelsResponse(_iCollisionChannelsResponse)
+	, m_iChannelMaskResponse(_iChannelMaskResponse)
 	{}
 
 	// CComponent
@@ -34,5 +34,5 @@ private:
 	EType m_eType;
 	int   m_iDamage;
 	int   m_iChannelMask;
-	int   m_iCollisionChannelsResponse;
+	int   m_iChannelMaskResponse;
 };

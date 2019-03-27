@@ -27,7 +27,7 @@ void CColliderComponent::receiveMessage(Message* _pMessage) {
 			pMessage->size = v2Size;
 			pMessage->deltaLife = m_iDamage;
 			pMessage->collisionChannel = m_iChannelMask;
-			pMessage->collisionChannelsResponse = m_iCollisionChannelsResponse;
+			pMessage->collisionChannelsResponse = m_iChannelMaskResponse;
 			pMessage->other = nullptr;
 			pOther->receiveMessage(pMessage);
 
@@ -37,7 +37,7 @@ void CColliderComponent::receiveMessage(Message* _pMessage) {
 		}
 
 		// Second entity check
-		else if ((m_iCollisionChannelsResponse & pMessage->collisionChannel) || (pMessage->collisionChannelsResponse & m_iChannelMask)) {
+		else if ((m_iChannelMaskResponse & pMessage->collisionChannel) || (pMessage->collisionChannelsResponse & m_iChannelMask)) {
 			bIsOverlapping = pMessage->overlap;
 			iCollisionDamage = pMessage->deltaLife;
 			if (!bIsOverlapping) {
@@ -65,7 +65,7 @@ void CColliderComponent::receiveMessage(Message* _pMessage) {
 				}
 				if (bIsOverlapping) {
 					bIsOverlapping = false;
-					if (m_iCollisionChannelsResponse & pMessage->collisionChannel) {
+					if (m_iChannelMaskResponse & pMessage->collisionChannel) {
 						bIsOverlapping = true;
 					}
 					if (pMessage->collisionChannelsResponse & m_iChannelMask) {
