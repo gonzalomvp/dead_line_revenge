@@ -6,7 +6,21 @@
 #include "scenes/world.h"
 #include "components/behavior_tree/blackboard.h"
 
-Status CheckDistance::update(float step) {
+void CCheckDistanceCondition::init(TiXmlElement* behaviorElem) {
+	ASSERT(behaviorElem);
+
+	std::vector<std::string> vParams;
+	TiXmlElement* paramElem = behaviorElem->FirstChildElement("param");
+	for (paramElem; paramElem; paramElem = paramElem->NextSiblingElement()) {
+		ASSERT(paramElem->Attribute("value"), "Missing value attribute in param");
+		vParams.push_back(paramElem->Attribute("value"));
+	}
+
+	ASSERT(vParams.size() == 1, "CCheckDistanceCondition must have 1 param");
+	mMinDistance = std::stoi(vParams[0]);
+}
+
+Status CCheckDistanceCondition::update(float step) {
 	Entity* self = getOwnerEntity();
 	Entity* player = g_pWorld->getPlayer();
 

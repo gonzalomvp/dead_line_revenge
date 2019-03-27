@@ -296,7 +296,7 @@ Entity* CEntitiesFactory::createEnemy(vec2 _v2Pos, Entity::EType _tEnemyType, co
 		break;
 	}	
 	case Entity::EENEMYRANGE: {
-		bAlignToMovement = true;
+		bAlignToAim = true;
 		BossIAComponent * bossAI = NEW(BossIAComponent, enemy, sBTFile.c_str());
 		bossAI->init();
 		break;

@@ -1,0 +1,37 @@
+<root>
+  <behavior type="parallel">
+    <behavior type="aimToPlayer" />
+    <behavior type="sequence">
+      <behavior type="fire"/>
+      <behavior type="wait">
+        <param value="1.0" />
+      </behavior>
+    </behavior>
+    <behavior type="selector">
+      <behavior type="sequence">
+        <behavior type="checkDistance">
+          <param value="300" />
+        </behavior>
+        <behavior type="selector">
+          <behavior type="sequence">
+            <behavior type="checkDistance">
+              <param value="100" />
+            </behavior>
+            <behavior type="goToRandomPosition">
+              <param value="20.0" />
+            </behavior>
+          </behavior>
+        </behavior>
+      </behavior>
+      <behavior type="sequence">
+        <behavior type="goToPlayerPosition">
+          <param value="150.0" />
+          <param value="1" />
+        </behavior>
+        <behavior type="wait">
+          <param value="0.0" />
+        </behavior>
+      </behavior>
+    </behavior>
+  </behavior>
+</root>

@@ -5,7 +5,8 @@ REG_BEHAVIOR(RepeatNode,   "repeat")
 REG_BEHAVIOR(ParallelNode, "parallel")
 
 // Conditions
-REG_BEHAVIOR(CheckLifeCondition, "checkLife")
+REG_BEHAVIOR(CheckLifeCondition,     "checkLife")
+REG_BEHAVIOR(CheckDistanceCondition, "checkDistance")
 
 // Actions
 REG_BEHAVIOR(ChangeWeaponAction,       "changeWeapon")

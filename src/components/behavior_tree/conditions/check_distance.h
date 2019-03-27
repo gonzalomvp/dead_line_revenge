@@ -3,13 +3,16 @@
 
 class CBehaviorNodeTreeComponent;
 
-class CheckDistance : public CBehaviorNode {
+class CCheckDistanceCondition : public CBehaviorNode {
 public:
-	CheckDistance(CBehaviorNodeTreeComponent* owner, float minDistance) : CBehaviorNode(owner), mMinDistance(minDistance) {}
+	CCheckDistanceCondition(CBehaviorNodeTreeComponent* owner) : CBehaviorNode(owner) {}
+
+	// CBehaviorNode
+	virtual void init(TiXmlElement* behaviorElem) override;
 
 protected:
 	virtual Status update(float step) override;
 
 private:
-	float mMinDistance;
+	int mMinDistance;
 };
