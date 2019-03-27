@@ -9,6 +9,7 @@ public:
 	
 	// CBehaviorNode
 	virtual void init(TiXmlElement* behaviorElem) override;
+	virtual void abort()                          override;
 
 protected:
 	virtual void onEnter() override;

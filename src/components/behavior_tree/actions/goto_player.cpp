@@ -60,3 +60,11 @@ Status CGoToPlayerPositionAction::update(float step) {
 
 	return eRunning;
 }
+
+void CGoToPlayerPositionAction::abort() {
+	CBehaviorNode::abort();
+
+	Entity* self = getOwnerEntity();
+	MessageSetMovementDir msgSetMovementDir;
+	self->receiveMessage(&msgSetMovementDir);
+}

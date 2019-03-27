@@ -45,3 +45,11 @@ Status CGoToRandomPositionAction::update(float step) {
 
 	return eRunning;
 }
+
+void CGoToRandomPositionAction::abort() {
+	CBehaviorNode::abort();
+
+	Entity* self = getOwnerEntity();
+	MessageSetMovementDir msgSetMovementDir;
+	self->receiveMessage(&msgSetMovementDir);
+}
