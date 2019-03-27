@@ -15,4 +15,5 @@ protected:
 
 private:
 	int mMinDistance;
+	bool m_bNegate;
 };

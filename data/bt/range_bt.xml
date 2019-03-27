@@ -1,13 +1,72 @@
 <root>
   <behavior type="parallel">
+    
     <behavior type="aimToPlayer" />
+    
     <behavior type="sequence">
       <behavior type="fire"/>
       <behavior type="wait">
         <param value="1.0" />
       </behavior>
     </behavior>
+
     <behavior type="selector">
+      
+      <behavior type="parallel">
+        <behavior type="checkDistance">
+          <param value="200" />
+          <param value="1" />
+        </behavior>
+        <!--No tiene que huir-->
+        <behavior type="selector">
+          
+          <behavior type="sequence">
+            <behavior type="checkDistance">
+              <param value="400" />
+              <param value="1" />
+            </behavior>
+            <behavior type="goToPlayerPosition">
+              <param value="300.0" />
+              <param value="1" />
+            </behavior>
+          </behavior>
+
+          <behavior type="wait">
+            <param value="0.0" />
+          </behavior>
+          
+        </behavior>
+          
+        
+      </behavior>
+
+      <!--Huida-->
+      <behavior type="parallel">
+        <behavior type="checkDistance">
+          <param value="300" />
+          <param value="0" />
+        </behavior>
+
+        <behavior type="sequence">
+          <behavior type="goToRandomPosition">
+            <param value="20.0" />
+          </behavior>
+          <behavior type="wait">
+            <param value="1.0" />
+          </behavior>
+        </behavior>
+        
+      </behavior> 
+        
+    </behavior><!--Selector-->
+    
+  </behavior><!--Parallel-->
+  
+ </root>
+
+
+
+    <!-- behavior type="selector">
       <behavior type="sequence">
         <behavior type="checkDistance">
           <param value="300" />
@@ -34,4 +93,4 @@
       </behavior>
     </behavior>
   </behavior>
-</root>
+</root-->

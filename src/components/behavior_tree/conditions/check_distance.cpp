@@ -16,8 +16,9 @@ void CCheckDistanceCondition::init(TiXmlElement* behaviorElem) {
 		vParams.push_back(paramElem->Attribute("value"));
 	}
 
-	ASSERT(vParams.size() == 1, "CCheckDistanceCondition must have 1 param");
+	ASSERT(vParams.size() == 2, "CCheckDistanceCondition must have 2 param");
 	mMinDistance = std::stoi(vParams[0]);
+	m_bNegate = std::stoi(vParams[1]);
 }
 
 Status CCheckDistanceCondition::update(float step) {
@@ -29,7 +30,16 @@ Status CCheckDistanceCondition::update(float step) {
 	mOwner->getBlackboard().setValueFloat("distance", dist2);
 	mOwner->getBlackboard().setValueEntity("player", player);
 
-	if (dist2 < (mMinDistance * mMinDistance)) {
+	bool bIsAtDistance = false;
+	if (dist2 <= (mMinDistance * mMinDistance)) {
+		bIsAtDistance = true;
+	}
+
+	if (m_bNegate) {
+		bIsAtDistance = !bIsAtDistance;
+	}
+
+	if (bIsAtDistance) {
 		return eSuccess;
 	}
 
