@@ -42,6 +42,7 @@
     <ClInclude Include="..\src\components\behavior_tree\actions\check_life.h" />
     <ClInclude Include="..\src\components\behavior_tree\actions\death.h" />
     <ClInclude Include="..\src\components\behavior_tree\actions\fire.h" />
+    <ClInclude Include="..\src\components\behavior_tree\actions\GoToBlackboardPositionAction.h" />
     <ClInclude Include="..\src\components\behavior_tree\actions\goto_player.h" />
     <ClInclude Include="..\src\components\behavior_tree\actions\goto_random.h" />
     <ClInclude Include="..\src\components\behavior_tree\actions\hit.h" />
@@ -128,6 +129,7 @@
     <ClCompile Include="..\src\components\behavior_tree\actions\check_life.cpp" />
     <ClCompile Include="..\src\components\behavior_tree\actions\death.cpp" />
     <ClCompile Include="..\src\components\behavior_tree\actions\fire.cpp" />
+    <ClCompile Include="..\src\components\behavior_tree\actions\GoToBlackboardPositionAction.cpp" />
     <ClCompile Include="..\src\components\behavior_tree\actions\goto_player.cpp" />
     <ClCompile Include="..\src\components\behavior_tree\actions\goto_random.cpp" />
     <ClCompile Include="..\src\components\behavior_tree\actions\hit.cpp" />

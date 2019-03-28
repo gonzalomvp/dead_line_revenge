@@ -41,7 +41,8 @@
       <behavior type="wait">
         <param value="0.5" />
       </behavior>
-      <behavior type="goToPlayerPosition">
+      <behavior type="goToBlackboardPosition">
+        <param value="player" />
         <param value="20.0" />
         <param value="0" />
       </behavior>

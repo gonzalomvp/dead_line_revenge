@@ -16,6 +16,7 @@
 #include "components/behavior_tree/conditions/check_distance.h"
 #include "components/behavior_tree/actions/goto_random.h"
 #include "components/behavior_tree/actions/goto_player.h"
+#include "components/behavior_tree/actions/GoToBlackboardPositionAction.h"
 #include "components/behavior_tree/actions/wait.h"
 #include "components/behavior_tree/actions/fire.h"
 #include "components/behavior_tree/actions/change_weapon.h"

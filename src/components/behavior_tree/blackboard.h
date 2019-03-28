@@ -1,16 +1,18 @@
 #pragma once
 
+#include "entities/entity.h"
+
 #include <map>
 #include <string>
 
 class Entity;
 
-class CBlackboard {
+class CBlackboard : public Entity::IListener {
 public:
 	typedef std::string TKey;
 
 	CBlackboard() {}
-	~CBlackboard() {}
+	~CBlackboard();
 
 	void setValueVec2(TKey key, const vec2& _vValue);
 	void setValueInt(TKey key, int _iValue);
@@ -21,6 +23,9 @@ public:
 	bool getValueInt(TKey key, int& iValue_ );
 	bool getValueFloat(TKey key, float& fValue_);
 	bool getValueEntity(TKey key, Entity*& pValue_);
+
+	// CEntity::IListener
+	virtual void onEntityDestroyed(Entity* _pEntity) override;
 
 private:
 	std::map<TKey, int>		    m_mapInt;

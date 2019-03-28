@@ -5,6 +5,11 @@ struct Message;
 
 class Entity {
 public:
+	class IListener {
+	public:
+		virtual void onEntityDestroyed(Entity* _pEntity) = 0;
+	};
+
 	enum EType {
 #define REG_ENTITY(val, name) \
 		E##val,
@@ -37,9 +42,15 @@ public:
 	void receiveMessage (Message* message);
 	void addComponent   (Component* component);
 
+	virtual void registerToDestroy(IListener* _pListener);
+	virtual void unregisterToDestroy(IListener* _pListener);
+
 protected:
 	vec2 m_v2Pos;
 	vec2 m_v2Size;
+	vec2 m_v2SizeIncrement;
 	EType                       m_type;
 	std::vector<Component*> m_components;
+
+	std::vector<IListener*> m_vlisteners;
 };

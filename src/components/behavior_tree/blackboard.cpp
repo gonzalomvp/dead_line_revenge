@@ -2,6 +2,12 @@
 
 #include "blackboard.h"
 
+CBlackboard::~CBlackboard() {
+	for (auto itEntity = m_mapEntity.begin(); itEntity != m_mapEntity.end(); ++itEntity) {
+		itEntity->second->unregisterToDestroy(this);
+	}
+}
+
 void CBlackboard::setValueVec2(TKey key, const vec2& _vValue) {
 	m_mapVec2[key] = _vValue;
 }
@@ -16,7 +22,13 @@ void CBlackboard::setValueFloat(TKey key, float _fValue) {
 
 void CBlackboard::setValueEntity(TKey key, Entity* _pValue) {
 	ASSERT(_pValue);
+
+	if (m_mapEntity.count(key) > 0 && m_mapEntity[key]) {
+		m_mapEntity[key]->unregisterToDestroy(this);
+	}
+
 	m_mapEntity[key] = _pValue;
+	_pValue->registerToDestroy(this);
 }
 
 bool CBlackboard::getValueVec2(TKey key, vec2& vValue_) {
@@ -65,4 +77,12 @@ bool CBlackboard::getValueEntity(TKey key, Entity*& pValue_) {
 	}
 
 	return bRet;
+}
+
+void CBlackboard::onEntityDestroyed(Entity* _pEntity) {
+	for (auto itEntity = m_mapEntity.begin(); itEntity != m_mapEntity.end(); ++itEntity) {
+		if (itEntity->second == _pEntity) {
+			m_mapEntity[itEntity->first] = nullptr; // revisar si se puede borrar de la map de otra forma
+		}
+	}
 }
