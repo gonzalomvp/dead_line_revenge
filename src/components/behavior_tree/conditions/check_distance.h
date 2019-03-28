@@ -1,19 +1,20 @@
 #pragma once
-#include "components/behavior_tree/behavior.h"
+#include "components/behavior_tree/ConditionNode.h"
 
 class CBehaviorNodeTreeComponent;
 
-class CCheckDistanceCondition : public CBehaviorNode {
+class CCheckDistanceCondition : public CConditionNode{
 public:
-	CCheckDistanceCondition(CBehaviorNodeTreeComponent* owner) : CBehaviorNode(owner) {}
+	CCheckDistanceCondition(CBehaviorNodeTreeComponent* owner) : CConditionNode(owner) {}
 
 	// CBehaviorNode
 	virtual void init(TiXmlElement* behaviorElem) override;
 
 protected:
-	virtual Status update(float step) override;
+	
+	// CConditionNode
+	virtual bool check(float step) override;
 
 private:
 	int mMinDistance;
-	bool m_bNegate;
 };

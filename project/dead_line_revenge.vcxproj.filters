@@ -297,6 +297,12 @@
     <ClInclude Include="..\src\components\behavior_tree\actions\GoToBlackboardPositionAction.h">
       <Filter>src\components\behavior_tree\actions</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\components\behavior_tree\ConditionNode.h">
+      <Filter>src\components\behavior_tree</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\components\behavior_tree\DecoratorNode.h">
+      <Filter>src\components\behavior_tree</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\main.cpp">
@@ -529,6 +535,12 @@
     </ClCompile>
     <ClCompile Include="..\src\components\behavior_tree\actions\GoToBlackboardPositionAction.cpp">
       <Filter>src\components\behavior_tree\actions</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\components\behavior_tree\ConditionNode.cpp">
+      <Filter>src\components\behavior_tree</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\components\behavior_tree\DecoratorNode.cpp">
+      <Filter>src\components\behavior_tree</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

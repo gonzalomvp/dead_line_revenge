@@ -1,11 +1,11 @@
 #pragma once
-#include "group.h"
+#include "DecoratorNode.h"
 
 class CBehaviorNodeTreeComponent;
 
-class CRepeatNode : public CGroupNode {
+class CRepeatNode : public CDecoratorNode {
 public:
-	CRepeatNode(CBehaviorNodeTreeComponent* _pOwner) : CGroupNode(_pOwner), m_iCounter(0) {}
+	CRepeatNode(CBehaviorNodeTreeComponent* _pOwner) : CDecoratorNode(_pOwner), m_iCounter(0) {}
 
 	// CBehaviorNode
 	virtual void init(TiXmlElement* behaviorElem) override;

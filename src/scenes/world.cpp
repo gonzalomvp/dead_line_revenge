@@ -104,6 +104,15 @@ bool CWorld::init(uint16_t _uLevel) {
 	ASSERT(doc.HasMember("pickupPoints"));
 	m_mEntityPoints[Entity::EPICKUP] = doc["pickupPoints"].GetInt();
 
+	// Create player and first pickup
+	Entity* pPlayer = g_pEntitiesFactory->createPlayer(vmake(WORLD_WIDTH * 0.5f, WORLD_HEIGHT * 0.5f));
+	addEntity(pPlayer);
+	m_pPlayer = pPlayer;
+
+	Entity* pPickup = g_pEntitiesFactory->createWeaponPickup();
+	addEntity(pPickup);
+	m_fPickupSpawnTimer = m_fPickupSpawnWait;
+
 	// Load enemy level configuration
 	float fTotalProbability = 0.0f;
 	ASSERT(doc.HasMember("enemies"));
@@ -152,15 +161,6 @@ bool CWorld::init(uint16_t _uLevel) {
 		++m_iCurrentEnemies;
 	}
 	fclose(pFile);
-
-	// Create player and first pickup
-	Entity* pPlayer = g_pEntitiesFactory->createPlayer(vmake(WORLD_WIDTH * 0.5f, WORLD_HEIGHT * 0.5f));
-	addEntity(pPlayer);
-	m_pPlayer = pPlayer;
-
-	Entity* pPickup = g_pEntitiesFactory->createWeaponPickup();
-	addEntity(pPickup);
-	m_fPickupSpawnTimer = m_fPickupSpawnWait;
 
 	// Generate spawn points
 	m_vSpawnPositions.push_back(vmake(WORLD_WIDTH / 2.0f, WORLD_HEIGHT));

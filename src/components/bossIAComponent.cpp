@@ -6,5 +6,8 @@ void BossIAComponent::init() {
 	Component::init();
 	loadFromXML(m_btFilename);
 
-	getBlackboard().setValueEntity("player", g_pWorld->getPlayer());
+	if (g_pWorld->getPlayer()) {
+		getBlackboard().setValueEntity("player", g_pWorld->getPlayer());
+	}
+	
 }

@@ -52,9 +52,11 @@
     <ClInclude Include="..\src\components\behavior_tree\behavior.h" />
     <ClInclude Include="..\src\components\behavior_tree\behavior_tree.h" />
     <ClInclude Include="..\src\components\behavior_tree\blackboard.h" />
+    <ClInclude Include="..\src\components\behavior_tree\ConditionNode.h" />
     <ClInclude Include="..\src\components\behavior_tree\conditions\check_dead.h" />
     <ClInclude Include="..\src\components\behavior_tree\conditions\check_distance.h" />
     <ClInclude Include="..\src\components\behavior_tree\conditions\check_hit.h" />
+    <ClInclude Include="..\src\components\behavior_tree\DecoratorNode.h" />
     <ClInclude Include="..\src\components\behavior_tree\group.h" />
     <ClInclude Include="..\src\components\behavior_tree\parallel.h" />
     <ClInclude Include="..\src\components\behavior_tree\repeat.h" />
@@ -139,9 +141,11 @@
     <ClCompile Include="..\src\components\behavior_tree\behavior.cpp" />
     <ClCompile Include="..\src\components\behavior_tree\behavior_tree.cpp" />
     <ClCompile Include="..\src\components\behavior_tree\blackboard.cpp" />
+    <ClCompile Include="..\src\components\behavior_tree\ConditionNode.cpp" />
     <ClCompile Include="..\src\components\behavior_tree\conditions\check_dead.cpp" />
     <ClCompile Include="..\src\components\behavior_tree\conditions\check_distance.cpp" />
     <ClCompile Include="..\src\components\behavior_tree\conditions\check_hit.cpp" />
+    <ClCompile Include="..\src\components\behavior_tree\DecoratorNode.cpp" />
     <ClCompile Include="..\src\components\behavior_tree\group.cpp" />
     <ClCompile Include="..\src\components\behavior_tree\parallel.cpp" />
     <ClCompile Include="..\src\components\behavior_tree\repeat.cpp" />
@@ -184,7 +188,7 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>{CC0EB618-AC99-4DFE-A4E1-534AD384C3A1}</ProjectGuid>
     <RootNamespace>dead_line_revenge</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.17134.0</WindowsTargetPlatformVersion>
     <ProjectName>dead_line_revenge</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />

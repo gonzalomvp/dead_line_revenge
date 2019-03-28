@@ -2,12 +2,12 @@
 #include "repeat.h"
 
 void CRepeatNode::init(TiXmlElement* behaviorElem) {
-	CGroupNode::init(behaviorElem);
+	CDecoratorNode::init(behaviorElem);
 
-	ASSERT(mChildren.size() == 1, "Repeat decorators must only have one child behavior node");
-
-	ASSERT(behaviorElem->Attribute("times"), "Missing times attribute in CRepeatNode");
-	m_iTimes = std::stoi(behaviorElem->Attribute("times"));
+	m_iTimes = -1;
+	if (behaviorElem->Attribute("iTimes")) {
+		m_iTimes = std::stoi(behaviorElem->Attribute("iTimes"));
+	}
 }
 
 void CRepeatNode::onEnter() {
@@ -16,7 +16,7 @@ void CRepeatNode::onEnter() {
 
 Status CRepeatNode::update(float step) {
 	if (m_iCounter < m_iTimes || m_iTimes == -1) {
-		Status s = mChildren[0]->tick(step);
+		Status s = m_pChildNode->tick(step);
 		
 		if (s == eFail) {
 			return eFail;

@@ -15,7 +15,7 @@
           <param value="20.0" />
         </behavior>
         <behavior type="aimToPlayer"/>
-        <behavior type="repeat" times="15">
+        <behavior type="repeat" iTimes="15">
           <behavior type="sequence">
             <behavior type="fire"/>
             <behavior type="wait">
@@ -47,7 +47,7 @@
         <param value="0" />
       </behavior>
       <behavior type="aimToPlayer"/>
-      <behavior type="repeat" times="3">
+      <behavior type="repeat" iTimes="3">
         <behavior type="sequence">   
           <behavior type="fire"/>
           <behavior type="wait">
