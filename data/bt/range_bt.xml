@@ -13,12 +13,12 @@
     <behavior type="selector">
       
       <behavior type="parallel">
-        <behavior type="checkDistance" fDistance="200" bNegate="1" />
+        <behavior type="checkDistance" sBlackboardKey="player" fDistance="200" bNegate="1" />
         <!--No tiene que huir-->
         <behavior type="selector">
           
           <behavior type="sequence">
-            <behavior type="checkDistance" fDistance="400" bNegate="1" />
+            <behavior type="checkDistance" sBlackboardKey="player" fDistance="400" bNegate="1" />
             <behavior type="goToPlayerPosition">
               <param value="300.0" />
               <param value="1" />
@@ -36,7 +36,7 @@
 
       <!--Huida-->
       <behavior type="parallel">
-        <behavior type="checkDistance" fDistance="300" />
+        <behavior type="checkDistance" sBlackboardKey="player" fDistance="300" />
 
         <behavior type="sequence">
           <behavior type="goToRandomPosition">

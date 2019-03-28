@@ -11,16 +11,29 @@ void CCheckDistanceCondition::init(TiXmlElement* behaviorElem) {
 
 	ASSERT(behaviorElem->Attribute("fDistance"));
 	mMinDistance = std::stoi(behaviorElem->Attribute("fDistance"));
+
+	ASSERT(behaviorElem->Attribute("sBlackboardKey"));
+	m_sBlackboardKey = behaviorElem->Attribute("sBlackboardKey");
 }
 
 bool CCheckDistanceCondition::check(float step) {
 	Entity* self = getOwnerEntity();
-	Entity* player = g_pWorld->getPlayer();
+	vec2 v2SelfPos = self->getPos();
 
-	float dist2 = vdist2(self->getPos(), player->getPos());
+	Entity* pOther;
+	vec2 v2TargetPos = vmake(0.0f, 0.0f);
 
-	mOwner->getBlackboard().setValueFloat("distance", dist2);
-	mOwner->getBlackboard().setValueEntity("player", player);
+	bool bFound = mOwner->getBlackboard().getValueEntity(m_sBlackboardKey, pOther);
+	if (bFound) {
+		ASSERT(pOther);
+		v2TargetPos = pOther->getPos();
+	}
+	else {
+		bFound = mOwner->getBlackboard().getValueVec2(m_sBlackboardKey, v2TargetPos);
+	}
+	if (!bFound) {
+		return false;
+	}
 
-	return dist2 <= mMinDistance * mMinDistance;
+	return vdist2(v2SelfPos, v2TargetPos) <= mMinDistance * mMinDistance;
 }
