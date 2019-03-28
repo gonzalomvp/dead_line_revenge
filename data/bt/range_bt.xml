@@ -18,7 +18,7 @@
         <behavior type="selector">
           
           <behavior type="sequence">
-            <behavior type="checkDistance" sBlackboardKey="player" fDistance="400" bNegate="1" />
+            <behavior type="checkDistance" sBlackboardKey="player" fDistance="350" bNegate="1" />
             <behavior type="goToPlayerPosition">
               <param value="300.0" />
               <param value="1" />
