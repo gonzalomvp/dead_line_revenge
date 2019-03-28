@@ -80,9 +80,13 @@ bool CBlackboard::getValueEntity(TKey key, Entity*& pValue_) {
 }
 
 void CBlackboard::onEntityDestroyed(Entity* _pEntity) {
-	for (auto itEntity = m_mapEntity.begin(); itEntity != m_mapEntity.end(); ++itEntity) {
-		if (itEntity->second == _pEntity) {
-			m_mapEntity[itEntity->first] = nullptr; // revisar si se puede borrar de la map de otra forma
+	auto it = m_mapEntity.begin();
+	while(it != m_mapEntity.end()) {
+		if (it->second == _pEntity) {
+			it = m_mapEntity.erase(it);
+		}
+		else {
+			++it;
 		}
 	}
 }
