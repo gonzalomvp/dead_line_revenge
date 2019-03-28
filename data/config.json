@@ -67,7 +67,7 @@
 	{
 		"name": "c4",
 		"fireRate": 0,
-		"reloadTime": 0,
+		"reloadTime": 60,
 		"maxBullets": 1,
 		"bulletSpeed": 0.0,
 		"bulletDamage": 0,

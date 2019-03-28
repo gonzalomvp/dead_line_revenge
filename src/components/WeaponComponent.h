@@ -1,8 +1,9 @@
 #pragma once
 
 #include "components/component.h"
+#include "entities/entity.h"
 
-class CWeaponComponent : public Component {
+class CWeaponComponent : public Component, public Entity::IListener {
 public:
 	enum EType {
 
@@ -32,12 +33,17 @@ public:
 	, m_iReloadTimer(0)
 	{}
 
+	~CWeaponComponent();
+
 	void equipWeapon(EType _eType);
 
 	// CComponent
 	virtual void init()                             override;
 	virtual void run(float _fDeltaTime)             override;
 	virtual void receiveMessage(Message* _pMessage) override;
+
+	// CEntity::IListener
+	virtual void onEntityDestroyed(Entity* _pEntity) override;
 
 private:
 	EType       m_eType;

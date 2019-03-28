@@ -11,6 +11,13 @@ namespace {
 	const float s_fShotgunAngle = 15.0f;
 }
 
+CWeaponComponent::~CWeaponComponent() {
+	if (m_pRemoteBullet) {
+		m_pRemoteBullet->unregisterToDestroy(this);
+	}
+}
+
+
 void CWeaponComponent::equipWeapon(EType _eType) {
 	ASSERT(g_pEntitiesFactory);
 
@@ -55,20 +62,8 @@ void CWeaponComponent::run(float _fDeltaTime) {
 	if (m_bIsFiring && m_pRemoteBullet) {
 		MessageDestroy msgDestroy;
 		m_pRemoteBullet->receiveMessage(&msgDestroy);
-		m_pRemoteBullet = nullptr;
-		m_bIsFiring = false;
-		m_iCurrentBullets = m_iMaxBullets;
 	}
 	else if (m_bIsFiring && m_iFireTimer <= 0 && m_iReloadTimer <= 0 && m_iCurrentBullets != 0) {
-		m_iFireTimer = m_iFireRate;
-		--m_iCurrentBullets;
-		if (m_iCurrentBullets == 0) {
-			m_iReloadTimer = m_iReloadTime;
-		}
-		if (!m_bIsAutomatic) {
-			m_bIsFiring = false;
-		}
-
 		switch (m_eType) {
 			case ESHOTGUN: {
 				vec2 v2bulletDir = m_v2AimDir;
@@ -93,6 +88,7 @@ void CWeaponComponent::run(float _fDeltaTime) {
 			}
 			case EC4: {
 				m_pRemoteBullet = g_pEntitiesFactory->createBullet(m_eType, m_owner->getPos(), m_v2AimDir, m_owner->getType());
+				m_pRemoteBullet->registerToDestroy(this);
 				g_pWorld->addEntity(m_pRemoteBullet);
 				break;
 			}
@@ -114,6 +110,15 @@ void CWeaponComponent::run(float _fDeltaTime) {
 				}
 				break;
 			}
+		}
+
+		m_iFireTimer = m_iFireRate;
+		--m_iCurrentBullets;
+		if (m_iCurrentBullets == 0 && !m_pRemoteBullet) {
+			m_iReloadTimer = m_iReloadTime;
+		}
+		if (!m_bIsAutomatic) {
+			m_bIsFiring = false;
 		}
 
 		if (m_sSoundFile != "") {
@@ -155,5 +160,13 @@ void CWeaponComponent::receiveMessage(Message* _pMessage) {
 			m_bIsFiring = false;
 			m_iReloadTimer = m_iReloadTime;
 		}
+	}
+}
+
+void CWeaponComponent::onEntityDestroyed(Entity* _pEntity) {
+	if (m_pRemoteBullet == _pEntity) {
+		m_pRemoteBullet = nullptr;
+		m_bIsFiring = false;
+		m_iReloadTimer = m_iReloadTime;
 	}
 }
