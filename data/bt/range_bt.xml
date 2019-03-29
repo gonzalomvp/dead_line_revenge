@@ -1,87 +1,39 @@
 <root>
   <behavior type="parallel">
-    
     <behavior type="aimToPlayer" />
     
     <behavior type="sequence">
       <behavior type="fire"/>
-      <behavior type="wait">
-        <param value="1.0" />
-      </behavior>
+      <behavior type="wait" fTime="1.0" fRandomDeviation="0.2" />
     </behavior>
-
-    <behavior type="selector">
-      
-      <behavior type="parallel">
-        <behavior type="checkDistance" sBlackboardKey="player" fDistance="200" bNegate="1" />
-        <!--No tiene que huir-->
-        <behavior type="selector">
-          
-          <behavior type="sequence">
-            <behavior type="checkDistance" sBlackboardKey="player" fDistance="350" bNegate="1" />
-            <behavior type="goToPlayerPosition">
-              <param value="300.0" />
-              <param value="1" />
-            </behavior>
-          </behavior>
-
-          <behavior type="wait">
-            <param value="0.0" />
-          </behavior>
-          
-        </behavior>
-          
-        
-      </behavior>
-
-      <!--Huida-->
-      <behavior type="parallel">
-        <behavior type="checkDistance" sBlackboardKey="player" fDistance="300" />
-
-        <behavior type="sequence">
-          <behavior type="goToRandomPosition">
-            <param value="20.0" />
-          </behavior>
-          <behavior type="wait">
-            <param value="0.2" />
-          </behavior>
-        </behavior>
-        
-      </behavior> 
-        
-    </behavior><!--Selector-->
     
-  </behavior><!--Parallel-->
-  
- </root>
-
-
-
-    <!-- behavior type="selector">
-      <behavior type="sequence">
-        <behavior type="checkDistance">
-          <param value="300" />
-        </behavior>
+    <behavior type="selector">
+      <behavior type="parallel">
+        
+        <behavior type="IsAtPosition" sPosition="player" fRadius="200.0" bNegate="true" />
+        
+        <!--No esta suficiente cerca del player como para huir-->
         <behavior type="selector">
+          <!-- Demasiado lejos del player, se acerca-->
           <behavior type="sequence">
-            <behavior type="checkDistance">
-              <param value="100" />
-            </behavior>
-            <behavior type="goToRandomPosition">
-              <param value="20.0" />
-            </behavior>
+            <behavior type="IsAtPosition" sPosition="player" fRadius="350.0" bNegate="true" />
+            <behavior type="goToBlackboardPosition" sTo="player" fArriveDistance="300.0" bKeepUpdatingPosition="true" />
           </behavior>
+          
+          <!-- Distancia optima, espera-->
+          <behavior type="wait" fTime="0.2" fRandomDeviation="0.1" />
         </behavior>
       </behavior>
-      <behavior type="sequence">
-        <behavior type="goToPlayerPosition">
-          <param value="150.0" />
-          <param value="1" />
+      
+      <!--Demasiado cerca del player, huye-->
+      <behavior type="parallel">
+        <behavior type="IsAtPosition" sPosition="player" fRadius="300.0" />
+        <behavior type="sequence">
+          <behavior type="CalculateFleePosition" sFrom="player" sResult="fleePos" fDistance="300.0" />
+          <behavior type="goToBlackboardPosition" sTo="fleePos" fArriveDistance="20.0" />
+          <behavior type="wait" fTime="0.2" fRandomDeviation="0.1" />
         </behavior>
-        <behavior type="wait">
-          <param value="0.0" />
-        </behavior>
-      </behavior>
-    </behavior>
-  </behavior>
-</root-->
+      </behavior> 
+    </behavior><!--Selector-->
+  </behavior><!--Parallel-->
+ </root>

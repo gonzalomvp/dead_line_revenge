@@ -3,9 +3,9 @@
 
 class CBehaviorNodeTreeComponent;
 
-class CCheckDistanceCondition : public CConditionNode{
+class CIsAtPositionCondition : public CConditionNode{
 public:
-	CCheckDistanceCondition(CBehaviorNodeTreeComponent* owner) : CConditionNode(owner), mMinDistance(0), m_sBlackboardKey("") {}
+	CIsAtPositionCondition(CBehaviorNodeTreeComponent* owner) : CConditionNode(owner), m_fRadius(0.0f), m_sBlackboardKey("") {}
 
 	// CBehaviorNode
 	virtual void init(TiXmlElement* behaviorElem) override;
@@ -16,6 +16,6 @@ protected:
 	virtual bool check(float step) override;
 
 private:
-	int mMinDistance;
+	float m_fRadius;
 	std::string m_sBlackboardKey;
 };

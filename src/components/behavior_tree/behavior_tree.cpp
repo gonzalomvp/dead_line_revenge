@@ -14,6 +14,7 @@
 #include "components/behavior_tree/actions/death.h"
 #include "components/behavior_tree/conditions/check_dead.h"
 #include "components/behavior_tree/conditions/check_distance.h"
+#include "components/behavior_tree/actions/CalculateFleePositionAction.h"
 #include "components/behavior_tree/actions/goto_random.h"
 #include "components/behavior_tree/actions/goto_player.h"
 #include "components/behavior_tree/actions/GoToBlackboardPositionAction.h"

@@ -6,7 +6,7 @@ REG_BEHAVIOR(ParallelNode, "parallel")
 
 // Conditions
 REG_BEHAVIOR(CheckLifeCondition,     "checkLife")
-REG_BEHAVIOR(CheckDistanceCondition, "checkDistance")
+REG_BEHAVIOR(IsAtPositionCondition,  "IsAtPosition")
 
 // Actions
 REG_BEHAVIOR(ChangeWeaponAction,           "changeWeapon")
@@ -20,3 +20,4 @@ REG_BEHAVIOR(RotateAimAction,              "rotateAim")
 REG_BEHAVIOR(ChangeAimDirectionAction,     "changeAimDirection")
 REG_BEHAVIOR(ChangeSpriteAction,           "changeSprite")
 REG_BEHAVIOR(ChangeSpeedAction,            "changeSpeed")
+REG_BEHAVIOR(CalculateFleePositionAction,  "CalculateFleePosition")

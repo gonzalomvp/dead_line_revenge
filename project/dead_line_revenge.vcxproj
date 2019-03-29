@@ -34,6 +34,7 @@
     <ClInclude Include="..\src\components\AIFleeComponent.h" />
     <ClInclude Include="..\src\components\AIMeleeComponent.h" />
     <ClInclude Include="..\src\components\behavior_tree\actions\aim_player.h" />
+    <ClInclude Include="..\src\components\behavior_tree\actions\CalculateFleePositionAction.h" />
     <ClInclude Include="..\src\components\behavior_tree\actions\change_aim_direction.h" />
     <ClInclude Include="..\src\components\behavior_tree\actions\change_speed.h" />
     <ClInclude Include="..\src\components\behavior_tree\actions\change_sprite.h" />
@@ -123,6 +124,7 @@
     <ClCompile Include="..\src\components\AIFleeComponent.cpp" />
     <ClCompile Include="..\src\components\AIMeleeComponent.cpp" />
     <ClCompile Include="..\src\components\behavior_tree\actions\aim_player.cpp" />
+    <ClCompile Include="..\src\components\behavior_tree\actions\CalculateFleePositionAction.cpp" />
     <ClCompile Include="..\src\components\behavior_tree\actions\change_aim_direction.cpp" />
     <ClCompile Include="..\src\components\behavior_tree\actions\change_speed.cpp" />
     <ClCompile Include="..\src\components\behavior_tree\actions\change_sprite.cpp" />

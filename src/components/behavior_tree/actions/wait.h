@@ -5,7 +5,7 @@ class CBehaviorNodeTreeComponent;
 
 class CWaitAction : public CBehaviorNode {
 public:
-	CWaitAction(CBehaviorNodeTreeComponent* owner) : CBehaviorNode(owner), m_fWaitTime(0.0f), m_fWaitTimer(0.0f) {}
+	CWaitAction(CBehaviorNodeTreeComponent* owner) : CBehaviorNode(owner), m_fWaitTime(0.0f), m_fWaitTimer(0.0f), m_fRandomDeviation(0.0f) {}
 
 	// CBehaviorNode
 	virtual void init(TiXmlElement* behaviorElem) override;
@@ -17,5 +17,6 @@ protected:
 private:
 	float m_fWaitTime;
 	float m_fWaitTimer;
+	float m_fRandomDeviation;
 };
 

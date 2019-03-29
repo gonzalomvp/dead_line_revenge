@@ -6,22 +6,22 @@
 #include "messages/message.h"
 #include "scenes/world.h"
 
+#include <sstream>
+
 void CGoToBlackboardPositionAction::init(TiXmlElement* behaviorElem) {
 	ASSERT(behaviorElem);
 
-	std::vector<std::string> vParams;
-	TiXmlElement* paramElem = behaviorElem->FirstChildElement("param");
-	for (paramElem; paramElem; paramElem = paramElem->NextSiblingElement()) {
-		ASSERT(paramElem->Attribute("value"), "Missing value attribute in param");
-		vParams.push_back(paramElem->Attribute("value"));
+	ASSERT(behaviorElem->Attribute("sTo"));
+	m_sBlackboardKey = behaviorElem->Attribute("sTo");
+
+	ASSERT(behaviorElem->Attribute("fArriveDistance"));
+	m_fArriveDistance = std::stof(behaviorElem->Attribute("fArriveDistance"));
+
+	m_bKeepUpdatingPosition = false;
+	if (behaviorElem->Attribute("bKeepUpdatingPosition")) {
+		std::istringstream is(behaviorElem->Attribute("bKeepUpdatingPosition"));
+		is >> std::boolalpha >> m_bKeepUpdatingPosition;
 	}
-
-	ASSERT(vParams.size() == 3, "CGoToBlackboardAction must have 3 param");
-	m_sBlackboardKey = vParams[0];
-	m_fArriveDistance = std::stof(vParams[1]);
-	m_bKeepFollowing = std::stoi(vParams[2]);
-
-	
 }
 
 void CGoToBlackboardPositionAction::onEnter() {
@@ -46,7 +46,8 @@ Status CGoToBlackboardPositionAction::update(float step) {
 
 	Entity* self = getOwnerEntity();
 	
-	if (m_bKeepFollowing && m_pTargetEntity) {
+	//volver a coger del blackboard, puede haber muerto
+	if (m_bKeepUpdatingPosition && m_pTargetEntity) {
 		vec2 selfSize = self->getSize();
 		mTargetPos = m_pTargetEntity->getPos();
 

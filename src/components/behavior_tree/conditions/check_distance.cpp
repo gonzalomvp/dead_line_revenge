@@ -6,17 +6,17 @@
 #include "scenes/world.h"
 #include "components/behavior_tree/blackboard.h"
 
-void CCheckDistanceCondition::init(TiXmlElement* behaviorElem) {
+void CIsAtPositionCondition::init(TiXmlElement* behaviorElem) {
 	CConditionNode::init(behaviorElem);
 
-	ASSERT(behaviorElem->Attribute("fDistance"));
-	mMinDistance = std::stoi(behaviorElem->Attribute("fDistance"));
+	ASSERT(behaviorElem->Attribute("fRadius"));
+	m_fRadius = std::stof(behaviorElem->Attribute("fRadius"));
 
-	ASSERT(behaviorElem->Attribute("sBlackboardKey"));
-	m_sBlackboardKey = behaviorElem->Attribute("sBlackboardKey");
+	ASSERT(behaviorElem->Attribute("sPosition"));
+	m_sBlackboardKey = behaviorElem->Attribute("sPosition");
 }
 
-bool CCheckDistanceCondition::check(float step) {
+bool CIsAtPositionCondition::check(float step) {
 	Entity* self = getOwnerEntity();
 	vec2 v2SelfPos = self->getPos();
 
@@ -35,5 +35,5 @@ bool CCheckDistanceCondition::check(float step) {
 		return false;
 	}
 
-	return vdist2(v2SelfPos, v2TargetPos) <= mMinDistance * mMinDistance;
+	return vdist2(v2SelfPos, v2TargetPos) <= m_fRadius * m_fRadius;
 }

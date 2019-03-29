@@ -10,7 +10,7 @@ public:
 	, m_sBlackboardKey("")
 	, m_pTargetEntity(nullptr)
 	, m_fArriveDistance(0.0f)
-	, m_bKeepFollowing(false)
+	, m_bKeepUpdatingPosition(false)
 	{}
 
 	// CBehaviorNode
@@ -27,6 +27,6 @@ private:
 	vec2 mTargetPos;
 	vec2 m_v2RandomOffset;
 	float m_fArriveDistance;
-	bool m_bKeepFollowing;
+	bool m_bKeepUpdatingPosition;
 };
 

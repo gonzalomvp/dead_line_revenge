@@ -303,6 +303,9 @@
     <ClInclude Include="..\src\components\behavior_tree\DecoratorNode.h">
       <Filter>src\components\behavior_tree</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\components\behavior_tree\actions\CalculateFleePositionAction.h">
+      <Filter>src\components\behavior_tree\actions</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\main.cpp">
@@ -541,6 +544,9 @@
     </ClCompile>
     <ClCompile Include="..\src\components\behavior_tree\DecoratorNode.cpp">
       <Filter>src\components\behavior_tree</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\components\behavior_tree\actions\CalculateFleePositionAction.cpp">
+      <Filter>src\components\behavior_tree\actions</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
