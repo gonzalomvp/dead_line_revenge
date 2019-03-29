@@ -9,7 +9,7 @@
     </behavior>
     <behavior type="parallel">
       <behavior type="rotateAim">
-        <param value="2.0" />
+        <param value="120.0" />
       </behavior>
       <behavior type="wait">
         <param value="1.0" />

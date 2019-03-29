@@ -25,7 +25,7 @@ Status CRotateAimAction::update(float step) {
 	self->receiveMessage(&messageGetAimDirection);
 
 	float angle = vangle(messageGetAimDirection.direction);
-	angle += m_fAngle;
+	angle += m_fAngle * step;
 
 	MessageSetAimDirection messageSetAimDirection;
 	messageSetAimDirection.direction = vunit(DEG2RAD(angle));
