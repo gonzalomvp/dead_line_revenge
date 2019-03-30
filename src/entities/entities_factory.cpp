@@ -79,8 +79,8 @@ bool CEntitiesFactory::init(const char* _sConfigFile) {
 	for (SizeType i = 0; i < weapons.Size(); i++) {
 		TWeaponDef weapon;
 		weapon.eType = getWeaponTypeByName(weapons[i]["name"].GetString());
-		weapon.iFireRate = weapons[i]["fireRate"].GetInt();
-		weapon.iReloadTime = weapons[i]["reloadTime"].GetInt();
+		weapon.fFireRate = weapons[i]["fireRate"].GetFloat();
+		weapon.fReloadTime = weapons[i]["reloadTime"].GetFloat();
 		weapon.iMaxBullets = weapons[i]["maxBullets"].GetInt();
 		weapon.fBulletSpeed = weapons[i]["bulletSpeed"].GetFloat();
 		weapon.iBulletDamage = weapons[i]["bulletDamage"].GetInt();

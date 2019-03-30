@@ -9,8 +9,8 @@ class CEntitiesFactory {
 public:
 	struct TWeaponDef {
 		CWeaponComponent::EType eType;
-		int                     iFireRate;
-		int                     iReloadTime;
+		float                   fFireRate;
+		float                   fReloadTime;
 		int                     iMaxBullets;
 		float                   fBulletSpeed;
 		int                     iBulletDamage;

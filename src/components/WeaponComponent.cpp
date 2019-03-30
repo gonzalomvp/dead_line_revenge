@@ -26,10 +26,10 @@ void CWeaponComponent::equipWeapon(EType _eType) {
 	m_iMaxBullets = weaponData.iMaxBullets;
 	m_iCurrentBullets = weaponData.iMaxBullets;
 	m_uBulletsPerShot = weaponData.uBulletsPerShot;
-	m_iFireRate = weaponData.iFireRate;
-	m_iFireTimer = 0;
-	m_iReloadTime = weaponData.iReloadTime;
-	m_iReloadTimer = 0;
+	m_fFireRate = weaponData.fFireRate;
+	m_fFireTimer = 0.0f;
+	m_fReloadTime = weaponData.fReloadTime;
+	m_fReloadTimer = 0.0f;
 	m_bIsAutomatic = weaponData.bIsAutomatic;
 	m_sSoundFile = weaponData.sSoundFile;
 }
@@ -47,13 +47,13 @@ void CWeaponComponent::run(float _fDeltaTime) {
 
 	ASSERT(m_pOwner && g_pWorld && g_pEntitiesFactory && g_pSoundEngine);
 
-	if (m_iFireTimer > 0) {
-		--m_iFireTimer;
+	if (m_fFireTimer > 0.0f) {
+		m_fFireTimer -= _fDeltaTime;
 	}
 
-	if (m_iReloadTimer > 0) {
-		--m_iReloadTimer;
-		if (m_iReloadTimer <= 0) {
+	if (m_fReloadTimer > 0.0f) {
+		m_fReloadTimer -= _fDeltaTime;
+		if (m_fReloadTimer <= 0) {
 			m_iCurrentBullets = m_iMaxBullets;
 			m_bIsFiring = false;
 		}
@@ -63,7 +63,7 @@ void CWeaponComponent::run(float _fDeltaTime) {
 		MessageDestroy msgDestroy;
 		m_pRemoteBullet->receiveMessage(&msgDestroy);
 	}
-	else if (m_bIsFiring && m_iFireTimer <= 0 && m_iReloadTimer <= 0 && m_iCurrentBullets != 0) {
+	else if (m_bIsFiring && m_fFireTimer <= 0.0f && m_fReloadTimer <= 0.0f && m_iCurrentBullets != 0) {
 		switch (m_eType) {
 			case ESHOTGUN: {
 				vec2 v2bulletDir = m_v2AimDir;
@@ -112,10 +112,10 @@ void CWeaponComponent::run(float _fDeltaTime) {
 			}
 		}
 
-		m_iFireTimer = m_iFireRate;
+		m_fFireTimer = m_fFireRate;
 		--m_iCurrentBullets;
 		if (m_iCurrentBullets == 0 && !m_pRemoteBullet) {
-			m_iReloadTimer = m_iReloadTime;
+			m_fReloadTimer = m_fReloadTime;
 		}
 		if (!m_bIsAutomatic) {
 			m_bIsFiring = false;
@@ -153,12 +153,12 @@ void CWeaponComponent::receiveMessage(Message* _pMessage) {
 	else if (MessageAmmoInfo* pMessage = dynamic_cast<MessageAmmoInfo*>(_pMessage)) {
 		pMessage->currentAmmo = m_iCurrentBullets;
 		pMessage->totalAmmo = m_iMaxBullets;
-		pMessage->reloadPercent = clamp((m_iReloadTime - m_iReloadTimer) * 1.0f / m_iReloadTime, 0.0f, 1.0f);
+		pMessage->reloadPercent = clamp((m_fReloadTime - m_fReloadTimer) / m_fReloadTime, 0.0f, 1.0f);
 	}
 	else if (MessageReload* pMessage = dynamic_cast<MessageReload*>(_pMessage)) {
-		if (m_iCurrentBullets < m_iMaxBullets && m_iReloadTimer <= 0) {
+		if (m_iCurrentBullets < m_iMaxBullets && m_fReloadTimer <= 0.0f) {
 			m_bIsFiring = false;
-			m_iReloadTimer = m_iReloadTime;
+			m_fReloadTimer = m_fReloadTime;
 		}
 	}
 }
@@ -167,6 +167,6 @@ void CWeaponComponent::onEntityDestroyed(Entity* _pEntity) {
 	if (m_pRemoteBullet == _pEntity) {
 		m_pRemoteBullet = nullptr;
 		m_bIsFiring = false;
-		m_iReloadTimer = m_iReloadTime;
+		m_fReloadTimer = m_fReloadTime;
 	}
 }

@@ -24,13 +24,13 @@ public:
 	, m_iMaxBullets(0)
 	, m_iCurrentBullets(0)
 	, m_uBulletsPerShot(0)
-	, m_iFireRate(0)
-	, m_iReloadTime(0)
+	, m_fFireRate(0.0f)
+	, m_fReloadTime(0.0f)
 	, m_bIsAutomatic(false)
 	, m_sSoundFile("")
 	, m_bIsFiring(false)
-	, m_iFireTimer(0)
-	, m_iReloadTimer(0)
+	, m_fFireTimer(0.0f)
+	, m_fReloadTimer(0.0f)
 	{}
 
 	~CWeaponComponent();
@@ -52,13 +52,13 @@ private:
 	int         m_iMaxBullets;
 	int         m_iCurrentBullets;
 	uint16_t    m_uBulletsPerShot;
-	int         m_iFireRate;
-	int         m_iReloadTime;
+	float       m_fFireRate;
+	float       m_fReloadTime;
 	bool        m_bIsAutomatic;
 	std::string m_sSoundFile;
 	bool        m_bIsFiring;
 
 	//Timers
-	int m_iFireTimer;
-	int m_iReloadTimer;
+	float       m_fFireTimer;
+	float       m_fReloadTimer;
 };
