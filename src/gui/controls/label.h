@@ -11,7 +11,7 @@ public:
 	CLabel(const std::string& _sName, const vec2& _v2Pos, const vec2& _v2Size, const std::string& _sText, bool _bIsActive = true);
 	~CLabel();
 
-	void setText(const std::string& _sText) { m_sText = _sText; }
+	void setText(const std::string& _sText);
 
 	// Control
 	virtual void init      ()                                    override;

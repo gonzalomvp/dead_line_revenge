@@ -22,6 +22,12 @@ CLabel::~CLabel() {
 	DELETE(m_pLabelText);
 }
 
+void CLabel::setText(const std::string& _sText) {
+	ASSERT(m_pLabelText);
+	m_sText = _sText; 
+	m_pLabelText->setText(m_sText);
+}
+
 void CLabel::init() {
 	CControl::init();
 
