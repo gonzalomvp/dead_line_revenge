@@ -44,7 +44,7 @@ bool CBehaviorNodeTreeComponent::loadFromXML(const char* _psFilename) {
 		return false;
 	}
 	TiXmlHandle hDoc(&doc);
-	m_pRootBehavior = createBehaviorFromXML(hDoc.FirstChild("root").FirstChild("behavior").Element());
+	m_pRootBehavior = createBehaviorFromXML(hDoc.FirstChild("root").FirstChild().Element());
 
 	return true;
 }
@@ -63,9 +63,8 @@ void CBehaviorNodeTreeComponent::run(float deltaTime)
 CBehaviorNode* CBehaviorNodeTreeComponent::createBehaviorFromXML(TiXmlElement* behaviorElem) {
 	ASSERT(behaviorElem);
 	CBehaviorNode* behavior = nullptr;
-	
-	ASSERT(behaviorElem->Attribute("type"), "Missing type in Behavior element");
-	std::string type = behaviorElem->Attribute("type");
+
+	std::string type = behaviorElem->Value();
 	CBehaviorNode::EType eBehaviorType = CBehaviorNode::getBehaviorTypeByName(type);
 
 	switch (eBehaviorType) {

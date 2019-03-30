@@ -1,19 +1,11 @@
 <root>
-  <behavior type="sequence">
-    <behavior type="wait">
-      <param value="0.5" />
-    </behavior>
-    <behavior type="fire"/>
-    <behavior type="wait">
-      <param value="0.5" />
-    </behavior>
-    <behavior type="parallel">
-      <behavior type="rotateAim">
-        <param value="120.0" />
-      </behavior>
-      <behavior type="wait">
-        <param value="1.0" />
-      </behavior>
-    </behavior>
-  </behavior>
+  <Sequence>
+    <Wait fTime="0.5" />
+    <Fire />
+    <Wait fTime="0.5" />
+    <Parallel>
+      <RotateAim fAngle="120.0" />
+      <Wait fTime="1.0" />
+    </Parallel>
+  </Sequence>
 </root>

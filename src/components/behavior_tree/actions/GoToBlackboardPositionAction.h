@@ -8,8 +8,9 @@ public:
 	CGoToBlackboardPositionAction(CBehaviorNodeTreeComponent* owner)
 	: CBehaviorNode(owner)
 	, m_sBlackboardKey("")
-	, m_pTargetEntity(nullptr)
+	, mTargetPos(vmake(0.0f, 0.0f))
 	, m_fArriveDistance(0.0f)
+	, m_v2Offset(vmake(0.0f, 0.0f))
 	, m_bKeepUpdatingPosition(false)
 	{}
 
@@ -23,9 +24,8 @@ protected:
 
 private:
 	std::string m_sBlackboardKey;
-	Entity* m_pTargetEntity;
 	vec2 mTargetPos;
-	vec2 m_v2RandomOffset;
+	vec2 m_v2Offset;
 	float m_fArriveDistance;
 	bool m_bKeepUpdatingPosition;
 };

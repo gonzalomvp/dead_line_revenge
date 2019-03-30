@@ -1,11 +1,6 @@
 <root>
-  <behavior type="sequence">
-    <behavior type="goToPlayerPosition">
-      <param value="20.0" />
-      <param value="1" />
-    </behavior>
-    <behavior type="wait">
-      <param value="0.5" />
-    </behavior>
-  </behavior>
+  <Sequence>
+    <GoToBlackboardPosition sTo="player" fArriveDistance="10.0" bKeepUpdatingPosition="true" fRandomDeviation="15.0" />
+    <Wait fTime="0.5" />
+  </Sequence>
 </root>

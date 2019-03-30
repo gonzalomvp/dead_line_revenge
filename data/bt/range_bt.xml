@@ -1,39 +1,37 @@
 <root>
-  <behavior type="parallel">
-    <behavior type="aimToPlayer" />
+  <Parallel>
+    <Aim sTo="player" />
     
-    <behavior type="sequence">
-      <behavior type="fire"/>
-      <behavior type="wait" fTime="1.0" fRandomDeviation="0.2" />
-    </behavior>
+    <Sequence>
+      <Fire/>
+      <Wait fTime="1.0" fRandomDeviation="0.2" />
+    </Sequence>
     
-    <behavior type="selector">
-      <behavior type="parallel">
-        
-        <behavior type="IsAtPosition" sPosition="player" fRadius="200.0" bNegate="true" />
+    <Selector>
+      <Parallel>
+        <CheckIsAtDistance sPosition="player" fDistance="200.0" bNegate="true" />
         
         <!--No esta suficiente cerca del player como para huir-->
-        <behavior type="selector">
+        <Selector>
           <!-- Demasiado lejos del player, se acerca-->
-          <behavior type="sequence">
-            <behavior type="IsAtPosition" sPosition="player" fRadius="350.0" bNegate="true" />
-            <behavior type="goToBlackboardPosition" sTo="player" fArriveDistance="300.0" bKeepUpdatingPosition="true" />
-          </behavior>
-          
+          <Sequence>
+            <CheckIsAtDistance sPosition="player" fDistance="350.0" bNegate="true" />
+            <GoToBlackboardPosition sTo="player" fArriveDistance="300.0" bKeepUpdatingPosition="true" />
+          </Sequence>
           <!-- Distancia optima, espera-->
-          <behavior type="wait" fTime="0.2" fRandomDeviation="0.1" />
-        </behavior>
-      </behavior>
+          <Wait fTime="0.2" fRandomDeviation="0.1" />
+        </Selector>
+      </Parallel>
       
       <!--Demasiado cerca del player, huye-->
-      <behavior type="parallel">
-        <behavior type="IsAtPosition" sPosition="player" fRadius="300.0" />
-        <behavior type="sequence">
-          <behavior type="CalculateFleePosition" sFrom="player" sResult="fleePos" fDistance="300.0" />
-          <behavior type="goToBlackboardPosition" sTo="fleePos" fArriveDistance="20.0" />
-          <behavior type="wait" fTime="0.2" fRandomDeviation="0.1" />
-        </behavior>
-      </behavior> 
-    </behavior><!--Selector-->
-  </behavior><!--Parallel-->
+      <Parallel>
+        <CheckIsAtDistance sPosition="player" fDistance="350.0" />
+        <Sequence>
+          <CalculateFleePosition sFrom="player" sResult="fleePos" fDistance="350.0" />
+          <GoToBlackboardPosition sTo="fleePos" fArriveDistance="20.0" />
+          <Wait fTime="0.2" fRandomDeviation="0.1" />
+        </Sequence>
+      </Parallel> 
+    </Selector><!--Selector-->
+  </Parallel>
  </root>

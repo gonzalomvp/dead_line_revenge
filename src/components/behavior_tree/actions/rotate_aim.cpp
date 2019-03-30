@@ -8,15 +8,8 @@
 void CRotateAimAction::init(TiXmlElement* behaviorElem) {
 	ASSERT(behaviorElem);
 
-	std::vector<std::string> vParams;
-	TiXmlElement* paramElem = behaviorElem->FirstChildElement("param");
-	for (paramElem; paramElem; paramElem = paramElem->NextSiblingElement()) {
-		ASSERT(paramElem->Attribute("value"), "Missing value attribute in param");
-		vParams.push_back(paramElem->Attribute("value"));
-	}
-
-	ASSERT(vParams.size() == 1, "CRotateAimAction must have 1 param");
-	m_fAngle = std::stof(vParams[0]);
+	ASSERT(behaviorElem->Attribute("fAngle"));
+	m_fAngle = std::stof(behaviorElem->Attribute("fAngle"));
 }
 
 Status CRotateAimAction::update(float step) {

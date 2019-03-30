@@ -3,20 +3,20 @@
 
 class CBehaviorNodeTreeComponent;
 
-class CGoToRandomPositionAction : public CBehaviorNode {
+class CCalculateRandomPositionAction : public CBehaviorNode {
 public:
-	CGoToRandomPositionAction(CBehaviorNodeTreeComponent* owner) : CBehaviorNode(owner), m_fArriveDistance(0.0f) {}
-	
+	CCalculateRandomPositionAction(CBehaviorNodeTreeComponent* owner)
+	: CBehaviorNode(owner)
+	, m_sResultBlackboardKey("")
+	{}
+
 	// CBehaviorNode
 	virtual void init(TiXmlElement* behaviorElem) override;
-	virtual void abort()                          override;
 
 protected:
-	virtual void onEnter() override;
 	virtual Status update(float step) override;
 
 private:
-	vec2 mTargetPos;
-	float m_fArriveDistance;
+	std::string m_sResultBlackboardKey;
 };
 

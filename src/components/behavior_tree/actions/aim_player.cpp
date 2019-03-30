@@ -5,8 +5,14 @@
 #include "scenes/world.h"
 #include "components/behavior_tree/behavior_tree.h"
 
+void CAimTo::init(TiXmlElement* behaviorElem) {
+	ASSERT(behaviorElem);
 
-Status CAimToPlayerAction::update(float step) {
+	ASSERT(behaviorElem->Attribute("sTo"));
+	m_sBlackboardkey = behaviorElem->Attribute("sTo");
+}
+
+Status CAimTo::update(float step) {
 	Entity* self = getOwnerEntity();
 	Entity* player = g_pWorld->getPlayer();
 

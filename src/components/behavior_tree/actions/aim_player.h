@@ -3,11 +3,17 @@
 
 class CBehaviorNodeTreeComponent;
 
-class CAimToPlayerAction : public CBehaviorNode {
+class CAimTo : public CBehaviorNode {
 public:
-	CAimToPlayerAction(CBehaviorNodeTreeComponent* owner) : CBehaviorNode(owner) {}
+	CAimTo(CBehaviorNodeTreeComponent* owner) : CBehaviorNode(owner), m_sBlackboardkey("") {}
+
+	// CBehaviorNode
+	virtual void init(TiXmlElement* behaviorElem) override;
 
 protected:
 	virtual Status update(float step) override;
+
+private:
+	std::string m_sBlackboardkey;
 };
 

@@ -4,7 +4,7 @@
 #include "components/behavior_tree/behavior_tree.h"
 
 void CGroupNode::init(TiXmlElement* behaviorElem) {
-	TiXmlElement* childElem = behaviorElem->FirstChildElement("behavior");
+	TiXmlElement* childElem = behaviorElem->FirstChildElement();
 	for (childElem; childElem; childElem = childElem->NextSiblingElement()) {
 		this->AddBehavior(mOwner->createBehaviorFromXML(childElem));
 	}

@@ -1,8 +1,6 @@
 <root>
-  <behavior type="sequence">
-    <behavior type="fire"/>
-    <behavior type="wait">
-      <param value="2.0" />
-    </behavior>
-  </behavior>
+  <Sequence>
+    <Fire />
+    <Wait fTime="2.2" fRandomDeviation="0.2" />
+  </Sequence>
 </root>

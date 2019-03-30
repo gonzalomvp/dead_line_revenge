@@ -22,39 +22,55 @@ void CGoToBlackboardPositionAction::init(TiXmlElement* behaviorElem) {
 		std::istringstream is(behaviorElem->Attribute("bKeepUpdatingPosition"));
 		is >> std::boolalpha >> m_bKeepUpdatingPosition;
 	}
+
+	if (behaviorElem->Attribute("fRandomDeviation")) {
+		float fRandomDeviation = std::stof(behaviorElem->Attribute("fRandomDeviation"));
+		m_v2Offset = vmake(CORE_FRand(-fRandomDeviation, fRandomDeviation), CORE_FRand(-fRandomDeviation, fRandomDeviation));
+	}
 }
 
 void CGoToBlackboardPositionAction::onEnter() {
 	Entity* self = getOwnerEntity();
 	vec2 selfSize = self->getSize();
 
-	bool bFound = mOwner->getBlackboard().getValueEntity(m_sBlackboardKey, m_pTargetEntity);
+	Entity* pTargetEntity = nullptr;
+	bool bFound = mOwner->getBlackboard().getValueEntity(m_sBlackboardKey, pTargetEntity);
 	if (bFound) {
-		ASSERT(m_pTargetEntity);
-		mTargetPos = m_pTargetEntity->getPos();
+		ASSERT(pTargetEntity);
+		mTargetPos = pTargetEntity->getPos();
 	}
 	else {
 		bFound = mOwner->getBlackboard().getValueVec2(m_sBlackboardKey, mTargetPos);
 	}
 	ASSERT(bFound);
 
+	mTargetPos = vadd(mTargetPos, m_v2Offset);
 	mTargetPos.x = clamp(mTargetPos.x, selfSize.x * 0.5f, WORLD_WIDTH - selfSize.x * 0.5f);
 	mTargetPos.y = clamp(mTargetPos.y, selfSize.y * 0.5f, WORLD_HEIGHT - selfSize.y * 0.5f);
 }
 
 Status CGoToBlackboardPositionAction::update(float step) {
-
 	Entity* self = getOwnerEntity();
-	
-	//volver a coger del blackboard, puede haber muerto
-	if (m_bKeepUpdatingPosition && m_pTargetEntity) {
-		vec2 selfSize = self->getSize();
-		mTargetPos = m_pTargetEntity->getPos();
+	vec2 selfSize = self->getSize();
 
-		mTargetPos.x = clamp(mTargetPos.x, selfSize.x * 0.5f, WORLD_WIDTH - selfSize.x * 0.5f);
-		mTargetPos.y = clamp(mTargetPos.y, selfSize.y * 0.5f, WORLD_HEIGHT - selfSize.y * 0.5f);
+	if (m_bKeepUpdatingPosition) {
+		Entity* pTargetEntity = nullptr;
+		bool bFound = mOwner->getBlackboard().getValueEntity(m_sBlackboardKey, pTargetEntity);
+		if (bFound) {
+			ASSERT(pTargetEntity);
+			mTargetPos = pTargetEntity->getPos();
+		}
+		else {
+			bFound = mOwner->getBlackboard().getValueVec2(m_sBlackboardKey, mTargetPos);
+		}
+		if (!bFound) {
+			return eFail;
+		}
 	}
-	
+
+	mTargetPos = vadd(mTargetPos, m_v2Offset);
+	mTargetPos.x = clamp(mTargetPos.x, selfSize.x * 0.5f, WORLD_WIDTH - selfSize.x * 0.5f);
+	mTargetPos.y = clamp(mTargetPos.y, selfSize.y * 0.5f, WORLD_HEIGHT - selfSize.y * 0.5f);
 
 	vec2 direction = vsub(mTargetPos, self->getPos());
 
@@ -68,7 +84,6 @@ Status CGoToBlackboardPositionAction::update(float step) {
 	MessageSetMovementDir msgSetMovementDir;
 	msgSetMovementDir.dir = direction;
 	self->receiveMessage(&msgSetMovementDir);
-
 	return eRunning;
 }
 
