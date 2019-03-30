@@ -142,7 +142,7 @@ Entity* CEntitiesFactory::createPlayer(vec2 _v2Pos) {
 	Entity* player = NEW(Entity, Entity::EPLAYER, _v2Pos, vmake(30.0f, 25.0f));
 	//CTransformComponent* transform = NEW(CTransformComponent, player, _v2Pos, vmake(30, 25));
 	//transform->init();
-	CRenderableComponent* renderable = NEW(CRenderableComponent, player, "data/player.png", 0.0f, 1.0f, 5, false, true, 10);
+	CRenderableComponent* renderable = NEW(CRenderableComponent, player, "data/player.png", 0.0f, 1.0f, 5, false, true, 0.5f);
 	renderable->init();
 	CPlayerControllerComponent* playerControl = NEW(CPlayerControllerComponent, player);
 	playerControl->init();
@@ -311,7 +311,7 @@ Entity* CEntitiesFactory::createEnemy(vec2 _v2Pos, Entity::EType _tEnemyType, co
 		break;
 	}
 
-	CRenderableComponent* renderable = NEW(CRenderableComponent, enemy, tEnemyDef.sImageFile.c_str(), 0.0f, 1.0f, 5, bAlignToMovement, bAlignToAim, 5);
+	CRenderableComponent* renderable = NEW(CRenderableComponent, enemy, tEnemyDef.sImageFile.c_str(), 0.0f, 1.0f, 5, bAlignToMovement, bAlignToAim, 0.5f);
 	renderable->init();
 
 	return enemy;

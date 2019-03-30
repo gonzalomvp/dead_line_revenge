@@ -47,16 +47,15 @@ void CRenderableComponent::run(float _fDeltaTime) {
 	}
 
 	// Blink effect when receiving a hit
-	if (m_iHitTimer > 0) {
-		--m_iHitTimer;
-		int iHitAnim = m_iHitTimer % 2;
-		if (iHitAnim) {
+	if (m_fHitTimer > 0.0f) {
+		m_fHitTimer -= _fDeltaTime;
+		if (m_pSprite->isActive()) {
 			m_pSprite->deactivate();
 		}
 		else {
 			m_pSprite->activate();
 		}
-		if (m_iHitTimer == 0) {
+		if (m_fHitTimer <= 0.0f) {
 			m_pSprite->activate();
 		}
 	}
@@ -70,8 +69,8 @@ void CRenderableComponent::receiveMessage(Message* _pMessage) {
 	ASSERT(_pMessage && m_pSprite && g_pGraphicsEngine);
 
 	if (MessageChangeLife* pMessage = dynamic_cast<MessageChangeLife*>(_pMessage)) {
-		if (m_iHitTimer <= 0 && pMessage->deltaLife < 0) {
-			m_iHitTimer = m_iHitTime;
+		if (m_fHitTimer <= 0.0f && pMessage->deltaLife < 0) {
+			m_fHitTimer = m_fHitTime;
 		}
 	}
 	else if (MessageChangeSprite* pMessage = dynamic_cast<MessageChangeSprite*>(_pMessage)) {
