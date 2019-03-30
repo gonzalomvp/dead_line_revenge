@@ -2,10 +2,10 @@
 
 #include "components/Component.h"
 
-class CLifeComponent : public Component {
+class CLifeComponent : public CComponent {
 public:
 	CLifeComponent(Entity* _pOwner, int _iLife, int _iInvencibleTime = -1, float _fTimeToLive = -1.0f)
-	: Component(_pOwner)
+	: CComponent(_pOwner)
 	, m_iLife(_iLife)
 	, m_iInvencibleTime(_iInvencibleTime)
 	, m_fLifeTimer(_fTimeToLive)

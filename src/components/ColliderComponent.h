@@ -2,7 +2,7 @@
 
 #include "components/Component.h"
 
-class CColliderComponent : public Component {
+class CColliderComponent : public CComponent {
 public:
 	enum EType {
 		ERectCollider,
@@ -20,7 +20,7 @@ public:
 	};
 
 	CColliderComponent(Entity* _pOwner, EType _eType, int _iDamage, int _iChannelMask, int _iChannelMaskResponse)
-	: Component(_pOwner)
+	: CComponent(_pOwner)
 	, m_eType(_eType)
 	, m_iDamage(_iDamage)
 	, m_iChannelMask(_iChannelMask)

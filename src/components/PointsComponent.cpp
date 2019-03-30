@@ -5,7 +5,7 @@
 #include "scenes/world.h"
 
 void CPointsComponent::receiveMessage(Message* _pMessage) {
-	Component::receiveMessage(_pMessage);
+	CComponent::receiveMessage(_pMessage);
 	if (!m_bIsActive)
 		return;
 

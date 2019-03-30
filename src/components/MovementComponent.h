@@ -2,10 +2,10 @@
 
 #include "components/Component.h"
 
-class CMovementComponent : public Component {
+class CMovementComponent : public CComponent {
 public:
 	CMovementComponent(Entity* _pOwner, const vec2& _v2Direction, float _fSpeed, bool _bHasBounce)
-	: Component(_pOwner)
+	: CComponent(_pOwner)
 	, m_v2Direction(_v2Direction)
 	, m_fSpeed(_fSpeed)
 	, m_bHasBounce(_bHasBounce)

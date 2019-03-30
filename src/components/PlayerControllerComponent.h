@@ -3,10 +3,10 @@
 #include "components/Component.h"
 #include "input/input_manager.h"
 
-class CPlayerControllerComponent : public Component, public IInputManager::IListener {
+class CPlayerControllerComponent : public CComponent, public IInputManager::IListener {
 public:
 	CPlayerControllerComponent(Entity* _pOwner)
-	: Component(_pOwner)
+	: CComponent(_pOwner)
 	, m_v2InputDir(vmake(0.0f, 0.0f))
 	{}
 

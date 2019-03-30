@@ -7,10 +7,10 @@ class CGfxEntity;
 class CSprite;
 class CText;
 
-class CHUDComponent : public Component, public IInputManager::IListener {
+class CHUDComponent : public CComponent, public IInputManager::IListener {
 public:
 	CHUDComponent(Entity* owner)
-	: Component(owner)
+	: CComponent(owner)
 	, m_iMessageTimer(0)
 	, m_pLifeText(nullptr)
 	, m_pScoreText(nullptr)

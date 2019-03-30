@@ -9,7 +9,7 @@ namespace {
 }
 
 void CExplossionComponent::run(float _fDeltaTime) {
-	Component::run(_fDeltaTime);
+	CComponent::run(_fDeltaTime);
 	if (!m_bIsActive)
 		return;
 

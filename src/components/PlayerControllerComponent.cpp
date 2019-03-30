@@ -13,7 +13,7 @@ CPlayerControllerComponent::~CPlayerControllerComponent() {
 }
 
 void CPlayerControllerComponent::init() {
-	Component::init();
+	CComponent::init();
 
 	ASSERT(g_pGraphicsEngine);
 	g_pInputManager->registerEvent(this, IInputManager::EEventType::EKeyHold);
@@ -22,7 +22,7 @@ void CPlayerControllerComponent::init() {
 }
 
 void CPlayerControllerComponent::run(float _fDeltaTime) {
-	Component::run(_fDeltaTime);
+	CComponent::run(_fDeltaTime);
 	if (!m_bIsActive)
 		return;
 

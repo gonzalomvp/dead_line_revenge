@@ -3,7 +3,7 @@
 
 #include "entities/entity.h"
 
-void Component::init() {
+void CComponent::init() {
 	ASSERT(m_pOwner);
 
 	m_pOwner->addComponent(this);
@@ -12,15 +12,15 @@ void Component::init() {
 	}
 }
 
-void Component::activate() {
+void CComponent::activate() {
 	m_bIsActive = true;
 }
 
-void Component::deactivate() {
+void CComponent::deactivate() {
 	m_bIsActive = false;
 }
 
-void Component::run(float _fDeltaTime) {
+void CComponent::run(float _fDeltaTime) {
 	if (m_fActivationTimer > 0.0f) {
 		m_fActivationTimer -= _fDeltaTime;
 		if (m_fActivationTimer <= 0.0f) {

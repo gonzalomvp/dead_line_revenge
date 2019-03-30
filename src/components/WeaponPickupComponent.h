@@ -3,10 +3,10 @@
 #include "components/Component.h"
 #include "components/WeaponComponent.h"
 
-class CWeaponPickupComponent : public Component {
+class CWeaponPickupComponent : public CComponent {
 public:
 	CWeaponPickupComponent(Entity* _pOwner, CWeaponComponent::EType _eWeaponType)
-	: Component(_pOwner)
+	: CComponent(_pOwner)
 	, m_eWeaponType(_eWeaponType)
 	{}
 

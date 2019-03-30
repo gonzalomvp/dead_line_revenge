@@ -12,7 +12,7 @@ namespace {
 }
 
 void CWeaponPickupComponent::receiveMessage(Message* _pMessage) {
-	Component::receiveMessage(_pMessage);
+	CComponent::receiveMessage(_pMessage);
 	if (!m_bIsActive)
 		return;
 

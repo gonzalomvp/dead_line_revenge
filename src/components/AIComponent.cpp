@@ -4,7 +4,7 @@
 #include "messages/message.h"
 
 void CAIComponent::receiveMessage(Message* _pMessage) {
-	Component::receiveMessage(_pMessage);
+	CComponent::receiveMessage(_pMessage);
 
 	ASSERT(_pMessage);
 

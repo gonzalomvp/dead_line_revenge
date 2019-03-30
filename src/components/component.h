@@ -3,10 +3,10 @@
 class  Entity;
 struct Message;
 
-class Component {
+class CComponent {
 public:
-	Component(Entity* _pOwner) : m_pOwner(_pOwner), m_bIsActive(false), m_fActivationTimer(0.0f) {}
-	virtual ~Component() = 0 {};
+	CComponent(Entity* _pOwner) : m_pOwner(_pOwner), m_bIsActive(false), m_fActivationTimer(0.0f) {}
+	virtual ~CComponent() = 0 {};
 
 	virtual void init          ();
 	virtual void activate      ();

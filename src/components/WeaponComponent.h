@@ -3,7 +3,7 @@
 #include "components/Component.h"
 #include "entities/entity.h"
 
-class CWeaponComponent : public Component, public Entity::IListener {
+class CWeaponComponent : public CComponent, public Entity::IListener {
 public:
 	enum EType {
 
@@ -17,7 +17,7 @@ public:
 	static const int NUM_WEAPON_TYPES = EInvalid;
 
 	CWeaponComponent(Entity* owner, EType _eType, vec2 _v2AimDir = vmake(0.0f, 0.0f))
-	: Component(owner)
+	: CComponent(owner)
 	, m_eType(_eType)
 	, m_v2AimDir(_v2AimDir)
 	, m_pRemoteBullet(nullptr)

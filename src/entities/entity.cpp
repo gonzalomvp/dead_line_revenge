@@ -38,7 +38,7 @@ void Entity::receiveMessage(Message* message) {
 	}
 }
 
-void Entity::addComponent(Component* component) {
+void Entity::addComponent(CComponent* component) {
 	m_components.push_back(component);
 }
 

@@ -6,7 +6,7 @@
 #include "scenes/world.h"
 
 void CMovementComponent::run(float _fDeltaTime) {
-	Component::run(_fDeltaTime);
+	CComponent::run(_fDeltaTime);
 	if (!m_bIsActive)
 		return;
 
@@ -39,7 +39,7 @@ void CMovementComponent::run(float _fDeltaTime) {
 }
 
 void CMovementComponent::receiveMessage(Message* _pMessage) {
-	Component::receiveMessage(_pMessage);
+	CComponent::receiveMessage(_pMessage);
 	if (!m_bIsActive)
 		return;
 

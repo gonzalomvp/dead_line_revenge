@@ -1,6 +1,6 @@
 #pragma once
 
-class  Component;
+class  CComponent;
 struct Message;
 
 class Entity {
@@ -40,7 +40,7 @@ public:
 
 	void run            (float deltaTime);
 	void receiveMessage (Message* message);
-	void addComponent   (Component* component);
+	void addComponent   (CComponent* component);
 
 	virtual void registerToDestroy(IListener* _pListener);
 	virtual void unregisterToDestroy(IListener* _pListener);
@@ -49,7 +49,7 @@ protected:
 	vec2 m_v2Pos;
 	vec2 m_v2Size;
 	EType                       m_type;
-	std::vector<Component*> m_components;
+	std::vector<CComponent*> m_components;
 
 	std::vector<IListener*> m_vlisteners;
 };

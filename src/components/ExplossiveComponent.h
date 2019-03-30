@@ -2,9 +2,9 @@
 
 #include "components/Component.h"
 
-class CExplossiveComponent : public Component {
+class CExplossiveComponent : public CComponent {
 public:
-	CExplossiveComponent(Entity* _pOwner) : Component(_pOwner) {}
+	CExplossiveComponent(Entity* _pOwner) : CComponent(_pOwner) {}
 
 	// CComponent
 	virtual void receiveMessage(Message* _pMessage) override;

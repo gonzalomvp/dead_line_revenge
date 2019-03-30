@@ -11,7 +11,7 @@ CRenderableComponent::~CRenderableComponent() {
 }
 
 void CRenderableComponent::init() {
-	Component::init();
+	CComponent::init();
 
 	ASSERT(g_pGraphicsEngine);
 	m_pSprite = NEW(CSprite, g_pGraphicsEngine->getTexture(m_sTexture), vmake(0.0f, 0.0f), vmake(0.0f, 0.0f), m_fAngle, m_fAlpha, m_iPriority);
@@ -19,7 +19,7 @@ void CRenderableComponent::init() {
 }
 
 void CRenderableComponent::run(float _fDeltaTime) {
-	Component::run(_fDeltaTime);
+	CComponent::run(_fDeltaTime);
 	if (!m_bIsActive)
 		return;
 
@@ -63,7 +63,7 @@ void CRenderableComponent::run(float _fDeltaTime) {
 }
 
 void CRenderableComponent::receiveMessage(Message* _pMessage) {
-	Component::receiveMessage(_pMessage);
+	CComponent::receiveMessage(_pMessage);
 	if (!m_bIsActive)
 		return;
 

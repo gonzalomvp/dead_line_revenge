@@ -6,7 +6,7 @@
 #include "scenes/world.h"
 
 void CLifeComponent::run(float _fDeltaTime) {
-	Component::run(_fDeltaTime);
+	CComponent::run(_fDeltaTime);
 	if (!m_bIsActive)
 		return;
 
@@ -23,7 +23,7 @@ void CLifeComponent::run(float _fDeltaTime) {
 }
 
 void CLifeComponent::receiveMessage(Message* _pMessage) {
-	Component::receiveMessage(_pMessage);
+	CComponent::receiveMessage(_pMessage);
 	if (!m_bIsActive)
 		return;
 

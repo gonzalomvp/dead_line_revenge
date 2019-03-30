@@ -33,7 +33,7 @@ CHUDComponent::~CHUDComponent() {
 }
 
 void CHUDComponent::init() {
-	Component::init();
+	CComponent::init();
 
 	ASSERT(g_pGraphicsEngine && g_pStringManager && g_pInputManager);
 	
@@ -87,7 +87,7 @@ void CHUDComponent::init() {
 }
 
 void CHUDComponent::run(float _fDeltaTime) {
-	Component::run(_fDeltaTime);
+	CComponent::run(_fDeltaTime);
 	if (!m_bIsActive)
 		return;
 
@@ -127,7 +127,7 @@ void CHUDComponent::run(float _fDeltaTime) {
 }
 
 void CHUDComponent::receiveMessage(Message* _pMessage) {
-	Component::receiveMessage(_pMessage);
+	CComponent::receiveMessage(_pMessage);
 	if (!m_bIsActive)
 		return;
 

@@ -2,9 +2,9 @@
 
 #include "components/Component.h"
 
-class CAIComponent : public Component {
+class CAIComponent : public CComponent {
 public:
-	CAIComponent(Entity* _pOwner) : Component(_pOwner) {}
+	CAIComponent(Entity* _pOwner) : CComponent(_pOwner) {}
 	virtual ~CAIComponent() = 0 {};
 
 	// CComponent

@@ -35,13 +35,13 @@ void CWeaponComponent::equipWeapon(EType _eType) {
 }
 
 void CWeaponComponent::init() {
-	Component::init();
+	CComponent::init();
 	
 	equipWeapon(m_eType);
 }
 
 void CWeaponComponent::run(float _fDeltaTime) {
-	Component::run(_fDeltaTime);
+	CComponent::run(_fDeltaTime);
 	if (!m_bIsActive)
 		return;
 
@@ -132,7 +132,7 @@ void CWeaponComponent::run(float _fDeltaTime) {
 }
 
 void CWeaponComponent::receiveMessage(Message* _pMessage) {
-	Component::receiveMessage(_pMessage);
+	CComponent::receiveMessage(_pMessage);
 	if (!m_bIsActive)
 		return;
 

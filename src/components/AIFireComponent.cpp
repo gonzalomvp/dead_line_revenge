@@ -7,7 +7,7 @@
 #include <algorithm>
 
 void CAIFireComponent::init() {
-	Component::init();
+	CComponent::init();
 
 	if (m_vAimDirections.size() > 0) {
 		if (m_bWantShuffle) {
@@ -19,7 +19,7 @@ void CAIFireComponent::init() {
 }
 
 void CAIFireComponent::run(float _fDeltaTime) {
-	Component::run(_fDeltaTime);
+	CComponent::run(_fDeltaTime);
 	if (!m_bIsActive)
 		return;
 

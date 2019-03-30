@@ -4,10 +4,10 @@
 
 class CSprite;
 
-class CRenderableComponent : public Component {
+class CRenderableComponent : public CComponent {
 public:
 	CRenderableComponent(Entity* _pOwner, const std::string& _sTexture, float _fAngle, float _fAlpha, int _iPriority, bool _bAlignToMovement = false, bool _bAlignToAim = false, int _iHitTime = 0)
-	: Component(_pOwner)
+	: CComponent(_pOwner)
 	, m_sTexture(_sTexture)
 	, m_fAngle(_fAngle)
 	, m_fAlpha(_fAlpha)
