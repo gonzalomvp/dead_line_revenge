@@ -1,6 +1,6 @@
 #include "common/stdafx.h"
 
-#include "blackboard.h"
+#include "Blackboard.h"
 
 CBlackboard::~CBlackboard() {
 	for (auto itEntity = m_mapEntity.begin(); itEntity != m_mapEntity.end(); ++itEntity) {

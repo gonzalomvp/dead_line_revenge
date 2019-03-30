@@ -1,17 +1,17 @@
 #include "common/stdafx.h"
-#include "fire.h"
+#include "Fire.h"
 #include "entities/entity.h"
-#include "components/behavior_tree/behavior_tree.h"
+#include "components/BehaviorTreeComponent.h"
 #include "messages/message.h"
 #include "scenes/world.h"
 
 
-Status CFireAction::update(float step) {
+EStatus CFire::onUpdate(float step) {
 
 	Entity* self = getOwnerEntity();
 	MessageFire messageFire;
 	messageFire.isFiring = true;
 	self->receiveMessage(&messageFire);
 
-	return eSuccess;
+	return EStatus::ESuccess;
 }

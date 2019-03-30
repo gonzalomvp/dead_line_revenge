@@ -5,21 +5,21 @@
 #include "tinyxml/tinyxml.h"
 #pragma pack(pop)
 
-class CBehaviorNodeTreeComponent;
+class CBehaviorTreeComponent;
 class Entity;
 
-enum Status {
-	eInvalid,
-	eSuccess,
-	eFail,
-	eAborted,
-	eRunning,
+enum EStatus {
+	EInvalid,
+	ESuccess,
+	EFail,
+	EAborted,
+	ERunning,
 };
 
-class CBehaviorNode {
+class CBehavior {
 public:
 	enum EType {
-#define REG_BEHAVIOR(val, name) \
+#define REG_BEHAVIOR(val) \
 		E##val,
 #include "REG_BEHAVIORS.h"
 #undef REG_BEHAVIOR
@@ -27,27 +27,26 @@ public:
 		EInvalid,
 	};
 
-	static const int NUM_BEHAVIORS = EInvalid;
+	static const int NUM_BEHAVIORS = EType::EInvalid;
 	static EType getBehaviorTypeByName(const std::string& name);
 
-	CBehaviorNode(CBehaviorNodeTreeComponent* owner) : mOwner(owner), mStatus(eInvalid) {}
-	virtual ~CBehaviorNode() {}
+	CBehavior(CBehaviorTreeComponent* owner) : mOwner(owner), mStatus(EStatus::EInvalid) {}
+	virtual ~CBehavior() {}
 
 	virtual void init(TiXmlElement* behaviorElem) {}
-	virtual void abort() { mStatus = eAborted; }
+	virtual void abort() { mStatus = EStatus::EAborted; }
 
-	virtual Status tick(float step);
+	virtual EStatus run(float step);
 
-	Status getStatus() const { return mStatus; }
+	EStatus getStatus() const { return mStatus; }
 	Entity* getOwnerEntity();
 
 protected:
-	virtual Status update(float step) = 0;
-	
+	virtual EStatus onUpdate(float step) = 0;
 	virtual void onEnter()  {}
 	virtual void onExit ()  {}
 
-	CBehaviorNodeTreeComponent* mOwner;
+	CBehaviorTreeComponent* mOwner;
 
 private:
 	struct SBehaviorInfo {
@@ -56,5 +55,5 @@ private:
 	};
 	static SBehaviorInfo s_aBehaviorInfo[];
 
-	Status mStatus;
+	EStatus mStatus;
 };

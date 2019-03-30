@@ -1,14 +1,14 @@
 #pragma once
 
-#include "components/behavior_tree/behavior_tree.h"
+#include "components/BehaviorTreeComponent.h"
 
 //=============================================================================
 // BossIAComponent class
 //=============================================================================
-class BossIAComponent : public CBehaviorNodeTreeComponent {
+class BossIAComponent : public CBehaviorTreeComponent {
 public:
 	BossIAComponent(Entity* owner, const char* filename) :
-		CBehaviorNodeTreeComponent(owner),
+		CBehaviorTreeComponent(owner),
 		m_btFilename(filename) {}
 
 	virtual void init();

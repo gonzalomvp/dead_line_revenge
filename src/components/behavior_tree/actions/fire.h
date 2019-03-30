@@ -1,14 +1,14 @@
 #pragma once
-#include "components/behavior_tree/behavior.h"
+#include "components/behavior_tree/Behavior.h"
 
-class CBehaviorNodeTreeComponent;
+class CBehaviorTreeComponent;
 
-class CFireAction : public CBehaviorNode {
+class CFire : public CBehavior {
 public:
-	CFireAction(CBehaviorNodeTreeComponent* owner) : CBehaviorNode(owner) {}
+	CFire(CBehaviorTreeComponent* owner) : CBehavior(owner) {}
 
 protected:
-	virtual Status update(float step) override;
+	virtual EStatus onUpdate(float step) override;
 
 private:
 };

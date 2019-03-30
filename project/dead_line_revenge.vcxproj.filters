@@ -49,6 +49,12 @@
     <Filter Include="src\messages">
       <UniqueIdentifier>{a5831c08-9339-411d-89eb-d81dbad4b88e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\components\behavior_tree\decorators">
+      <UniqueIdentifier>{1c922931-d80e-4728-ad1d-a834a95218ab}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\components\behavior_tree\composites">
+      <UniqueIdentifier>{d311b1fb-163c-48f8-ae22-4fd01fb3ceaa}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\globals.h">
@@ -174,78 +180,6 @@
     <ClInclude Include="..\src\components\MovementComponent.h">
       <Filter>src\components</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\components\behavior_tree\behavior.h">
-      <Filter>src\components\behavior_tree</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\components\behavior_tree\behavior_tree.h">
-      <Filter>src\components\behavior_tree</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\components\behavior_tree\blackboard.h">
-      <Filter>src\components\behavior_tree</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\components\behavior_tree\group.h">
-      <Filter>src\components\behavior_tree</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\components\behavior_tree\parallel.h">
-      <Filter>src\components\behavior_tree</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\components\behavior_tree\repeat.h">
-      <Filter>src\components\behavior_tree</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\components\behavior_tree\selector.h">
-      <Filter>src\components\behavior_tree</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\components\behavior_tree\sequence.h">
-      <Filter>src\components\behavior_tree</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\components\behavior_tree\actions\aim_player.h">
-      <Filter>src\components\behavior_tree\actions</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\components\behavior_tree\actions\change_sprite.h">
-      <Filter>src\components\behavior_tree\actions</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\components\behavior_tree\actions\change_weapon.h">
-      <Filter>src\components\behavior_tree\actions</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\components\behavior_tree\actions\chase.h">
-      <Filter>src\components\behavior_tree\actions</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\components\behavior_tree\actions\check_life.h">
-      <Filter>src\components\behavior_tree\actions</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\components\behavior_tree\actions\death.h">
-      <Filter>src\components\behavior_tree\actions</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\components\behavior_tree\actions\fire.h">
-      <Filter>src\components\behavior_tree\actions</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\components\behavior_tree\actions\goto_player.h">
-      <Filter>src\components\behavior_tree\actions</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\components\behavior_tree\actions\goto_random.h">
-      <Filter>src\components\behavior_tree\actions</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\components\behavior_tree\actions\hit.h">
-      <Filter>src\components\behavior_tree\actions</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\components\behavior_tree\actions\idle.h">
-      <Filter>src\components\behavior_tree\actions</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\components\behavior_tree\actions\rotate_aim.h">
-      <Filter>src\components\behavior_tree\actions</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\components\behavior_tree\actions\wait.h">
-      <Filter>src\components\behavior_tree\actions</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\components\behavior_tree\conditions\check_dead.h">
-      <Filter>src\components\behavior_tree\conditions</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\components\behavior_tree\conditions\check_distance.h">
-      <Filter>src\components\behavior_tree\conditions</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\components\behavior_tree\conditions\check_hit.h">
-      <Filter>src\components\behavior_tree\conditions</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\messages\message.h">
       <Filter>src\messages</Filter>
     </ClInclude>
@@ -285,25 +219,73 @@
     <ClInclude Include="..\src\components\WeaponComponent.h">
       <Filter>src\components</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\components\behavior_tree\actions\change_aim_direction.h">
-      <Filter>src\components\behavior_tree\actions</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\components\behavior_tree\actions\change_speed.h">
-      <Filter>src\components\behavior_tree\actions</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\components\behavior_tree\actions\GoToBlackboardPositionAction.h">
-      <Filter>src\components\behavior_tree\actions</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\components\behavior_tree\ConditionNode.h">
-      <Filter>src\components\behavior_tree</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\components\behavior_tree\DecoratorNode.h">
-      <Filter>src\components\behavior_tree</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\components\behavior_tree\actions\CalculateFleePositionAction.h">
-      <Filter>src\components\behavior_tree\actions</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\components\ExplossionComponent.h">
+      <Filter>src\components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\components\behavior_tree\Behavior.h">
+      <Filter>src\components\behavior_tree</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\components\behavior_tree\Blackboard.h">
+      <Filter>src\components\behavior_tree</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\components\behavior_tree\Composite.h">
+      <Filter>src\components\behavior_tree</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\components\behavior_tree\Condition.h">
+      <Filter>src\components\behavior_tree</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\components\behavior_tree\Decorator.h">
+      <Filter>src\components\behavior_tree</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\components\behavior_tree\actions\Aim.h">
+      <Filter>src\components\behavior_tree\actions</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\components\behavior_tree\actions\CalculateFleePosition.h">
+      <Filter>src\components\behavior_tree\actions</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\components\behavior_tree\actions\CalculateRandomPosition.h">
+      <Filter>src\components\behavior_tree\actions</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\components\behavior_tree\actions\ChangeSpeed.h">
+      <Filter>src\components\behavior_tree\actions</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\components\behavior_tree\actions\ChangeSprite.h">
+      <Filter>src\components\behavior_tree\actions</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\components\behavior_tree\actions\ChangeWeapon.h">
+      <Filter>src\components\behavior_tree\actions</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\components\behavior_tree\actions\Fire.h">
+      <Filter>src\components\behavior_tree\actions</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\components\behavior_tree\actions\GoToBlackboardPosition.h">
+      <Filter>src\components\behavior_tree\actions</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\components\behavior_tree\actions\RotateAim.h">
+      <Filter>src\components\behavior_tree\actions</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\components\behavior_tree\actions\Wait.h">
+      <Filter>src\components\behavior_tree\actions</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\components\behavior_tree\conditions\CheckIsAtDistance.h">
+      <Filter>src\components\behavior_tree\conditions</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\components\behavior_tree\conditions\CheckLife.h">
+      <Filter>src\components\behavior_tree\conditions</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\components\behavior_tree\decorators\Repeat.h">
+      <Filter>src\components\behavior_tree\decorators</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\components\behavior_tree\composites\Parallel.h">
+      <Filter>src\components\behavior_tree\composites</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\components\behavior_tree\composites\Selector.h">
+      <Filter>src\components\behavior_tree\composites</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\components\behavior_tree\composites\Sequence.h">
+      <Filter>src\components\behavior_tree\composites</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\components\BehaviorTreeComponent.h">
       <Filter>src\components</Filter>
     </ClInclude>
   </ItemGroup>
@@ -419,78 +401,6 @@
     <ClCompile Include="..\src\components\MovementComponent.cpp">
       <Filter>src\components</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\components\behavior_tree\behavior.cpp">
-      <Filter>src\components\behavior_tree</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\components\behavior_tree\behavior_tree.cpp">
-      <Filter>src\components\behavior_tree</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\components\behavior_tree\blackboard.cpp">
-      <Filter>src\components\behavior_tree</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\components\behavior_tree\group.cpp">
-      <Filter>src\components\behavior_tree</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\components\behavior_tree\parallel.cpp">
-      <Filter>src\components\behavior_tree</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\components\behavior_tree\repeat.cpp">
-      <Filter>src\components\behavior_tree</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\components\behavior_tree\selector.cpp">
-      <Filter>src\components\behavior_tree</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\components\behavior_tree\sequence.cpp">
-      <Filter>src\components\behavior_tree</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\components\behavior_tree\actions\aim_player.cpp">
-      <Filter>src\components\behavior_tree\actions</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\components\behavior_tree\actions\change_sprite.cpp">
-      <Filter>src\components\behavior_tree\actions</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\components\behavior_tree\actions\change_weapon.cpp">
-      <Filter>src\components\behavior_tree\actions</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\components\behavior_tree\actions\chase.cpp">
-      <Filter>src\components\behavior_tree\actions</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\components\behavior_tree\actions\check_life.cpp">
-      <Filter>src\components\behavior_tree\actions</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\components\behavior_tree\actions\death.cpp">
-      <Filter>src\components\behavior_tree\actions</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\components\behavior_tree\actions\fire.cpp">
-      <Filter>src\components\behavior_tree\actions</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\components\behavior_tree\actions\goto_player.cpp">
-      <Filter>src\components\behavior_tree\actions</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\components\behavior_tree\actions\goto_random.cpp">
-      <Filter>src\components\behavior_tree\actions</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\components\behavior_tree\actions\hit.cpp">
-      <Filter>src\components\behavior_tree\actions</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\components\behavior_tree\actions\idle.cpp">
-      <Filter>src\components\behavior_tree\actions</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\components\behavior_tree\actions\rotate_aim.cpp">
-      <Filter>src\components\behavior_tree\actions</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\components\behavior_tree\actions\wait.cpp">
-      <Filter>src\components\behavior_tree\actions</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\components\behavior_tree\conditions\check_dead.cpp">
-      <Filter>src\components\behavior_tree\conditions</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\components\behavior_tree\conditions\check_distance.cpp">
-      <Filter>src\components\behavior_tree\conditions</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\components\behavior_tree\conditions\check_hit.cpp">
-      <Filter>src\components\behavior_tree\conditions</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\components\RenderableComponent.cpp">
       <Filter>src\components</Filter>
     </ClCompile>
@@ -527,25 +437,73 @@
     <ClCompile Include="..\src\components\WeaponComponent.cpp">
       <Filter>src\components</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\components\behavior_tree\actions\change_aim_direction.cpp">
-      <Filter>src\components\behavior_tree\actions</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\components\behavior_tree\actions\change_speed.cpp">
-      <Filter>src\components\behavior_tree\actions</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\components\behavior_tree\actions\GoToBlackboardPositionAction.cpp">
-      <Filter>src\components\behavior_tree\actions</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\components\behavior_tree\ConditionNode.cpp">
-      <Filter>src\components\behavior_tree</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\components\behavior_tree\DecoratorNode.cpp">
-      <Filter>src\components\behavior_tree</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\components\behavior_tree\actions\CalculateFleePositionAction.cpp">
-      <Filter>src\components\behavior_tree\actions</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\components\ExplossionComponent.cpp">
+      <Filter>src\components</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\components\behavior_tree\Behavior.cpp">
+      <Filter>src\components\behavior_tree</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\components\behavior_tree\Blackboard.cpp">
+      <Filter>src\components\behavior_tree</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\components\behavior_tree\Composite.cpp">
+      <Filter>src\components\behavior_tree</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\components\behavior_tree\Condition.cpp">
+      <Filter>src\components\behavior_tree</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\components\behavior_tree\Decorator.cpp">
+      <Filter>src\components\behavior_tree</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\components\behavior_tree\actions\Aim.cpp">
+      <Filter>src\components\behavior_tree\actions</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\components\behavior_tree\actions\CalculateFleePosition.cpp">
+      <Filter>src\components\behavior_tree\actions</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\components\behavior_tree\actions\CalculateRandomPosition.cpp">
+      <Filter>src\components\behavior_tree\actions</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\components\behavior_tree\actions\ChangeSpeed.cpp">
+      <Filter>src\components\behavior_tree\actions</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\components\behavior_tree\actions\ChangeSprite.cpp">
+      <Filter>src\components\behavior_tree\actions</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\components\behavior_tree\actions\ChangeWeapon.cpp">
+      <Filter>src\components\behavior_tree\actions</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\components\behavior_tree\actions\Fire.cpp">
+      <Filter>src\components\behavior_tree\actions</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\components\behavior_tree\actions\GoToBlackboardPosition.cpp">
+      <Filter>src\components\behavior_tree\actions</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\components\behavior_tree\actions\RotateAim.cpp">
+      <Filter>src\components\behavior_tree\actions</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\components\behavior_tree\actions\Wait.cpp">
+      <Filter>src\components\behavior_tree\actions</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\components\behavior_tree\conditions\CheckIsAtDistance.cpp">
+      <Filter>src\components\behavior_tree\conditions</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\components\behavior_tree\conditions\CheckLife.cpp">
+      <Filter>src\components\behavior_tree\conditions</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\components\behavior_tree\decorators\Repeat.cpp">
+      <Filter>src\components\behavior_tree\decorators</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\components\behavior_tree\composites\Parallel.cpp">
+      <Filter>src\components\behavior_tree\composites</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\components\behavior_tree\composites\Selector.cpp">
+      <Filter>src\components\behavior_tree\composites</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\components\behavior_tree\composites\Sequence.cpp">
+      <Filter>src\components\behavior_tree\composites</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\components\BehaviorTreeComponent.cpp">
       <Filter>src\components</Filter>
     </ClCompile>
   </ItemGroup>

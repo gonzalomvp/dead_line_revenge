@@ -1,10 +1,11 @@
 #include "common/stdafx.h"
-#include "wait.h"
+#include "Wait.h"
 #include "messages/message.h"
 #include "scenes/world.h"
-#include "components/behavior_tree/behavior_tree.h"
+#include "components/BehaviorTreeComponent.h"
 
-void CWaitAction::init(TiXmlElement* behaviorElem) {
+void CWait::init(TiXmlElement* behaviorElem) {
+	CBehavior::init(behaviorElem);
 	ASSERT(behaviorElem);
 
 	ASSERT(behaviorElem->Attribute("fTime"));
@@ -16,16 +17,16 @@ void CWaitAction::init(TiXmlElement* behaviorElem) {
 	}
 }
 
-void CWaitAction::onEnter() {
+void CWait::onEnter() {
 	m_fWaitTimer = m_fWaitTime + CORE_FRand(-m_fRandomDeviation, m_fRandomDeviation);
 }
 
-Status CWaitAction::update(float step) {
+EStatus CWait::onUpdate(float step) {
 	if (m_fWaitTimer <= 0.0f) {
-		return eSuccess;
+		return EStatus::ESuccess;
 	}
 
 	m_fWaitTimer -= step;
 
-	return eRunning;
+	return EStatus::ERunning;
 }

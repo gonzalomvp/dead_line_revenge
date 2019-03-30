@@ -1,16 +1,16 @@
 #include "common/stdafx.h"
-#include "behavior.h"
+#include "Behavior.h"
 
-#include "components/behavior_tree/behavior_tree.h"
+#include "components/BehaviorTreeComponent.h"
 
-CBehaviorNode::SBehaviorInfo CBehaviorNode::s_aBehaviorInfo[] = {
-#define REG_BEHAVIOR(val, name) \
-	{E##val, name},
+CBehavior::SBehaviorInfo CBehavior::s_aBehaviorInfo[] = {
+#define REG_BEHAVIOR(val) \
+	{E##val, #val},
 #include "REG_BEHAVIORS.h"
 #undef REG_BEHAVIOR
 };
 
-CBehaviorNode::EType CBehaviorNode::getBehaviorTypeByName(const std::string& name) {
+CBehavior::EType CBehavior::getBehaviorTypeByName(const std::string& name) {
 	EType etype = EType::EInvalid;
 	int i = 0;
 	while ((etype == EType::EInvalid) && (i < NUM_BEHAVIORS))
@@ -23,17 +23,17 @@ CBehaviorNode::EType CBehaviorNode::getBehaviorTypeByName(const std::string& nam
 	return etype;
 }
 
-Entity* CBehaviorNode::getOwnerEntity() {
+Entity* CBehavior::getOwnerEntity() {
 	ASSERT(mOwner);
 	return mOwner->getOwner();
 }
 
-Status CBehaviorNode::tick(float step) {
-	if (mStatus != eRunning) {
+EStatus CBehavior::run(float step) {
+	if (mStatus != EStatus::ERunning) {
 		onEnter();
 	}
-	mStatus = update(step);
-	if (mStatus != eRunning) {
+	mStatus = onUpdate(step);
+	if (mStatus != EStatus::ERunning) {
 		onExit();
 	}
 	return mStatus;
