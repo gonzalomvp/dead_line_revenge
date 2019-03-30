@@ -20,26 +20,26 @@ void CRenderableComponent::init() {
 
 void CRenderableComponent::run(float _fDeltaTime) {
 	Component::run(_fDeltaTime);
-	if (!m_isActive)
+	if (!m_bIsActive)
 		return;
 
-	ASSERT(m_owner && m_pSprite);
+	ASSERT(m_pOwner && m_pSprite);
 
 	// Update pos and size
-	m_pSprite->setPos(m_owner->getPos());
-	m_pSprite->setSize(m_owner->getSize());
+	m_pSprite->setPos(m_pOwner->getPos());
+	m_pSprite->setSize(m_pOwner->getSize());
 
 	// Update angle
 	vec2 v2Orientation = vmake(0.0f, 0.0f);
 	if (m_bAlignToMovement) {
 		MessageGetMovementDir messageGetMovementDirection;
-		m_owner->receiveMessage(&messageGetMovementDirection);
+		m_pOwner->receiveMessage(&messageGetMovementDirection);
 		v2Orientation = messageGetMovementDirection.dir;
 		
 	}
 	if (m_bAlignToAim && vlen2(v2Orientation) == 0.0f) {
 		MessageGetAimDirection messageGetAimDirection;
-		m_owner->receiveMessage(&messageGetAimDirection);
+		m_pOwner->receiveMessage(&messageGetAimDirection);
 		v2Orientation = messageGetAimDirection.direction;
 	}
 	if (vlen2(v2Orientation) != 0.0f) {
@@ -64,7 +64,7 @@ void CRenderableComponent::run(float _fDeltaTime) {
 
 void CRenderableComponent::receiveMessage(Message* _pMessage) {
 	Component::receiveMessage(_pMessage);
-	if (!m_isActive)
+	if (!m_bIsActive)
 		return;
 
 	ASSERT(_pMessage && m_pSprite && g_pGraphicsEngine);

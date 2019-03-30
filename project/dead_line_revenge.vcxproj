@@ -56,7 +56,7 @@
     <ClInclude Include="..\src\components\behavior_tree\Decorator.h" />
     <ClInclude Include="..\src\components\behavior_tree\decorators\Repeat.h" />
     <ClInclude Include="..\src\components\ColliderComponent.h" />
-    <ClInclude Include="..\src\components\component.h" />
+    <ClInclude Include="..\src\components\Component.h" />
     <ClInclude Include="..\src\components\ExplossionComponent.h" />
     <ClInclude Include="..\src\components\ExplossiveComponent.h" />
     <ClInclude Include="..\src\components\HUDComponent.h" />
@@ -137,7 +137,7 @@
     <ClCompile Include="..\src\components\behavior_tree\Decorator.cpp" />
     <ClCompile Include="..\src\components\behavior_tree\decorators\Repeat.cpp" />
     <ClCompile Include="..\src\components\ColliderComponent.cpp" />
-    <ClCompile Include="..\src\components\component.cpp" />
+    <ClCompile Include="..\src\components\Component.cpp" />
     <ClCompile Include="..\src\components\ExplossionComponent.cpp" />
     <ClCompile Include="..\src\components\ExplossiveComponent.cpp" />
     <ClCompile Include="..\src\components\HUDComponent.cpp" />

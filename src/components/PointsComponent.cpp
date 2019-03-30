@@ -6,12 +6,12 @@
 
 void CPointsComponent::receiveMessage(Message* _pMessage) {
 	Component::receiveMessage(_pMessage);
-	if (!m_isActive)
+	if (!m_bIsActive)
 		return;
 
-	ASSERT(_pMessage && m_owner && g_pWorld);
+	ASSERT(_pMessage && m_pOwner && g_pWorld);
 
 	if (MessageDestroy* pMessage = dynamic_cast<MessageDestroy*>(_pMessage)) {
-		g_pWorld->addPoints(m_owner->getType());
+		g_pWorld->addPoints(m_pOwner->getType());
 	}
 }

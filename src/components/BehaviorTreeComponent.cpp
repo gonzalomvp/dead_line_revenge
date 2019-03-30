@@ -34,7 +34,7 @@ void CBehaviorTreeComponent::init() {
 
 void CBehaviorTreeComponent::run(float _fDeltaTime) {
 	Component::run(_fDeltaTime);
-	if (!m_isActive)
+	if (!m_bIsActive)
 		return;
 	
 	if (m_pRootBehavior) {

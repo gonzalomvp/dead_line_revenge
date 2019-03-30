@@ -1,6 +1,6 @@
 #pragma once
 
-#include "components/component.h"
+#include "components/Component.h"
 #include "components/WeaponComponent.h"
 
 class CWeaponPickupComponent : public Component {

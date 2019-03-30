@@ -23,22 +23,22 @@ void CPlayerControllerComponent::init() {
 
 void CPlayerControllerComponent::run(float _fDeltaTime) {
 	Component::run(_fDeltaTime);
-	if (!m_isActive)
+	if (!m_bIsActive)
 		return;
 
 	MessageSetMovementDir msgSetMovementDir;
 	msgSetMovementDir.dir = m_v2InputDir;
-	m_owner->receiveMessage(&msgSetMovementDir);
+	m_pOwner->receiveMessage(&msgSetMovementDir);
 
 	m_v2InputDir = vmake(0.0f, 0.0f);
 }
 
 bool CPlayerControllerComponent::onEvent(const IInputManager::CEvent& _event) {
 	bool bConsumed = false;
-	if (!m_isActive)
+	if (!m_bIsActive)
 		return bConsumed;
 
-	ASSERT(m_owner);
+	ASSERT(m_pOwner);
 
 	// Process key inputs
 	if (const IInputManager::CKeyEvent* pEvent = dynamic_cast<const IInputManager::CKeyEvent*>(&_event)) {
@@ -63,7 +63,7 @@ bool CPlayerControllerComponent::onEvent(const IInputManager::CEvent& _event) {
 				}	
 				case VK_SPACE: {
 					MessageReload msgReload;
-					m_owner->receiveMessage(&msgReload);
+					m_pOwner->receiveMessage(&msgReload);
 					break;
 				}
 				default: {
@@ -81,20 +81,20 @@ bool CPlayerControllerComponent::onEvent(const IInputManager::CEvent& _event) {
 				bConsumed = true;
 				MessageFire messageFire;
 				messageFire.isFiring = true;
-				m_owner->receiveMessage(&messageFire);
+				m_pOwner->receiveMessage(&messageFire);
 			}
 			else if (pEvent->getType() == IInputManager::EEventType::EMouseButtonUp) {
 				bConsumed = true;
 				MessageFire messageFire;
 				messageFire.isFiring = false;
-				m_owner->receiveMessage(&messageFire);
+				m_pOwner->receiveMessage(&messageFire);
 			}
 		}
 		else if (pEvent->getButton() == SYS_MB_RIGHT) {
 			if (pEvent->getType() == IInputManager::EEventType::EMouseButtonDown) {
 				bConsumed = true;
 				MessageReload msgReload;
-				m_owner->receiveMessage(&msgReload);
+				m_pOwner->receiveMessage(&msgReload);
 			}
 		}
 	}

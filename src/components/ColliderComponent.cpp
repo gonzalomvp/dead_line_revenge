@@ -6,17 +6,17 @@
 
 void CColliderComponent::receiveMessage(Message* _pMessage) {
 	Component::receiveMessage(_pMessage);
-	if (!m_isActive)
+	if (!m_bIsActive)
 		return;
 
-	ASSERT(_pMessage && m_owner);
+	ASSERT(_pMessage && m_pOwner);
 
 	if (MessageCheckCollision* pMessage = dynamic_cast<MessageCheckCollision*>(_pMessage)) {
 		bool bIsOverlapping = false;
 		int iCollisionDamage = 0;
 
-		vec2 v2Center = m_owner->getPos();
-		vec2 v2Size = m_owner->getSize();
+		vec2 v2Center = m_pOwner->getPos();
+		vec2 v2Size = m_pOwner->getSize();
 
 		Entity* pOther = pMessage->other;
 
@@ -78,7 +78,7 @@ void CColliderComponent::receiveMessage(Message* _pMessage) {
 		if (bIsOverlapping) {
 			MessageChangeLife mgsChangeLife;
 			mgsChangeLife.deltaLife = iCollisionDamage;
-			m_owner->receiveMessage(&mgsChangeLife);
+			m_pOwner->receiveMessage(&mgsChangeLife);
 		}
 	}
 }

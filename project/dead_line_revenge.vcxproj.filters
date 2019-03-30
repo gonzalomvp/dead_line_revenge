@@ -168,9 +168,6 @@
     <ClInclude Include="..\src\engine\text.h">
       <Filter>src\engine</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\components\component.h">
-      <Filter>src\components</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\components\LifeComponent.h">
       <Filter>src\components</Filter>
     </ClInclude>
@@ -285,6 +282,9 @@
     <ClInclude Include="..\src\components\BehaviorTreeComponent.h">
       <Filter>src\components</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\components\Component.h">
+      <Filter>src\components</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\main.cpp">
@@ -385,9 +385,6 @@
     </ClCompile>
     <ClCompile Include="..\src\engine\text.cpp">
       <Filter>src\engine</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\components\component.cpp">
-      <Filter>src\components</Filter>
     </ClCompile>
     <ClCompile Include="..\src\components\LifeComponent.cpp">
       <Filter>src\components</Filter>
@@ -498,6 +495,9 @@
       <Filter>src\components\behavior_tree\composites</Filter>
     </ClCompile>
     <ClCompile Include="..\src\components\BehaviorTreeComponent.cpp">
+      <Filter>src\components</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\components\Component.cpp">
       <Filter>src\components</Filter>
     </ClCompile>
   </ItemGroup>

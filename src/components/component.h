@@ -5,21 +5,22 @@ struct Message;
 
 class Component {
 public:
-	Component(Entity* owner) : m_owner(owner), m_isActive(false), m_activationDelay(0), m_activationTimer(0) {}
+	Component(Entity* _pOwner) : m_pOwner(_pOwner), m_bIsActive(false), m_fActivationTimer(0.0f) {}
 	virtual ~Component() = 0 {};
 
 	virtual void init          ();
 	virtual void activate      ();
 	virtual void deactivate    ();
-	virtual void run           (float deltaTime);
-	virtual void receiveMessage(Message* message) {}
+	virtual void run           (float _fDeltaTime);
+	virtual void receiveMessage(Message* _pMessage) {}
 
-	void setActivationDelay(int activationDelay) { m_activationDelay = activationDelay; }
-	Entity* getOwner() { return m_owner; }
+	Entity* getOwner() { return m_pOwner; }
+	void setActivationDelay(float _fActivationTimer) { m_fActivationTimer = _fActivationTimer; }
 
 protected:
-	Entity* m_owner;
-	bool        m_isActive;
-	int         m_activationDelay;
-	int         m_activationTimer;
+	Entity* m_pOwner;
+	bool    m_bIsActive;
+
+private:
+	float   m_fActivationTimer;
 };

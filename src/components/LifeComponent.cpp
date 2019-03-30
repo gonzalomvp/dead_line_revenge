@@ -7,7 +7,7 @@
 
 void CLifeComponent::run(float _fDeltaTime) {
 	Component::run(_fDeltaTime);
-	if (!m_isActive)
+	if (!m_bIsActive)
 		return;
 
 	if (m_iInvencibleTimer > 0) {
@@ -24,7 +24,7 @@ void CLifeComponent::run(float _fDeltaTime) {
 
 void CLifeComponent::receiveMessage(Message* _pMessage) {
 	Component::receiveMessage(_pMessage);
-	if (!m_isActive)
+	if (!m_bIsActive)
 		return;
 
 	ASSERT(_pMessage);
@@ -54,11 +54,11 @@ void CLifeComponent::receiveMessage(Message* _pMessage) {
 }
 
 void CLifeComponent::onDead() {
-	ASSERT(m_owner && g_pWorld);
+	ASSERT(m_pOwner && g_pWorld);
 
 	deactivate();
 	MessageDestroy msgDestroy;
-	m_owner->receiveMessage(&msgDestroy);
-	m_owner->deactivate();
-	g_pWorld->removeEntity(m_owner);
+	m_pOwner->receiveMessage(&msgDestroy);
+	m_pOwner->deactivate();
+	g_pWorld->removeEntity(m_pOwner);
 }

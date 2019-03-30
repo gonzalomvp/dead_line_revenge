@@ -11,13 +11,13 @@ namespace {
 
 void CAIFleeComponent::run(float _fDeltaTime) {
 	Component::run(_fDeltaTime);
-	if (!m_isActive)
+	if (!m_bIsActive)
 		return;
 
-	//ASSERT(m_owner && g_pWorld && g_pWorld->getPlayer());
+	//ASSERT(m_pOwner && g_pWorld && g_pWorld->getPlayer());
 
 	//MessageGetTransform messageSelfPos;
-	//m_owner->receiveMessage(&messageSelfPos);
+	//m_pOwner->receiveMessage(&messageSelfPos);
 	//MessageGetTransform messagePlayerPos;
 	//g_pWorld->getPlayer()->receiveMessage(&messagePlayerPos);
 
@@ -53,7 +53,7 @@ void CAIFleeComponent::run(float _fDeltaTime) {
 	//	MessageSetTransform msgSetTransform;
 	//	msgSetTransform.pos = vadd(messageSelfPos.pos, vscale(vnorm(v2MoveDir), m_fSpeed));
 	//	msgSetTransform.size = messageSelfPos.size;
-	//	m_owner->receiveMessage(&msgSetTransform);
+	//	m_pOwner->receiveMessage(&msgSetTransform);
 	//}
 }
 

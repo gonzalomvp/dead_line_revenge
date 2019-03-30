@@ -1,6 +1,6 @@
 #pragma once
 
-#include "components/component.h"
+#include "components/Component.h"
 
 class CExplossionComponent : public Component {
 public:

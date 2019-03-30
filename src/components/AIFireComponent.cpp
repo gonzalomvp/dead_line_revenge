@@ -20,41 +20,41 @@ void CAIFireComponent::init() {
 
 void CAIFireComponent::run(float _fDeltaTime) {
 	Component::run(_fDeltaTime);
-	if (!m_isActive)
+	if (!m_bIsActive)
 		return;
 
-	//ASSERT(m_owner && g_pWorld && g_pWorld->getPlayer());
+	//ASSERT(m_pOwner && g_pWorld && g_pWorld->getPlayer());
 
 	MessageSetAimDirection messageSetAimDirection;
 	messageSetAimDirection.direction = m_v2AimDirection;
 	//messageSetAimDirection.changeAngle = true;
-	m_owner->receiveMessage(&messageSetAimDirection);
+	m_pOwner->receiveMessage(&messageSetAimDirection);
 
 	////MessageFire msgFire;
 	////msgFire.isFiring = true;
-	////m_owner->receiveMessage(&msgFire);
+	////m_pOwner->receiveMessage(&msgFire);
 
 	//if (m_vFireDirections.size() > 0) {
 	//	MessageSetAimDirection messageSetAimDirection;
 	//	messageSetAimDirection.direction = m_vFireDirections[m_uCurrentFireDirectionIndex];
 	//	messageSetAimDirection.changeAngle = true;
-	//	m_owner->receiveMessage(&messageSetAimDirection);
+	//	m_pOwner->receiveMessage(&messageSetAimDirection);
 	//}
 	//else {
 	//	MessageGetTransform messageSelfPos;
-	//	m_owner->receiveMessage(&messageSelfPos);
+	//	m_pOwner->receiveMessage(&messageSelfPos);
 	//	MessageGetTransform messagePlayerPos;
 	//	g_pWorld->getPlayer()->receiveMessage(&messagePlayerPos);
 	//	MessageSetAimDirection messageSetAimDirection;
 	//	messageSetAimDirection.direction = vnorm(vsub(messagePlayerPos.pos, messageSelfPos.pos));
 	//	messageSetAimDirection.changeAngle = true;
-	//	m_owner->receiveMessage(&messageSetAimDirection);
+	//	m_pOwner->receiveMessage(&messageSetAimDirection);
 	//}
 }
 
 void CAIFireComponent::receiveMessage(Message* _pMessage) {
 	CAIComponent::receiveMessage(_pMessage);
-	if (!m_isActive)
+	if (!m_bIsActive)
 		return;
 
 	ASSERT(_pMessage);

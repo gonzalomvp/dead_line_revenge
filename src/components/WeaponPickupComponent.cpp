@@ -13,7 +13,7 @@ namespace {
 
 void CWeaponPickupComponent::receiveMessage(Message* _pMessage) {
 	Component::receiveMessage(_pMessage);
-	if (!m_isActive)
+	if (!m_bIsActive)
 		return;
 
 	ASSERT(_pMessage && g_pWorld && g_pWorld->getPlayer() && g_pStringManager && g_pEntitiesFactory);

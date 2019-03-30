@@ -7,14 +7,14 @@
 
 void CMovementComponent::run(float _fDeltaTime) {
 	Component::run(_fDeltaTime);
-	if (!m_isActive)
+	if (!m_bIsActive)
 		return;
 
-	ASSERT(m_owner);
+	ASSERT(m_pOwner);
 
 	if (vlen2(m_v2Direction) != 0.0f) {
-		vec2 v2NewPos = vadd(m_owner->getPos(), vscale(vnorm(m_v2Direction), m_fSpeed * _fDeltaTime));
-		vec2 v2Size = m_owner->getSize();
+		vec2 v2NewPos = vadd(m_pOwner->getPos(), vscale(vnorm(m_v2Direction), m_fSpeed * _fDeltaTime));
+		vec2 v2Size = m_pOwner->getSize();
 
 		vec2 v2ValidPos = v2NewPos;
 		v2ValidPos.x = clamp(v2ValidPos.x, v2Size.x * 0.5f, WORLD_WIDTH - v2Size.x * 0.5f);
@@ -25,7 +25,7 @@ void CMovementComponent::run(float _fDeltaTime) {
 			msgCheckCollision.overlap = true;
 			msgCheckCollision.deltaLife = -1;
 			msgCheckCollision.collisionChannel = CColliderComponent::EBoundariesCollider;
-			m_owner->receiveMessage(&msgCheckCollision);
+			m_pOwner->receiveMessage(&msgCheckCollision);
 
 			if (m_bHasBounce && v2ValidPos.x != v2NewPos.x) {
 				m_v2Direction.x = -m_v2Direction.x;
@@ -34,13 +34,13 @@ void CMovementComponent::run(float _fDeltaTime) {
 				m_v2Direction.y = -m_v2Direction.y;
 			}
 		}
-		m_owner->setPos(v2ValidPos);
+		m_pOwner->setPos(v2ValidPos);
 	}
 }
 
 void CMovementComponent::receiveMessage(Message* _pMessage) {
 	Component::receiveMessage(_pMessage);
-	if (!m_isActive)
+	if (!m_bIsActive)
 		return;
 
 	ASSERT(_pMessage);

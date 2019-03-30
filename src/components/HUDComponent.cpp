@@ -88,10 +88,10 @@ void CHUDComponent::init() {
 
 void CHUDComponent::run(float _fDeltaTime) {
 	Component::run(_fDeltaTime);
-	if (!m_isActive)
+	if (!m_bIsActive)
 		return;
 
-	ASSERT(m_owner && m_pMessageText && m_pLifeText && m_pScoreText && m_pAmmoText && m_pReloadSprite && g_pWorld);
+	ASSERT(m_pOwner && m_pMessageText && m_pLifeText && m_pScoreText && m_pAmmoText && m_pReloadSprite && g_pWorld);
 
 	if (m_iMessageTimer > 0) {
 		--m_iMessageTimer;
@@ -101,17 +101,17 @@ void CHUDComponent::run(float _fDeltaTime) {
 	}
 
 	MessageGetLife msgLife;
-	m_owner->receiveMessage(&msgLife);
+	m_pOwner->receiveMessage(&msgLife);
 	m_pLifeText->setText(std::to_string(msgLife.currentLife));
 
 	m_pScoreText->setText(std::to_string(g_pWorld->getScore()));
 
 	MessageAmmoInfo msgAmmo;
-	m_owner->receiveMessage(&msgAmmo);
+	m_pOwner->receiveMessage(&msgAmmo);
 	m_pAmmoText->setText(std::to_string(msgAmmo.currentAmmo) + "/" + std::to_string(msgAmmo.totalAmmo));
 
-	vec2 v2Pos = m_owner->getPos();
-	vec2 v2Size = m_owner->getSize();
+	vec2 v2Pos = m_pOwner->getPos();
+	vec2 v2Size = m_pOwner->getSize();
 
 	// Full sprite reload animation
 	//m_pReloadSprite->setPos(vmake(v2Pos.x, v2Pos.y - v2Size.y * msgAmmo.reloadPercent * 0.5f));
@@ -128,7 +128,7 @@ void CHUDComponent::run(float _fDeltaTime) {
 
 void CHUDComponent::receiveMessage(Message* _pMessage) {
 	Component::receiveMessage(_pMessage);
-	if (!m_isActive)
+	if (!m_bIsActive)
 		return;
 
 	ASSERT(_pMessage && m_pMessageText);
@@ -142,10 +142,10 @@ void CHUDComponent::receiveMessage(Message* _pMessage) {
 bool CHUDComponent::onEvent(const IInputManager::CEvent& _event) {
 	// We never want to consume this event
 	bool bConsumed = false;
-	if (!m_isActive)
+	if (!m_bIsActive)
 		return bConsumed;
 	
-	ASSERT(m_owner && m_pTargetSprite);
+	ASSERT(m_pOwner && m_pTargetSprite);
 
 	if (const IInputManager::CMouseEvent* pEvent = dynamic_cast<const IInputManager::CMouseEvent*>(&_event)) {
 		if (pEvent->getType() == IInputManager::EEventType::EMouseMove) {
@@ -153,8 +153,8 @@ bool CHUDComponent::onEvent(const IInputManager::CEvent& _event) {
 			m_pTargetSprite->setPos(v2TargetPos);
 
 			MessageSetAimDirection messageSetAimDirection;
-			messageSetAimDirection.direction = vnorm(vsub(v2TargetPos, m_owner->getPos()));
-			m_owner->receiveMessage(&messageSetAimDirection);
+			messageSetAimDirection.direction = vnorm(vsub(v2TargetPos, m_pOwner->getPos()));
+			m_pOwner->receiveMessage(&messageSetAimDirection);
 		}
 	}
 

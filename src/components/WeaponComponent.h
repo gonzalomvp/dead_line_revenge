@@ -1,6 +1,6 @@
 #pragma once
 
-#include "components/component.h"
+#include "components/Component.h"
 #include "entities/entity.h"
 
 class CWeaponComponent : public Component, public Entity::IListener {

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "components/component.h"
+#include "components/Component.h"
 #include "input/input_manager.h"
 
 class CGfxEntity;

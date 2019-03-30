@@ -1,27 +1,29 @@
 #include "common/stdafx.h"
-#include "component.h"
+#include "Component.h"
 
 #include "entities/entity.h"
 
 void Component::init() {
-	m_owner->addComponent(this);
-	if (m_activationDelay == 0) {
+	ASSERT(m_pOwner);
+
+	m_pOwner->addComponent(this);
+	if (m_fActivationTimer <= 0.0f) {
 		activate();
 	}
 }
 
 void Component::activate() {
-	m_isActive = true;
+	m_bIsActive = true;
 }
 
 void Component::deactivate() {
-	m_isActive = false;
+	m_bIsActive = false;
 }
 
-void Component::run(float deltaTime) {
-	if (m_activationTimer < m_activationDelay) {
-		++m_activationTimer;
-		if (m_activationTimer == m_activationDelay) {
+void Component::run(float _fDeltaTime) {
+	if (m_fActivationTimer > 0.0f) {
+		m_fActivationTimer -= _fDeltaTime;
+		if (m_fActivationTimer <= 0.0f) {
 			activate();
 		}
 	}

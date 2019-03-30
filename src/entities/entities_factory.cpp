@@ -176,13 +176,13 @@ Entity* CEntitiesFactory::createBullet(CWeaponComponent::EType _eWeaponType, vec
 	// Depending on the type of bullet it has different collider setup
 	int iColliderChannelMask = CColliderComponent::ENoneCollider;
 	int iColliderChannelMaskResponse = CColliderComponent::ENoneCollider;
-	int iActivationDelay = 0;
+	float fActivationDelay = 0.0f;
 
 	switch (_eWeaponType) {
 		case CWeaponComponent::EMINES:
 			iColliderChannelMask = CColliderComponent::ENoneCollider;
 			iColliderChannelMaskResponse = CColliderComponent::EPlayerCollider | CColliderComponent::EEnemyCollider | CColliderComponent::EPlayerWeaponCollider | CColliderComponent::EEnemyWeaponCollider;
-			iActivationDelay = 20;
+			fActivationDelay = 0.4f;
 			break;
 		case CWeaponComponent::EC4:
 			iColliderChannelMask = CColliderComponent::ENoneCollider;
@@ -202,7 +202,7 @@ Entity* CEntitiesFactory::createBullet(CWeaponComponent::EType _eWeaponType, vec
 			break;
 	}
 	CColliderComponent* collider = NEW(CColliderComponent, bullet, CColliderComponent::ECircleCollider, weaponData.iBulletDamage, iColliderChannelMask, iColliderChannelMaskResponse);
-	collider->setActivationDelay(iActivationDelay);
+	collider->setActivationDelay(fActivationDelay);
 	collider->init();
 
 	if (weaponData.bIsExplossive) {
@@ -223,7 +223,7 @@ Entity* CEntitiesFactory::createExplossion(vec2 _v2Pos, CWeaponComponent::EType 
 	switch (_eWeaponType) {
 		case CWeaponComponent::ENUCLEARBOMB:
 			v2InitSize = vmake(20.0f, 20.0f);
-			v2EndSize = vmake(820.0f, 820.0f);
+			v2EndSize = vmake(620.0f, 620.0f);
 			fDuration = 1.6f;
 			iColliderChannelMask = CColliderComponent::EPlayerWeaponCollider | CColliderComponent::EBoundariesCollider;
 			break;
@@ -296,7 +296,7 @@ Entity* CEntitiesFactory::createEnemy(vec2 _v2Pos, Entity::EType _tEnemyType, co
 	case Entity::EENEMYTURRET: {
 		bAlignToAim = true;
 		CBehaviorTreeComponent * pBTComponent = NEW(CBehaviorTreeComponent, enemy, sBTFile.c_str());
-		pBTComponent->setActivationDelay(rand() % 100);
+		pBTComponent->setActivationDelay(CORE_FRand(1.0f, 2.0f));
 		pBTComponent->init();
 		break;
 	}

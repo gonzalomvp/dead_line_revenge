@@ -42,10 +42,10 @@ void CWeaponComponent::init() {
 
 void CWeaponComponent::run(float _fDeltaTime) {
 	Component::run(_fDeltaTime);
-	if (!m_isActive)
+	if (!m_bIsActive)
 		return;
 
-	ASSERT(m_owner && g_pWorld && g_pEntitiesFactory && g_pSoundEngine);
+	ASSERT(m_pOwner && g_pWorld && g_pEntitiesFactory && g_pSoundEngine);
 
 	if (m_iFireTimer > 0) {
 		--m_iFireTimer;
@@ -67,45 +67,45 @@ void CWeaponComponent::run(float _fDeltaTime) {
 		switch (m_eType) {
 			case ESHOTGUN: {
 				vec2 v2bulletDir = m_v2AimDir;
-				Entity* pBullet = g_pEntitiesFactory->createBullet(m_eType, m_owner->getPos(), v2bulletDir, m_owner->getType());
+				Entity* pBullet = g_pEntitiesFactory->createBullet(m_eType, m_pOwner->getPos(), v2bulletDir, m_pOwner->getType());
 				g_pWorld->addEntity(pBullet);
 				float fAngle = vangle(m_v2AimDir);
 				fAngle += s_fShotgunAngle;
 				v2bulletDir = vunit(DEG2RAD(fAngle));
-				pBullet = g_pEntitiesFactory->createBullet(m_eType, m_owner->getPos(), v2bulletDir, m_owner->getType());
+				pBullet = g_pEntitiesFactory->createBullet(m_eType, m_pOwner->getPos(), v2bulletDir, m_pOwner->getType());
 				g_pWorld->addEntity(pBullet);
 				fAngle = vangle(m_v2AimDir);
 				fAngle -= s_fShotgunAngle;
 				v2bulletDir = vunit(DEG2RAD(fAngle));
-				pBullet = g_pEntitiesFactory->createBullet(m_eType, m_owner->getPos(), v2bulletDir, m_owner->getType());
+				pBullet = g_pEntitiesFactory->createBullet(m_eType, m_pOwner->getPos(), v2bulletDir, m_pOwner->getType());
 				g_pWorld->addEntity(pBullet);
 				break;
 			}
 			case EMINES: {
-				Entity* pBullet = g_pEntitiesFactory->createBullet(m_eType, m_owner->getPos(), m_v2AimDir, m_owner->getType());
+				Entity* pBullet = g_pEntitiesFactory->createBullet(m_eType, m_pOwner->getPos(), m_v2AimDir, m_pOwner->getType());
 				g_pWorld->addEntity(pBullet);
 				break;
 			}
 			case EC4: {
-				m_pRemoteBullet = g_pEntitiesFactory->createBullet(m_eType, m_owner->getPos(), m_v2AimDir, m_owner->getType());
+				m_pRemoteBullet = g_pEntitiesFactory->createBullet(m_eType, m_pOwner->getPos(), m_v2AimDir, m_pOwner->getType());
 				m_pRemoteBullet->registerToDestroy(this);
 				g_pWorld->addEntity(m_pRemoteBullet);
 				break;
 			}
 			case EROCKETLAUNCHER: {
-				Entity* pBullet = g_pEntitiesFactory->createBullet(m_eType, m_owner->getPos(), m_v2AimDir, m_owner->getType());
+				Entity* pBullet = g_pEntitiesFactory->createBullet(m_eType, m_pOwner->getPos(), m_v2AimDir, m_pOwner->getType());
 				g_pWorld->addEntity(pBullet);
 				break;
 			}
 			case ENUCLEARBOMB: {
-				Entity* pExplossion = g_pEntitiesFactory->createExplossion(m_owner->getPos(), m_eType);
+				Entity* pExplossion = g_pEntitiesFactory->createExplossion(m_pOwner->getPos(), m_eType);
 				g_pWorld->addEntity(pExplossion);
 				break;
 			}
 			default: {
 				for (size_t i = 0; i < m_uBulletsPerShot; i++) {
 					float fAngle = vangle(m_v2AimDir) + (i * 360.f / m_uBulletsPerShot);
-					Entity* pBullet = g_pEntitiesFactory->createBullet(m_eType, m_owner->getPos(), vunit(DEG2RAD(fAngle)), m_owner->getType());
+					Entity* pBullet = g_pEntitiesFactory->createBullet(m_eType, m_pOwner->getPos(), vunit(DEG2RAD(fAngle)), m_pOwner->getType());
 					g_pWorld->addEntity(pBullet);
 				}
 				break;
@@ -127,13 +127,13 @@ void CWeaponComponent::run(float _fDeltaTime) {
 
 		MessageFire messageFire;
 		messageFire.isFiring = m_bIsFiring;
-		m_owner->receiveMessage(&messageFire);
+		m_pOwner->receiveMessage(&messageFire);
 	}
 }
 
 void CWeaponComponent::receiveMessage(Message* _pMessage) {
 	Component::receiveMessage(_pMessage);
-	if (!m_isActive)
+	if (!m_bIsActive)
 		return;
 
 	ASSERT(_pMessage);

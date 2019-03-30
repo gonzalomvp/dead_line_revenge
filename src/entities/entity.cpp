@@ -1,7 +1,7 @@
 #include "common/stdafx.h"
 #include "entity.h"
 
-#include"components/component.h"
+#include"components/Component.h"
 
 #include <algorithm>
 
