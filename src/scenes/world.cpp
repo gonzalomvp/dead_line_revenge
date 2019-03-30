@@ -47,6 +47,8 @@ bool CWorld::init(uint16_t _uLevel) {
 	m_fEnemySpawnWait = 0.0f;
 	m_iCurrentEnemies = 0;
 	m_iMaxEnemies = 0;
+	m_iBossSpawnPoints = 0;
+	m_iBossSpawnPointsCounter = 0;
 	m_fPickupSpawnTimer = 0.0f;
 	m_fEnemySpawnTimer = 0.0f;
 
@@ -67,7 +69,7 @@ bool CWorld::init(uint16_t _uLevel) {
 		case 1:
 			psFileName = "data/level1.json";
 			// Force test level
-			psFileName = "data/levelTest.json";
+			//psFileName = "data/levelTest.json";
 			break;
 		case 2:
 			psFileName = "data/level2.json";
@@ -101,6 +103,8 @@ bool CWorld::init(uint16_t _uLevel) {
 	m_fEnemySpawnWait = doc["enemySpawnWait"].GetFloat();
 	ASSERT(doc.HasMember("maxEnemies"));
 	m_iMaxEnemies = doc["maxEnemies"].GetInt();
+	ASSERT(doc.HasMember("bossSpawnPoints"));
+	m_iBossSpawnPoints = doc["bossSpawnPoints"].GetInt();
 	ASSERT(doc.HasMember("pickupPoints"));
 	m_mEntityPoints[Entity::EPICKUP] = doc["pickupPoints"].GetInt();
 
@@ -111,7 +115,8 @@ bool CWorld::init(uint16_t _uLevel) {
 
 	Entity* pPickup = g_pEntitiesFactory->createWeaponPickup();
 	addEntity(pPickup);
-	m_fPickupSpawnTimer = m_fPickupSpawnWait;
+
+	m_fEnemySpawnTimer = m_fEnemySpawnWait;
 
 	// Load enemy level configuration
 	float fTotalProbability = 0.0f;
@@ -270,7 +275,7 @@ void CWorld::removePendingEntities() {
 				break;
 			}
 			case Entity::EPICKUP: {
-				m_fPickupSpawnTimer = 0.0f;
+				m_fPickupSpawnTimer = m_fPickupSpawnWait;
 				break;
 			}
 
@@ -281,6 +286,11 @@ void CWorld::removePendingEntities() {
 #include "REG_ENEMIES.h"
 #undef REG_ENTITY
 
+		}
+
+		// Enable enemies spawn after killing the Boss
+		if (eEntityType == Entity::EENEMYBOSS) {
+			m_fEnemySpawnTimer = m_fEnemySpawnWait;
 		}
 
 		m_vEntities.erase(
@@ -301,32 +311,41 @@ void CWorld::addPendingEntities() {
 
 void CWorld::spawnNewEntities(float _fDeltaTime) {
 	// Spawn Pickup
-	if (m_fPickupSpawnTimer < m_fPickupSpawnWait) {
-		m_fPickupSpawnTimer += _fDeltaTime;
-		if (m_fPickupSpawnTimer >= m_fPickupSpawnWait) {
+	if (m_fPickupSpawnTimer > 0.0f) {
+		m_fPickupSpawnTimer -= _fDeltaTime;
+		if (m_fPickupSpawnTimer <= 0.0f) {
 			Entity* pPickup = g_pEntitiesFactory->createWeaponPickup();
 			addEntity(pPickup);
 		}
 	}
-	
+
 	// Spawn Enemy
-	if (m_fEnemySpawnTimer < m_fEnemySpawnWait && m_iCurrentEnemies < m_iMaxEnemies) {
-		m_fEnemySpawnTimer += _fDeltaTime;
-		if (m_fEnemySpawnTimer >= m_fEnemySpawnWait) {
+	if (m_fEnemySpawnTimer > 0.0f && m_iCurrentEnemies < m_iMaxEnemies) {
+		m_fEnemySpawnTimer -= _fDeltaTime;
+		if (m_fEnemySpawnTimer <= 0.0f) {
 			// Pick a random spawn point from the available ones
 			vec2 v2SpawnLocation = m_vSpawnPositions[rand() % m_vSpawnPositions.size()];
+			Entity* enemy = nullptr;
 
-			// Pick a random enemy based on the probability for each one
-			float fEnemyTypeProb = CORE_FRand(0.0f, 1.0f);
-			for (auto itEnemyProbability = m_mEnemyProbabilities.begin(); itEnemyProbability != m_mEnemyProbabilities.end(); ++itEnemyProbability) {
-				if (fEnemyTypeProb <= itEnemyProbability->second) {
-					Entity* enemy = g_pEntitiesFactory->createEnemy(v2SpawnLocation, itEnemyProbability->first);
-					addEntity(enemy);
-					++m_iCurrentEnemies;
-					m_fEnemySpawnTimer = 0.0f;
-					break;
+			// If enough points spawn Boss
+			if (m_uScore / m_iBossSpawnPoints > m_iBossSpawnPointsCounter) {
+				enemy = g_pEntitiesFactory->createEnemy(v2SpawnLocation, Entity::EENEMYBOSS);
+				++m_iBossSpawnPointsCounter;
+			}
+			// Otherwise pick a random enemy based on the probability for each one
+			else {
+				float fEnemyTypeProb = CORE_FRand(0.0f, 1.0f);
+				for (auto itEnemyProbability = m_mEnemyProbabilities.begin(); itEnemyProbability != m_mEnemyProbabilities.end(); ++itEnemyProbability) {
+					if (fEnemyTypeProb <= itEnemyProbability->second) {
+						enemy = g_pEntitiesFactory->createEnemy(v2SpawnLocation, itEnemyProbability->first);
+						m_fEnemySpawnTimer = m_fEnemySpawnWait;
+						break;
+					}
 				}
 			}
+			ASSERT(enemy);
+			addEntity(enemy);
+			++m_iCurrentEnemies;
 		}
 	}
 }

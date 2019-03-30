@@ -3,7 +3,7 @@
     <!--Fase 1, con escudo y con arma rotatoria-->
     <Parallel>
       
-      <CheckLife iLife="35" />
+      <CheckLife iLife="15" />
       <Sequence>
         <ChangeSprite sSprite="data/boss_shield.png" />
         <ChangeWeapon sWeapon="boss weapon1" />

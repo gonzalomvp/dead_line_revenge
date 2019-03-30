@@ -41,16 +41,18 @@ private:
 	bool                  m_bIsPaused;
 
 	// Game rules
-	uint16_t m_uScore;
-	int      m_iPlayerLife;
-	float    m_fPlayerSpeed;
-	float    m_fPickupSpawnWait;
-	float    m_fEnemySpawnWait;
-	int      m_iCurrentEnemies;
-	int      m_iMaxEnemies;
+	uint16_t                          m_uScore;
+	int                               m_iPlayerLife;
+	float                             m_fPlayerSpeed;
+	float                             m_fPickupSpawnWait;
+	float                             m_fEnemySpawnWait;
+	int                               m_iCurrentEnemies;
+	int                               m_iMaxEnemies;
+	int                               m_iBossSpawnPoints;
+	int                               m_iBossSpawnPointsCounter;
 	std::map<Entity::EType, float>    m_mEnemyProbabilities;
 	std::map<Entity::EType, uint16_t> m_mEntityPoints;
-	std::vector<vec2> m_vSpawnPositions;
+	std::vector<vec2>                 m_vSpawnPositions;
 
 	// Timers
 	float m_fPickupSpawnTimer;

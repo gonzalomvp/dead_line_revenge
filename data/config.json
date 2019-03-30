@@ -209,7 +209,7 @@
 	,
 	{
 		"type": "boss",
-		"life": 40,
+		"life": 30,
 		"invencibleTime": 0.3,
 		"speed": 120.0,
 		"collisionDamage": -2,

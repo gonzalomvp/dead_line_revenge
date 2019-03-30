@@ -1,9 +1,10 @@
 {
-	"playerLife": 5,
-	"playerSpeed": 5,
+	"playerLife": 20,
+	"playerSpeed": 300,
 	"pickupPoints": 10,
-	"pickupSpawnWait": 0.2,
+	"pickupSpawnWait": 10.0,
 	"enemySpawnWait": 2.0,
+	"bossSpawnPoints": 100,
 	"maxEnemies": 3,
 	"enemies": [
 	{
@@ -25,6 +26,11 @@
 		"type": "turret",
 		"spawnProbability": 0,
 		"points": 3
+	},
+	{
+		"type": "boss",
+		"spawnProbability": 0,
+		"points": 20
 	}
 	],
 	"turrets": [
