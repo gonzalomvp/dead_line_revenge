@@ -111,7 +111,7 @@ bool CEntitiesFactory::init(const char* _sConfigFile) {
 		TEnemyDef enemy;
 		enemy.eType = getEntityTypeByName(enemies[i]["type"].GetString());
 		enemy.iLife = enemies[i]["life"].GetInt();
-		enemy.iInvencibleTime = enemies[i]["invencibleTime"].GetInt();
+		enemy.fInvencibleTime = enemies[i]["invencibleTime"].GetFloat();
 		enemy.fSpeed = enemies[i]["speed"].GetFloat();
 		enemy.iCollisionDamage = enemies[i]["collisionDamage"].GetInt();
 		enemy.eWeapon = CWeaponComponent::EType::EInvalid;
@@ -152,7 +152,7 @@ Entity* CEntitiesFactory::createPlayer(vec2 _v2Pos) {
 	weapon->init();
 	CColliderComponent* collider = NEW(CColliderComponent, player, CColliderComponent::ERectCollider, -1, CColliderComponent::EPlayerCollider, CColliderComponent::EEnemyCollider | CColliderComponent::EEnemyWeaponCollider);
 	collider->init();
-	CLifeComponent* life = NEW(CLifeComponent, player, g_pWorld->getPlayerLife(), 20);
+	CLifeComponent* life = NEW(CLifeComponent, player, g_pWorld->getPlayerLife(), 0.5f);
 	life->init();
 	CHUDComponent* hudComponent = NEW(CHUDComponent, player);
 	hudComponent->init();
@@ -209,7 +209,7 @@ Entity* CEntitiesFactory::createBullet(CWeaponComponent::EType _eWeaponType, vec
 		CExplossiveComponent* explossive = NEW(CExplossiveComponent, bullet);
 		explossive->init();
 	}
-	CLifeComponent* componentLife = NEW(CLifeComponent, bullet, weaponData.iBulletLife, -1, weaponData.fBulletRange);
+	CLifeComponent* componentLife = NEW(CLifeComponent, bullet, weaponData.iBulletLife, 0.0f, weaponData.fBulletRange);
 	componentLife->init();
 	return bullet;
 }
@@ -241,7 +241,7 @@ Entity* CEntitiesFactory::createExplossion(vec2 _v2Pos, CWeaponComponent::EType 
 	renderable->init();
 	CColliderComponent* collider = NEW(CColliderComponent, explossion, CColliderComponent::ECircleCollider, -5, iColliderChannelMask, CColliderComponent::ENoneCollider);
 	collider->init();
-	CLifeComponent* life = NEW(CLifeComponent, explossion, 1, -1, fDuration);
+	CLifeComponent* life = NEW(CLifeComponent, explossion, 1, 0.0f, fDuration);
 	life->init();
 	CExplossionComponent* explossionComp = NEW(CExplossionComponent, explossion, v2InitSize, v2EndSize, fDuration);
 	explossionComp->init();
@@ -265,7 +265,7 @@ Entity* CEntitiesFactory::createEnemy(vec2 _v2Pos, Entity::EType _tEnemyType, co
 	movement->init();
 	CColliderComponent* collider = NEW(CColliderComponent, enemy, CColliderComponent::ERectCollider, tEnemyDef.iCollisionDamage, CColliderComponent::EEnemyCollider, CColliderComponent::EPlayerWeaponCollider);
 	collider->init();
-	CLifeComponent* life = NEW(CLifeComponent, enemy, tEnemyDef.iLife, tEnemyDef.iInvencibleTime);
+	CLifeComponent* life = NEW(CLifeComponent, enemy, tEnemyDef.iLife, tEnemyDef.fInvencibleTime);
 	life->init();
 	CPointsComponent* points = NEW(CPointsComponent, enemy);
 	points->init();
@@ -336,12 +336,3 @@ Entity* CEntitiesFactory::createWeaponPickup() {
 	life->init();
 	return weaponPickup;
 }
-
-//Entity* CEntitiesFactory::createHUDMessage(const std::string& _sMessage, int _iDisplayTime) {
-//	Entity* hudMessage = NEW(Entity, Entity::EHUDMESSAGE);
-//	CHUDMessageComponent* hudMessageComponent = NEW(CHUDMessageComponent, hudMessage, _sMessage);
-//	hudMessageComponent->init();
-//	CLifeComponent* life = NEW(CLifeComponent, hudMessage, 1, _iDisplayTime, 0);
-//	life->init();
-//	return hudMessage;
-//}

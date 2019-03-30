@@ -10,8 +10,8 @@ void CLifeComponent::run(float _fDeltaTime) {
 	if (!m_bIsActive)
 		return;
 
-	if (m_iInvencibleTimer > 0) {
-		--m_iInvencibleTimer;
+	if (m_fInvencibleTimer > 0.0f) {
+		m_fInvencibleTimer -= _fDeltaTime;
 	}
 
 	if (m_fLifeTimer > 0) {
@@ -38,13 +38,13 @@ void CLifeComponent::receiveMessage(Message* _pMessage) {
 			m_iLife += pMessage->deltaLife;
 		}
 		// Only apply damage if life is not infinite and not invencible
-		else if (m_iLife != -1 && m_iInvencibleTimer <= 0) {
+		else if (m_iLife != -1 && m_fInvencibleTimer <= 0) {
 			m_iLife += pMessage->deltaLife;
 			if (m_iLife <= 0) {
 				onDead();
 			}
 			else {
-				m_iInvencibleTimer = m_iInvencibleTime;
+				m_fInvencibleTimer = m_fInvencibleTime;
 			}
 		}
 	}

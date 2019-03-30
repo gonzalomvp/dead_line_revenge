@@ -4,12 +4,12 @@
 
 class CLifeComponent : public CComponent {
 public:
-	CLifeComponent(Entity* _pOwner, int _iLife, int _iInvencibleTime = -1, float _fTimeToLive = -1.0f)
+	CLifeComponent(Entity* _pOwner, int _iLife, float _fInvencibleTime = 0.0, float _fTimeToLive = -1.0f)
 	: CComponent(_pOwner)
 	, m_iLife(_iLife)
-	, m_iInvencibleTime(_iInvencibleTime)
+	, m_fInvencibleTime(_fInvencibleTime)
 	, m_fLifeTimer(_fTimeToLive)
-	, m_iInvencibleTimer(0)
+	, m_fInvencibleTimer(0)
 	{}
 
 	// CComponent
@@ -19,10 +19,10 @@ public:
 private:
 	void onDead();
 
-	int m_iLife;
-	int m_iInvencibleTime;
+	int   m_iLife;
+	float m_fInvencibleTime;
 
 	//Timers
 	float m_fLifeTimer;
-	int m_iInvencibleTimer;
+	float m_fInvencibleTimer;
 };

@@ -28,7 +28,7 @@ public:
 	struct TEnemyDef {
 		Entity::EType            eType;
 		int                      iLife;
-		int                      iInvencibleTime;
+		float                    fInvencibleTime;
 		float                    fSpeed;
 		int                      iCollisionDamage;
 		CWeaponComponent::EType  eWeapon;
