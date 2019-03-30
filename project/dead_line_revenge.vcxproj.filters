@@ -186,15 +186,6 @@
     <ClInclude Include="..\src\components\ExplossiveComponent.h">
       <Filter>src\components</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\components\AIMeleeComponent.h">
-      <Filter>src\components</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\components\AIFleeComponent.h">
-      <Filter>src\components</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\components\AIFireComponent.h">
-      <Filter>src\components</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\components\AIComponent.h">
       <Filter>src\components</Filter>
     </ClInclude>
@@ -399,15 +390,6 @@
       <Filter>src\components</Filter>
     </ClCompile>
     <ClCompile Include="..\src\components\ExplossiveComponent.cpp">
-      <Filter>src\components</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\components\AIMeleeComponent.cpp">
-      <Filter>src\components</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\components\AIFleeComponent.cpp">
-      <Filter>src\components</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\components\AIFireComponent.cpp">
       <Filter>src\components</Filter>
     </ClCompile>
     <ClCompile Include="..\src\components\AIComponent.cpp">

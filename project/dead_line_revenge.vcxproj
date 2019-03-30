@@ -30,9 +30,6 @@
     <ClInclude Include="..\src\common\stdafx.h" />
     <ClInclude Include="..\src\common\sys.h" />
     <ClInclude Include="..\src\components\AIComponent.h" />
-    <ClInclude Include="..\src\components\AIFireComponent.h" />
-    <ClInclude Include="..\src\components\AIFleeComponent.h" />
-    <ClInclude Include="..\src\components\AIMeleeComponent.h" />
     <ClInclude Include="..\src\components\BehaviorTreeComponent.h" />
     <ClInclude Include="..\src\components\behavior_tree\actions\Aim.h" />
     <ClInclude Include="..\src\components\behavior_tree\actions\CalculateFleePosition.h" />
@@ -111,9 +108,6 @@
     <ClCompile Include="..\src\common\stdafx.cpp" />
     <ClCompile Include="..\src\common\sys_win.cpp" />
     <ClCompile Include="..\src\components\AIComponent.cpp" />
-    <ClCompile Include="..\src\components\AIFireComponent.cpp" />
-    <ClCompile Include="..\src\components\AIFleeComponent.cpp" />
-    <ClCompile Include="..\src\components\AIMeleeComponent.cpp" />
     <ClCompile Include="..\src\components\BehaviorTreeComponent.cpp" />
     <ClCompile Include="..\src\components\behavior_tree\actions\Aim.cpp" />
     <ClCompile Include="..\src\components\behavior_tree\actions\CalculateFleePosition.cpp" />
