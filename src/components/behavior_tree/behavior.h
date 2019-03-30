@@ -30,6 +30,8 @@ public:
 	static const int NUM_BEHAVIORS = EType::EInvalid;
 	static EType getBehaviorTypeByName(const std::string& name);
 
+	static CBehavior* createBehaviorFromXML(TiXmlElement* _pBehaviorElem, CBehaviorTreeComponent* _pOwnerComponent);
+
 	CBehavior(CBehaviorTreeComponent* owner) : mOwner(owner), mStatus(EStatus::EInvalid) {}
 	virtual ~CBehavior() {}
 

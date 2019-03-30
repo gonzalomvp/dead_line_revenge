@@ -55,7 +55,6 @@
     <ClInclude Include="..\src\components\behavior_tree\conditions\CheckLife.h" />
     <ClInclude Include="..\src\components\behavior_tree\Decorator.h" />
     <ClInclude Include="..\src\components\behavior_tree\decorators\Repeat.h" />
-    <ClInclude Include="..\src\components\bossIAComponent.h" />
     <ClInclude Include="..\src\components\ColliderComponent.h" />
     <ClInclude Include="..\src\components\component.h" />
     <ClInclude Include="..\src\components\ExplossionComponent.h" />
@@ -137,7 +136,6 @@
     <ClCompile Include="..\src\components\behavior_tree\conditions\CheckLife.cpp" />
     <ClCompile Include="..\src\components\behavior_tree\Decorator.cpp" />
     <ClCompile Include="..\src\components\behavior_tree\decorators\Repeat.cpp" />
-    <ClCompile Include="..\src\components\bossIAComponent.cpp" />
     <ClCompile Include="..\src\components\ColliderComponent.cpp" />
     <ClCompile Include="..\src\components\component.cpp" />
     <ClCompile Include="..\src\components\ExplossionComponent.cpp" />

@@ -1,29 +1,8 @@
 #include "common/stdafx.h"
 #include "BehaviorTreeComponent.h"
 
-// Composites
-#include "components/behavior_tree/composites/Parallel.h"
-#include "components/behavior_tree/composites/Selector.h"
-#include "components/behavior_tree/composites/Sequence.h"
-
-// Decorators
-#include "components/behavior_tree/decorators/Repeat.h"
-
-// Conditions
-#include "components/behavior_tree/conditions/CheckIsAtDistance.h"
-#include "components/behavior_tree/conditions/CheckLife.h"
-
-// Actions
-#include "components/behavior_tree/actions/Aim.h"
-#include "components/behavior_tree/actions/CalculateFleePosition.h"
-#include "components/behavior_tree/actions/CalculateRandomPosition.h"
-#include "components/behavior_tree/actions/ChangeSpeed.h"
-#include "components/behavior_tree/actions/ChangeSprite.h"
-#include "components/behavior_tree/actions/ChangeWeapon.h"
-#include "components/behavior_tree/actions/Fire.h"
-#include "components/behavior_tree/actions/GoToBlackboardPosition.h"
-#include "components/behavior_tree/actions/RotateAim.h"
-#include "components/behavior_tree/actions/Wait.h"
+#include "components/behavior_tree/Behavior.h"
+#include "scenes/world.h"
 
 #pragma pack(push)
 #pragma pack()
@@ -34,50 +13,31 @@ CBehaviorTreeComponent::~CBehaviorTreeComponent() {
 	delete m_pRootBehavior;
 }
 
-bool CBehaviorTreeComponent::loadFromXML(const char* _psFilename) {
-	ASSERT(_psFilename);
-	TiXmlDocument doc(_psFilename);
-	if (!doc.LoadFile()) {
-		fprintf(stderr, "Couldn't read behavior tree configuration from %s", _psFilename);
-		return false;
-	}
-	TiXmlHandle hDoc(&doc);
-	m_pRootBehavior = createBehaviorFromXML(hDoc.FirstChild("root").FirstChild().Element());
+void CBehaviorTreeComponent::init() {
+	CAIComponent::init();
 
-	return true;
+	// Load the BT from an XML file
+	ASSERT(m_psBTFile);
+	TiXmlDocument doc(m_psBTFile);
+	ASSERT(doc.LoadFile(), "Couldn't read behavior tree configuration from %s", m_psBTFile);
+	TiXmlHandle hDoc(&doc);
+	ASSERT(hDoc.FirstChild("root").Element(), "Mising root node in %s", m_psBTFile);
+	ASSERT(hDoc.FirstChild("root").FirstChild().Element(), "Empty BT %s", m_psBTFile);
+
+	m_pRootBehavior = CBehavior::createBehaviorFromXML(hDoc.FirstChild("root").FirstChild().Element(), this);
+
+	// If there is a player save it in the Blackboard
+	if (g_pWorld->getPlayer()) {
+		m_blackboard.setValueEntity("player", g_pWorld->getPlayer());
+	}
 }
 
-void CBehaviorTreeComponent::run(float deltaTime)
-{
-	Component::run(deltaTime);
+void CBehaviorTreeComponent::run(float _fDeltaTime) {
+	Component::run(_fDeltaTime);
 	if (!m_isActive)
 		return;
 	
 	if (m_pRootBehavior) {
-		m_pRootBehavior->run(deltaTime);
+		m_pRootBehavior->run(_fDeltaTime);
 	}
-}
-
-CBehavior* CBehaviorTreeComponent::createBehaviorFromXML(TiXmlElement* behaviorElem) {
-	ASSERT(behaviorElem);
-	CBehavior* behavior = nullptr;
-
-	std::string type = behaviorElem->Value();
-	CBehavior::EType eBehaviorType = CBehavior::getBehaviorTypeByName(type);
-
-	switch (eBehaviorType) {
-#define REG_BEHAVIOR(val) \
-		case CBehavior::E##val: \
-			behavior = new C##val(this); \
-			behavior->init(behaviorElem); \
-			break;
-#include "REG_BEHAVIORS.h"
-#undef REG_BEHAVIOR
-
-		default:
-			ASSERT(false, "Invalid Behavior type: %s", type.c_str());
-			break;
-	}
-
-	return behavior;
 }

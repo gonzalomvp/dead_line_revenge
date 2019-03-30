@@ -12,9 +12,9 @@ void CDecorator::init(TiXmlElement* behaviorElem) {
 
 	TiXmlElement* childElem = behaviorElem->FirstChildElement();
 
-	ASSERT(childElem->NextSibling() == nullptr, "Decorator nodes must have only one child behavior");
+	ASSERT(childElem && childElem->NextSibling() == nullptr, "Decorator nodes must have only one child behavior");
 
-	m_pChildNode = mOwner->createBehaviorFromXML(childElem);
+	m_pChildNode = CBehavior::createBehaviorFromXML(childElem, mOwner);
 }
 
 void CDecorator::abort() {

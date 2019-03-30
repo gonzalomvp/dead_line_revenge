@@ -3,9 +3,7 @@
 
 #include "engine/sound_engine.h"
 
-#include "components/AIFireComponent.h"
-#include "components/AIFleeComponent.h"
-#include "components/AIMeleeComponent.h"
+#include "components/BehaviorTreeComponent.h"
 #include "components/ColliderComponent.h"
 #include "components/ExplossionComponent.h"
 #include "components/ExplossiveComponent.h"
@@ -17,7 +15,6 @@
 #include "components/RenderableComponent.h"
 #include "components/WeaponComponent.h"
 #include "components/WeaponPickupComponent.h"
-#include "components/bossIAComponent.h"
 
 #include "scenes/world.h"
 
@@ -281,36 +278,31 @@ Entity* CEntitiesFactory::createEnemy(vec2 _v2Pos, Entity::EType _tEnemyType, co
 	switch (tEnemyDef.eType)
 	{
 	case Entity::EENEMYMELEE: {
-		BossIAComponent * bossAI = NEW(BossIAComponent, enemy, sBTFile.c_str());
-		bossAI->init();
+		CBehaviorTreeComponent * pBTComponent = NEW(CBehaviorTreeComponent, enemy, sBTFile.c_str());
+		pBTComponent->init();
 		break;
 	}
 	case Entity::EENEMYBIG: {
-		BossIAComponent * bossAI = NEW(BossIAComponent, enemy, sBTFile.c_str());
-		bossAI->init();
+		CBehaviorTreeComponent * pBTComponent = NEW(CBehaviorTreeComponent, enemy, sBTFile.c_str());
+		pBTComponent->init();
 		break;
 	}	
 	case Entity::EENEMYRANGE: {
 		bAlignToAim = true;
-		BossIAComponent * bossAI = NEW(BossIAComponent, enemy, sBTFile.c_str());
-		bossAI->init();
+		CBehaviorTreeComponent * pBTComponent = NEW(CBehaviorTreeComponent, enemy, sBTFile.c_str());
+		pBTComponent->init();
 		break;
 	}
 	case Entity::EENEMYTURRET: {
 		bAlignToAim = true;
-
-		// Used by the turrets to fire in the given directions and use a delay to not shoot all at the same time
-		//CAIFireComponent* aiFire = NEW(CAIFireComponent, enemy, _vAimDirections, _bIshuffleAim);
-		//aiFire->setActivationDelay(rand() % 100);
-		//aiFire->init();
-		BossIAComponent * bossAI = NEW(BossIAComponent, enemy, sBTFile.c_str());
-		bossAI->setActivationDelay(rand() % 100);
-		bossAI->init();
+		CBehaviorTreeComponent * pBTComponent = NEW(CBehaviorTreeComponent, enemy, sBTFile.c_str());
+		pBTComponent->setActivationDelay(rand() % 100);
+		pBTComponent->init();
 		break;
 	}
 	case Entity::EENEMYBOSS: {
-		BossIAComponent * bossAI = NEW(BossIAComponent, enemy, sBTFile.c_str());
-		bossAI->init();
+		CBehaviorTreeComponent * pBTComponent = NEW(CBehaviorTreeComponent, enemy, sBTFile.c_str());
+		pBTComponent->init();
 		CExplossiveComponent* explossive = NEW(CExplossiveComponent, enemy);
 		explossive->init();
 		break;
