@@ -46,7 +46,7 @@ int Main(void) {
 	g_pEntitiesFactory->init("data/config.json");
 
 	//Set Background
-	CSprite background(g_pGraphicsEngine->getTexture("data/background.png"), vmake(SCR_WIDTH * 0.5f, SCR_HEIGHT * 0.5f), vmake(SCR_WIDTH, SCR_HEIGHT), 0.0f, 1.0f, 6);
+	CSprite background(g_pGraphicsEngine->getTexture("data/background.png"), vmake(SCR_WIDTH * 0.5f, SCR_HEIGHT * 0.5f), vmake(SCR_WIDTH, SCR_HEIGHT), 0.0f, 1.0f, 100);
 	g_pGraphicsEngine->addGfxEntity(&background);
 
 	//Play Music

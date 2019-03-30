@@ -168,7 +168,7 @@ Entity* CEntitiesFactory::createBullet(CWeaponComponent::EType _eWeaponType, vec
 	
 	Entity* bullet = NEW(Entity, Entity::EWEAPON, _v2Pos, weaponData.v2BulletSize);
 
-	CRenderableComponent* renderable = NEW(CRenderableComponent, bullet, weaponData.sImageFile, vangle(_v2Direction), 1.0f, 5, true, false);
+	CRenderableComponent* renderable = NEW(CRenderableComponent, bullet, weaponData.sImageFile, vangle(_v2Direction), 1.0f, 6, true, false);
 	renderable->init();
 	CMovementComponent* movement = NEW(CMovementComponent, bullet, _v2Direction, weaponData.fBulletSpeed, weaponData.bIsBouncy);
 	movement->init();
@@ -311,7 +311,7 @@ Entity* CEntitiesFactory::createEnemy(vec2 _v2Pos, Entity::EType _tEnemyType, co
 		break;
 	}
 
-	CRenderableComponent* renderable = NEW(CRenderableComponent, enemy, tEnemyDef.sImageFile.c_str(), 0.0f, 1.0f, 5, bAlignToMovement, bAlignToAim, 0.5f);
+	CRenderableComponent* renderable = NEW(CRenderableComponent, enemy, tEnemyDef.sImageFile.c_str(), 0.0f, 1.0f, 8, bAlignToMovement, bAlignToAim, 0.5f);
 	renderable->init();
 
 	return enemy;
@@ -324,7 +324,7 @@ Entity* CEntitiesFactory::createWeaponPickup() {
 	vec2 randomPos = vmake(CORE_FRand(0.0, WORLD_WIDTH), CORE_FRand(80, WORLD_HEIGHT - 80));
 
 	Entity* weaponPickup = NEW(Entity, Entity::EPICKUP, randomPos, vmake(20, 20));
-	CRenderableComponent* renderable = NEW(CRenderableComponent, weaponPickup, "data/crate-1.png", 0.0f, 1.0f, 5);
+	CRenderableComponent* renderable = NEW(CRenderableComponent, weaponPickup, "data/crate-1.png", 0.0f, 1.0f, 7);
 	renderable->init();
 	CColliderComponent* collider = NEW(CColliderComponent, weaponPickup, CColliderComponent::ERectCollider, 0, CColliderComponent::EPickupCollider, CColliderComponent::EPlayerCollider);
 	collider->init();
