@@ -11,7 +11,7 @@ class CHUDComponent : public CComponent, public IInputManager::IListener {
 public:
 	CHUDComponent(Entity* owner)
 	: CComponent(owner)
-	, m_iMessageTimer(0)
+	, m_fMessageTimer(0.0f)
 	, m_pLifeText(nullptr)
 	, m_pScoreText(nullptr)
 	, m_pAmmoText(nullptr)
@@ -32,7 +32,7 @@ public:
 
 private:
 	std::vector<CGfxEntity*> m_vGfxEntities;
-	int                      m_iMessageTimer;
+	float                    m_fMessageTimer;
 	CText*                   m_pLifeText;
 	CText*                   m_pScoreText;
 	CText*                   m_pAmmoText;

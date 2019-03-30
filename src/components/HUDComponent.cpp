@@ -93,9 +93,9 @@ void CHUDComponent::run(float _fDeltaTime) {
 
 	ASSERT(m_pOwner && m_pMessageText && m_pLifeText && m_pScoreText && m_pAmmoText && m_pReloadSprite && g_pWorld);
 
-	if (m_iMessageTimer > 0) {
-		--m_iMessageTimer;
-		if (m_iMessageTimer <= 0) {
+	if (m_fMessageTimer > 0.0f) {
+		m_fMessageTimer -= _fDeltaTime;
+		if (m_fMessageTimer <= 0.0f) {
 			m_pMessageText->setText("");
 		}
 	}
@@ -135,7 +135,7 @@ void CHUDComponent::receiveMessage(Message* _pMessage) {
 	if (MessageShowHUDMessage* pMessage = dynamic_cast<MessageShowHUDMessage*>(_pMessage)) {
 		m_pMessageText->setText(pMessage->message);
 		m_pMessageText->setPos(vmake((WORLD_WIDTH * 0.5f) - g_pStringManager->calculateTextHalfWidth(pMessage->message), m_pMessageText->getPos().y));
-		m_iMessageTimer = pMessage->time;
+		m_fMessageTimer = pMessage->time;
 	}
 }
 

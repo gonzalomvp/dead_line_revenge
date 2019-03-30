@@ -77,5 +77,5 @@ struct MessageEnableAI: public Message {
 
 struct MessageShowHUDMessage : public Message {
 	std::string message = "";
-	int         time = 0;
+	float       time    = 0.0f;
 };
