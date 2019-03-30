@@ -15,7 +15,7 @@ public:
 		float                   fBulletSpeed;
 		int                     iBulletDamage;
 		int                     iBulletLife;
-		int                     iBulletRange;
+		float                   fBulletRange;
 		vec2                    v2BulletSize;
 		uint16_t                uBulletsPerShot;
 		bool                    bIsAutomatic;

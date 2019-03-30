@@ -66,6 +66,7 @@
     <ClInclude Include="..\src\components\bossIAComponent.h" />
     <ClInclude Include="..\src\components\ColliderComponent.h" />
     <ClInclude Include="..\src\components\component.h" />
+    <ClInclude Include="..\src\components\ExplossionComponent.h" />
     <ClInclude Include="..\src\components\ExplossiveComponent.h" />
     <ClInclude Include="..\src\components\HUDComponent.h" />
     <ClInclude Include="..\src\components\LifeComponent.h" />
@@ -73,7 +74,6 @@
     <ClInclude Include="..\src\components\PlayerControllerComponent.h" />
     <ClInclude Include="..\src\components\PointsComponent.h" />
     <ClInclude Include="..\src\components\RenderableComponent.h" />
-    <ClInclude Include="..\src\components\TransformComponent.h" />
     <ClInclude Include="..\src\components\WeaponComponent.h" />
     <ClInclude Include="..\src\components\WeaponPickupComponent.h" />
     <ClInclude Include="..\src\engine\graphics_engine.h" />
@@ -156,6 +156,7 @@
     <ClCompile Include="..\src\components\bossIAComponent.cpp" />
     <ClCompile Include="..\src\components\ColliderComponent.cpp" />
     <ClCompile Include="..\src\components\component.cpp" />
+    <ClCompile Include="..\src\components\ExplossionComponent.cpp" />
     <ClCompile Include="..\src\components\ExplossiveComponent.cpp" />
     <ClCompile Include="..\src\components\HUDComponent.cpp" />
     <ClCompile Include="..\src\components\LifeComponent.cpp" />
@@ -163,7 +164,6 @@
     <ClCompile Include="..\src\components\PlayerControllerComponent.cpp" />
     <ClCompile Include="..\src\components\PointsComponent.cpp" />
     <ClCompile Include="..\src\components\RenderableComponent.cpp" />
-    <ClCompile Include="..\src\components\TransformComponent.cpp" />
     <ClCompile Include="..\src\components\WeaponComponent.cpp" />
     <ClCompile Include="..\src\components\WeaponPickupComponent.cpp" />
     <ClCompile Include="..\src\engine\graphics_engine.cpp" />

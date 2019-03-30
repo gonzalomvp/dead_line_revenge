@@ -48,7 +48,6 @@ public:
 protected:
 	vec2 m_v2Pos;
 	vec2 m_v2Size;
-	vec2 m_v2SizeIncrement;
 	EType                       m_type;
 	std::vector<Component*> m_components;
 

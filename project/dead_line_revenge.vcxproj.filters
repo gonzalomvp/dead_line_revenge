@@ -246,9 +246,6 @@
     <ClInclude Include="..\src\components\behavior_tree\conditions\check_hit.h">
       <Filter>src\components\behavior_tree\conditions</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\components\TransformComponent.h">
-      <Filter>src\components</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\messages\message.h">
       <Filter>src\messages</Filter>
     </ClInclude>
@@ -305,6 +302,9 @@
     </ClInclude>
     <ClInclude Include="..\src\components\behavior_tree\actions\CalculateFleePositionAction.h">
       <Filter>src\components\behavior_tree\actions</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\components\ExplossionComponent.h">
+      <Filter>src\components</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -491,9 +491,6 @@
     <ClCompile Include="..\src\components\behavior_tree\conditions\check_hit.cpp">
       <Filter>src\components\behavior_tree\conditions</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\components\TransformComponent.cpp">
-      <Filter>src\components</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\components\RenderableComponent.cpp">
       <Filter>src\components</Filter>
     </ClCompile>
@@ -547,6 +544,9 @@
     </ClCompile>
     <ClCompile Include="..\src\components\behavior_tree\actions\CalculateFleePositionAction.cpp">
       <Filter>src\components\behavior_tree\actions</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\components\ExplossionComponent.cpp">
+      <Filter>src\components</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

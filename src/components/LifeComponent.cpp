@@ -14,9 +14,9 @@ void CLifeComponent::run(float _fDeltaTime) {
 		--m_iInvencibleTimer;
 	}
 
-	if (m_iLifeTimer > 0) {
-		--m_iLifeTimer;
-		if (m_iLifeTimer <= 0) {
+	if (m_fLifeTimer > 0) {
+		m_fLifeTimer -= _fDeltaTime;
+		if (m_fLifeTimer <= 0) {
 			onDead();
 		}
 	}

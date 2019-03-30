@@ -7,6 +7,7 @@
 #include "components/AIFleeComponent.h"
 #include "components/AIMeleeComponent.h"
 #include "components/ColliderComponent.h"
+#include "components/ExplossionComponent.h"
 #include "components/ExplossiveComponent.h"
 #include "components/HUDComponent.h"
 #include "components/LifeComponent.h"
@@ -14,7 +15,6 @@
 #include "components/PlayerControllerComponent.h"
 #include "components/PointsComponent.h"
 #include "components/RenderableComponent.h"
-#include "components/TransformComponent.h"
 #include "components/WeaponComponent.h"
 #include "components/WeaponPickupComponent.h"
 #include "components/bossIAComponent.h"
@@ -88,7 +88,7 @@ bool CEntitiesFactory::init(const char* _sConfigFile) {
 		weapon.fBulletSpeed = weapons[i]["bulletSpeed"].GetFloat();
 		weapon.iBulletDamage = weapons[i]["bulletDamage"].GetInt();
 		weapon.iBulletLife = weapons[i]["bulletLife"].GetInt();
-		weapon.iBulletRange = weapons[i]["bulletRange"].GetInt();
+		weapon.fBulletRange = weapons[i]["bulletRange"].GetFloat();
 
 		ASSERT(weapons[i].HasMember("bulletSize") && weapons[i]["bulletSize"].Size() == 2);
 		weapon.v2BulletSize = vmake(weapons[i]["bulletSize"][0].GetFloat(), weapons[i]["bulletSize"][1].GetFloat());
@@ -155,7 +155,7 @@ Entity* CEntitiesFactory::createPlayer(vec2 _v2Pos) {
 	weapon->init();
 	CColliderComponent* collider = NEW(CColliderComponent, player, CColliderComponent::ERectCollider, -1, CColliderComponent::EPlayerCollider, CColliderComponent::EEnemyCollider | CColliderComponent::EEnemyWeaponCollider);
 	collider->init();
-	CLifeComponent* life = NEW(CLifeComponent, player, g_pWorld->getPlayerLife(), 0, 20);
+	CLifeComponent* life = NEW(CLifeComponent, player, g_pWorld->getPlayerLife(), 20);
 	life->init();
 	CHUDComponent* hudComponent = NEW(CHUDComponent, player);
 	hudComponent->init();
@@ -171,8 +171,6 @@ Entity* CEntitiesFactory::createBullet(CWeaponComponent::EType _eWeaponType, vec
 	
 	Entity* bullet = NEW(Entity, Entity::EWEAPON, _v2Pos, weaponData.v2BulletSize);
 
-	CTransformComponent* transform = NEW(CTransformComponent, bullet, _v2Pos, weaponData.v2BulletSize);
-	transform->init();
 	CRenderableComponent* renderable = NEW(CRenderableComponent, bullet, weaponData.sImageFile, vangle(_v2Direction), 1.0f, 5, true, false);
 	renderable->init();
 	CMovementComponent* movement = NEW(CMovementComponent, bullet, _v2Direction, weaponData.fBulletSpeed, weaponData.bIsBouncy);
@@ -214,44 +212,43 @@ Entity* CEntitiesFactory::createBullet(CWeaponComponent::EType _eWeaponType, vec
 		CExplossiveComponent* explossive = NEW(CExplossiveComponent, bullet);
 		explossive->init();
 	}
-	CLifeComponent* componentLife = NEW(CLifeComponent, bullet, weaponData.iBulletLife, weaponData.iBulletRange, 0);
+	CLifeComponent* componentLife = NEW(CLifeComponent, bullet, weaponData.iBulletLife, -1, weaponData.fBulletRange);
 	componentLife->init();
 	return bullet;
 }
 
 Entity* CEntitiesFactory::createExplossion(vec2 _v2Pos, CWeaponComponent::EType _eWeaponType) {
-	vec2 v2Size = vmake(0.0f, 0.0f);
-	vec2 v2SizeIncrement = vmake(0.0f, 0.0f);
-	int iDuration = 0;
+	vec2 v2InitSize = vmake(0.0f, 0.0f);
+	vec2 v2EndSize = vmake(0.0f, 0.0f);
+	float fDuration = 0.0f;
 	int iColliderChannelMask = CColliderComponent::ENoneCollider;
 
 	switch (_eWeaponType) {
 		case CWeaponComponent::ENUCLEARBOMB:
-			v2Size = vmake(20.0f, 20.0f);
-			v2SizeIncrement = vmake(8.0f, 8.0f);
-			iDuration = 100;
+			v2InitSize = vmake(20.0f, 20.0f);
+			v2EndSize = vmake(820.0f, 820.0f);
+			fDuration = 1.6f;
 			iColliderChannelMask = CColliderComponent::EPlayerWeaponCollider | CColliderComponent::EBoundariesCollider;
 			break;
 		default:
-			v2Size = vmake(10.0f, 10.0f);
-			v2SizeIncrement = vmake(2.0f, 2.0f);
-			iDuration = 50;
+			v2InitSize = vmake(10.0f, 10.0f);
+			v2EndSize = vmake(110.0f, 110.0f);
+			fDuration = 0.8f;
 			iColliderChannelMask = CColliderComponent::EPlayerWeaponCollider | CColliderComponent::EEnemyWeaponCollider | CColliderComponent::EBoundariesCollider;
 			break;
 	}
 
-	Entity* explossion = NEW(Entity, Entity::EWEAPON, _v2Pos, v2Size);
+	Entity* explossion = NEW(Entity, Entity::EWEAPON, _v2Pos, v2InitSize);
 
 	CRenderableComponent* renderable = NEW(CRenderableComponent, explossion, "data/explossion.png", 0.0f, 0.5f, 5);
 	renderable->init();
-	CTransformComponent* transform = NEW(CTransformComponent, explossion, _v2Pos, v2Size, v2SizeIncrement);
-	transform->init();
 	CColliderComponent* collider = NEW(CColliderComponent, explossion, CColliderComponent::ECircleCollider, -5, iColliderChannelMask, CColliderComponent::ENoneCollider);
 	collider->init();
-	CLifeComponent* life = NEW(CLifeComponent, explossion, 1, iDuration, 0);
+	CLifeComponent* life = NEW(CLifeComponent, explossion, 1, -1, fDuration);
 	life->init();
+	CExplossionComponent* explossionComp = NEW(CExplossionComponent, explossion, v2InitSize, v2EndSize, fDuration);
+	explossionComp->init();
 	
-	g_pSoundEngine->playSound("data/explossion.wav");
 	return explossion;
 }
 
@@ -267,13 +264,11 @@ Entity* CEntitiesFactory::createEnemy(vec2 _v2Pos, Entity::EType _tEnemyType, co
 		sBTFile = _sBTFile;
 	}
 
-	CTransformComponent* transform = NEW(CTransformComponent, enemy, _v2Pos, tEnemyDef.v2Size);
-	transform->init();
 	CMovementComponent * movement = NEW(CMovementComponent, enemy, _v2MoveDir, tEnemyDef.fSpeed, true);
 	movement->init();
 	CColliderComponent* collider = NEW(CColliderComponent, enemy, CColliderComponent::ERectCollider, tEnemyDef.iCollisionDamage, CColliderComponent::EEnemyCollider, CColliderComponent::EPlayerWeaponCollider);
 	collider->init();
-	CLifeComponent* life = NEW(CLifeComponent, enemy, tEnemyDef.iLife, 0, tEnemyDef.iInvencibleTime);
+	CLifeComponent* life = NEW(CLifeComponent, enemy, tEnemyDef.iLife, tEnemyDef.iInvencibleTime);
 	life->init();
 	CPointsComponent* points = NEW(CPointsComponent, enemy);
 	points->init();
@@ -337,8 +332,6 @@ Entity* CEntitiesFactory::createWeaponPickup() {
 	vec2 randomPos = vmake(CORE_FRand(0.0, WORLD_WIDTH), CORE_FRand(80, WORLD_HEIGHT - 80));
 
 	Entity* weaponPickup = NEW(Entity, Entity::EPICKUP, randomPos, vmake(20, 20));
-	CTransformComponent* transform = NEW(CTransformComponent, weaponPickup, randomPos, vmake(20, 20));
-	transform->init();
 	CRenderableComponent* renderable = NEW(CRenderableComponent, weaponPickup, "data/crate-1.png", 0.0f, 1.0f, 5);
 	renderable->init();
 	CColliderComponent* collider = NEW(CColliderComponent, weaponPickup, CColliderComponent::ERectCollider, 0, CColliderComponent::EPickupCollider, CColliderComponent::EPlayerCollider);
@@ -347,7 +340,7 @@ Entity* CEntitiesFactory::createWeaponPickup() {
 	pickup->init();
 	CPointsComponent* points = NEW(CPointsComponent, weaponPickup);
 	points->init();
-	CLifeComponent* life = NEW(CLifeComponent, weaponPickup, 1, 0, 0);
+	CLifeComponent* life = NEW(CLifeComponent, weaponPickup, 1);
 	life->init();
 	return weaponPickup;
 }
