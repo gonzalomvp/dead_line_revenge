@@ -4,7 +4,7 @@
 
 class CPointsComponent : public CComponent {
 public:
-	CPointsComponent(Entity* _pOwner) : CComponent(_pOwner) {}
+	CPointsComponent(CEntity* _pOwner) : CComponent(_pOwner) {}
 
 	// CComponent
 	virtual void receiveMessage(TMessage* _pMessage) override;

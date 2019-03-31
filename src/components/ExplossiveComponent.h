@@ -4,7 +4,7 @@
 
 class CExplossiveComponent : public CComponent {
 public:
-	CExplossiveComponent(Entity* _pOwner) : CComponent(_pOwner) {}
+	CExplossiveComponent(CEntity* _pOwner) : CComponent(_pOwner) {}
 
 	// CComponent
 	virtual void receiveMessage(TMessage* _pMessage) override;

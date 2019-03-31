@@ -4,7 +4,7 @@
 
 class CAIComponent : public CComponent {
 public:
-	CAIComponent(Entity* _pOwner) : CComponent(_pOwner) {}
+	CAIComponent(CEntity* _pOwner) : CComponent(_pOwner) {}
 	virtual ~CAIComponent() = 0 {};
 
 	// CComponent

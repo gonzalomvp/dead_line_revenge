@@ -9,8 +9,8 @@ class CText;
 
 class CHUDComponent : public CComponent, public IInputManager::IListener {
 public:
-	CHUDComponent(Entity* owner)
-	: CComponent(owner)
+	CHUDComponent(CEntity* _pOwner)
+	: CComponent(_pOwner)
 	, m_fTMessageTimer(0.0f)
 	, m_pLifeText(nullptr)
 	, m_pScoreText(nullptr)
@@ -23,8 +23,8 @@ public:
 	~CHUDComponent();
 
 	// CComponent
-	virtual void init()                             override;
-	virtual void run(float _fDeltaTime)             override;
+	virtual void init()                              override;
+	virtual void run(float _fDeltaTime)              override;
 	virtual void receiveMessage(TMessage* _pMessage) override;
 
 	// IInputManager::IListener

@@ -4,7 +4,7 @@
 
 class CExplossionComponent : public CComponent {
 public:
-	CExplossionComponent(Entity* _pOwner, vec2 _v2InitSize, vec2 _v2EndSize, float _fExplossionTime)
+	CExplossionComponent(CEntity* _pOwner, vec2 _v2InitSize, vec2 _v2EndSize, float _fExplossionTime)
 	: CComponent(_pOwner)
 	, m_v2InitSize(_v2InitSize)
 	, m_v2EndSize(_v2EndSize)

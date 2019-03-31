@@ -14,7 +14,7 @@ void CRotateAim::init(TiXmlElement* behaviorElem) {
 }
 
 EStatus CRotateAim::onUpdate(float step) {
-	Entity* self = getOwnerEntity();
+	CEntity* self = getOwnerEntity();
 	TMessageGetAimDirection messageGetAimDirection;
 	self->receiveMessage(&messageGetAimDirection);
 

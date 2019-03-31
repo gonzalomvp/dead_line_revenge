@@ -110,14 +110,14 @@ bool CWorld::init(uint16_t _uLevel) {
 	ASSERT(doc.HasMember("bossSpawnPoints"));
 	m_iBossSpawnPoints = doc["bossSpawnPoints"].GetInt();
 	ASSERT(doc.HasMember("pickupPoints"));
-	m_mEntityPoints[Entity::EPICKUP] = doc["pickupPoints"].GetInt();
+	m_mEntityPoints[CEntity::EPICKUP] = doc["pickupPoints"].GetInt();
 
 	// Create player and first pickup
-	Entity* pPlayer = g_pEntitiesFactory->createPlayer(vmake(WORLD_WIDTH * 0.5f, WORLD_HEIGHT * 0.5f));
+	CEntity* pPlayer = g_pEntitiesFactory->createPlayer(vmake(WORLD_WIDTH * 0.5f, WORLD_HEIGHT * 0.5f));
 	addEntity(pPlayer);
 	m_pPlayer = pPlayer;
 
-	Entity* pPickup = g_pEntitiesFactory->createWeaponPickup();
+	CEntity* pPickup = g_pEntitiesFactory->createWeaponPickup();
 	addEntity(pPickup);
 
 	m_fEnemySpawnTimer = m_fEnemySpawnWait;
@@ -128,7 +128,7 @@ bool CWorld::init(uint16_t _uLevel) {
 	const Value& enemies = doc["enemies"];
 	for (SizeType i = 0; i < enemies.Size(); i++) {
 		ASSERT(enemies[i].HasMember("type"));
-		Entity::EType eEnemyType = CEntitiesFactory::getEntityTypeByName(enemies[i]["type"].GetString());
+		CEntity::EType eEnemyType = CEntitiesFactory::getEntityTypeByName(enemies[i]["type"].GetString());
 		ASSERT(enemies[i].HasMember("spawnProbability"));
 		fTotalProbability += enemies[i]["spawnProbability"].GetFloat();
 		m_mEnemyProbabilities[eEnemyType] = fTotalProbability;
@@ -165,7 +165,7 @@ bool CWorld::init(uint16_t _uLevel) {
 		}
 
 		// Create turrets
-		Entity* pTurret = g_pEntitiesFactory->createEnemy(v2Pos, Entity::EENEMYTURRET, sBTFile, v2MoveDirection, v2AimDirection);
+		CEntity* pTurret = g_pEntitiesFactory->createEnemy(v2Pos, CEntity::EENEMYTURRET, sBTFile, v2MoveDirection, v2AimDirection);
 		addEntity(pTurret);
 		++m_iCurrentEnemies;
 	}
@@ -230,12 +230,12 @@ void CWorld::run(float _fDeltaTime) {
 	}
 }
 
-void CWorld::addEntity(Entity* _pEntity) {
+void CWorld::addEntity(CEntity* _pEntity) {
 	ASSERT(_pEntity);
 	m_vEntitiesToAdd.push_back(_pEntity);
 }
 
-void CWorld::removeEntity(Entity* _pEntity) {
+void CWorld::removeEntity(CEntity* _pEntity) {
 	ASSERT(_pEntity);
 	m_vEntitiesToRemove.push_back(_pEntity);
 }
@@ -260,9 +260,9 @@ bool CWorld::onEvent(const IInputManager::CEvent& _event) {
 
 void CWorld::checkCollisions() {
 	for (size_t i = 0; i < m_vEntities.size(); ++i) {
-		Entity* pEntity1 = m_vEntities[i];
+		CEntity* pEntity1 = m_vEntities[i];
 		for (size_t j = i + 1; j < m_vEntities.size(); ++j) {
-			Entity* pEntity2 = m_vEntities[j];
+			CEntity* pEntity2 = m_vEntities[j];
 			TMessageCheckCollision msgCheckCollision;
 			msgCheckCollision.pOther = pEntity2;
 			pEntity1->receiveMessage(&msgCheckCollision);
@@ -272,19 +272,19 @@ void CWorld::checkCollisions() {
 
 void CWorld::removePendingEntities() {
 	for (auto it = m_vEntitiesToRemove.begin(); it != m_vEntitiesToRemove.end(); ++it) {
-		Entity::EType eEntityType = (*it)->getType();
+		CEntity::EType eEntityType = (*it)->getType();
 		switch (eEntityType) {
-			case Entity::EPLAYER: {
+			case CEntity::EPLAYER: {
 				m_bIsGameOver = true;
 				break;
 			}
-			case Entity::EPICKUP: {
+			case CEntity::EPICKUP: {
 				m_fPickupSpawnTimer = m_fPickupSpawnWait;
 				break;
 			}
 
 #define REG_ENTITY(val, name) \
-			case Entity::E##val: \
+			case CEntity::E##val: \
 				--m_iCurrentEnemies; \
 				break;
 #include "REG_ENEMIES.h"
@@ -293,7 +293,7 @@ void CWorld::removePendingEntities() {
 		}
 
 		// Enable enemies spawn after killing the Boss
-		if (eEntityType == Entity::EENEMYBOSS) {
+		if (eEntityType == CEntity::EENEMYBOSS) {
 			m_fEnemySpawnTimer = m_fEnemySpawnWait;
 		}
 
@@ -318,7 +318,7 @@ void CWorld::spawnNewEntities(float _fDeltaTime) {
 	if (m_fPickupSpawnTimer > 0.0f) {
 		m_fPickupSpawnTimer -= _fDeltaTime;
 		if (m_fPickupSpawnTimer <= 0.0f) {
-			Entity* pPickup = g_pEntitiesFactory->createWeaponPickup();
+			CEntity* pPickup = g_pEntitiesFactory->createWeaponPickup();
 			addEntity(pPickup);
 		}
 	}
@@ -329,11 +329,11 @@ void CWorld::spawnNewEntities(float _fDeltaTime) {
 		if (m_fEnemySpawnTimer <= 0.0f) {
 			// Pick a random spawn point from the available ones
 			vec2 v2SpawnLocation = m_vSpawnPositions[rand() % m_vSpawnPositions.size()];
-			Entity* enemy = nullptr;
+			CEntity* enemy = nullptr;
 
 			// If enough points spawn Boss
 			if (m_uScore / m_iBossSpawnPoints > m_iBossSpawnPointsCounter) {
-				enemy = g_pEntitiesFactory->createEnemy(v2SpawnLocation, Entity::EENEMYBOSS);
+				enemy = g_pEntitiesFactory->createEnemy(v2SpawnLocation, CEntity::EENEMYBOSS);
 				++m_iBossSpawnPointsCounter;
 			}
 			// Otherwise pick a random enemy based on the probability for each one

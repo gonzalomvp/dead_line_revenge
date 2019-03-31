@@ -67,7 +67,7 @@ void CWeaponComponent::run(float _fDeltaTime) {
 		switch (m_eType) {
 			case ESHOTGUN: {
 				vec2 v2bulletDir = m_v2AimDir;
-				Entity* pBullet = g_pEntitiesFactory->createBullet(m_eType, m_pOwner->getPos(), v2bulletDir, m_pOwner->getType());
+				CEntity* pBullet = g_pEntitiesFactory->createBullet(m_eType, m_pOwner->getPos(), v2bulletDir, m_pOwner->getType());
 				g_pWorld->addEntity(pBullet);
 				float fAngle = vangle(m_v2AimDir);
 				fAngle += DEG2RAD(s_fShotgunAngle);
@@ -82,7 +82,7 @@ void CWeaponComponent::run(float _fDeltaTime) {
 				break;
 			}
 			case EMINES: {
-				Entity* pBullet = g_pEntitiesFactory->createBullet(m_eType, m_pOwner->getPos(), m_v2AimDir, m_pOwner->getType());
+				CEntity* pBullet = g_pEntitiesFactory->createBullet(m_eType, m_pOwner->getPos(), m_v2AimDir, m_pOwner->getType());
 				g_pWorld->addEntity(pBullet);
 				break;
 			}
@@ -93,19 +93,19 @@ void CWeaponComponent::run(float _fDeltaTime) {
 				break;
 			}
 			case EROCKETLAUNCHER: {
-				Entity* pBullet = g_pEntitiesFactory->createBullet(m_eType, m_pOwner->getPos(), m_v2AimDir, m_pOwner->getType());
+				CEntity* pBullet = g_pEntitiesFactory->createBullet(m_eType, m_pOwner->getPos(), m_v2AimDir, m_pOwner->getType());
 				g_pWorld->addEntity(pBullet);
 				break;
 			}
 			case ENUCLEARBOMB: {
-				Entity* pExplossion = g_pEntitiesFactory->createExplossion(m_pOwner->getPos(), m_eType);
+				CEntity* pExplossion = g_pEntitiesFactory->createExplossion(m_pOwner->getPos(), m_eType);
 				g_pWorld->addEntity(pExplossion);
 				break;
 			}
 			default: {
 				for (size_t i = 0; i < m_uBulletsPerShot; i++) {
 					float fAngle = vangle(m_v2AimDir) + (i * 2.0f * M_PIf / m_uBulletsPerShot);
-					Entity* pBullet = g_pEntitiesFactory->createBullet(m_eType, m_pOwner->getPos(), vunit(fAngle), m_pOwner->getType());
+					CEntity* pBullet = g_pEntitiesFactory->createBullet(m_eType, m_pOwner->getPos(), vunit(fAngle), m_pOwner->getType());
 					g_pWorld->addEntity(pBullet);
 				}
 				break;
@@ -163,7 +163,7 @@ void CWeaponComponent::receiveMessage(TMessage* _pMessage) {
 	}
 }
 
-void CWeaponComponent::onEntityDestroyed(Entity* _pEntity) {
+void CWeaponComponent::onEntityDestroyed(CEntity* _pEntity) {
 	if (m_pRemoteBullet == _pEntity) {
 		m_pRemoteBullet = nullptr;
 		m_bIsFiring = false;

@@ -18,7 +18,7 @@ void CColliderComponent::receiveMessage(TMessage* _pMessage) {
 		vec2 v2Center = m_pOwner->getPos();
 		vec2 v2Size = m_pOwner->getSize();
 
-		Entity* pOther = pMessage->pOther;
+		CEntity* pOther = pMessage->pOther;
 
 		// First entity check
 		if (pMessage->pOther) {

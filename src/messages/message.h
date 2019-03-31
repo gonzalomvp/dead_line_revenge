@@ -55,7 +55,7 @@ struct TMessageCheckCollision : public TMessage {
 	int                       iDamage              = 0;
 	int                       iChannelMask         = 0;
 	int                       iChannelMaskResponse = 0;
-	Entity*                   pOther               = nullptr;
+	CEntity*                  pOther               = nullptr;
 	bool                      bIsOverlapping       = false;
 };
 

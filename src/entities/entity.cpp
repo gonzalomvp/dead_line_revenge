@@ -5,50 +5,50 @@
 
 #include <algorithm>
 
-Entity::~Entity() {
-	for (auto itComponents = m_components.begin(); itComponents != m_components.end(); ++itComponents) {
-		DELETE(*itComponents);
+CEntity::~CEntity() {
+	for (auto itComponent = m_vComponents.begin(); itComponent != m_vComponents.end(); ++itComponent) {
+		DELETE(*itComponent);
 	}
-	for (auto itDestroyListener = m_vlisteners.begin(); itDestroyListener != m_vlisteners.end(); ++itDestroyListener) {
+	for (auto itDestroyListener = m_vDestroyListeners.begin(); itDestroyListener != m_vDestroyListeners.end(); ++itDestroyListener) {
 		(*itDestroyListener)->onEntityDestroyed(this);
 	}
 }
 
-void Entity::activate() {
-	for (auto itComponents = m_components.begin(); itComponents != m_components.end(); ++itComponents) {
-		(*itComponents)->activate();
+void CEntity::activate() {
+	for (auto itComponent = m_vComponents.begin(); itComponent != m_vComponents.end(); ++itComponent) {
+		(*itComponent)->activate();
 	}
 }
 
-void Entity::deactivate() {
-	for (auto itComponents = m_components.begin(); itComponents != m_components.end(); ++itComponents) {
-		(*itComponents)->deactivate();
+void CEntity::deactivate() {
+	for (auto itComponent = m_vComponents.begin(); itComponent != m_vComponents.end(); ++itComponent) {
+		(*itComponent)->deactivate();
 	}
 }
 
-void Entity::run(float deltaTime) {
-	for (auto itComponents = m_components.begin(); itComponents != m_components.end(); ++itComponents) {
-		(*itComponents)->run(deltaTime);
+void CEntity::run(float _fDeltaTime) {
+	for (auto itComponent = m_vComponents.begin(); itComponent != m_vComponents.end(); ++itComponent) {
+		(*itComponent)->run(_fDeltaTime);
 	}
 }
 
-void Entity::receiveMessage(TMessage* message) {
-	for (auto itComponents = m_components.begin(); itComponents != m_components.end(); ++itComponents) {
-		(*itComponents)->receiveMessage(message);
+void CEntity::receiveMessage(TMessage* _pMessage) {
+	for (auto itComponent = m_vComponents.begin(); itComponent != m_vComponents.end(); ++itComponent) {
+		(*itComponent)->receiveMessage(_pMessage);
 	}
 }
 
-void Entity::addComponent(CComponent* component) {
-	m_components.push_back(component);
+void CEntity::addComponent(CComponent* _pComponent) {
+	m_vComponents.push_back(_pComponent);
 }
 
-void Entity::registerToDestroy(IListener* _pListener) {
-	m_vlisteners.push_back(_pListener);
+void CEntity::registerToDestroy(IListener* _pListener) {
+	m_vDestroyListeners.push_back(_pListener);
 }
 
-void Entity::unregisterToDestroy(IListener* _pListener) {
-	m_vlisteners.erase(
-		std::remove(m_vlisteners.begin(), m_vlisteners.end(), _pListener),
-		m_vlisteners.end()
+void CEntity::unregisterToDestroy(IListener* _pListener) {
+	m_vDestroyListeners.erase(
+		std::remove(m_vDestroyListeners.begin(), m_vDestroyListeners.end(), _pListener),
+		m_vDestroyListeners.end()
 	);
 }

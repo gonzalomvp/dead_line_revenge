@@ -5,9 +5,9 @@
 #include <map>
 #include <string>
 
-class Entity;
+class CEntity;
 
-class CBlackboard : public Entity::IListener {
+class CBlackboard : public CEntity::IListener {
 public:
 	typedef std::string TKey;
 
@@ -17,19 +17,19 @@ public:
 	void setValueVec2(TKey key, const vec2& _vValue);
 	void setValueInt(TKey key, int _iValue);
 	void setValueFloat(TKey key, float _fValue);
-	void setValueEntity(TKey key, Entity* _pValue);
+	void setValueEntity(TKey key, CEntity* _pValue);
 
 	bool getValueVec2(TKey key, vec2& vValue_);
 	bool getValueInt(TKey key, int& iValue_ );
 	bool getValueFloat(TKey key, float& fValue_);
-	bool getValueEntity(TKey key, Entity*& pValue_);
+	bool getValueEntity(TKey key, CEntity*& pValue_);
 
 	// CEntity::IListener
-	virtual void onEntityDestroyed(Entity* _pEntity) override;
+	virtual void onEntityDestroyed(CEntity* _pEntity) override;
 
 private:
 	std::map<TKey, int>		    m_mapInt;
 	std::map<TKey, float>		m_mapFloat;
 	std::map<TKey, vec2>		m_mapVec2;
-	std::map<TKey, Entity*>	m_mapEntity;
+	std::map<TKey, CEntity*>	m_mapEntity;
 };

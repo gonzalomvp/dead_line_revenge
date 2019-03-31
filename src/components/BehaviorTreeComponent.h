@@ -9,7 +9,7 @@ class TiXmlElement;
 
 class CBehaviorTreeComponent : public CAIComponent {
 public:
-	CBehaviorTreeComponent(Entity* _pOwner, const char* _psBTFile)
+	CBehaviorTreeComponent(CEntity* _pOwner, const char* _psBTFile)
 	: CAIComponent(_pOwner)
 	, m_psBTFile(_psBTFile)
 	, m_pRootBehavior(nullptr)

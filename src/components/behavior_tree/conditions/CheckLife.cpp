@@ -14,7 +14,7 @@ void CCheckLife::init(TiXmlElement* behaviorElem) {
 }
 
 bool CCheckLife::check(float step) {
-	Entity* self = getOwnerEntity();
+	CEntity* self = getOwnerEntity();
 	TMessageGetLife messageGetLife;
 	self->receiveMessage(&messageGetLife);
 

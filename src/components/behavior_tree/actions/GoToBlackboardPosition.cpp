@@ -31,10 +31,10 @@ void CGoToBlackboardPosition::init(TiXmlElement* behaviorElem) {
 }
 
 void CGoToBlackboardPosition::onEnter() {
-	Entity* self = getOwnerEntity();
+	CEntity* self = getOwnerEntity();
 	vec2 selfSize = self->getSize();
 
-	Entity* pTargetEntity = nullptr;
+	CEntity* pTargetEntity = nullptr;
 	bool bFound = mOwner->getBlackboard().getValueEntity(m_sBlackboardKey, pTargetEntity);
 	if (bFound) {
 		ASSERT(pTargetEntity);
@@ -51,11 +51,11 @@ void CGoToBlackboardPosition::onEnter() {
 }
 
 EStatus CGoToBlackboardPosition::onUpdate(float step) {
-	Entity* self = getOwnerEntity();
+	CEntity* self = getOwnerEntity();
 	vec2 selfSize = self->getSize();
 
 	if (m_bKeepUpdatingPosition) {
-		Entity* pTargetEntity = nullptr;
+		CEntity* pTargetEntity = nullptr;
 		bool bFound = mOwner->getBlackboard().getValueEntity(m_sBlackboardKey, pTargetEntity);
 		if (bFound) {
 			ASSERT(pTargetEntity);
@@ -91,7 +91,7 @@ EStatus CGoToBlackboardPosition::onUpdate(float step) {
 void CGoToBlackboardPosition::abort() {
 	CBehavior::abort();
 
-	Entity* self = getOwnerEntity();
+	CEntity* self = getOwnerEntity();
 	TMessageSetMovementDir msgSetMovementDir;
 	self->receiveMessage(&msgSetMovementDir);
 }

@@ -17,7 +17,7 @@ void CChangeWeapon::init(TiXmlElement* behaviorElem) {
 
 EStatus CChangeWeapon::onUpdate(float step) {
 
-	Entity* self = getOwnerEntity();
+	CEntity* self = getOwnerEntity();
 	TMessageWeaponChange messageWeaponChange;
 	messageWeaponChange.eWeaponType = CEntitiesFactory::getWeaponTypeByName(mWeaponName);
 	self->receiveMessage(&messageWeaponChange);

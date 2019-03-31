@@ -14,8 +14,8 @@ void CAim::init(TiXmlElement* behaviorElem) {
 }
 
 EStatus CAim::onUpdate(float step) {
-	Entity* self = getOwnerEntity();
-	Entity* player = g_pWorld->getPlayer();
+	CEntity* self = getOwnerEntity();
+	CEntity* player = g_pWorld->getPlayer();
 
 	TMessageSetAimDirection messageSetAimDirection;
 	messageSetAimDirection.v2Dir = vnorm(vsub(player->getPos(), self->getPos()));

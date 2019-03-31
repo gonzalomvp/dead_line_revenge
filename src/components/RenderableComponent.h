@@ -6,7 +6,7 @@ class CSprite;
 
 class CRenderableComponent : public CComponent {
 public:
-	CRenderableComponent(Entity* _pOwner, const std::string& _sTexture, float _fAngle, float _fAlpha, int _iPriority, bool _bAlignToMovement = false, bool _bAlignToAim = false, float _fHitTime = 0.0f)
+	CRenderableComponent(CEntity* _pOwner, const std::string& _sTexture, float _fAngle, float _fAlpha, int _iPriority, bool _bAlignToMovement = false, bool _bAlignToAim = false, float _fHitTime = 0.0f)
 	: CComponent(_pOwner)
 	, m_sTexture(_sTexture)
 	, m_fAngle(_fAngle)

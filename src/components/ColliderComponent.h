@@ -19,7 +19,7 @@ public:
 		ENoneCollider = 0,
 	};
 
-	CColliderComponent(Entity* _pOwner, EType _eType, int _iDamage, int _iChannelMask, int _iChannelMaskResponse)
+	CColliderComponent(CEntity* _pOwner, EType _eType, int _iDamage, int _iChannelMask, int _iChannelMaskResponse)
 	: CComponent(_pOwner)
 	, m_eType(_eType)
 	, m_iDamage(_iDamage)

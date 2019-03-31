@@ -26,10 +26,10 @@ void CCalculateFleePosition::init(TiXmlElement* behaviorElem) {
 EStatus CCalculateFleePosition::onUpdate(float step) {
 	ASSERT(mOwner);
 
-	Entity* self = getOwnerEntity();
+	CEntity* self = getOwnerEntity();
 	vec2 selfSize = self->getSize();
 
-	Entity* pFromEntity = nullptr;
+	CEntity* pFromEntity = nullptr;
 	vec2 v2FromPos = vmake(0.0f, 0.0f);
 
 	bool bFound = mOwner->getBlackboard().getValueEntity(m_sFromBlackboardKey, pFromEntity);

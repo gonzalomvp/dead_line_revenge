@@ -4,7 +4,7 @@
 
 class CMovementComponent : public CComponent {
 public:
-	CMovementComponent(Entity* _pOwner, const vec2& _v2Direction, float _fSpeed, bool _bHasBounce)
+	CMovementComponent(CEntity* _pOwner, const vec2& _v2Direction, float _fSpeed, bool _bHasBounce)
 	: CComponent(_pOwner)
 	, m_v2Direction(_v2Direction)
 	, m_fSpeed(_fSpeed)

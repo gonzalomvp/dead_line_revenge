@@ -17,10 +17,10 @@ void CCheckIsAtDistance::init(TiXmlElement* behaviorElem) {
 }
 
 bool CCheckIsAtDistance::check(float step) {
-	Entity* self = getOwnerEntity();
+	CEntity* self = getOwnerEntity();
 	vec2 v2SelfPos = self->getPos();
 
-	Entity* pOther;
+	CEntity* pOther;
 	vec2 v2TargetPos = vmake(0.0f, 0.0f);
 
 	bool bFound = mOwner->getBlackboard().getValueEntity(m_sBlackboardKey, pOther);

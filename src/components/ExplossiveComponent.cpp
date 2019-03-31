@@ -12,7 +12,7 @@ void CExplossiveComponent::receiveMessage(TMessage* _pMessage) {
 
 	ASSERT(_pMessage && m_pOwner && g_pWorld && g_pEntitiesFactory);
 	if (TMessageDestroy* pMessage = dynamic_cast<TMessageDestroy*>(_pMessage)) {
-		Entity* pExplossion = g_pEntitiesFactory->createExplossion(m_pOwner->getPos());
+		CEntity* pExplossion = g_pEntitiesFactory->createExplossion(m_pOwner->getPos());
 		g_pWorld->addEntity(pExplossion);
 	}
 }

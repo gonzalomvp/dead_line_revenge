@@ -47,7 +47,7 @@ CBehavior::EType CBehavior::getBehaviorTypeByName(const std::string& name) {
 	return etype;
 }
 
-Entity* CBehavior::getOwnerEntity() {
+CEntity* CBehavior::getOwnerEntity() {
 	ASSERT(mOwner);
 	return mOwner->getOwner();
 }

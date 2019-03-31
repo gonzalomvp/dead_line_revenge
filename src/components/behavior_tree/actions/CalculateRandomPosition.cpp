@@ -14,7 +14,7 @@ void CCalculateRandomPosition::init(TiXmlElement* behaviorElem) {
 }
 
 EStatus CCalculateRandomPosition::onUpdate(float step) {
-	Entity* self = getOwnerEntity();
+	CEntity* self = getOwnerEntity();
 	vec2 selfSize = self->getSize();
 
 	vec2 v2TargetPos = vmake(CORE_FRand(0.0f, WORLD_WIDTH), CORE_FRand(0.0f, WORLD_HEIGHT));

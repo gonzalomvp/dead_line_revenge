@@ -5,7 +5,7 @@
 
 class CPlayerControllerComponent : public CComponent, public IInputManager::IListener {
 public:
-	CPlayerControllerComponent(Entity* _pOwner)
+	CPlayerControllerComponent(CEntity* _pOwner)
 	: CComponent(_pOwner)
 	, m_v2InputDir(vmake(0.0f, 0.0f))
 	{}

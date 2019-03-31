@@ -5,7 +5,7 @@
 
 class CWeaponPickupComponent : public CComponent {
 public:
-	CWeaponPickupComponent(Entity* _pOwner, CWeaponComponent::EType _eWeaponType)
+	CWeaponPickupComponent(CEntity* _pOwner, CWeaponComponent::EType _eWeaponType)
 	: CComponent(_pOwner)
 	, m_eWeaponType(_eWeaponType)
 	{}

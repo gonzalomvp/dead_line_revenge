@@ -13,7 +13,7 @@ void CChangeSpeed::init(TiXmlElement* behaviorElem) {
 }
 
 EStatus CChangeSpeed::onUpdate(float step) {
-	Entity* self = getOwnerEntity();
+	CEntity* self = getOwnerEntity();
 	TMessageSetMovementSpeed messageSetMovementSpeed;
 	messageSetMovementSpeed.fSpeed = m_fSpeed;
 	self->receiveMessage(&messageSetMovementSpeed);

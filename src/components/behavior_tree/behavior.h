@@ -6,7 +6,7 @@
 #pragma pack(pop)
 
 class CBehaviorTreeComponent;
-class Entity;
+class CEntity;
 
 enum EStatus {
 	EInvalid,
@@ -41,7 +41,7 @@ public:
 	virtual EStatus run(float step);
 
 	EStatus getStatus() const { return mStatus; }
-	Entity* getOwnerEntity();
+	CEntity* getOwnerEntity();
 
 protected:
 	virtual EStatus onUpdate(float step) = 0;

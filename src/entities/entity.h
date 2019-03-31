@@ -3,11 +3,11 @@
 class  CComponent;
 struct TMessage;
 
-class Entity {
+class CEntity {
 public:
 	class IListener {
 	public:
-		virtual void onEntityDestroyed(Entity* _pEntity) = 0;
+		virtual void onEntityDestroyed(CEntity* _pEntity) = 0;
 	};
 
 	enum EType {
@@ -18,38 +18,37 @@ public:
 
 		EInvalid,
 	};
-
 	static const int NUM_ENTITIES = EInvalid;
 
-	Entity(EType type, const vec2& _v2Pos, const vec2& _v2Size)
-	: m_type(type)
+	CEntity(EType _eType, const vec2& _v2Pos, const vec2& _v2Size)
+	: m_eType(_eType)
 	, m_v2Pos(_v2Pos)
 	, m_v2Size(_v2Size)
 	{}
-	~Entity();
 
-	void  activate  ();
+	~CEntity();
+
+	void  activate();
 	void  deactivate();
 
-	EType getType   () const { return m_type; }
+	void run           (float _fDeltaTime      );
+	void receiveMessage(TMessage* _pMessage    );
+	void addComponent  (CComponent* _pComponent);
 
-	vec2 getPos () const       { return m_v2Pos;     }
-	void setPos (vec2 _v2Pos)  { m_v2Pos = _v2Pos;   }
-	vec2 getSize() const       { return m_v2Size;    }
-	void setSize(vec2 _v2Size) { m_v2Size = _v2Size; }
-
-	void run            (float deltaTime);
-	void receiveMessage (TMessage* message);
-	void addComponent   (CComponent* component);
-
-	virtual void registerToDestroy(IListener* _pListener);
+	virtual void registerToDestroy  (IListener* _pListener);
 	virtual void unregisterToDestroy(IListener* _pListener);
 
-protected:
-	vec2 m_v2Pos;
-	vec2 m_v2Size;
-	EType                       m_type;
-	std::vector<CComponent*> m_components;
+	EType getType() const        { return m_eType;     }
+	vec2  getPos  () const       { return m_v2Pos;     }
+	void  setPos  (vec2 _v2Pos)  { m_v2Pos = _v2Pos;   }
+	vec2  getSize () const       { return m_v2Size;    }
+	void  setSize (vec2 _v2Size) { m_v2Size = _v2Size; }
 
-	std::vector<IListener*> m_vlisteners;
+private:
+	EType m_eType;
+	vec2  m_v2Pos;
+	vec2  m_v2Size;
+	
+	std::vector<CComponent*> m_vComponents;
+	std::vector<IListener*>  m_vDestroyListeners;
 };

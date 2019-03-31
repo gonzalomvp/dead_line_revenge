@@ -14,7 +14,7 @@ void CChangeSprite::init(TiXmlElement* behaviorElem) {
 
 EStatus CChangeSprite::onUpdate(float step) {
 	
-	Entity* self = getOwnerEntity();
+	CEntity* self = getOwnerEntity();
 	TMessageChangeSprite messageChangeSprite;
 	messageChangeSprite.sTexture = m_sTextureFile;
 	self->receiveMessage(&messageChangeSprite);

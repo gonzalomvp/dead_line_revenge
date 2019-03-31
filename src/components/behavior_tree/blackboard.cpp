@@ -20,7 +20,7 @@ void CBlackboard::setValueFloat(TKey key, float _fValue) {
 	m_mapFloat[key] = _fValue;
 }
 
-void CBlackboard::setValueEntity(TKey key, Entity* _pValue) {
+void CBlackboard::setValueEntity(TKey key, CEntity* _pValue) {
 	ASSERT(_pValue);
 
 	if (m_mapEntity.count(key) > 0 && m_mapEntity[key]) {
@@ -67,7 +67,7 @@ bool CBlackboard::getValueFloat(TKey key, float& fValue_) {
 	return bRet;
 }
 
-bool CBlackboard::getValueEntity(TKey key, Entity*& pValue_) {
+bool CBlackboard::getValueEntity(TKey key, CEntity*& pValue_) {
 	bool bRet = false;
 	auto it = m_mapEntity.find(key);
 	if (it != m_mapEntity.end())
@@ -79,7 +79,7 @@ bool CBlackboard::getValueEntity(TKey key, Entity*& pValue_) {
 	return bRet;
 }
 
-void CBlackboard::onEntityDestroyed(Entity* _pEntity) {
+void CBlackboard::onEntityDestroyed(CEntity* _pEntity) {
 	auto it = m_mapEntity.begin();
 	while(it != m_mapEntity.end()) {
 		if (it->second == _pEntity) {

@@ -3,7 +3,7 @@
 #include "components/Component.h"
 #include "entities/Entity.h"
 
-class CWeaponComponent : public CComponent, public Entity::IListener {
+class CWeaponComponent : public CComponent, public CEntity::IListener {
 public:
 	enum EType {
 
@@ -16,8 +16,8 @@ public:
 	};
 	static const int NUM_WEAPON_TYPES = EInvalid;
 
-	CWeaponComponent(Entity* owner, EType _eType, vec2 _v2AimDir = vmake(0.0f, 0.0f))
-	: CComponent(owner)
+	CWeaponComponent(CEntity* _pOwner, EType _eType, vec2 _v2AimDir = vmake(0.0f, 0.0f))
+	: CComponent(_pOwner)
 	, m_eType(_eType)
 	, m_v2AimDir(_v2AimDir)
 	, m_pRemoteBullet(nullptr)
@@ -43,12 +43,12 @@ public:
 	virtual void receiveMessage(TMessage* _pMessage) override;
 
 	// CEntity::IListener
-	virtual void onEntityDestroyed(Entity* _pEntity) override;
+	virtual void onEntityDestroyed(CEntity* _pEntity) override;
 
 private:
 	EType       m_eType;
 	vec2        m_v2AimDir;
-	Entity*     m_pRemoteBullet;
+	CEntity*    m_pRemoteBullet;
 	int         m_iMaxBullets;
 	int         m_iCurrentBullets;
 	uint16_t    m_uBulletsPerShot;
