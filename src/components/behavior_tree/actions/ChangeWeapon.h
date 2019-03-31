@@ -5,15 +5,19 @@ class CBehaviorTreeComponent;
 
 class CChangeWeapon : public CBehavior {
 public:
-	CChangeWeapon(CBehaviorTreeComponent* owner) : CBehavior(owner) {}
+	CChangeWeapon(CBehaviorTreeComponent* _pOwnerComponent)
+	: CBehavior(_pOwnerComponent)
+	, m_sWeaponName("")
+	{}
 
 	// CBehavior
-	virtual void init(TiXmlElement* behaviorElem) override;
+	virtual void init(TiXmlElement* _pBehaviorElem) override;
 
 protected:
+	// CBehavior
 	virtual EStatus onUpdate(float _fDeltaTime) override;
 
 private:
-	std::string mWeaponName;
+	std::string m_sWeaponName;
 };
 

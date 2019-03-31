@@ -5,15 +5,18 @@ class CBehaviorTreeComponent;
 
 class CAim : public CBehavior {
 public:
-	CAim(CBehaviorTreeComponent* owner) : CBehavior(owner), m_sBlackboardkey("") {}
+	CAim(CBehaviorTreeComponent* _pOwnerComponent)
+	: CBehavior(_pOwnerComponent)
+	, m_sBlackboardKey("")
+	{}
 
 	// CBehavior
-	virtual void init(TiXmlElement* behaviorElem) override;
+	virtual void init(TiXmlElement* _pBehaviorElem) override;
 
 protected:
+	// CBehavior
 	virtual EStatus onUpdate(float _fDeltaTime) override;
 
 private:
-	std::string m_sBlackboardkey;
+	std::string m_sBlackboardKey;
 };
-

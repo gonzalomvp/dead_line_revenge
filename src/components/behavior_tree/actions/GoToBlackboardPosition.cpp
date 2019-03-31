@@ -2,7 +2,6 @@
 #include "GoToBlackboardPosition.h"
 
 #include "components/BehaviorTreeComponent.h"
-#include "components/behavior_tree/Blackboard.h"
 #include "entities/Entity.h"
 #include "messages/Message.h"
 #include "scenes/World.h"

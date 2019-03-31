@@ -1,26 +1,24 @@
 #include "common/stdafx.h"
 #include "ChangeWeapon.h"
+
 #include "entities/Entity.h"
 #include "entities/EntitiesFactory.h"
 #include "messages/Message.h"
-#include "scenes/World.h"
 
-#include "components/BehaviorTreeComponent.h"
+void CChangeWeapon::init(TiXmlElement* _pOwnerComponent) {
+	CBehavior::init(_pOwnerComponent);
+	ASSERT(_pOwnerComponent);
 
-void CChangeWeapon::init(TiXmlElement* behaviorElem) {
-	CBehavior::init(behaviorElem);
-	ASSERT(behaviorElem);
-
-	ASSERT(behaviorElem->Attribute("sWeapon"));
-	mWeaponName = behaviorElem->Attribute("sWeapon");
+	ASSERT(_pOwnerComponent->Attribute("sWeapon"));
+	m_sWeaponName = _pOwnerComponent->Attribute("sWeapon");
 }
 
-CBehavior::EStatus CChangeWeapon::onUpdate(float step) {
-
-	CEntity* self = getOwnerEntity();
+CBehavior::EStatus CChangeWeapon::onUpdate(float _fDeltaTime) {
+	CEntity* pOwnerEntity = getOwnerEntity();
+	ASSERT(pOwnerEntity);
 	TMessageWeaponChange messageWeaponChange;
-	messageWeaponChange.eWeaponType = CEntitiesFactory::getWeaponTypeByName(mWeaponName);
-	self->receiveMessage(&messageWeaponChange);
+	messageWeaponChange.eWeaponType = CEntitiesFactory::getWeaponTypeByName(m_sWeaponName);
+	pOwnerEntity->receiveMessage(&messageWeaponChange);
 
 	return EStatus::ESuccess;
 }

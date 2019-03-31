@@ -1,23 +1,23 @@
 #include "common/stdafx.h"
 #include "ChangeSprite.h"
+
 #include "entities/Entity.h"
-#include "components/BehaviorTreeComponent.h"
 #include "messages/Message.h"
 
-void CChangeSprite::init(TiXmlElement* behaviorElem) {
-	CBehavior::init(behaviorElem);
-	ASSERT(behaviorElem);
+void CChangeSprite::init(TiXmlElement* _pOwnerComponent) {
+	CBehavior::init(_pOwnerComponent);
+	ASSERT(_pOwnerComponent);
 
-	ASSERT(behaviorElem->Attribute("sSprite"));
-	m_sTextureFile = behaviorElem->Attribute("sSprite");
+	ASSERT(_pOwnerComponent->Attribute("sSprite"));
+	m_sTextureFile = _pOwnerComponent->Attribute("sSprite");
 }
 
 CBehavior::EStatus CChangeSprite::onUpdate(float step) {
-	
-	CEntity* self = getOwnerEntity();
+	CEntity* pOwnerEntity = getOwnerEntity();
+	ASSERT(pOwnerEntity);
 	TMessageChangeSprite messageChangeSprite;
 	messageChangeSprite.sTexture = m_sTextureFile;
-	self->receiveMessage(&messageChangeSprite);
+	pOwnerEntity->receiveMessage(&messageChangeSprite);
 
 	return EStatus::ESuccess;
 }

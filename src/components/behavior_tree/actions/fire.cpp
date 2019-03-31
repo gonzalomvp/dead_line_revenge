@@ -1,17 +1,16 @@
 #include "common/stdafx.h"
 #include "Fire.h"
+
 #include "entities/Entity.h"
-#include "components/BehaviorTreeComponent.h"
 #include "messages/Message.h"
-#include "scenes/World.h"
 
 
-CBehavior::EStatus CFire::onUpdate(float step) {
-
-	CEntity* self = getOwnerEntity();
+CBehavior::EStatus CFire::onUpdate(float _fDeltaTime) {
+	CEntity* pOwnerEntity = getOwnerEntity();
+	ASSERT(pOwnerEntity);
 	TMessageFire messageFire;
 	messageFire.bIsFiring = true;
-	self->receiveMessage(&messageFire);
+	pOwnerEntity->receiveMessage(&messageFire);
 
 	return EStatus::ESuccess;
 }
