@@ -39,7 +39,7 @@
 		"maxBullets": 2,
 		"bulletSpeed": 240.0,
 		"bulletDamage": -1,
-		"bulletLife": 2,
+		"bulletLife": -1,
 		"bulletRange": 0.6,
 		"bulletSize": [ 10 ,10 ],
 		"isAutomatic": false,
