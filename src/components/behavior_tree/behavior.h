@@ -14,8 +14,8 @@ public:
 		EInvalid,
 		ESuccess,
 		EFail,
-		EAborted,
 		ERunning,
+		EAborted,
 	};
 
 	enum EType {
@@ -27,25 +27,25 @@ public:
 		EUnknown,
 	};
 	static const int NUM_BEHAVIORS = EType::EUnknown;
-	static EType getBehaviorTypeByName(const std::string& name);
+	static EType getBehaviorTypeByName(const std::string& _sName);
 
 	static CBehavior* createBehaviorFromXML(CBehaviorTreeComponent* _pOwnerComponent, TiXmlElement* _pBehaviorElem);
 
 	CBehavior(CBehaviorTreeComponent* _pOwnerComponent) : m_pOwnerComponent(_pOwnerComponent), m_eStatus(EStatus::EInvalid) {}
 	virtual ~CBehavior() {}
 
-	virtual void init(TiXmlElement* behaviorElem) {}
-	virtual void abort() { m_eStatus = EStatus::EAborted; }
-
-	virtual EStatus run(float step);
+	EStatus run(float _fDeltaTime);
 
 	EStatus  getStatus() const { return m_eStatus; }
-	CEntity* getOwnerEntity();
+	CEntity* getOwnerEntity() const;
+
+	virtual void init(TiXmlElement* _pBehaviorElem) {}
+	virtual void abort() { m_eStatus = EStatus::EAborted; }
 
 protected:
-	virtual EStatus onUpdate(float step) = 0;
-	virtual void onEnter()  {}
-	virtual void onExit ()  {}
+	virtual EStatus onUpdate(float _fDeltaTime) = 0;
+	virtual void onEnter() {}
+	virtual void onExit () {}
 
 	EStatus                 m_eStatus;
 	CBehaviorTreeComponent* m_pOwnerComponent;

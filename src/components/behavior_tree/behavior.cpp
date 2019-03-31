@@ -34,12 +34,12 @@ CBehavior::SBehaviorInfo CBehavior::s_aBehaviorInfo[] = {
 #undef REG_BEHAVIOR
 };
 
-CBehavior::EType CBehavior::getBehaviorTypeByName(const std::string& name) {
+CBehavior::EType CBehavior::getBehaviorTypeByName(const std::string& _sName) {
 	EType etype = EType::EUnknown;
 	int i = 0;
 	while ((etype == EType::EUnknown) && (i < NUM_BEHAVIORS))
 	{
-		if (name == s_aBehaviorInfo[i].sName) {
+		if (_sName == s_aBehaviorInfo[i].sName) {
 			etype = s_aBehaviorInfo[i].eType;
 		}
 		i++;
@@ -47,42 +47,41 @@ CBehavior::EType CBehavior::getBehaviorTypeByName(const std::string& name) {
 	return etype;
 }
 
-CEntity* CBehavior::getOwnerEntity() {
-	ASSERT(m_pOwnerComponent);
-	return m_pOwnerComponent->getOwner();
+CBehavior* CBehavior::createBehaviorFromXML(CBehaviorTreeComponent* _pOwnerComponent, TiXmlElement* _pBehaviorElem) {
+	ASSERT(_pOwnerComponent && _pBehaviorElem);
+	CBehavior* pBehavior = nullptr;
+
+	std::string sTypeName = _pBehaviorElem->Value();
+	EType eBehaviorType = CBehavior::getBehaviorTypeByName(sTypeName);
+
+	switch (eBehaviorType) {
+#define REG_BEHAVIOR(val) \
+		case EType::E##val: \
+			pBehavior = new C##val(_pOwnerComponent); \
+			pBehavior->init(_pBehaviorElem); \
+			break;
+#include "REG_BEHAVIORS.h"
+#undef REG_BEHAVIOR
+
+	default:
+		ASSERT(false, "Unknow Behavior: %s", sTypeName.c_str());
+		break;
+	}
+	return pBehavior;
 }
 
-CBehavior::EStatus CBehavior::run(float step) {
+CBehavior::EStatus CBehavior::run(float _fDeltaTime) {
 	if (m_eStatus != EStatus::ERunning) {
 		onEnter();
 	}
-	m_eStatus = onUpdate(step);
+	m_eStatus = onUpdate(_fDeltaTime);
 	if (m_eStatus != EStatus::ERunning) {
 		onExit();
 	}
 	return m_eStatus;
 }
 
-CBehavior* CBehavior::createBehaviorFromXML(CBehaviorTreeComponent* _pOwnerComponent, TiXmlElement* _pBehaviorElem) {
-	ASSERT(_pOwnerComponent && _pBehaviorElem);
-	CBehavior* behavior = nullptr;
-
-	std::string type = _pBehaviorElem->Value();
-	EType eBehaviorType = CBehavior::getBehaviorTypeByName(type);
-
-	switch (eBehaviorType) {
-#define REG_BEHAVIOR(val) \
-		case EType::E##val: \
-			behavior = new C##val(_pOwnerComponent); \
-			behavior->init(_pBehaviorElem); \
-			break;
-#include "REG_BEHAVIORS.h"
-#undef REG_BEHAVIOR
-
-		default:
-			ASSERT(false, "Invalid Behavior type: %s", type.c_str());
-			break;
-	}
-
-	return behavior;
+CEntity* CBehavior::getOwnerEntity() const{
+	ASSERT(m_pOwnerComponent);
+	return m_pOwnerComponent->getOwner();
 }
