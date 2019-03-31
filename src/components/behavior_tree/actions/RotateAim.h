@@ -8,7 +8,7 @@ public:
 	CRotateAim(CBehaviorTreeComponent* owner) : CBehavior(owner), m_fAngle(0.0f) {}
 
 protected:
-	virtual EStatus onUpdate(float step) override;
+	virtual EStatus onUpdate(float _fDeltaTime) override;
 
 	// CBehavior
 	virtual void init(TiXmlElement* behaviorElem) override;

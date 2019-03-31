@@ -8,7 +8,7 @@ public:
 	CFire(CBehaviorTreeComponent* owner) : CBehavior(owner) {}
 
 protected:
-	virtual EStatus onUpdate(float step) override;
+	virtual EStatus onUpdate(float _fDeltaTime) override;
 
 private:
 };

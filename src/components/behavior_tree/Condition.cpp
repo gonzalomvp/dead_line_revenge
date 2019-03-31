@@ -15,7 +15,7 @@ void CCondition::init(TiXmlElement* behaviorElem) {
 	}
 }
 
-EStatus CCondition::onUpdate(float step) {
+CBehavior::EStatus CCondition::onUpdate(float step) {
 	if (check(step) != m_bNegate) {
 		return EStatus::ESuccess;
 	}

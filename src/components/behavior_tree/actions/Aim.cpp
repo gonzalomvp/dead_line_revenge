@@ -13,7 +13,7 @@ void CAim::init(TiXmlElement* behaviorElem) {
 	m_sBlackboardkey = behaviorElem->Attribute("sTo");
 }
 
-EStatus CAim::onUpdate(float step) {
+CBehavior::EStatus CAim::onUpdate(float step) {
 	CEntity* self = getOwnerEntity();
 	CEntity* player = g_pWorld->getPlayer();
 

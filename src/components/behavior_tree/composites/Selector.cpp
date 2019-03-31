@@ -5,7 +5,7 @@ void CSelector::onEnter() {
 	mCurrentChild = 0;
 }
 
-EStatus CSelector::onUpdate(float step) {
+CBehavior::EStatus CSelector::onUpdate(float step) {
 	while (true) {
 		EStatus s = mChildren[mCurrentChild]->run(step);
 		if (s != EStatus::EFail) {

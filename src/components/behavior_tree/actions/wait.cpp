@@ -21,7 +21,7 @@ void CWait::onEnter() {
 	m_fWaitTimer = m_fWaitTime + CORE_FRand(-m_fRandomDeviation, m_fRandomDeviation);
 }
 
-EStatus CWait::onUpdate(float step) {
+CBehavior::EStatus CWait::onUpdate(float step) {
 	if (m_fWaitTimer <= 0.0f) {
 		return EStatus::ESuccess;
 	}

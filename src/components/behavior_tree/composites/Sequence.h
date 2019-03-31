@@ -10,7 +10,7 @@ public:
 
 protected:
 	virtual void onEnter() override;
-	virtual EStatus onUpdate(float step) override;
+	virtual CBehavior::EStatus onUpdate(float step) override;
 
 	int mCurrentChild;
 };

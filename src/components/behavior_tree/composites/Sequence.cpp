@@ -5,7 +5,7 @@ void CSequence::onEnter() {
 	mCurrentChild = 0;
 }
 
-EStatus CSequence::onUpdate(float step) {
+CBehavior::EStatus CSequence::onUpdate(float step) {
 	while (true) {
 		EStatus s = mChildren[mCurrentChild]->run(step);
 		if (s != EStatus::ESuccess) {

@@ -12,7 +12,7 @@ void CChangeSprite::init(TiXmlElement* behaviorElem) {
 	m_sTextureFile = behaviorElem->Attribute("sSprite");
 }
 
-EStatus CChangeSprite::onUpdate(float step) {
+CBehavior::EStatus CChangeSprite::onUpdate(float step) {
 	
 	CEntity* self = getOwnerEntity();
 	TMessageChangeSprite messageChangeSprite;

@@ -1,7 +1,7 @@
 #include "common/stdafx.h"
 #include "Parallel.h"
 
-EStatus CParallel::onUpdate(float step) {
+CBehavior::EStatus CParallel::onUpdate(float step) {
 	EStatus returnStatus = EStatus::ESuccess;
 	for (size_t i = 0; i < mChildren.size(); ++i) {
 		EStatus s = mChildren[i]->run(step);

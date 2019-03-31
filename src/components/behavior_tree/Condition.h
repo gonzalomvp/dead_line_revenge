@@ -12,7 +12,7 @@ public:
 	virtual void init(TiXmlElement* behaviorElem) override;
 
 protected:
-	virtual EStatus onUpdate(float step) override;
+	virtual EStatus onUpdate(float _fDeltaTime) override;
 	virtual bool check(float step) = 0;
 
 private:

@@ -23,13 +23,13 @@ bool CCheckIsAtDistance::check(float step) {
 	CEntity* pOther;
 	vec2 v2TargetPos = vmake(0.0f, 0.0f);
 
-	bool bFound = mOwner->getBlackboard().getValueEntity(m_sBlackboardKey, pOther);
+	bool bFound = m_pOwnerComponent->getBlackboard().getValueEntity(m_sBlackboardKey, pOther);
 	if (bFound) {
 		ASSERT(pOther);
 		v2TargetPos = pOther->getPos();
 	}
 	else {
-		bFound = mOwner->getBlackboard().getValueVec2(m_sBlackboardKey, v2TargetPos);
+		bFound = m_pOwnerComponent->getBlackboard().getValueVec2(m_sBlackboardKey, v2TargetPos);
 	}
 	if (!bFound) {
 		return false;

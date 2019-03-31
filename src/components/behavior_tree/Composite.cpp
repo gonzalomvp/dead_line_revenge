@@ -16,7 +16,7 @@ void CComposite::init(TiXmlElement* behaviorElem) {
 	ASSERT(childElem, "Composite nodes must have at least one child behavior");
 
 	for (childElem; childElem; childElem = childElem->NextSiblingElement()) {
-		this->AddBehavior(CBehavior::createBehaviorFromXML(childElem, mOwner));
+		this->AddBehavior(CBehavior::createBehaviorFromXML(m_pOwnerComponent, childElem));
 	}
 }
 

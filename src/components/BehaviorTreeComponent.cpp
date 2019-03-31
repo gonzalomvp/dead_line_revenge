@@ -24,7 +24,7 @@ void CBehaviorTreeComponent::init() {
 	ASSERT(hDoc.FirstChild("root").Element(), "Mising root node in %s", m_psBTFile);
 	ASSERT(hDoc.FirstChild("root").FirstChild().Element(), "Empty BT %s", m_psBTFile);
 
-	m_pRootBehavior = CBehavior::createBehaviorFromXML(hDoc.FirstChild("root").FirstChild().Element(), this);
+	m_pRootBehavior = CBehavior::createBehaviorFromXML(this, hDoc.FirstChild("root").FirstChild().Element());
 
 	// If there is a player save it in the Blackboard
 	if (g_pWorld->getPlayer()) {

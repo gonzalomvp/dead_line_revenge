@@ -13,7 +13,7 @@ void CRotateAim::init(TiXmlElement* behaviorElem) {
 	m_fAngle = std::stof(behaviorElem->Attribute("fAngle"));
 }
 
-EStatus CRotateAim::onUpdate(float step) {
+CBehavior::EStatus CRotateAim::onUpdate(float step) {
 	CEntity* self = getOwnerEntity();
 	TMessageGetAimDirection messageGetAimDirection;
 	self->receiveMessage(&messageGetAimDirection);

@@ -23,8 +23,8 @@ void CCalculateFleePosition::init(TiXmlElement* behaviorElem) {
 	m_fDistance = std::stof(behaviorElem->Attribute("fDistance"));
 }
 
-EStatus CCalculateFleePosition::onUpdate(float step) {
-	ASSERT(mOwner);
+CBehavior::EStatus CCalculateFleePosition::onUpdate(float step) {
+	ASSERT(m_pOwnerComponent);
 
 	CEntity* self = getOwnerEntity();
 	vec2 selfSize = self->getSize();
@@ -32,7 +32,7 @@ EStatus CCalculateFleePosition::onUpdate(float step) {
 	CEntity* pFromEntity = nullptr;
 	vec2 v2FromPos = vmake(0.0f, 0.0f);
 
-	bool bFound = mOwner->getBlackboard().getValueEntity(m_sFromBlackboardKey, pFromEntity);
+	bool bFound = m_pOwnerComponent->getBlackboard().getValueEntity(m_sFromBlackboardKey, pFromEntity);
 	// Check if the blackboard key is an Entity
 	if (bFound) {
 		ASSERT(pFromEntity);
@@ -40,7 +40,7 @@ EStatus CCalculateFleePosition::onUpdate(float step) {
 	}
 	// Check if the blackboard key is vec2
 	else {
-		bFound = mOwner->getBlackboard().getValueVec2(m_sFromBlackboardKey, v2FromPos);
+		bFound = m_pOwnerComponent->getBlackboard().getValueVec2(m_sFromBlackboardKey, v2FromPos);
 	}
 	
 	if (!bFound) {
@@ -68,6 +68,6 @@ EStatus CCalculateFleePosition::onUpdate(float step) {
 		}
 	}
 
-	mOwner->getBlackboard().setValueVec2(m_sResultBlackboardKey, v2TargetPos);
+	m_pOwnerComponent->getBlackboard().setValueVec2(m_sResultBlackboardKey, v2TargetPos);
 	return EStatus::ESuccess;
 }

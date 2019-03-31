@@ -35,9 +35,9 @@ CBehavior::SBehaviorInfo CBehavior::s_aBehaviorInfo[] = {
 };
 
 CBehavior::EType CBehavior::getBehaviorTypeByName(const std::string& name) {
-	EType etype = EType::EInvalid;
+	EType etype = EType::EUnknown;
 	int i = 0;
-	while ((etype == EType::EInvalid) && (i < NUM_BEHAVIORS))
+	while ((etype == EType::EUnknown) && (i < NUM_BEHAVIORS))
 	{
 		if (name == s_aBehaviorInfo[i].sName) {
 			etype = s_aBehaviorInfo[i].eType;
@@ -48,33 +48,33 @@ CBehavior::EType CBehavior::getBehaviorTypeByName(const std::string& name) {
 }
 
 CEntity* CBehavior::getOwnerEntity() {
-	ASSERT(mOwner);
-	return mOwner->getOwner();
+	ASSERT(m_pOwnerComponent);
+	return m_pOwnerComponent->getOwner();
 }
 
-EStatus CBehavior::run(float step) {
-	if (mStatus != EStatus::ERunning) {
+CBehavior::EStatus CBehavior::run(float step) {
+	if (m_eStatus != EStatus::ERunning) {
 		onEnter();
 	}
-	mStatus = onUpdate(step);
-	if (mStatus != EStatus::ERunning) {
+	m_eStatus = onUpdate(step);
+	if (m_eStatus != EStatus::ERunning) {
 		onExit();
 	}
-	return mStatus;
+	return m_eStatus;
 }
 
-CBehavior* CBehavior::createBehaviorFromXML(TiXmlElement* behaviorElem, CBehaviorTreeComponent* _pOwnerComponent) {
-	ASSERT(behaviorElem);
+CBehavior* CBehavior::createBehaviorFromXML(CBehaviorTreeComponent* _pOwnerComponent, TiXmlElement* _pBehaviorElem) {
+	ASSERT(_pOwnerComponent && _pBehaviorElem);
 	CBehavior* behavior = nullptr;
 
-	std::string type = behaviorElem->Value();
-	CBehavior::EType eBehaviorType = CBehavior::getBehaviorTypeByName(type);
+	std::string type = _pBehaviorElem->Value();
+	EType eBehaviorType = CBehavior::getBehaviorTypeByName(type);
 
 	switch (eBehaviorType) {
 #define REG_BEHAVIOR(val) \
-		case CBehavior::E##val: \
+		case EType::E##val: \
 			behavior = new C##val(_pOwnerComponent); \
-			behavior->init(behaviorElem); \
+			behavior->init(_pBehaviorElem); \
 			break;
 #include "REG_BEHAVIORS.h"
 #undef REG_BEHAVIOR

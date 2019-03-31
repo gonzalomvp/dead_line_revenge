@@ -12,7 +12,7 @@ void CChangeSpeed::init(TiXmlElement* behaviorElem) {
 	m_fSpeed = std::stof(behaviorElem->Attribute("fSpeed"));
 }
 
-EStatus CChangeSpeed::onUpdate(float step) {
+CBehavior::EStatus CChangeSpeed::onUpdate(float step) {
 	CEntity* self = getOwnerEntity();
 	TMessageSetMovementSpeed messageSetMovementSpeed;
 	messageSetMovementSpeed.fSpeed = m_fSpeed;

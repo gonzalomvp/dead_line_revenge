@@ -14,7 +14,7 @@ void CRepeat::onEnter() {
 	m_iCounter = 0;
 }
 
-EStatus CRepeat::onUpdate(float step) {
+CBehavior::EStatus CRepeat::onUpdate(float step) {
 	if (m_iCounter < m_iTimes || m_iTimes == -1) {
 		EStatus s = m_pChildNode->run(step);
 		

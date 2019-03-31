@@ -20,7 +20,7 @@ public:
 
 protected:
 	virtual void onEnter() override;
-	virtual EStatus onUpdate(float step) override;
+	virtual EStatus onUpdate(float _fDeltaTime) override;
 
 private:
 	std::string m_sBlackboardKey;

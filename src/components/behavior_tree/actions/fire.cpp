@@ -6,7 +6,7 @@
 #include "scenes/World.h"
 
 
-EStatus CFire::onUpdate(float step) {
+CBehavior::EStatus CFire::onUpdate(float step) {
 
 	CEntity* self = getOwnerEntity();
 	TMessageFire messageFire;

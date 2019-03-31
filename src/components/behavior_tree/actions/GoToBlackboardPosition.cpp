@@ -35,13 +35,13 @@ void CGoToBlackboardPosition::onEnter() {
 	vec2 selfSize = self->getSize();
 
 	CEntity* pTargetEntity = nullptr;
-	bool bFound = mOwner->getBlackboard().getValueEntity(m_sBlackboardKey, pTargetEntity);
+	bool bFound = m_pOwnerComponent->getBlackboard().getValueEntity(m_sBlackboardKey, pTargetEntity);
 	if (bFound) {
 		ASSERT(pTargetEntity);
 		mTargetPos = pTargetEntity->getPos();
 	}
 	else {
-		bFound = mOwner->getBlackboard().getValueVec2(m_sBlackboardKey, mTargetPos);
+		bFound = m_pOwnerComponent->getBlackboard().getValueVec2(m_sBlackboardKey, mTargetPos);
 	}
 	ASSERT(bFound);
 
@@ -50,19 +50,19 @@ void CGoToBlackboardPosition::onEnter() {
 	mTargetPos.y = clamp(mTargetPos.y, selfSize.y * 0.5f, WORLD_HEIGHT - selfSize.y * 0.5f);
 }
 
-EStatus CGoToBlackboardPosition::onUpdate(float step) {
+CBehavior::EStatus CGoToBlackboardPosition::onUpdate(float step) {
 	CEntity* self = getOwnerEntity();
 	vec2 selfSize = self->getSize();
 
 	if (m_bKeepUpdatingPosition) {
 		CEntity* pTargetEntity = nullptr;
-		bool bFound = mOwner->getBlackboard().getValueEntity(m_sBlackboardKey, pTargetEntity);
+		bool bFound = m_pOwnerComponent->getBlackboard().getValueEntity(m_sBlackboardKey, pTargetEntity);
 		if (bFound) {
 			ASSERT(pTargetEntity);
 			mTargetPos = pTargetEntity->getPos();
 		}
 		else {
-			bFound = mOwner->getBlackboard().getValueVec2(m_sBlackboardKey, mTargetPos);
+			bFound = m_pOwnerComponent->getBlackboard().getValueVec2(m_sBlackboardKey, mTargetPos);
 		}
 		if (!bFound) {
 			return EStatus::EFail;

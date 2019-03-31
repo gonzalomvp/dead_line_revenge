@@ -8,39 +8,38 @@
 class CBehaviorTreeComponent;
 class CEntity;
 
-enum EStatus {
-	EInvalid,
-	ESuccess,
-	EFail,
-	EAborted,
-	ERunning,
-};
-
 class CBehavior {
 public:
+	enum EStatus {
+		EInvalid,
+		ESuccess,
+		EFail,
+		EAborted,
+		ERunning,
+	};
+
 	enum EType {
 #define REG_BEHAVIOR(val) \
 		E##val,
 #include "REG_BEHAVIORS.h"
 #undef REG_BEHAVIOR
 
-		EInvalid,
+		EUnknown,
 	};
-
-	static const int NUM_BEHAVIORS = EType::EInvalid;
+	static const int NUM_BEHAVIORS = EType::EUnknown;
 	static EType getBehaviorTypeByName(const std::string& name);
 
-	static CBehavior* createBehaviorFromXML(TiXmlElement* _pBehaviorElem, CBehaviorTreeComponent* _pOwnerComponent);
+	static CBehavior* createBehaviorFromXML(CBehaviorTreeComponent* _pOwnerComponent, TiXmlElement* _pBehaviorElem);
 
-	CBehavior(CBehaviorTreeComponent* owner) : mOwner(owner), mStatus(EStatus::EInvalid) {}
+	CBehavior(CBehaviorTreeComponent* _pOwnerComponent) : m_pOwnerComponent(_pOwnerComponent), m_eStatus(EStatus::EInvalid) {}
 	virtual ~CBehavior() {}
 
 	virtual void init(TiXmlElement* behaviorElem) {}
-	virtual void abort() { mStatus = EStatus::EAborted; }
+	virtual void abort() { m_eStatus = EStatus::EAborted; }
 
 	virtual EStatus run(float step);
 
-	EStatus getStatus() const { return mStatus; }
+	EStatus  getStatus() const { return m_eStatus; }
 	CEntity* getOwnerEntity();
 
 protected:
@@ -48,14 +47,13 @@ protected:
 	virtual void onEnter()  {}
 	virtual void onExit ()  {}
 
-	CBehaviorTreeComponent* mOwner;
+	EStatus                 m_eStatus;
+	CBehaviorTreeComponent* m_pOwnerComponent;
 
 private:
 	struct SBehaviorInfo {
-		EType eType;
+		EType       eType;
 		std::string sName;
 	};
 	static SBehaviorInfo s_aBehaviorInfo[];
-
-	EStatus mStatus;
 };

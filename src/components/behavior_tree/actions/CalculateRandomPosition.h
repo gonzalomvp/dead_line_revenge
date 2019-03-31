@@ -14,7 +14,7 @@ public:
 	virtual void init(TiXmlElement* behaviorElem) override;
 
 protected:
-	virtual EStatus onUpdate(float step) override;
+	virtual EStatus onUpdate(float _fDeltaTime) override;
 
 private:
 	std::string m_sResultBlackboardKey;
