@@ -121,6 +121,7 @@ bool CWorld::init(uint16_t _uLevel) {
 	addEntity(pPickup);
 
 	m_fEnemySpawnTimer = m_fEnemySpawnWait;
+	m_iBossSpawnPointsCounter = m_iBossSpawnPoints;
 
 	// Load enemy level configuration
 	float fTotalProbability = 0.0f;
@@ -295,6 +296,7 @@ void CWorld::removePendingEntities() {
 		// Enable enemies spawn after killing the Boss
 		if (eEntityType == CEntity::EENEMYBOSS) {
 			m_fEnemySpawnTimer = m_fEnemySpawnWait;
+			m_iBossSpawnPointsCounter = m_uScore + m_iBossSpawnPoints;
 		}
 
 		m_vEntities.erase(
@@ -332,9 +334,8 @@ void CWorld::spawnNewEntities(float _fDeltaTime) {
 			CEntity* enemy = nullptr;
 
 			// If enough points spawn Boss
-			if (m_uScore / m_iBossSpawnPoints > m_iBossSpawnPointsCounter) {
+			if (m_uScore >= m_iBossSpawnPointsCounter) {
 				enemy = g_pEntitiesFactory->createEnemy(v2SpawnLocation, CEntity::EENEMYBOSS);
-				++m_iBossSpawnPointsCounter;
 			}
 			// Otherwise pick a random enemy based on the probability for each one
 			else {
