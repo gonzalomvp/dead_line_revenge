@@ -4,20 +4,23 @@
 #include "components/BehaviorTreeComponent.h"
 
 CDecorator::~CDecorator() {
-	delete m_pChildNode;
+	delete m_pChildBehavior;
 }
 
-void CDecorator::init(TiXmlElement* behaviorElem) {
-	CBehavior::init(behaviorElem);
+void CDecorator::init(TiXmlElement* _pBehaviorElem) {
+	CBehavior::init(_pBehaviorElem);
 
-	TiXmlElement* childElem = behaviorElem->FirstChildElement();
+	ASSERT(_pBehaviorElem);
 
-	ASSERT(childElem && childElem->NextSibling() == nullptr, "Decorator nodes must have only one child behavior");
+	TiXmlElement* pChildElem = _pBehaviorElem->FirstChildElement();
 
-	m_pChildNode = CBehavior::createBehaviorFromXML(m_pOwnerComponent, childElem);
+	ASSERT(pChildElem && pChildElem->NextSibling() == nullptr, "Decorator nodes must have only one child behavior");
+
+	m_pChildBehavior = CBehavior::createBehaviorFromXML(m_pOwnerComponent, pChildElem);
 }
 
 void CDecorator::abort() {
 	CBehavior::abort();
-	m_pChildNode->abort();
+
+	m_pChildBehavior->abort();
 }

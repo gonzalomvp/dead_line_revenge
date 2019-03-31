@@ -1,32 +1,39 @@
 #include "common/stdafx.h"
 #include "Repeat.h"
 
-void CRepeat::init(TiXmlElement* behaviorElem) {
-	CDecorator::init(behaviorElem);
+void CRepeat::init(TiXmlElement* _pBehaviorElem) {
+	CDecorator::init(_pBehaviorElem);
 
-	m_iTimes = -1;
-	if (behaviorElem->Attribute("iTimes")) {
-		m_iTimes = std::stoi(behaviorElem->Attribute("iTimes"));
+	ASSERT(_pBehaviorElem);
+
+	m_iRepeatTimes = -1;
+	if (_pBehaviorElem->Attribute("iRepeatTimes")) {
+		m_iRepeatTimes = std::stoi(_pBehaviorElem->Attribute("iRepeatTimes"));
 	}
 }
 
 void CRepeat::onEnter() {
+	CDecorator::onEnter();
+
 	m_iCounter = 0;
 }
 
-CBehavior::EStatus CRepeat::onUpdate(float step) {
-	if (m_iCounter < m_iTimes || m_iTimes == -1) {
-		EStatus s = m_pChildNode->run(step);
-		
-		if (s == EStatus::EFail) {
-			return EStatus::EFail;
+CBehavior::EStatus CRepeat::onUpdate(float _fDeltaTime) {
+	if (m_iCounter < m_iRepeatTimes || m_iRepeatTimes == -1) {
+		EStatus eChildStatus = m_pChildBehavior->run(_fDeltaTime);
+		if (eChildStatus != EStatus::ESuccess) {
+			return eChildStatus;
 		}
-		else if (s == EStatus::ESuccess) {
+		else {
 			++m_iCounter;
 		}
-		return EStatus::ERunning;
 	}
 
-	return EStatus::ESuccess;
+	if (m_iCounter >= m_iRepeatTimes) {
+		return EStatus::ESuccess;
+	}
+	else {
+		return EStatus::ERunning;
+	}
 }
 

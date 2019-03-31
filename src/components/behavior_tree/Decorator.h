@@ -6,13 +6,13 @@ class CBehaviorTreeComponent;
 
 class CDecorator : public CBehavior {
 public:
-	CDecorator(CBehaviorTreeComponent* owner) : CBehavior(owner) {}
+	CDecorator(CBehaviorTreeComponent* _pOwnerComponent) : CBehavior(_pOwnerComponent) {}
 	~CDecorator();
 
 	// CBehavior
-	virtual void init(TiXmlElement* behaviorElem) override;
-	virtual void abort() override;
+	virtual void init(TiXmlElement* _pBehaviorElem) override;
+	virtual void abort()                            override;
 
 protected:
-	CBehavior* m_pChildNode;
+	CBehavior* m_pChildBehavior;
 };

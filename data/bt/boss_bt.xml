@@ -12,7 +12,7 @@
             <CalculateRandomPosition sResult="newPos" />
             <GoToBlackboardPosition sTo="newPos" fArriveDistance="20.0" />
             <Aim sTo="player" />
-            <Repeat iTimes="15">
+            <Repeat iRepeatTimes="15">
               <Sequence>
                 <Fire />
                 <Wait fTime="0.15" />
@@ -35,7 +35,7 @@
           <GoToBlackboardPosition sTo="player" fArriveDistance="20.0" />
           <Aim sTo="player" />
           <Wait fTime="0.5" />
-          <Repeat iTimes="3">
+          <Repeat iRepeatTimes="3">
             <Sequence>
               <Fire />
               <Wait fTime="1.0" />

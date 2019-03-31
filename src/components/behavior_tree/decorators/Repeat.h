@@ -5,15 +5,17 @@ class CBehaviorTreeComponent;
 
 class CRepeat : public CDecorator {
 public:
-	CRepeat(CBehaviorTreeComponent* _pOwner) : CDecorator(_pOwner), m_iCounter(0) {}
+	CRepeat(CBehaviorTreeComponent* _pOwnerComponent) : CDecorator(_pOwnerComponent), m_iCounter(0) {}
 
 	// CBehavior
-	virtual void init(TiXmlElement* behaviorElem) override;
+	virtual void init(TiXmlElement* _pBehaviorElem) override;
 
 protected:
-	virtual void onEnter() override;
+	// CBehavior
+	virtual void    onEnter()                   override;
 	virtual EStatus onUpdate(float _fDeltaTime) override;
 
-	int m_iTimes;
+private:
+	int m_iRepeatTimes;
 	int m_iCounter;
 };
