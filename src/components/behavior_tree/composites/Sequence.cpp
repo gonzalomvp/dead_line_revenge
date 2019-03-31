@@ -2,20 +2,19 @@
 #include "Sequence.h"
 
 void CSequence::onEnter() {
-	mCurrentChild = 0;
+	CComposite::onEnter();
+
+	m_uCurrentChild = 0;
 }
 
-CBehavior::EStatus CSequence::onUpdate(float step) {
-	while (true) {
-		EStatus s = mChildren[mCurrentChild]->run(step);
-		if (s != EStatus::ESuccess) {
-			return s;
+CBehavior::EStatus CSequence::onUpdate(float _fDeltaTime) {
+	while (m_uCurrentChild < m_vChildBehaviors.size()) {
+		EStatus eChildStatus = m_vChildBehaviors[m_uCurrentChild]->run(_fDeltaTime);
+		if (eChildStatus != EStatus::ESuccess) {
+			return eChildStatus;
 		}
-		++mCurrentChild;
-		if (mCurrentChild == mChildren.size()) {
-			return EStatus::ESuccess;
-		}
+		++m_uCurrentChild;
 	}
-	return EStatus::EInvalid;
+	return EStatus::ESuccess;
 }
 

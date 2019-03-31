@@ -6,8 +6,9 @@ class CBehaviorTreeComponent;
 
 class CParallel : public CComposite {
 public:
-	CParallel(CBehaviorTreeComponent* owner) : CComposite(owner) {}
+	CParallel(CBehaviorTreeComponent* _pOwnerComponent) : CComposite(_pOwnerComponent) {}
 
 protected:
+	// CBehavior
 	virtual EStatus onUpdate(float _fDeltaTime) override;
 };

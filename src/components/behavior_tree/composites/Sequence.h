@@ -6,11 +6,13 @@ class CBehaviorTreeComponent;
 
 class CSequence : public CComposite {
 public:
-	CSequence(CBehaviorTreeComponent* owner) : CComposite(owner) {}
+	CSequence(CBehaviorTreeComponent* _pOwnerComponent) : CComposite(_pOwnerComponent) {}
 
 protected:
-	virtual void onEnter() override;
-	virtual CBehavior::EStatus onUpdate(float step) override;
+	// CBehavior
+	virtual void    onEnter()                   override;
+	virtual EStatus onUpdate(float _fDeltaTime) override;
 
-	int mCurrentChild;
+private:
+	uint16_t m_uCurrentChild;
 };

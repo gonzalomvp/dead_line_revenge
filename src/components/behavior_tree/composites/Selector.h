@@ -6,11 +6,13 @@ class CBehaviorTreeComponent;
 
 class CSelector : public CComposite {
 public:
-	CSelector(CBehaviorTreeComponent* owner) : CComposite(owner) {}
+	CSelector(CBehaviorTreeComponent* _pOwnerComponent) : CComposite(_pOwnerComponent) {}
 
 protected:
-	virtual void onEnter() override;
+	// CBehavior
+	virtual void    onEnter()                   override;
 	virtual EStatus onUpdate(float _fDeltaTime) override;
 
-	int mCurrentChild;
+private:
+	uint16_t m_uCurrentChild;
 };
