@@ -5,14 +5,14 @@ class CBehaviorTreeComponent;
 
 class CCheckLife : public CCondition {
 public:
-	CCheckLife(CBehaviorTreeComponent* owner) : CCondition(owner), m_iLife(0) {}
+	CCheckLife(CBehaviorTreeComponent* _pOwnerComponent) : CCondition(_pOwnerComponent), m_iLife(0) {}
 
 	// CBehavior
-	virtual void init(TiXmlElement* behaviorElem) override;
+	virtual void init(TiXmlElement* _pBehaviorElem) override;
 
 protected:
 	// CConditionNode
-	virtual bool check(float step) override;
+	virtual bool check(float _fDeltaTime) override;
 
 private:
 	int m_iLife;

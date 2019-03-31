@@ -5,17 +5,16 @@ class CBehaviorTreeComponent;
 
 class CCheckIsAtDistance : public CCondition{
 public:
-	CCheckIsAtDistance(CBehaviorTreeComponent* owner) : CCondition(owner), m_fDistance(0.0f), m_sBlackboardKey("") {}
+	CCheckIsAtDistance(CBehaviorTreeComponent* _pOwnerComponent) : CCondition(_pOwnerComponent), m_fDistance(0.0f), m_sBlackboardKey("") {}
 
 	// CBehavior
-	virtual void init(TiXmlElement* behaviorElem) override;
+	virtual void init(TiXmlElement* _pBehaviorElem) override;
 
 protected:
-	
 	// CConditionNode
-	virtual bool check(float step) override;
+	virtual bool check(float _fDeltaTime) override;
 
 private:
-	float m_fDistance;
+	float       m_fDistance;
 	std::string m_sBlackboardKey;
 };

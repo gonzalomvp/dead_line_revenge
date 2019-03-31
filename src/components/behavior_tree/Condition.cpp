@@ -3,20 +3,20 @@
 
 #include <sstream>
 
-void CCondition::init(TiXmlElement* behaviorElem) {
-	ASSERT(behaviorElem);
+void CCondition::init(TiXmlElement* _pBehaviorElem) {
+	CBehavior::init(_pBehaviorElem);
 
-	CBehavior::init(behaviorElem);
+	ASSERT(_pBehaviorElem);
 
 	m_bNegate = false;
-	if (behaviorElem->Attribute("bNegate")) {
-		std::istringstream is(behaviorElem->Attribute("bNegate"));
+	if (_pBehaviorElem->Attribute("bNegate")) {
+		std::istringstream is(_pBehaviorElem->Attribute("bNegate"));
 		is >> std::boolalpha >> m_bNegate;
 	}
 }
 
-CBehavior::EStatus CCondition::onUpdate(float step) {
-	if (check(step) != m_bNegate) {
+CBehavior::EStatus CCondition::onUpdate(float _fDeltaTime) {
+	if (check(_fDeltaTime) != m_bNegate) {
 		return EStatus::ESuccess;
 	}
 	else {

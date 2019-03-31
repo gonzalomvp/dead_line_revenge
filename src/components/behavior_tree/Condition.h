@@ -6,14 +6,16 @@ class CBehaviorTreeComponent;
 
 class CCondition : public CBehavior {
 public:
-	CCondition(CBehaviorTreeComponent* owner) : CBehavior(owner) {}
+	CCondition(CBehaviorTreeComponent* _pOwnerComponent) : CBehavior(_pOwnerComponent) {}
 
 	// CBehavior
-	virtual void init(TiXmlElement* behaviorElem) override;
+	virtual void init(TiXmlElement* _pBehaviorElem) override;
 
 protected:
+	virtual bool check(float _fDeltaTime) = 0;
+
+	// CBehavior
 	virtual EStatus onUpdate(float _fDeltaTime) override;
-	virtual bool check(float step) = 0;
 
 private:
 	bool m_bNegate;

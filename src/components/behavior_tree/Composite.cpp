@@ -9,11 +9,11 @@ CComposite::~CComposite() {
 	}
 }
 
-void CComposite::init(TiXmlElement* behaviorElem) {
-	CBehavior::init(behaviorElem);
+void CComposite::init(TiXmlElement* _pBehaviorElem) {
+	CBehavior::init(_pBehaviorElem);
 
-	ASSERT(behaviorElem);
-	TiXmlElement* pChildElem = behaviorElem->FirstChildElement();
+	ASSERT(_pBehaviorElem);
+	TiXmlElement* pChildElem = _pBehaviorElem->FirstChildElement();
 
 	ASSERT(pChildElem, "Composite nodes must have at least one child behavior");
 

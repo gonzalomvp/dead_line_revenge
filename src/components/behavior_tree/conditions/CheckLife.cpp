@@ -5,18 +5,22 @@
 #include "scenes/World.h"
 #include "components/BehaviorTreeComponent.h"
 
-void CCheckLife::init(TiXmlElement* behaviorElem) {
-	CCondition::init(behaviorElem);
-	ASSERT(behaviorElem);
+void CCheckLife::init(TiXmlElement* _pBehaviorElem) {
+	CCondition::init(_pBehaviorElem);
 
-	ASSERT(behaviorElem->Attribute("iLife"));
-	m_iLife = std::stoi(behaviorElem->Attribute("iLife"));
+	ASSERT(_pBehaviorElem);
+
+	ASSERT(_pBehaviorElem->Attribute("iLife"));
+	m_iLife = std::stoi(_pBehaviorElem->Attribute("iLife"));
 }
 
-bool CCheckLife::check(float step) {
-	CEntity* self = getOwnerEntity();
+bool CCheckLife::check(float _fDeltaTime) {
+	CEntity* pOwnerEntity = getOwnerEntity();
+	
+	ASSERT(pOwnerEntity);
+
 	TMessageGetLife messageGetLife;
-	self->receiveMessage(&messageGetLife);
+	pOwnerEntity->receiveMessage(&messageGetLife);
 
 	return messageGetLife.iCurrentLife >= m_iLife;
 }
