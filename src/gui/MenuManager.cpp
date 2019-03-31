@@ -169,7 +169,7 @@ void CMenuManager::onClick(CButton* _pButton) {
 		g_pWorld->init(g_pWorld->getLevel());
 	}
 	else if (_pButton->getName() == s_psExitButtonName) {
-		exit(0);
+		SYS_Quit();
 	}
 }
 

@@ -39,6 +39,7 @@
 void  SYS_Pump      ();
 void  SYS_Show      ();
 bool  SYS_GottaQuit ();
+void  SYS_Quit      ();
 void  SYS_Sleep     (int ms);
 
 struct ivec2 { int x, y; };
