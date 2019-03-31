@@ -1,10 +1,10 @@
 #include "common/stdafx.h"
-#include "button.h"
+#include "Button.h"
 
-#include "engine/graphics_engine.h"
-#include "engine/sprite.h"
-#include "engine/text.h"
-#include "gui/string_manager.h"
+#include "engine/GraphicEngine.h"
+#include "engine/Sprite.h"
+#include "engine/Text.h"
+#include "gui/StringManager.h"
 
 namespace {
 	const float s_fNormalTextVerticalOffset = -6.0f;
@@ -26,10 +26,10 @@ CButton::CButton(const std::string& _sName, const vec2& _v2Pos, const vec2& _v2S
 {}
 
 CButton::~CButton() {
-	if (g_pGraphicsEngine) {
-		g_pGraphicsEngine->removeGfxEntity(m_pSpriteNormal);
-		g_pGraphicsEngine->removeGfxEntity(m_pSpritePush);
-		g_pGraphicsEngine->removeGfxEntity(m_pButtonText);
+	if (g_pGraphicEngine) {
+		g_pGraphicEngine->removeGfxEntity(m_pSpriteNormal);
+		g_pGraphicEngine->removeGfxEntity(m_pSpritePush);
+		g_pGraphicEngine->removeGfxEntity(m_pButtonText);
 	}
 	DELETE(m_pSpriteNormal);
 	DELETE(m_pSpritePush);
@@ -45,14 +45,14 @@ CButton::~CButton() {
 void CButton::init() {
 	CControl::init();
 
-	ASSERT(g_pGraphicsEngine && g_pStringManager);
+	ASSERT(g_pGraphicEngine && g_pStringManager);
 
-	m_pSpriteNormal = NEW(CSprite, g_pGraphicsEngine->getTexture(m_psNormalImage), m_v2Pos, m_v2Size, 0.f, 1.f, 2);
-	g_pGraphicsEngine->addGfxEntity(m_pSpriteNormal);
-	m_pSpritePush = NEW(CSprite, g_pGraphicsEngine->getTexture(m_psPushImage) , m_v2Pos, m_v2Size, 0.f, 1.f, 2);
-	g_pGraphicsEngine->addGfxEntity(m_pSpritePush);
+	m_pSpriteNormal = NEW(CSprite, g_pGraphicEngine->getTexture(m_psNormalImage), m_v2Pos, m_v2Size, 0.f, 1.f, 2);
+	g_pGraphicEngine->addGfxEntity(m_pSpriteNormal);
+	m_pSpritePush = NEW(CSprite, g_pGraphicEngine->getTexture(m_psPushImage) , m_v2Pos, m_v2Size, 0.f, 1.f, 2);
+	g_pGraphicEngine->addGfxEntity(m_pSpritePush);
 	m_pButtonText = NEW(CText, m_sText, vmake(m_v2Pos.x - g_pStringManager->calculateTextHalfWidth(m_sText), m_v2Pos.y + s_fNormalTextVerticalOffset), 1);
-	g_pGraphicsEngine->addGfxEntity(m_pButtonText);
+	g_pGraphicEngine->addGfxEntity(m_pButtonText);
 }
 
 void CButton::activate() {

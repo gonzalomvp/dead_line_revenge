@@ -1,9 +1,8 @@
 #pragma once
-#include "common/stdafx.h"
-#include "globals.h"
+
 #include <map>
 
-class StringManager {
+class CStringManager {
 public:
 	bool loadLanguage(ELanguage language);
 	std::string getText(const std::string& label);

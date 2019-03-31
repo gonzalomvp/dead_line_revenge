@@ -1,12 +1,12 @@
 #include "common/stdafx.h"
-#include "scenes/world.h"
+#include "World.h"
 
-#include "entities/entities_factory.h"
-#include "messages/message.h"
-#include "gui/menu_manager.h"
-#include "gui/string_manager.h"
-#include "gui/controls/label.h"
-#include "gui/controls/menu.h"
+#include "entities/EntitiesFactory.h"
+#include "messages/Message.h"
+#include "gui/MenuManager.h"
+#include "gui/StringManager.h"
+#include "gui/controls/Label.h"
+#include "gui/controls/Menu.h"
 
 #include <algorithm>
 #include "rapidjson/document.h"
@@ -209,12 +209,12 @@ void CWorld::run(float _fDeltaTime) {
 			// Show Game Over Menu with the score
 			CMenu* pGameOverMenu = g_pMenuManager->getMenu(CMenuManager::EGameOverMenu);
 			ASSERT(pGameOverMenu);
-			std::string sScoreMessage = g_pStringManager->getText(menu::constants::s_psScoreText) + std::to_string(m_uScore);
+			std::string sScoreTMessage = g_pStringManager->getText(menu::constants::s_psScoreText) + std::to_string(m_uScore);
 			CControl* pControl = pGameOverMenu->getControlByName(menu::constants::s_psScoreLabelName);
 			if (pControl) {
 				CLabel* pLabel = dynamic_cast<CLabel*>(pControl);
 				if (pLabel) {
-					pLabel->setText(sScoreMessage);
+					pLabel->setText(sScoreTMessage);
 				}
 			}
 			g_pMenuManager->activateMenu(CMenuManager::EGameOverMenu);
@@ -259,7 +259,7 @@ void CWorld::checkCollisions() {
 		Entity* pEntity1 = m_vEntities[i];
 		for (size_t j = i + 1; j < m_vEntities.size(); ++j) {
 			Entity* pEntity2 = m_vEntities[j];
-			MessageCheckCollision msgCheckCollision;
+			TMessageCheckCollision msgCheckCollision;
 			msgCheckCollision.other = pEntity2;
 			pEntity1->receiveMessage(&msgCheckCollision);
 		}

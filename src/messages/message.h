@@ -1,53 +1,54 @@
 #pragma once
-#include "./components/ColliderComponent.h"
-#include "./components/WeaponComponent.h"
 
-struct Message {
-	virtual ~Message() {}
+#include "components/ColliderComponent.h"
+#include "components/WeaponComponent.h"
+
+struct TMessage {
+	virtual ~TMessage() {}
 };
 
-struct MessageGetLife : public Message {
+struct TMessageGetLife : public TMessage {
 	int currentLife = 0;
 };
 
-struct MessageChangeLife : public Message {
+struct TMessageChangeLife : public TMessage {
 	int deltaLife = 0;
 };
 
-struct MessageGetMovementDir : public Message {
+struct TMessageGetMovementDir : public TMessage {
 	vec2 dir = vmake(0.0f, 0.0f);
 };
 
-struct MessageSetMovementDir : public Message {
+struct TMessageSetMovementDir : public TMessage {
 	vec2 dir = vmake(0.0f, 0.0f);
 };
 
-struct MessageSetMovementSpeed : public Message {
+struct TMessageSetMovementSpeed : public TMessage {
 	float speed = 0.0f;
 };
 
-struct MessageReload : public Message {
+struct TMessageReload : public TMessage {
 };
 
-struct MessageFire : public Message {
+struct TMessageFire : public TMessage {
 	bool isFiring   = false;
 };
 
-struct MessageSetAimDirection : public Message {
+struct TMessageSetAimDirection : public TMessage {
 	vec2 direction = vmake(0.0f, 0.0f);
 };
 
-struct MessageGetAimDirection : public Message {
+struct TMessageGetAimDirection : public TMessage {
 	vec2 direction = vmake(0.0f, 0.0f);
 };
 
-struct MessageAmmoInfo : public Message {
+struct TMessageAmmoInfo : public TMessage {
 	int   currentAmmo     = 0;
 	int   totalAmmo       = 0;
 	float reloadPercent   = 1.0f;
 };
 
-struct MessageCheckCollision : public Message {
+struct TMessageCheckCollision : public TMessage {
 	CColliderComponent::EType type;
 	vec2                      center                    = vmake(0.0f, 0.0f);
 	vec2                      size                      = vmake(0.0f, 0.0f);
@@ -60,22 +61,22 @@ struct MessageCheckCollision : public Message {
 	bool                      bounceY                   = false;
 };
 
-struct MessageWeaponChange : public Message {
+struct TMessageWeaponChange : public TMessage {
 	CWeaponComponent::EType eWeaponType;
 };
 
-struct MessageDestroy : public Message {
+struct TMessageDestroy : public TMessage {
 };
 
-struct MessageChangeSprite: public Message {
+struct TMessageChangeSprite: public TMessage {
 	std::string texture = "";
 };
 
-struct MessageEnableAI: public Message {
+struct TMessageEnableAI: public TMessage {
 	bool enable = true;
 };
 
-struct MessageShowHUDMessage : public Message {
+struct TMessageShowHUDTMessage : public TMessage {
 	std::string message = "";
 	float       time    = 0.0f;
 };

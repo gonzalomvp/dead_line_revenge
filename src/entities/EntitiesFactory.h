@@ -1,7 +1,7 @@
 #pragma once
 
 #include "components/WeaponComponent.h"
-#include "entities/entity.h"
+#include "entities/Entity.h"
 
 #include <map>
 

@@ -1,11 +1,11 @@
 #include "common/stdafx.h"
-#include "graphics_engine.h"
+#include "GraphicEngine.h"
 
-#include "engine/graphics_entitiy.h"
+#include "engine/GraphicEntity.h"
 
 #include <algorithm>
 
-GraphicsEngine::GraphicsEngine() {
+CGraphicEngine::CGraphicEngine() {
 	FONT_Init();
 	glViewport(0, 0, SCR_WIDTH, SCR_HEIGHT);
 	glClearColor(0.0f, 0.1f, 0.3f, 0.0f);
@@ -18,14 +18,14 @@ GraphicsEngine::GraphicsEngine() {
 	ShowCursor(false);
 }
 
-GraphicsEngine::~GraphicsEngine() {
+CGraphicEngine::~CGraphicEngine() {
 	for (auto itTexture = m_mTextures.begin(); itTexture != m_mTextures.end(); ++itTexture) {
 		CORE_UnloadPNG(itTexture->second);
 	}
 	FONT_End();
 }
 
-GLuint GraphicsEngine::getTexture(const std::string& _sFileName) {
+GLuint CGraphicEngine::getTexture(const std::string& _sFileName) {
 	GLuint uTextureId = 0;
 	if (m_mTextures.count(_sFileName)) {
 		uTextureId = m_mTextures[_sFileName];
@@ -38,24 +38,24 @@ GLuint GraphicsEngine::getTexture(const std::string& _sFileName) {
 	return uTextureId;
 }
 
-void GraphicsEngine::addGfxEntity(CGfxEntity* _pGfxEntity) {
+void CGraphicEngine::addGfxEntity(CGraphicEntity* _pGfxEntity) {
 	m_vGfxEntities.push_back(_pGfxEntity);
 }
 
-void GraphicsEngine::removeGfxEntity(const CGfxEntity* _pGfxEntity) {
+void CGraphicEngine::removeGfxEntity(const CGraphicEntity* _pGfxEntity) {
 	m_vGfxEntities.erase(
 		std::remove(m_vGfxEntities.begin(), m_vGfxEntities.end(), _pGfxEntity),
 		m_vGfxEntities.end()
 	);
 }
 
-void GraphicsEngine::render() {
+void CGraphicEngine::render() {
 	glClear(GL_COLOR_BUFFER_BIT);
 
 	//sort by priority
 	std::sort(m_vGfxEntities.begin(),
 		m_vGfxEntities.end(),
-		[](const CGfxEntity* lhs, const CGfxEntity* rhs) {
+		[](const CGraphicEntity* lhs, const CGraphicEntity* rhs) {
 		return lhs->getPriority() > rhs->getPriority();
 	});
 

@@ -2,10 +2,10 @@
 
 #include <map>
 
-class SoundEngine {
+class CSoundEngine {
 public:
-	SoundEngine();
-	~SoundEngine();
+	CSoundEngine();
+	~CSoundEngine();
 
 	void playSound(const char* _psSoundFile);
 	void playMusic(const char* _psSoundFile);

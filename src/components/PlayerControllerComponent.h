@@ -1,7 +1,7 @@
 #pragma once
 
 #include "components/Component.h"
-#include "input/input_manager.h"
+#include "input/IInputManager.h"
 
 class CPlayerControllerComponent : public CComponent, public IInputManager::IListener {
 public:

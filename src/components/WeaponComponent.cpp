@@ -1,11 +1,11 @@
 #include "common/stdafx.h"
 #include "WeaponComponent.h"
 
-#include "engine/sound_engine.h"
-#include "entities/entity.h"
-#include "entities/entities_factory.h"
-#include "messages/message.h"
-#include "scenes/world.h"
+#include "engine/SoundEngine.h"
+#include "entities/Entity.h"
+#include "entities/EntitiesFactory.h"
+#include "messages/Message.h"
+#include "scenes/World.h"
 
 namespace {
 	const float s_fShotgunAngle = 15.0f;
@@ -60,7 +60,7 @@ void CWeaponComponent::run(float _fDeltaTime) {
 	}
 
 	if (m_bIsFiring && m_pRemoteBullet) {
-		MessageDestroy msgDestroy;
+		TMessageDestroy msgDestroy;
 		m_pRemoteBullet->receiveMessage(&msgDestroy);
 	}
 	else if (m_bIsFiring && m_fFireTimer <= 0.0f && m_fReloadTimer <= 0.0f && m_iCurrentBullets != 0) {
@@ -125,37 +125,37 @@ void CWeaponComponent::run(float _fDeltaTime) {
 			g_pSoundEngine->playSound(m_sSoundFile.c_str());
 		}
 
-		MessageFire messageFire;
+		TMessageFire messageFire;
 		messageFire.isFiring = m_bIsFiring;
 		m_pOwner->receiveMessage(&messageFire);
 	}
 }
 
-void CWeaponComponent::receiveMessage(Message* _pMessage) {
+void CWeaponComponent::receiveMessage(TMessage* _pMessage) {
 	CComponent::receiveMessage(_pMessage);
 	if (!m_bIsActive)
 		return;
 
 	ASSERT(_pMessage);
 
-	if (MessageWeaponChange* pMessage = dynamic_cast<MessageWeaponChange*>(_pMessage)) {
+	if (TMessageWeaponChange* pMessage = dynamic_cast<TMessageWeaponChange*>(_pMessage)) {
 		equipWeapon(pMessage->eWeaponType);
 	}
-	else if (MessageFire* pMessage = dynamic_cast<MessageFire*>(_pMessage)) {
+	else if (TMessageFire* pMessage = dynamic_cast<TMessageFire*>(_pMessage)) {
 		m_bIsFiring = pMessage->isFiring;
 	}
-	else if (MessageSetAimDirection* pMessage = dynamic_cast<MessageSetAimDirection*>(_pMessage)) {
+	else if (TMessageSetAimDirection* pMessage = dynamic_cast<TMessageSetAimDirection*>(_pMessage)) {
 		m_v2AimDir = pMessage->direction;
 	}
-	else if (MessageGetAimDirection* pMessage = dynamic_cast<MessageGetAimDirection*>(_pMessage)) {
+	else if (TMessageGetAimDirection* pMessage = dynamic_cast<TMessageGetAimDirection*>(_pMessage)) {
 		pMessage->direction = m_v2AimDir;
 	}
-	else if (MessageAmmoInfo* pMessage = dynamic_cast<MessageAmmoInfo*>(_pMessage)) {
+	else if (TMessageAmmoInfo* pMessage = dynamic_cast<TMessageAmmoInfo*>(_pMessage)) {
 		pMessage->currentAmmo = m_iCurrentBullets;
 		pMessage->totalAmmo = m_iMaxBullets;
 		pMessage->reloadPercent = clamp((m_fReloadTime - m_fReloadTimer) / m_fReloadTime, 0.0f, 1.0f);
 	}
-	else if (MessageReload* pMessage = dynamic_cast<MessageReload*>(_pMessage)) {
+	else if (TMessageReload* pMessage = dynamic_cast<TMessageReload*>(_pMessage)) {
 		if (m_iCurrentBullets < m_iMaxBullets && m_fReloadTimer <= 0.0f) {
 			m_bIsFiring = false;
 			m_fReloadTimer = m_fReloadTime;

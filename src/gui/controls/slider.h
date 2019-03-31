@@ -1,7 +1,8 @@
 #pragma once
 
-#include "gui/controls/control.h"
-#include "gui/controls/button.h"
+#include "gui/controls/Control.h"
+#include "gui/controls/Button.h"
+
 #include <vector>
 
 class CSprite;

@@ -1,10 +1,10 @@
 #include "common/stdafx.h"
-#include "slider.h"
+#include "Slider.h"
 
-#include "engine/graphics_engine.h"
-#include "engine/sprite.h"
-#include "engine/text.h"
-#include "gui/string_manager.h"
+#include "engine/GraphicEngine.h"
+#include "engine/Sprite.h"
+#include "engine/Text.h"
+#include "gui/StringManager.h"
 
 namespace {
 	const float s_fTextVerticalOffset = -6.0f;
@@ -33,10 +33,10 @@ CSlider::~CSlider() {
 	DELETE(m_pLeftButton);
 	DELETE(m_pRightButton);
 
-	if (g_pGraphicsEngine) {
-		g_pGraphicsEngine->removeGfxEntity(m_pSpriteBar);
-		g_pGraphicsEngine->removeGfxEntity(m_pSpriteBall);
-		g_pGraphicsEngine->removeGfxEntity(m_pSliderText);
+	if (g_pGraphicEngine) {
+		g_pGraphicEngine->removeGfxEntity(m_pSpriteBar);
+		g_pGraphicEngine->removeGfxEntity(m_pSpriteBall);
+		g_pGraphicEngine->removeGfxEntity(m_pSliderText);
 	}
 	DELETE(m_pSpriteBar);
 	DELETE(m_pSpriteBall);
@@ -52,7 +52,7 @@ CSlider::~CSlider() {
 void CSlider::init() {
 	CControl::init();
 
-	ASSERT(g_pGraphicsEngine && g_pStringManager);
+	ASSERT(g_pGraphicEngine && g_pStringManager);
 
 	m_pLeftButton = NEW(CButton, m_sName, vmake(m_v2Pos.x - (m_v2Size.x + 32.0f) / 2.0f, m_v2Pos.y), vmake(32.0f, 32.0f), m_psLeftNormalImage, m_psLeftPushImage, "", 0.15f);
 	m_pLeftButton->init();
@@ -62,14 +62,14 @@ void CSlider::init() {
 	m_pRightButton->init();
 	m_pRightButton->addListener(this);
 
-	m_pSpriteBar = NEW(CSprite, g_pGraphicsEngine->getTexture(m_psBarImage), m_v2Pos, vmake(m_v2Size.x, 5.0f), 0.f, 1.f, 2);
-	g_pGraphicsEngine->addGfxEntity(m_pSpriteBar);
+	m_pSpriteBar = NEW(CSprite, g_pGraphicEngine->getTexture(m_psBarImage), m_v2Pos, vmake(m_v2Size.x, 5.0f), 0.f, 1.f, 2);
+	g_pGraphicEngine->addGfxEntity(m_pSpriteBar);
 
-	m_pSpriteBall = NEW(CSprite, g_pGraphicsEngine->getTexture(m_psBallImage), m_v2Pos, vmake(20.0f, 20.0f), 0.f, 1.f, 1);
-	g_pGraphicsEngine->addGfxEntity(m_pSpriteBall);
+	m_pSpriteBall = NEW(CSprite, g_pGraphicEngine->getTexture(m_psBallImage), m_v2Pos, vmake(20.0f, 20.0f), 0.f, 1.f, 1);
+	g_pGraphicEngine->addGfxEntity(m_pSpriteBall);
 
 	m_pSliderText = NEW(CText, "", vmake(m_v2Pos.x + m_v2Size.x * 0.5f + m_pRightButton->getSize().x, m_v2Pos.y + s_fTextVerticalOffset), 1);
-	g_pGraphicsEngine->addGfxEntity(m_pSliderText);
+	g_pGraphicEngine->addGfxEntity(m_pSliderText);
 }
 
 void CSlider::activate() {

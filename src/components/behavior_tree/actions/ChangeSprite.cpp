@@ -1,8 +1,8 @@
 #include "common/stdafx.h"
 #include "ChangeSprite.h"
-#include "entities/entity.h"
+#include "entities/Entity.h"
 #include "components/BehaviorTreeComponent.h"
-#include "messages/message.h"
+#include "messages/Message.h"
 
 void CChangeSprite::init(TiXmlElement* behaviorElem) {
 	CBehavior::init(behaviorElem);
@@ -15,7 +15,7 @@ void CChangeSprite::init(TiXmlElement* behaviorElem) {
 EStatus CChangeSprite::onUpdate(float step) {
 	
 	Entity* self = getOwnerEntity();
-	MessageChangeSprite messageChangeSprite;
+	TMessageChangeSprite messageChangeSprite;
 	messageChangeSprite.texture = m_sTextureFile;
 	self->receiveMessage(&messageChangeSprite);
 

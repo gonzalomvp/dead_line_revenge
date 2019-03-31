@@ -7,5 +7,5 @@ public:
 	CExplossiveComponent(Entity* _pOwner) : CComponent(_pOwner) {}
 
 	// CComponent
-	virtual void receiveMessage(Message* _pMessage) override;
+	virtual void receiveMessage(TMessage* _pMessage) override;
 };

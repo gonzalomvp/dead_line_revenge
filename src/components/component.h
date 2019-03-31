@@ -1,7 +1,7 @@
 #pragma once
 
 class  Entity;
-struct Message;
+struct TMessage;
 
 class CComponent {
 public:
@@ -12,7 +12,7 @@ public:
 	virtual void activate      ();
 	virtual void deactivate    ();
 	virtual void run           (float _fDeltaTime);
-	virtual void receiveMessage(Message* _pMessage) {}
+	virtual void receiveMessage(TMessage* _pMessage) {}
 
 	Entity* getOwner() { return m_pOwner; }
 	void setActivationDelay(float _fActivationTimer) { m_fActivationTimer = _fActivationTimer; }

@@ -1,9 +1,9 @@
 #include "common/stdafx.h"
 #include "CheckIsAtDistance.h"
-#include "entities/entity.h"
+#include "entities/Entity.h"
 #include "components/BehaviorTreeComponent.h"
-#include "messages/message.h"
-#include "scenes/world.h"
+#include "messages/Message.h"
+#include "scenes/World.h"
 #include "components/behavior_tree/Blackboard.h"
 
 void CCheckIsAtDistance::init(TiXmlElement* behaviorElem) {

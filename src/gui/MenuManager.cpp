@@ -1,12 +1,12 @@
 #include "common/stdafx.h"
-#include "menu_manager.h"
+#include "MenuManager.h"
 
-#include "engine/sound_engine.h"
-#include "gui/controls/label.h"
-#include "gui/controls/menu.h"
-#include "gui/string_manager.h"
-#include "scenes/scene_manager.h"
-#include "scenes/world.h"
+#include "engine/SoundEngine.h"
+#include "gui/controls/Label.h"
+#include "gui/controls/Menu.h"
+#include "gui/StringManager.h"
+#include "scenes/SceneManager.h"
+#include "scenes/World.h"
 
 namespace menu { namespace constants {
 	// Menu names

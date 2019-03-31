@@ -1,10 +1,10 @@
 #include "common/stdafx.h"
 #include "GoToBlackboardPosition.h"
-#include "entities/entity.h"
+#include "entities/Entity.h"
 #include "components/BehaviorTreeComponent.h"
 #include "components/behavior_tree/blackboard.h"
-#include "messages/message.h"
-#include "scenes/world.h"
+#include "messages/Message.h"
+#include "scenes/World.h"
 
 #include <sstream>
 
@@ -77,12 +77,12 @@ EStatus CGoToBlackboardPosition::onUpdate(float step) {
 
 	if (vlen2(direction) <= m_fArriveDistance * m_fArriveDistance)
 	{
-		MessageSetMovementDir msgSetMovementDir;
+		TMessageSetMovementDir msgSetMovementDir;
 		self->receiveMessage(&msgSetMovementDir);
 		return EStatus::ESuccess;
 	}
 
-	MessageSetMovementDir msgSetMovementDir;
+	TMessageSetMovementDir msgSetMovementDir;
 	msgSetMovementDir.dir = direction;
 	self->receiveMessage(&msgSetMovementDir);
 	return EStatus::ERunning;
@@ -92,6 +92,6 @@ void CGoToBlackboardPosition::abort() {
 	CBehavior::abort();
 
 	Entity* self = getOwnerEntity();
-	MessageSetMovementDir msgSetMovementDir;
+	TMessageSetMovementDir msgSetMovementDir;
 	self->receiveMessage(&msgSetMovementDir);
 }

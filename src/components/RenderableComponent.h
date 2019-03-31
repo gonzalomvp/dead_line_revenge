@@ -24,7 +24,7 @@ public:
 	// CComponent
 	virtual void init()                             override;
 	virtual void run(float _fDeltaTime)             override;
-	virtual void receiveMessage(Message* _pMessage) override;
+	virtual void receiveMessage(TMessage* _pMessage) override;
 
 private:
 	std::string m_sTexture;

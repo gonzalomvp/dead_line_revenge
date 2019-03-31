@@ -1,7 +1,7 @@
 #pragma once
 
 class  CComponent;
-struct Message;
+struct TMessage;
 
 class Entity {
 public:
@@ -39,7 +39,7 @@ public:
 	void setSize(vec2 _v2Size) { m_v2Size = _v2Size; }
 
 	void run            (float deltaTime);
-	void receiveMessage (Message* message);
+	void receiveMessage (TMessage* message);
 	void addComponent   (CComponent* component);
 
 	virtual void registerToDestroy(IListener* _pListener);

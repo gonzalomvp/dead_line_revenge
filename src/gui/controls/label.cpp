@@ -1,9 +1,9 @@
 #include "common/stdafx.h"
-#include "label.h"
+#include "Label.h"
 
-#include "engine/graphics_engine.h"
-#include "engine/text.h"
-#include "gui/string_manager.h"
+#include "engine/GraphicEngine.h"
+#include "engine/Text.h"
+#include "gui/StringManager.h"
 
 namespace {
 	const float s_fTextVerticalOffset = -6.0f;
@@ -16,8 +16,8 @@ CLabel::CLabel(const std::string& _sName, const vec2& _v2Pos, const vec2& _v2Siz
 {}
 
 CLabel::~CLabel() {
-	if (g_pGraphicsEngine) {
-		g_pGraphicsEngine->removeGfxEntity(m_pLabelText);
+	if (g_pGraphicEngine) {
+		g_pGraphicEngine->removeGfxEntity(m_pLabelText);
 	}
 	DELETE(m_pLabelText);
 }
@@ -31,10 +31,10 @@ void CLabel::setText(const std::string& _sText) {
 void CLabel::init() {
 	CControl::init();
 
-	ASSERT(g_pGraphicsEngine && g_pStringManager);
+	ASSERT(g_pGraphicEngine && g_pStringManager);
 
 	m_pLabelText = NEW(CText, m_sText, vmake(m_v2Pos.x - g_pStringManager->calculateTextHalfWidth(m_sText), m_v2Pos.y + s_fTextVerticalOffset), 1);
-	g_pGraphicsEngine->addGfxEntity(m_pLabelText);
+	g_pGraphicEngine->addGfxEntity(m_pLabelText);
 }
 
 void CLabel::activate() {

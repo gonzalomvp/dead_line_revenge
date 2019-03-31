@@ -1,8 +1,8 @@
 #include "common/stdafx.h"
 #include "Aim.h"
-#include "entities/entity.h"
-#include "messages/message.h"
-#include "scenes/world.h"
+#include "entities/Entity.h"
+#include "messages/Message.h"
+#include "scenes/World.h"
 #include "components/BehaviorTreeComponent.h"
 
 void CAim::init(TiXmlElement* behaviorElem) {
@@ -17,7 +17,7 @@ EStatus CAim::onUpdate(float step) {
 	Entity* self = getOwnerEntity();
 	Entity* player = g_pWorld->getPlayer();
 
-	MessageSetAimDirection messageSetAimDirection;
+	TMessageSetAimDirection messageSetAimDirection;
 	messageSetAimDirection.direction = vnorm(vsub(player->getPos(), self->getPos()));
 	self->receiveMessage(&messageSetAimDirection);
 

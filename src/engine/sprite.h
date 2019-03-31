@@ -1,10 +1,10 @@
 #pragma once
 
-#include "engine/graphics_entitiy.h"
+#include "engine/GraphicEntity.h"
 
-class CSprite : public CGfxEntity {
+class CSprite : public CGraphicEntity {
 public:
-	CSprite(GLuint _uTexture, vec2 _v2Pos, vec2 _v2Size, float _fAngle, float _fAlpha, int _iPriority) : CGfxEntity(_v2Pos, _iPriority), m_uTexture(_uTexture), m_v2Size(_v2Size), m_fAngle(_fAngle), m_fAlpha(_fAlpha) {}
+	CSprite(GLuint _uTexture, vec2 _v2Pos, vec2 _v2Size, float _fAngle, float _fAlpha, int _iPriority) : CGraphicEntity(_v2Pos, _iPriority), m_uTexture(_uTexture), m_v2Size(_v2Size), m_fAngle(_fAngle), m_fAlpha(_fAlpha) {}
 
 	GLuint getTexture() const           { return m_uTexture;      }
 	void   setTexture(GLuint _uTexture) { m_uTexture = _uTexture; }
@@ -15,7 +15,7 @@ public:
 	float  getAlpha  () const           { return m_fAlpha;        }
 	void   setAlpha  (float _fAlpha)    { m_fAlpha = _fAlpha;     }
 
-	// CGfxEntity
+	// CGraphicEntity
 	virtual void render() override;
 
 private:

@@ -1,8 +1,8 @@
 #include "common/stdafx.h"
 #include "ExplossionComponent.h"
 
-#include "entities/entity.h"
-#include "engine/sound_engine.h"
+#include "entities/Entity.h"
+#include "engine/SoundEngine.h"
 
 namespace {
 	const std::string s_sExplossionSoundFile = "data/explossion.wav";

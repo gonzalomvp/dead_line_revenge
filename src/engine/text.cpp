@@ -1,7 +1,7 @@
 #include "common/stdafx.h"
-#include "text.h"
+#include "Text.h"
 
-#include "gui/string_manager.h"
+#include "gui/StringManager.h"
 
 void CText::render() {
 	ASSERT(g_pStringManager);

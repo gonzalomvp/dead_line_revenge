@@ -1,7 +1,7 @@
 #include "common/stdafx.h"
-#include "menu.h"
+#include "Menu.h"
 
-#include "engine/graphics_engine.h"
+#include "engine/GraphicEngine.h"
 
 CMenu::~CMenu() {
 	for (auto itControl = m_vControls.begin(); itControl != m_vControls.end(); ++itControl) {

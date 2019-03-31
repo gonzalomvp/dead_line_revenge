@@ -1,9 +1,9 @@
 #include "common/stdafx.h"
 #include "LifeComponent.h"
 
-#include "entities/entity.h"
-#include "messages/message.h"
-#include "scenes/world.h"
+#include "entities/Entity.h"
+#include "messages/Message.h"
+#include "scenes/World.h"
 
 void CLifeComponent::run(float _fDeltaTime) {
 	CComponent::run(_fDeltaTime);
@@ -22,17 +22,17 @@ void CLifeComponent::run(float _fDeltaTime) {
 	}
 }
 
-void CLifeComponent::receiveMessage(Message* _pMessage) {
+void CLifeComponent::receiveMessage(TMessage* _pMessage) {
 	CComponent::receiveMessage(_pMessage);
 	if (!m_bIsActive)
 		return;
 
 	ASSERT(_pMessage);
 
-	if (MessageGetLife* pMessage = dynamic_cast<MessageGetLife*>(_pMessage)) {
+	if (TMessageGetLife* pMessage = dynamic_cast<TMessageGetLife*>(_pMessage)) {
 		pMessage->currentLife = m_iLife;
 	}
-	else if (MessageChangeLife* pMessage = dynamic_cast<MessageChangeLife*>(_pMessage)) {
+	else if (TMessageChangeLife* pMessage = dynamic_cast<TMessageChangeLife*>(_pMessage)) {
 		// Apply heal
 		if (pMessage->deltaLife > 0) {
 			m_iLife += pMessage->deltaLife;
@@ -48,7 +48,7 @@ void CLifeComponent::receiveMessage(Message* _pMessage) {
 			}
 		}
 	}
-	else if (MessageDestroy* pMessage = dynamic_cast<MessageDestroy*>(_pMessage)) {
+	else if (TMessageDestroy* pMessage = dynamic_cast<TMessageDestroy*>(_pMessage)) {
 		onDead();
 	}
 }
@@ -57,7 +57,7 @@ void CLifeComponent::onDead() {
 	ASSERT(m_pOwner && g_pWorld);
 
 	deactivate();
-	MessageDestroy msgDestroy;
+	TMessageDestroy msgDestroy;
 	m_pOwner->receiveMessage(&msgDestroy);
 	m_pOwner->deactivate();
 	g_pWorld->removeEntity(m_pOwner);

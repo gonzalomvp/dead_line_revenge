@@ -1,10 +1,10 @@
 #include "common/stdafx.h"
 #include "RenderableComponent.h"
 
-#include "engine/graphics_engine.h"
-#include "engine/sprite.h"
-#include "entities/entity.h"
-#include "messages/message.h"
+#include "engine/GraphicEngine.h"
+#include "engine/Sprite.h"
+#include "entities/Entity.h"
+#include "messages/Message.h"
 
 CRenderableComponent::~CRenderableComponent() {
 	DELETE(m_pSprite);
@@ -13,9 +13,9 @@ CRenderableComponent::~CRenderableComponent() {
 void CRenderableComponent::init() {
 	CComponent::init();
 
-	ASSERT(g_pGraphicsEngine);
-	m_pSprite = NEW(CSprite, g_pGraphicsEngine->getTexture(m_sTexture), vmake(0.0f, 0.0f), vmake(0.0f, 0.0f), m_fAngle, m_fAlpha, m_iPriority);
-	g_pGraphicsEngine->addGfxEntity(m_pSprite);
+	ASSERT(g_pGraphicEngine);
+	m_pSprite = NEW(CSprite, g_pGraphicEngine->getTexture(m_sTexture), vmake(0.0f, 0.0f), vmake(0.0f, 0.0f), m_fAngle, m_fAlpha, m_iPriority);
+	g_pGraphicEngine->addGfxEntity(m_pSprite);
 }
 
 void CRenderableComponent::run(float _fDeltaTime) {
@@ -32,13 +32,13 @@ void CRenderableComponent::run(float _fDeltaTime) {
 	// Update angle
 	vec2 v2Orientation = vmake(0.0f, 0.0f);
 	if (m_bAlignToMovement) {
-		MessageGetMovementDir messageGetMovementDirection;
+		TMessageGetMovementDir messageGetMovementDirection;
 		m_pOwner->receiveMessage(&messageGetMovementDirection);
 		v2Orientation = messageGetMovementDirection.dir;
 		
 	}
 	if (m_bAlignToAim && vlen2(v2Orientation) == 0.0f) {
-		MessageGetAimDirection messageGetAimDirection;
+		TMessageGetAimDirection messageGetAimDirection;
 		m_pOwner->receiveMessage(&messageGetAimDirection);
 		v2Orientation = messageGetAimDirection.direction;
 	}
@@ -61,25 +61,25 @@ void CRenderableComponent::run(float _fDeltaTime) {
 	}
 }
 
-void CRenderableComponent::receiveMessage(Message* _pMessage) {
+void CRenderableComponent::receiveMessage(TMessage* _pMessage) {
 	CComponent::receiveMessage(_pMessage);
 	if (!m_bIsActive)
 		return;
 
-	ASSERT(_pMessage && m_pSprite && g_pGraphicsEngine);
+	ASSERT(_pMessage && m_pSprite && g_pGraphicEngine);
 
-	if (MessageChangeLife* pMessage = dynamic_cast<MessageChangeLife*>(_pMessage)) {
+	if (TMessageChangeLife* pMessage = dynamic_cast<TMessageChangeLife*>(_pMessage)) {
 		if (m_fHitTimer <= 0.0f && pMessage->deltaLife < 0) {
 			m_fHitTimer = m_fHitTime;
 		}
 	}
-	else if (MessageChangeSprite* pMessage = dynamic_cast<MessageChangeSprite*>(_pMessage)) {
-		ASSERT(g_pGraphicsEngine);
-		g_pGraphicsEngine->removeGfxEntity(m_pSprite);
+	else if (TMessageChangeSprite* pMessage = dynamic_cast<TMessageChangeSprite*>(_pMessage)) {
+		ASSERT(g_pGraphicEngine);
+		g_pGraphicEngine->removeGfxEntity(m_pSprite);
 		DELETE(m_pSprite);
 
 		m_sTexture = pMessage->texture;
-		m_pSprite = NEW(CSprite, g_pGraphicsEngine->getTexture(m_sTexture), vmake(0.0f, 0.0f), vmake(0.0f, 0.0f), m_fAngle, m_fAlpha, m_iPriority);
-		g_pGraphicsEngine->addGfxEntity(m_pSprite);
+		m_pSprite = NEW(CSprite, g_pGraphicEngine->getTexture(m_sTexture), vmake(0.0f, 0.0f), vmake(0.0f, 0.0f), m_fAngle, m_fAlpha, m_iPriority);
+		g_pGraphicEngine->addGfxEntity(m_pSprite);
 	}
 }

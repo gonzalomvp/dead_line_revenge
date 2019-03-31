@@ -28,7 +28,7 @@ public:
 	{}
 
 	// CComponent
-	virtual void receiveMessage(Message* _pMessage) override;
+	virtual void receiveMessage(TMessage* _pMessage) override;
 
 private:
 	EType m_eType;

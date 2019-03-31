@@ -1,6 +1,6 @@
 #pragma once
 
-#include "scene.h"
+#include "scenes/IScene.h"
 
 class CMenuScene : public IScene {
 public:

@@ -1,7 +1,7 @@
 #include "common/stdafx.h"
 #include "ChangeSpeed.h"
-#include "entities/entity.h"
-#include "messages/message.h"
+#include "entities/Entity.h"
+#include "messages/Message.h"
 #include "components/BehaviorTreeComponent.h"
 
 void CChangeSpeed::init(TiXmlElement* behaviorElem) {
@@ -14,7 +14,7 @@ void CChangeSpeed::init(TiXmlElement* behaviorElem) {
 
 EStatus CChangeSpeed::onUpdate(float step) {
 	Entity* self = getOwnerEntity();
-	MessageSetMovementSpeed messageSetMovementSpeed;
+	TMessageSetMovementSpeed messageSetMovementSpeed;
 	messageSetMovementSpeed.speed = m_fSpeed;
 	self->receiveMessage(&messageSetMovementSpeed);
 

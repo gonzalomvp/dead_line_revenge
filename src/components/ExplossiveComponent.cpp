@@ -1,17 +1,17 @@
 #include "common/stdafx.h"
 #include "ExplossiveComponent.h"
 
-#include "entities/entities_factory.h"
-#include "messages/message.h"
-#include "scenes/world.h"
+#include "entities/EntitiesFactory.h"
+#include "messages/Message.h"
+#include "scenes/World.h"
 
-void CExplossiveComponent::receiveMessage(Message* _pMessage) {
+void CExplossiveComponent::receiveMessage(TMessage* _pMessage) {
 	CComponent::receiveMessage(_pMessage);
 	if (!m_bIsActive)
 		return;
 
 	ASSERT(_pMessage && m_pOwner && g_pWorld && g_pEntitiesFactory);
-	if (MessageDestroy* pMessage = dynamic_cast<MessageDestroy*>(_pMessage)) {
+	if (TMessageDestroy* pMessage = dynamic_cast<TMessageDestroy*>(_pMessage)) {
 		Entity* pExplossion = g_pEntitiesFactory->createExplossion(m_pOwner->getPos());
 		g_pWorld->addEntity(pExplossion);
 	}

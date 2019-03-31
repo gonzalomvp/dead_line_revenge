@@ -1,10 +1,9 @@
 #include "common/stdafx.h"
-#include "game_scene.h"
+#include "GameScene.h"
 
-#include "globals.h"
-#include "engine/graphics_engine.h"
-#include "gui/menu_manager.h"
-#include "scenes/world.h"
+#include "engine/GraphicEngine.h"
+#include "gui/MenuManager.h"
+#include "scenes/World.h"
 
 CWorld* g_pWorld;
 
@@ -28,5 +27,5 @@ void CGameScene::run(float _fDeltaTime) const {
 }
 
 void CGameScene::render() const {
-	g_pGraphicsEngine->render();
+	g_pGraphicEngine->render();
 }

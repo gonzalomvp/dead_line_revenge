@@ -1,7 +1,7 @@
 #include "common/stdafx.h"
 #include "Wait.h"
-#include "messages/message.h"
-#include "scenes/world.h"
+#include "messages/Message.h"
+#include "scenes/World.h"
 #include "components/BehaviorTreeComponent.h"
 
 void CWait::init(TiXmlElement* behaviorElem) {

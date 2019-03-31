@@ -1,6 +1,6 @@
 #pragma once
 
-#include "gui/controls/control.h"
+#include "gui/controls/Control.h"
 
 #include <vector>
 

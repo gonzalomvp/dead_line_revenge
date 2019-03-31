@@ -1,8 +1,8 @@
 #include "common/stdafx.h"
 #include "RotateAim.h"
-#include "entities/entity.h"
-#include "messages/message.h"
-#include "scenes/world.h"
+#include "entities/Entity.h"
+#include "messages/Message.h"
+#include "scenes/World.h"
 #include "components/BehaviorTreeComponent.h"
 
 void CRotateAim::init(TiXmlElement* behaviorElem) {
@@ -15,13 +15,13 @@ void CRotateAim::init(TiXmlElement* behaviorElem) {
 
 EStatus CRotateAim::onUpdate(float step) {
 	Entity* self = getOwnerEntity();
-	MessageGetAimDirection messageGetAimDirection;
+	TMessageGetAimDirection messageGetAimDirection;
 	self->receiveMessage(&messageGetAimDirection);
 
 	float angle = vangle(messageGetAimDirection.direction);
 	angle += m_fAngle * step;
 
-	MessageSetAimDirection messageSetAimDirection;
+	TMessageSetAimDirection messageSetAimDirection;
 	messageSetAimDirection.direction = vunit(DEG2RAD(angle));
 	self->receiveMessage(&messageSetAimDirection);
 

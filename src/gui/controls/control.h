@@ -1,6 +1,6 @@
 #pragma once
 
-#include "input/input_manager.h"
+#include "input/IInputManager.h"
 
 class CControl : public IInputManager::IListener {
 public:

@@ -1,9 +1,9 @@
 #pragma once
 
-class CGfxEntity {
+class CGraphicEntity {
 public:
-	CGfxEntity(vec2 _v2Pos, int _iPriority, bool _bIsActive = true) : m_v2Pos(_v2Pos), m_iPriority(_iPriority), m_bIsActive(_bIsActive) {}
-	~CGfxEntity();
+	CGraphicEntity(vec2 _v2Pos, int _iPriority, bool _bIsActive = true) : m_v2Pos(_v2Pos), m_iPriority(_iPriority), m_bIsActive(_bIsActive) {}
+	~CGraphicEntity();
 
 	virtual void activate  ()     { m_bIsActive = true;  }
 	virtual void deactivate()     { m_bIsActive = false; }

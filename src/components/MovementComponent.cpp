@@ -1,9 +1,9 @@
 #include "common/stdafx.h"
 #include "MovementComponent.h"
 
-#include "entities/entity.h"
-#include "messages/message.h"
-#include "scenes/world.h"
+#include "entities/Entity.h"
+#include "messages/Message.h"
+#include "scenes/World.h"
 
 void CMovementComponent::run(float _fDeltaTime) {
 	CComponent::run(_fDeltaTime);
@@ -21,7 +21,7 @@ void CMovementComponent::run(float _fDeltaTime) {
 		v2ValidPos.y = clamp(v2ValidPos.y, v2Size.y * 0.5f, WORLD_HEIGHT - v2Size.y * 0.5f);
 
 		if (v2ValidPos.x != v2NewPos.x || v2ValidPos.y != v2NewPos.y) {
-			MessageCheckCollision msgCheckCollision;
+			TMessageCheckCollision msgCheckCollision;
 			msgCheckCollision.overlap = true;
 			msgCheckCollision.deltaLife = -1;
 			msgCheckCollision.collisionChannel = CColliderComponent::EBoundariesCollider;
@@ -38,20 +38,20 @@ void CMovementComponent::run(float _fDeltaTime) {
 	}
 }
 
-void CMovementComponent::receiveMessage(Message* _pMessage) {
+void CMovementComponent::receiveMessage(TMessage* _pMessage) {
 	CComponent::receiveMessage(_pMessage);
 	if (!m_bIsActive)
 		return;
 
 	ASSERT(_pMessage);
 
-	if (MessageGetMovementDir* pMessage = dynamic_cast<MessageGetMovementDir*>(_pMessage)) {
+	if (TMessageGetMovementDir* pMessage = dynamic_cast<TMessageGetMovementDir*>(_pMessage)) {
 		pMessage->dir = m_v2Direction;
 	}
-	else if (MessageSetMovementDir* pMessage = dynamic_cast<MessageSetMovementDir*>(_pMessage)) {
+	else if (TMessageSetMovementDir* pMessage = dynamic_cast<TMessageSetMovementDir*>(_pMessage)) {
 		m_v2Direction = pMessage->dir;
 	}
-	else if (MessageSetMovementSpeed* pMessage = dynamic_cast<MessageSetMovementSpeed*>(_pMessage)) {
+	else if (TMessageSetMovementSpeed* pMessage = dynamic_cast<TMessageSetMovementSpeed*>(_pMessage)) {
 		m_fSpeed = pMessage->speed;
 	}
 }

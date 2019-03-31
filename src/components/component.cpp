@@ -1,7 +1,7 @@
 #include "common/stdafx.h"
 #include "Component.h"
 
-#include "entities/entity.h"
+#include "entities/Entity.h"
 
 void CComponent::init() {
 	ASSERT(m_pOwner);

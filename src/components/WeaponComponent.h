@@ -1,7 +1,7 @@
 #pragma once
 
 #include "components/Component.h"
-#include "entities/entity.h"
+#include "entities/Entity.h"
 
 class CWeaponComponent : public CComponent, public Entity::IListener {
 public:
@@ -40,7 +40,7 @@ public:
 	// CComponent
 	virtual void init()                             override;
 	virtual void run(float _fDeltaTime)             override;
-	virtual void receiveMessage(Message* _pMessage) override;
+	virtual void receiveMessage(TMessage* _pMessage) override;
 
 	// CEntity::IListener
 	virtual void onEntityDestroyed(Entity* _pEntity) override;

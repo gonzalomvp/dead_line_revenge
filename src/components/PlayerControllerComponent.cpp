@@ -1,8 +1,8 @@
 #include "common/stdafx.h"
 #include "PlayerControllerComponent.h"
 
-#include "entities/entity.h"
-#include "messages/message.h"
+#include "entities/Entity.h"
+#include "messages/Message.h"
 
 CPlayerControllerComponent::~CPlayerControllerComponent() {
 	if (g_pInputManager) {
@@ -15,7 +15,7 @@ CPlayerControllerComponent::~CPlayerControllerComponent() {
 void CPlayerControllerComponent::init() {
 	CComponent::init();
 
-	ASSERT(g_pGraphicsEngine);
+	ASSERT(g_pGraphicEngine);
 	g_pInputManager->registerEvent(this, IInputManager::EEventType::EKeyHold);
 	g_pInputManager->registerEvent(this, IInputManager::EEventType::EMouseButtonDown);
 	g_pInputManager->registerEvent(this, IInputManager::EEventType::EMouseButtonUp);
@@ -26,7 +26,7 @@ void CPlayerControllerComponent::run(float _fDeltaTime) {
 	if (!m_bIsActive)
 		return;
 
-	MessageSetMovementDir msgSetMovementDir;
+	TMessageSetMovementDir msgSetMovementDir;
 	msgSetMovementDir.dir = m_v2InputDir;
 	m_pOwner->receiveMessage(&msgSetMovementDir);
 
@@ -62,7 +62,7 @@ bool CPlayerControllerComponent::onEvent(const IInputManager::CEvent& _event) {
 					break;
 				}	
 				case VK_SPACE: {
-					MessageReload msgReload;
+					TMessageReload msgReload;
 					m_pOwner->receiveMessage(&msgReload);
 					break;
 				}
@@ -79,13 +79,13 @@ bool CPlayerControllerComponent::onEvent(const IInputManager::CEvent& _event) {
 		if (pEvent->getButton() == SYS_MB_LEFT) {
 			if (pEvent->getType() == IInputManager::EEventType::EMouseButtonDown) {
 				bConsumed = true;
-				MessageFire messageFire;
+				TMessageFire messageFire;
 				messageFire.isFiring = true;
 				m_pOwner->receiveMessage(&messageFire);
 			}
 			else if (pEvent->getType() == IInputManager::EEventType::EMouseButtonUp) {
 				bConsumed = true;
-				MessageFire messageFire;
+				TMessageFire messageFire;
 				messageFire.isFiring = false;
 				m_pOwner->receiveMessage(&messageFire);
 			}
@@ -93,7 +93,7 @@ bool CPlayerControllerComponent::onEvent(const IInputManager::CEvent& _event) {
 		else if (pEvent->getButton() == SYS_MB_RIGHT) {
 			if (pEvent->getType() == IInputManager::EEventType::EMouseButtonDown) {
 				bConsumed = true;
-				MessageReload msgReload;
+				TMessageReload msgReload;
 				m_pOwner->receiveMessage(&msgReload);
 			}
 		}

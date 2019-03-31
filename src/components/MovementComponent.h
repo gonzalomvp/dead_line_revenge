@@ -13,7 +13,7 @@ public:
 
 	// CComponent
 	virtual void run(float _fDeltaTime)             override;
-	virtual void receiveMessage(Message* _pMessage) override;
+	virtual void receiveMessage(TMessage* _pMessage) override;
 
 private:
 	vec2  m_v2Direction;

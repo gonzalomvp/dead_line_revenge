@@ -1,6 +1,6 @@
 #pragma once
 
-#include "iinput_manager.h"
+#include "input/IInputManager.h"
 
 class CInputManager : public IInputManager {
 public:

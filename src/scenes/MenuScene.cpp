@@ -1,9 +1,8 @@
 #include "common/stdafx.h"
-#include "menu_scene.h"
+#include "MenuScene.h"
 
-#include "globals.h"
-#include "engine/graphics_engine.h"
-#include "gui/menu_manager.h"
+#include "engine/GraphicEngine.h"
+#include "gui/MenuManager.h"
 
 void CMenuScene::init() {
 	g_pMenuManager->activateMenu(CMenuManager::EMainMenu);
@@ -18,5 +17,5 @@ void CMenuScene::run(float _fDeltaTime) const {
 }
 
 void CMenuScene::render() const {
-	g_pGraphicsEngine->render();
+	g_pGraphicEngine->render();
 }

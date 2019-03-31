@@ -2,7 +2,7 @@
 #include "BehaviorTreeComponent.h"
 
 #include "components/behavior_tree/Behavior.h"
-#include "scenes/world.h"
+#include "scenes/World.h"
 
 #pragma pack(push)
 #pragma pack()

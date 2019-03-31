@@ -60,21 +60,6 @@
     <ClInclude Include="..\src\globals.h">
       <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\scenes\world.h">
-      <Filter>src\scenes</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\input\input_manager.h">
-      <Filter>src\input</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\gui\string_manager.h">
-      <Filter>src\gui</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\entities\entity.h">
-      <Filter>src\entities</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\engine\graphics_engine.h">
-      <Filter>src\engine</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\common\core.h">
       <Filter>src\common</Filter>
     </ClInclude>
@@ -89,9 +74,6 @@
     </ClInclude>
     <ClInclude Include="..\src\common\sys.h">
       <Filter>src\common</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\engine\sound_engine.h">
-      <Filter>src\engine</Filter>
     </ClInclude>
     <ClInclude Include="..\src\common\leaks.h">
       <Filter>src\common</Filter>
@@ -108,45 +90,6 @@
     <ClInclude Include="..\src\REG_WEAPONS.h">
       <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\scenes\menu_scene.h">
-      <Filter>src\scenes</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\scenes\game_scene.h">
-      <Filter>src\scenes</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\scenes\scene.h">
-      <Filter>src\scenes</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\scenes\scene_manager.h">
-      <Filter>src\scenes</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\entities\entities_factory.h">
-      <Filter>src\entities</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\input\iinput_manager.h">
-      <Filter>src\input</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\gui\menu_manager.h">
-      <Filter>src\gui</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\gui\controls\button.h">
-      <Filter>src\gui\controls</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\gui\controls\checkbox.h">
-      <Filter>src\gui\controls</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\gui\controls\control.h">
-      <Filter>src\gui\controls</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\gui\controls\label.h">
-      <Filter>src\gui\controls</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\gui\controls\menu.h">
-      <Filter>src\gui\controls</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\gui\controls\slider.h">
-      <Filter>src\gui\controls</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\REG_BEHAVIORS.h">
       <Filter>src</Filter>
     </ClInclude>
@@ -159,23 +102,11 @@
     <ClInclude Include="..\src\common\math_utils.h">
       <Filter>src\common</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\engine\graphics_entitiy.h">
-      <Filter>src\engine</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\engine\sprite.h">
-      <Filter>src\engine</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\engine\text.h">
-      <Filter>src\engine</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\components\LifeComponent.h">
       <Filter>src\components</Filter>
     </ClInclude>
     <ClInclude Include="..\src\components\MovementComponent.h">
       <Filter>src\components</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\messages\message.h">
-      <Filter>src\messages</Filter>
     </ClInclude>
     <ClInclude Include="..\src\components\RenderableComponent.h">
       <Filter>src\components</Filter>
@@ -276,25 +207,79 @@
     <ClInclude Include="..\src\components\Component.h">
       <Filter>src\components</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\scenes\GameScene.h">
+      <Filter>src\scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\scenes\IScene.h">
+      <Filter>src\scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\scenes\MenuScene.h">
+      <Filter>src\scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\scenes\SceneManager.h">
+      <Filter>src\scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\scenes\World.h">
+      <Filter>src\scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\messages\Message.h">
+      <Filter>src\messages</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\input\IInputManager.h">
+      <Filter>src\input</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\input\InputManager.h">
+      <Filter>src\input</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\gui\MenuManager.h">
+      <Filter>src\gui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\gui\StringManager.h">
+      <Filter>src\gui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\gui\controls\Button.h">
+      <Filter>src\gui\controls</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\gui\controls\Checkbox.h">
+      <Filter>src\gui\controls</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\gui\controls\Control.h">
+      <Filter>src\gui\controls</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\gui\controls\Label.h">
+      <Filter>src\gui\controls</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\gui\controls\Menu.h">
+      <Filter>src\gui\controls</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\gui\controls\Slider.h">
+      <Filter>src\gui\controls</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\entities\EntitiesFactory.h">
+      <Filter>src\entities</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\entities\Entity.h">
+      <Filter>src\entities</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\engine\GraphicEngine.h">
+      <Filter>src\engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\engine\GraphicEntity.h">
+      <Filter>src\engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\engine\SoundEngine.h">
+      <Filter>src\engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\engine\Sprite.h">
+      <Filter>src\engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\engine\Text.h">
+      <Filter>src\engine</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\main.cpp">
       <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\scenes\world.cpp">
-      <Filter>src\scenes</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\input\input_manager.cpp">
-      <Filter>src\input</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\gui\string_manager.cpp">
-      <Filter>src\gui</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\entities\entity.cpp">
-      <Filter>src\entities</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\engine\graphics_engine.cpp">
-      <Filter>src\engine</Filter>
     </ClCompile>
     <ClCompile Include="..\src\common\core.cpp">
       <Filter>src\common</Filter>
@@ -310,9 +295,6 @@
     </ClCompile>
     <ClCompile Include="..\src\common\sys_win.cpp">
       <Filter>src\common</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\engine\sound_engine.cpp">
-      <Filter>src\engine</Filter>
     </ClCompile>
     <ClCompile Include="..\src\common\leaks_windows.cpp">
       <Filter>src\common</Filter>
@@ -335,47 +317,8 @@
     <ClCompile Include="..\lib\tinyxml\tinyxmlparser.cpp">
       <Filter>lib\tinyxml</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\scenes\menu_scene.cpp">
-      <Filter>src\scenes</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\scenes\game_scene.cpp">
-      <Filter>src\scenes</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\scenes\scene_manager.cpp">
-      <Filter>src\scenes</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\entities\entities_factory.cpp">
-      <Filter>src\entities</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\gui\menu_manager.cpp">
-      <Filter>src\gui</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\gui\controls\button.cpp">
-      <Filter>src\gui\controls</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\gui\controls\checkbox.cpp">
-      <Filter>src\gui\controls</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\gui\controls\label.cpp">
-      <Filter>src\gui\controls</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\gui\controls\menu.cpp">
-      <Filter>src\gui\controls</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\gui\controls\slider.cpp">
-      <Filter>src\gui\controls</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\common\math_utils.cpp">
       <Filter>src\common</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\engine\graphics_entity.cpp">
-      <Filter>src\engine</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\engine\sprite.cpp">
-      <Filter>src\engine</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\engine\text.cpp">
-      <Filter>src\engine</Filter>
     </ClCompile>
     <ClCompile Include="..\src\components\LifeComponent.cpp">
       <Filter>src\components</Filter>
@@ -481,6 +424,63 @@
     </ClCompile>
     <ClCompile Include="..\src\components\Component.cpp">
       <Filter>src\components</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\scenes\GameScene.cpp">
+      <Filter>src\scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\scenes\MenuScene.cpp">
+      <Filter>src\scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\scenes\SceneManager.cpp">
+      <Filter>src\scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\scenes\World.cpp">
+      <Filter>src\scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\input\InputManager.cpp">
+      <Filter>src\input</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\gui\MenuManager.cpp">
+      <Filter>src\gui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\gui\StringManager.cpp">
+      <Filter>src\gui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\gui\controls\Button.cpp">
+      <Filter>src\gui\controls</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\gui\controls\Checkbox.cpp">
+      <Filter>src\gui\controls</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\gui\controls\Label.cpp">
+      <Filter>src\gui\controls</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\gui\controls\Menu.cpp">
+      <Filter>src\gui\controls</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\gui\controls\Slider.cpp">
+      <Filter>src\gui\controls</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\entities\EntitiesFactory.cpp">
+      <Filter>src\entities</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\entities\Entity.cpp">
+      <Filter>src\entities</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\engine\GraphicEngine.cpp">
+      <Filter>src\engine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\engine\GraphicEntity.cpp">
+      <Filter>src\engine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\engine\SoundEngine.cpp">
+      <Filter>src\engine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\engine\Sprite.cpp">
+      <Filter>src\engine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\engine\Text.cpp">
+      <Filter>src\engine</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

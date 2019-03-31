@@ -1,16 +1,17 @@
 #include "common/stdafx.h"
-#include "string_manager.h"
+#include "StringManager.h"
+
 #include "rapidjson/document.h"
 #include "rapidjson/filereadstream.h"
 #include <fstream>
 
 using namespace rapidjson;
 
-float StringManager::calculateTextHalfWidth(const std::string& _sLabel) {
+float CStringManager::calculateTextHalfWidth(const std::string& _sLabel) {
 	return getText(_sLabel).length() / 2.0f * 16.0f;
 }
 
-bool StringManager::loadLanguage(ELanguage language) {
+bool CStringManager::loadLanguage(ELanguage language) {
 	m_texts.clear();
 	char* filename;
 	switch (language) {
@@ -41,7 +42,7 @@ bool StringManager::loadLanguage(ELanguage language) {
 	return true;
 }
 
-std::string StringManager::getText(const std::string& label) {
+std::string CStringManager::getText(const std::string& label) {
 	std::string convertedText = label;
 	if (m_texts.count(label)) {
 		convertedText = m_texts[label];

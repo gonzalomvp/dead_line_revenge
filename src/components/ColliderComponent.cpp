@@ -1,17 +1,17 @@
 #include "common/stdafx.h"
 #include "ColliderComponent.h"
 
-#include "entities/entity.h"
-#include "messages/message.h"
+#include "entities/Entity.h"
+#include "messages/Message.h"
 
-void CColliderComponent::receiveMessage(Message* _pMessage) {
+void CColliderComponent::receiveMessage(TMessage* _pMessage) {
 	CComponent::receiveMessage(_pMessage);
 	if (!m_bIsActive)
 		return;
 
 	ASSERT(_pMessage && m_pOwner);
 
-	if (MessageCheckCollision* pMessage = dynamic_cast<MessageCheckCollision*>(_pMessage)) {
+	if (TMessageCheckCollision* pMessage = dynamic_cast<TMessageCheckCollision*>(_pMessage)) {
 		bool bIsOverlapping = false;
 		int iCollisionDamage = 0;
 
@@ -76,7 +76,7 @@ void CColliderComponent::receiveMessage(Message* _pMessage) {
 			}
 		}
 		if (bIsOverlapping) {
-			MessageChangeLife mgsChangeLife;
+			TMessageChangeLife mgsChangeLife;
 			mgsChangeLife.deltaLife = iCollisionDamage;
 			m_pOwner->receiveMessage(&mgsChangeLife);
 		}

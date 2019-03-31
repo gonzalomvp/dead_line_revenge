@@ -1,6 +1,6 @@
 #pragma once
 
-#include "scene.h"
+#include "scenes/IScene.h"
 
 class CGameScene : public IScene {
 public:
@@ -12,6 +12,7 @@ public:
 	virtual void   run(float fDeltaTime) const override;
 	virtual void   render()              const override;
 	virtual EScene getSceneType()        const override { return EGAME; }
+
 private:
 	uint16_t m_uLevel;
 };

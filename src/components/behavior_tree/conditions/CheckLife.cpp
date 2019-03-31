@@ -1,8 +1,8 @@
 #include "common/stdafx.h"
 #include "CheckLife.h"
-#include "entities/entity.h"
-#include "messages/message.h"
-#include "scenes/world.h"
+#include "entities/Entity.h"
+#include "messages/Message.h"
+#include "scenes/World.h"
 #include "components/BehaviorTreeComponent.h"
 
 void CCheckLife::init(TiXmlElement* behaviorElem) {
@@ -15,7 +15,7 @@ void CCheckLife::init(TiXmlElement* behaviorElem) {
 
 bool CCheckLife::check(float step) {
 	Entity* self = getOwnerEntity();
-	MessageGetLife messageGetLife;
+	TMessageGetLife messageGetLife;
 	self->receiveMessage(&messageGetLife);
 
 	return messageGetLife.currentLife >= m_iLife;

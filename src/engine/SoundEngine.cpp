@@ -1,18 +1,18 @@
 #include "common/stdafx.h"
-#include "sound_engine.h"
+#include "SoundEngine.h"
 
-SoundEngine::SoundEngine() {
+CSoundEngine::CSoundEngine() {
 	CORE_InitSound();
 }
 
-SoundEngine::~SoundEngine() {
+CSoundEngine::~CSoundEngine() {
 	for (auto itSounds= m_mSounds.begin(); itSounds != m_mSounds.end(); ++itSounds) {
 		CORE_UnloadWav(itSounds->second);
 	}
 	CORE_EndSound();
 }
 
-void SoundEngine::playSound(const char* _psSoundFile) {
+void CSoundEngine::playSound(const char* _psSoundFile) {
 	if (g_settings.sfx) {
 		uint uSoundId = UINT_MAX;
 		if (m_mSounds.count(_psSoundFile)) {
@@ -27,7 +27,7 @@ void SoundEngine::playSound(const char* _psSoundFile) {
 	}
 }
 
-void SoundEngine::playMusic(const char* _psSoundFile) {
+void CSoundEngine::playMusic(const char* _psSoundFile) {
 	if (g_settings.music) {
 		uint uSoundId = UINT_MAX;
 		if (m_mSounds.count(_psSoundFile)) {
@@ -42,10 +42,10 @@ void SoundEngine::playMusic(const char* _psSoundFile) {
 	}
 }
 
-void SoundEngine::stopMusic() {
+void CSoundEngine::stopMusic() {
 	CORE_StopMusic();
 }
 
-void SoundEngine::setVolume(float _fVolume) {
+void CSoundEngine::setVolume(float _fVolume) {
 	CORE_SetMusicVolume(_fVolume);
 }

@@ -1,8 +1,8 @@
 #include "common/stdafx.h"
-#include "scene_manager.h"
+#include "SceneManager.h"
 
-#include "game_scene.h"
-#include "menu_scene.h"
+#include "scenes/GameScene.h"
+#include "scenes/MenuScene.h"
 
 CSceneManager::~CSceneManager() {
 	if (m_pCurrentScene) {

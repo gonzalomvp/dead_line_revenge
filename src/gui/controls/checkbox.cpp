@@ -1,9 +1,9 @@
 #include "common/stdafx.h"
-#include "checkbox.h"
+#include "Checkbox.h"
 
-#include "engine/graphics_engine.h"
-#include "engine/sprite.h"
-#include "gui/string_manager.h"
+#include "engine/GraphicEngine.h"
+#include "engine/Sprite.h"
+#include "gui/StringManager.h"
 
 CCheckbox::CCheckbox(const std::string& _sName, const vec2& _v2Pos, const vec2& _v2Size, const char* _psCheckedImage, const char* _psUncheckedImage, bool _bIsChecked, bool _bIsActive)
 : CControl(_sName, _v2Pos, _v2Size, _bIsActive)
@@ -16,9 +16,9 @@ CCheckbox::CCheckbox(const std::string& _sName, const vec2& _v2Pos, const vec2& 
 {}
 
 CCheckbox::~CCheckbox() {
-	if (g_pGraphicsEngine) {
-		g_pGraphicsEngine->removeGfxEntity(m_pSpriteChecked);
-		g_pGraphicsEngine->removeGfxEntity(m_pSpriteUnchecked);
+	if (g_pGraphicEngine) {
+		g_pGraphicEngine->removeGfxEntity(m_pSpriteChecked);
+		g_pGraphicEngine->removeGfxEntity(m_pSpriteUnchecked);
 	}
 	DELETE(m_pSpriteChecked);
 	DELETE(m_pSpriteUnchecked);
@@ -34,12 +34,12 @@ CCheckbox::~CCheckbox() {
 void CCheckbox::init() {
 	CControl::init();
 
-	ASSERT(g_pGraphicsEngine);
+	ASSERT(g_pGraphicEngine);
 
-	m_pSpriteChecked = NEW(CSprite, g_pGraphicsEngine->getTexture(m_psCheckedImage), m_v2Pos, m_v2Size, 0.f, 1.f, 1);
-	g_pGraphicsEngine->addGfxEntity(m_pSpriteChecked);
-	m_pSpriteUnchecked = NEW(CSprite, g_pGraphicsEngine->getTexture(m_psUncheckedImage), m_v2Pos, m_v2Size, 0.f, 1.f, 1);
-	g_pGraphicsEngine->addGfxEntity(m_pSpriteUnchecked);
+	m_pSpriteChecked = NEW(CSprite, g_pGraphicEngine->getTexture(m_psCheckedImage), m_v2Pos, m_v2Size, 0.f, 1.f, 1);
+	g_pGraphicEngine->addGfxEntity(m_pSpriteChecked);
+	m_pSpriteUnchecked = NEW(CSprite, g_pGraphicEngine->getTexture(m_psUncheckedImage), m_v2Pos, m_v2Size, 0.f, 1.f, 1);
+	g_pGraphicEngine->addGfxEntity(m_pSpriteUnchecked);
 	deactivate();
 }
 

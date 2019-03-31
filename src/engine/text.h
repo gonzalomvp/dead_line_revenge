@@ -1,15 +1,15 @@
 #pragma once
 
-#include "engine/graphics_entitiy.h"
+#include "engine/GraphicEntity.h"
 
-class CText : public CGfxEntity {
+class CText : public CGraphicEntity {
 public:
-	CText(const std::string& _sText, vec2 _v2Pos, int _iPriority) : CGfxEntity(_v2Pos, _iPriority), m_sText(_sText) {}
+	CText(const std::string& _sText, vec2 _v2Pos, int _iPriority) : CGraphicEntity(_v2Pos, _iPriority), m_sText(_sText) {}
 
 	std::string getText() const                    { return m_sText;   }
 	void        setText(const std::string& _sText) { m_sText = _sText; }
 
-	// CGfxEntity
+	// CGraphicEntity
 	virtual void render() override;
 
 private:

@@ -1,7 +1,7 @@
 #pragma once
 
-#include "entities/entity.h"
-#include "input/input_manager.h"
+#include "entities/Entity.h"
+#include "input/IInputManager.h"
 
 #define WORLD_WIDTH  640
 #define WORLD_HEIGHT 480

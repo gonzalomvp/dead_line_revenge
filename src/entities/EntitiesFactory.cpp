@@ -1,7 +1,7 @@
 #include "common/stdafx.h"
-#include "entities_factory.h"
+#include "EntitiesFactory.h"
 
-#include "engine/sound_engine.h"
+#include "engine/SoundEngine.h"
 
 #include "components/BehaviorTreeComponent.h"
 #include "components/ColliderComponent.h"
@@ -16,7 +16,7 @@
 #include "components/WeaponComponent.h"
 #include "components/WeaponPickupComponent.h"
 
-#include "scenes/world.h"
+#include "scenes/World.h"
 
 #include "rapidjson/document.h"
 #include "rapidjson/filereadstream.h"

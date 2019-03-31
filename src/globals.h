@@ -3,10 +3,10 @@
 class CSceneManager;
 class CWorld;
 class CEntitiesFactory;
-class GraphicsEngine;
-class SoundEngine;
+class CGraphicEngine;
+class CSoundEngine;
 class IInputManager;
-class StringManager;
+class CStringManager;
 class CMenuManager;
 
 enum ELanguage {
@@ -14,7 +14,7 @@ enum ELanguage {
 	ESpanish,
 };
 
-struct Settings {
+struct TSettings {
 	bool music;
 	bool sfx;
 	float volume;
@@ -24,9 +24,9 @@ struct Settings {
 extern CSceneManager*    g_pSceneManager;
 extern CWorld*           g_pWorld;
 extern CEntitiesFactory* g_pEntitiesFactory;
-extern GraphicsEngine*   g_pGraphicsEngine;
-extern SoundEngine*      g_pSoundEngine;
+extern CGraphicEngine*   g_pGraphicEngine;
+extern CSoundEngine*     g_pSoundEngine;
 extern IInputManager*    g_pInputManager;
-extern StringManager*    g_pStringManager;
+extern CStringManager*   g_pStringManager;
 extern CMenuManager*     g_pMenuManager;
-extern Settings          g_settings;
+extern TSettings         g_settings;

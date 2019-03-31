@@ -32,7 +32,7 @@ void Entity::run(float deltaTime) {
 	}
 }
 
-void Entity::receiveMessage(Message* message) {
+void Entity::receiveMessage(TMessage* message) {
 	for (auto itComponents = m_components.begin(); itComponents != m_components.end(); ++itComponents) {
 		(*itComponents)->receiveMessage(message);
 	}

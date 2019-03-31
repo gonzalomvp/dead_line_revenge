@@ -1,25 +1,25 @@
 #include "common/stdafx.h"
 
-#include "engine/graphics_engine.h"
-#include "engine/sprite.h"
-#include "engine/sound_engine.h"
-#include "entities/entities_factory.h"
-#include "gui/menu_manager.h"
-#include "gui/string_manager.h"
-#include "input/input_manager.h"
-#include "scenes/scene_manager.h"
+#include "engine/GraphicEngine.h"
+#include "engine/Sprite.h"
+#include "engine/SoundEngine.h"
+#include "entities/EntitiesFactory.h"
+#include "gui/MenuManager.h"
+#include "gui/StringManager.h"
+#include "input/InputManager.h"
+#include "scenes/SceneManager.h"
 
 #include <ctime>
 
 // Global variables
-GraphicsEngine*   g_pGraphicsEngine;
-SoundEngine*      g_pSoundEngine;
+CGraphicEngine*   g_pGraphicEngine;
+CSoundEngine*     g_pSoundEngine;
 IInputManager*    g_pInputManager;
 CSceneManager*    g_pSceneManager;
 CEntitiesFactory* g_pEntitiesFactory;
-StringManager*    g_pStringManager;
+CStringManager*   g_pStringManager;
 CMenuManager*     g_pMenuManager;
-Settings          g_settings;
+TSettings         g_settings;
 
 int Main(void) {
 	g_settings.music = true;
@@ -27,12 +27,12 @@ int Main(void) {
 	g_settings.volume = 0.2f;
 	g_settings.language = EEnglish;
 
-	g_pGraphicsEngine  = NEW(GraphicsEngine);
-	g_pSoundEngine     = NEW(SoundEngine);
+	g_pGraphicEngine   = NEW(CGraphicEngine);
+	g_pSoundEngine     = NEW(CSoundEngine);
 	g_pInputManager    = NEW(CInputManager);
 	g_pSceneManager    = NEW(CSceneManager);
 	g_pEntitiesFactory = NEW(CEntitiesFactory);
-	g_pStringManager   = NEW(StringManager);
+	g_pStringManager   = NEW(CStringManager);
 	g_pMenuManager     = NEW(CMenuManager);
 	g_pMenuManager->init();
 
@@ -46,8 +46,8 @@ int Main(void) {
 	g_pEntitiesFactory->init("data/config.json");
 
 	//Set Background
-	CSprite background(g_pGraphicsEngine->getTexture("data/background.png"), vmake(SCR_WIDTH * 0.5f, SCR_HEIGHT * 0.5f), vmake(SCR_WIDTH, SCR_HEIGHT), 0.0f, 1.0f, 100);
-	g_pGraphicsEngine->addGfxEntity(&background);
+	CSprite background(g_pGraphicEngine->getTexture("data/background.png"), vmake(SCR_WIDTH * 0.5f, SCR_HEIGHT * 0.5f), vmake(SCR_WIDTH, SCR_HEIGHT), 0.0f, 1.0f, 100);
+	g_pGraphicEngine->addGfxEntity(&background);
 
 	//Play Music
 	g_pSoundEngine->playMusic("data/audio/music.wav");
@@ -82,8 +82,8 @@ int Main(void) {
 	g_pSceneManager = nullptr;
 	DELETE(g_pMenuManager);
 	g_pMenuManager = nullptr;
-	DELETE(g_pGraphicsEngine);
-	g_pGraphicsEngine = nullptr;
+	DELETE(g_pGraphicEngine);
+	g_pGraphicEngine = nullptr;
 	DELETE(g_pSoundEngine);
 	g_pSoundEngine = nullptr;
 

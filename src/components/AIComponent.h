@@ -8,5 +8,5 @@ public:
 	virtual ~CAIComponent() = 0 {};
 
 	// CComponent
-	virtual void receiveMessage(Message* _pMessage) override;
+	virtual void receiveMessage(TMessage* _pMessage) override;
 };

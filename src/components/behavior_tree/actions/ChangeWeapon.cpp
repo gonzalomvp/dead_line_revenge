@@ -1,9 +1,9 @@
 #include "common/stdafx.h"
 #include "ChangeWeapon.h"
-#include "entities/entity.h"
-#include "entities/entities_factory.h"
-#include "messages/message.h"
-#include "scenes/world.h"
+#include "entities/Entity.h"
+#include "entities/EntitiesFactory.h"
+#include "messages/Message.h"
+#include "scenes/World.h"
 
 #include "components/BehaviorTreeComponent.h"
 
@@ -18,7 +18,7 @@ void CChangeWeapon::init(TiXmlElement* behaviorElem) {
 EStatus CChangeWeapon::onUpdate(float step) {
 
 	Entity* self = getOwnerEntity();
-	MessageWeaponChange messageWeaponChange;
+	TMessageWeaponChange messageWeaponChange;
 	messageWeaponChange.eWeaponType = CEntitiesFactory::getWeaponTypeByName(mWeaponName);
 	self->receiveMessage(&messageWeaponChange);
 
