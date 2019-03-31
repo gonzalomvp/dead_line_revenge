@@ -1,29 +1,30 @@
 #include "common/stdafx.h"
 #include "RotateAim.h"
+
 #include "entities/Entity.h"
 #include "messages/Message.h"
-#include "scenes/World.h"
-#include "components/BehaviorTreeComponent.h"
 
-void CRotateAim::init(TiXmlElement* behaviorElem) {
-	CBehavior::init(behaviorElem);
-	ASSERT(behaviorElem);
+void CRotateAim::init(TiXmlElement* _pBehaviorElem) {
+	CBehavior::init(_pBehaviorElem);
 
-	ASSERT(behaviorElem->Attribute("fAngle"));
-	m_fAngle = std::stof(behaviorElem->Attribute("fAngle"));
+	ASSERT(_pBehaviorElem);
+
+	ASSERT(_pBehaviorElem->Attribute("fAngle"));
+	m_fAngle = std::stof(_pBehaviorElem->Attribute("fAngle"));
 }
 
-CBehavior::EStatus CRotateAim::onUpdate(float step) {
-	CEntity* self = getOwnerEntity();
-	TMessageGetAimDirection messageGetAimDirection;
-	self->receiveMessage(&messageGetAimDirection);
+CBehavior::EStatus CRotateAim::onUpdate(float _fDeltaTime) {
+	CEntity* pOwnerEntity = getOwnerEntity();
+	ASSERT(pOwnerEntity);
 
-	float angle = vangle(messageGetAimDirection.v2Dir);
-	angle += DEG2RAD(m_fAngle) * step;
+	TMessageGetAimDirection messageGetAimDirection;
+	pOwnerEntity->receiveMessage(&messageGetAimDirection);
+	float fAngle = vangle(messageGetAimDirection.v2Dir);
+	fAngle += DEG2RAD(m_fAngle) * _fDeltaTime;
 
 	TMessageSetAimDirection messageSetAimDirection;
-	messageSetAimDirection.v2Dir = vunit(angle);
-	self->receiveMessage(&messageSetAimDirection);
+	messageSetAimDirection.v2Dir = vunit(fAngle);
+	pOwnerEntity->receiveMessage(&messageSetAimDirection);
 
 	return EStatus::ESuccess;
 }

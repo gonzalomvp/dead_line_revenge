@@ -5,13 +5,19 @@ class CBehaviorTreeComponent;
 
 class CWait : public CBehavior {
 public:
-	CWait(CBehaviorTreeComponent* owner) : CBehavior(owner), m_fWaitTime(0.0f), m_fWaitTimer(0.0f), m_fRandomDeviation(0.0f) {}
+	CWait(CBehaviorTreeComponent* _pOwnerComponent)
+	: CBehavior(_pOwnerComponent)
+	, m_fWaitTime(0.0f)
+	, m_fWaitTimer(0.0f)
+	, m_fRandomDeviation(0.0f)
+	{}
 
 	// CBehavior
-	virtual void init(TiXmlElement* behaviorElem) override;
+	virtual void init(TiXmlElement* _pBehaviorElem) override;
 
 protected:
-	virtual void onEnter() override;
+	// CBehavior
+	virtual void    onEnter()                   override;
 	virtual EStatus onUpdate(float _fDeltaTime) override;
 
 private:

@@ -1,97 +1,105 @@
 #include "common/stdafx.h"
 #include "GoToBlackboardPosition.h"
-#include "entities/Entity.h"
+
 #include "components/BehaviorTreeComponent.h"
-#include "components/behavior_tree/blackboard.h"
+#include "components/behavior_tree/Blackboard.h"
+#include "entities/Entity.h"
 #include "messages/Message.h"
 #include "scenes/World.h"
 
 #include <sstream>
 
-void CGoToBlackboardPosition::init(TiXmlElement* behaviorElem) {
-	CBehavior::init(behaviorElem);
-	ASSERT(behaviorElem);
+void CGoToBlackboardPosition::init(TiXmlElement* _pBehaviorElem) {
+	CBehavior::init(_pBehaviorElem);
 
-	ASSERT(behaviorElem->Attribute("sTo"));
-	m_sBlackboardKey = behaviorElem->Attribute("sTo");
+	ASSERT(_pBehaviorElem);
 
-	ASSERT(behaviorElem->Attribute("fArriveDistance"));
-	m_fArriveDistance = std::stof(behaviorElem->Attribute("fArriveDistance"));
+	ASSERT(_pBehaviorElem->Attribute("sTo"));
+	m_sBlackboardKey = _pBehaviorElem->Attribute("sTo");
+
+	ASSERT(_pBehaviorElem->Attribute("fArriveDistance"));
+	m_fArriveDistance = std::stof(_pBehaviorElem->Attribute("fArriveDistance"));
 
 	m_bKeepUpdatingPosition = false;
-	if (behaviorElem->Attribute("bKeepUpdatingPosition")) {
-		std::istringstream is(behaviorElem->Attribute("bKeepUpdatingPosition"));
+	if (_pBehaviorElem->Attribute("bKeepUpdatingPosition")) {
+		std::istringstream is(_pBehaviorElem->Attribute("bKeepUpdatingPosition"));
 		is >> std::boolalpha >> m_bKeepUpdatingPosition;
 	}
 
-	if (behaviorElem->Attribute("fRandomDeviation")) {
-		float fRandomDeviation = std::stof(behaviorElem->Attribute("fRandomDeviation"));
+	if (_pBehaviorElem->Attribute("fRandomDeviation")) {
+		float fRandomDeviation = std::stof(_pBehaviorElem->Attribute("fRandomDeviation"));
 		m_v2Offset = vmake(CORE_FRand(-fRandomDeviation, fRandomDeviation), CORE_FRand(-fRandomDeviation, fRandomDeviation));
 	}
 }
 
 void CGoToBlackboardPosition::onEnter() {
-	CEntity* self = getOwnerEntity();
-	vec2 selfSize = self->getSize();
+	CBehavior::onEnter();
+
+	CEntity* pOwnerEntity = getOwnerEntity();
+	ASSERT(pOwnerEntity && m_pOwnerComponent);
+	vec2 v2SelfSize = pOwnerEntity->getSize();
 
 	CEntity* pTargetEntity = nullptr;
 	bool bFound = m_pOwnerComponent->getBlackboard().getValueEntity(m_sBlackboardKey, pTargetEntity);
 	if (bFound) {
 		ASSERT(pTargetEntity);
-		mTargetPos = pTargetEntity->getPos();
+		m_v2TargetPos = pTargetEntity->getPos();
 	}
 	else {
-		bFound = m_pOwnerComponent->getBlackboard().getValueVec2(m_sBlackboardKey, mTargetPos);
+		bFound = m_pOwnerComponent->getBlackboard().getValueVec2(m_sBlackboardKey, m_v2TargetPos);
 	}
 	ASSERT(bFound);
 
-	mTargetPos = vadd(mTargetPos, m_v2Offset);
-	mTargetPos.x = clamp(mTargetPos.x, selfSize.x * 0.5f, WORLD_WIDTH - selfSize.x * 0.5f);
-	mTargetPos.y = clamp(mTargetPos.y, selfSize.y * 0.5f, WORLD_HEIGHT - selfSize.y * 0.5f);
+	m_v2TargetPos = vadd(m_v2TargetPos, m_v2Offset);
+	m_v2TargetPos.x = clamp(m_v2TargetPos.x, v2SelfSize.x * 0.5f, WORLD_WIDTH - v2SelfSize.x * 0.5f);
+	m_v2TargetPos.y = clamp(m_v2TargetPos.y, v2SelfSize.y * 0.5f, WORLD_HEIGHT - v2SelfSize.y * 0.5f);
 }
 
-CBehavior::EStatus CGoToBlackboardPosition::onUpdate(float step) {
-	CEntity* self = getOwnerEntity();
-	vec2 selfSize = self->getSize();
+CBehavior::EStatus CGoToBlackboardPosition::onUpdate(float _fDeltaTime) {
+	CEntity* pOwnerEntity = getOwnerEntity();
+	ASSERT(pOwnerEntity && m_pOwnerComponent);
+	vec2 v2SelfSize = pOwnerEntity->getSize();
 
 	if (m_bKeepUpdatingPosition) {
 		CEntity* pTargetEntity = nullptr;
 		bool bFound = m_pOwnerComponent->getBlackboard().getValueEntity(m_sBlackboardKey, pTargetEntity);
 		if (bFound) {
 			ASSERT(pTargetEntity);
-			mTargetPos = pTargetEntity->getPos();
+			m_v2TargetPos = pTargetEntity->getPos();
 		}
 		else {
-			bFound = m_pOwnerComponent->getBlackboard().getValueVec2(m_sBlackboardKey, mTargetPos);
+			bFound = m_pOwnerComponent->getBlackboard().getValueVec2(m_sBlackboardKey, m_v2TargetPos);
 		}
 		if (!bFound) {
 			return EStatus::EFail;
 		}
 	}
 
-	mTargetPos = vadd(mTargetPos, m_v2Offset);
-	mTargetPos.x = clamp(mTargetPos.x, selfSize.x * 0.5f, WORLD_WIDTH - selfSize.x * 0.5f);
-	mTargetPos.y = clamp(mTargetPos.y, selfSize.y * 0.5f, WORLD_HEIGHT - selfSize.y * 0.5f);
+	m_v2TargetPos = vadd(m_v2TargetPos, m_v2Offset);
+	m_v2TargetPos.x = clamp(m_v2TargetPos.x, v2SelfSize.x * 0.5f, WORLD_WIDTH - v2SelfSize.x * 0.5f);
+	m_v2TargetPos.y = clamp(m_v2TargetPos.y, v2SelfSize.y * 0.5f, WORLD_HEIGHT - v2SelfSize.y * 0.5f);
 
-	vec2 direction = vsub(mTargetPos, self->getPos());
+	vec2 v2SelfToTarget = vsub(m_v2TargetPos, pOwnerEntity->getPos());
 
-	if (vlen2(direction) <= m_fArriveDistance * m_fArriveDistance)
-	{
+	// Stop movement if arrived
+	if (vlen2(v2SelfToTarget) <= m_fArriveDistance * m_fArriveDistance) {
 		TMessageSetMovementDir msgSetMovementDir;
-		self->receiveMessage(&msgSetMovementDir);
+		pOwnerEntity->receiveMessage(&msgSetMovementDir);
 		return EStatus::ESuccess;
 	}
 
 	TMessageSetMovementDir msgSetMovementDir;
-	msgSetMovementDir.v2Dir = direction;
-	self->receiveMessage(&msgSetMovementDir);
+	msgSetMovementDir.v2Dir = v2SelfToTarget;
+	pOwnerEntity->receiveMessage(&msgSetMovementDir);
 	return EStatus::ERunning;
 }
 
 void CGoToBlackboardPosition::abort() {
 	CBehavior::abort();
 
-	CEntity* self = getOwnerEntity();
+	// Stop movement
+	CEntity* pOwnerEntity = getOwnerEntity();
+	ASSERT(pOwnerEntity);
 	TMessageSetMovementDir msgSetMovementDir;
-	self->receiveMessage(&msgSetMovementDir);
+	pOwnerEntity->receiveMessage(&msgSetMovementDir);
 }
