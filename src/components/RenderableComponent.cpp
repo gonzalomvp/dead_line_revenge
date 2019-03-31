@@ -43,7 +43,7 @@ void CRenderableComponent::run(float _fDeltaTime) {
 		v2Orientation = messageGetAimDirection.direction;
 	}
 	if (vlen2(v2Orientation) != 0.0f) {
-		m_pSprite->setAngle(vangle(v2Orientation));
+		m_pSprite->setAngle(RAD2DEG(vangle(v2Orientation)));
 	}
 
 	// Blink effect when receiving a hit

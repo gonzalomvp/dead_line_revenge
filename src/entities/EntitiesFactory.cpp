@@ -174,7 +174,7 @@ Entity* CEntitiesFactory::createBullet(CWeaponComponent::EType _eWeaponType, vec
 	
 	Entity* bullet = NEW(Entity, Entity::EWEAPON, _v2Pos, weaponData.v2BulletSize);
 
-	CRenderableComponent* renderable = NEW(CRenderableComponent, bullet, weaponData.sImageFile, vangle(_v2Direction), 1.0f, 6, true, false);
+	CRenderableComponent* renderable = NEW(CRenderableComponent, bullet, weaponData.sImageFile, RAD2DEG(vangle(_v2Direction)), 1.0f, 6, true, false);
 	renderable->init();
 	CMovementComponent* movement = NEW(CMovementComponent, bullet, _v2Direction, weaponData.fBulletSpeed, weaponData.bIsBouncy);
 	movement->init();

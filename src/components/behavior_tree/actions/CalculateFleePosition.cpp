@@ -52,7 +52,7 @@ EStatus CCalculateFleePosition::onUpdate(float step) {
 
 	float fAngleStep = s_fAngleStep * (rand() % 2 - 0.5f) * 2.0f;
 	int iStep = 0;
-	float fInitAngle = vangle(v2ToEnemyDir);
+	float fInitAngle = RAD2DEG(vangle(v2ToEnemyDir));
 
 	// find a valid pos in the world changing progressively the angle
 	while (v2TargetPos.x < selfSize.x * 0.5f || v2TargetPos.x > WORLD_WIDTH - selfSize.x * 0.5f
