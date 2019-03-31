@@ -7,19 +7,24 @@
 
 using namespace rapidjson;
 
+namespace {
+	const std::string s_sEnglishFile = "data/config/english.json";
+	const std::string s_sSpanishFile = "data/config/spanish.json";
+}
+
 float CStringManager::calculateTextHalfWidth(const std::string& _sLabel) {
 	return getText(_sLabel).length() / 2.0f * 16.0f;
 }
 
 bool CStringManager::loadLanguage(ELanguage language) {
 	m_texts.clear();
-	char* filename;
+	const char* filename;
 	switch (language) {
 		case EEnglish:
-			filename = "data/english.json";
+			filename = s_sEnglishFile.c_str();
 			break;
 		case ESpanish:
-			filename = "data/spanish.json";
+			filename = s_sSpanishFile.c_str();
 			break;
 		default:
 			return false;

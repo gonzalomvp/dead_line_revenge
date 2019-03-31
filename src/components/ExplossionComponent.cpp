@@ -5,7 +5,7 @@
 #include "engine/SoundEngine.h"
 
 namespace {
-	const std::string s_sExplossionSoundFile = "data/explossion.wav";
+	const std::string s_sExplossionSoundFile = "data/audio/explossion.wav";
 }
 
 void CExplossionComponent::run(float _fDeltaTime) {

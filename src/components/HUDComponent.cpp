@@ -15,8 +15,8 @@ namespace {
 	const std::string s_sScoreText = "LTEXT_GUI_SCORE_HUD";
 	const std::string s_sAmmoText  = "LTEXT_GUI_AMMO_HUD";
 
-	const char* s_psTargetImage = "data/target.png";
-	const char* s_psReloadImage = "data/reload.png";
+	const char* s_psTargetImage = "data/images/target.png";
+	const char* s_psReloadImage = "data/images/reload.png";
 }
 
 CHUDComponent::~CHUDComponent() {

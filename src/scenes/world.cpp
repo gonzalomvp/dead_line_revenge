@@ -15,6 +15,12 @@
 
 using namespace rapidjson;
 
+namespace {
+	const std::string s_sLevel1File = "data/config/level1.json";
+	const std::string s_sLevel2File = "data/config/level2.json";
+	const std::string s_sLevel3File = "data/config/level3.json";
+}
+
 CWorld::CWorld() 
 : m_uLevel(0)
 , m_pPlayer(nullptr)
@@ -67,15 +73,13 @@ bool CWorld::init(uint16_t _uLevel) {
 	const char* psFileName = "";
 	switch (_uLevel) {
 		case 1:
-			psFileName = "data/level1.json";
-			// Force test level
-			//psFileName = "data/levelTest.json";
+			psFileName = s_sLevel1File.c_str();
 			break;
 		case 2:
-			psFileName = "data/level2.json";
+			psFileName = s_sLevel2File.c_str();
 			break;
 		case 3:
-			psFileName = "data/level3.json";
+			psFileName = s_sLevel3File.c_str();
 			break;
 		default:
 			// Invalid level

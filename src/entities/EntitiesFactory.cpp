@@ -24,6 +24,12 @@
 
 using namespace rapidjson;
 
+namespace {
+	const std::string s_sPlayerImage     = "data/images/player.png";
+	const std::string s_sCrateImage      = "data/images/crate.png";
+	const std::string s_sExplossionImage = "data/images/explossion.png";
+}
+
 CEntitiesFactory::TWeaponInfo CEntitiesFactory::s_aWeaponInfo[] = {
 #define REG_WEAPON(val, name) \
 	{CWeaponComponent::E##val, name},
@@ -142,7 +148,7 @@ Entity* CEntitiesFactory::createPlayer(vec2 _v2Pos) {
 	Entity* player = NEW(Entity, Entity::EPLAYER, _v2Pos, vmake(30.0f, 25.0f));
 	//CTransformComponent* transform = NEW(CTransformComponent, player, _v2Pos, vmake(30, 25));
 	//transform->init();
-	CRenderableComponent* renderable = NEW(CRenderableComponent, player, "data/player.png", 0.0f, 1.0f, 5, false, true, 0.5f);
+	CRenderableComponent* renderable = NEW(CRenderableComponent, player, s_sPlayerImage, 0.0f, 1.0f, 5, false, true, 0.5f);
 	renderable->init();
 	CPlayerControllerComponent* playerControl = NEW(CPlayerControllerComponent, player);
 	playerControl->init();
@@ -237,7 +243,7 @@ Entity* CEntitiesFactory::createExplossion(vec2 _v2Pos, CWeaponComponent::EType 
 
 	Entity* explossion = NEW(Entity, Entity::EWEAPON, _v2Pos, v2InitSize);
 
-	CRenderableComponent* renderable = NEW(CRenderableComponent, explossion, "data/explossion.png", 0.0f, 0.5f, 5);
+	CRenderableComponent* renderable = NEW(CRenderableComponent, explossion, s_sExplossionImage, 0.0f, 0.5f, 5);
 	renderable->init();
 	CColliderComponent* collider = NEW(CColliderComponent, explossion, CColliderComponent::ECircleCollider, -5, iColliderChannelMask, CColliderComponent::ENoneCollider);
 	collider->init();
@@ -324,7 +330,7 @@ Entity* CEntitiesFactory::createWeaponPickup() {
 	vec2 randomPos = vmake(CORE_FRand(0.0, WORLD_WIDTH), CORE_FRand(80, WORLD_HEIGHT - 80));
 
 	Entity* weaponPickup = NEW(Entity, Entity::EPICKUP, randomPos, vmake(20, 20));
-	CRenderableComponent* renderable = NEW(CRenderableComponent, weaponPickup, "data/crate-1.png", 0.0f, 1.0f, 7);
+	CRenderableComponent* renderable = NEW(CRenderableComponent, weaponPickup, s_sCrateImage, 0.0f, 1.0f, 7);
 	renderable->init();
 	CColliderComponent* collider = NEW(CColliderComponent, weaponPickup, CColliderComponent::ERectCollider, 0, CColliderComponent::EPickupCollider, CColliderComponent::EPlayerCollider);
 	collider->init();

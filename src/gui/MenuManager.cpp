@@ -38,16 +38,16 @@ namespace menu { namespace constants {
 	const char* s_psScoreLabelName             = "SCORE_LBL";
 
 	// File names
-	const char* s_psButtonOffImage               = "data/ui/buttonOff.png";
-	const char* s_psButtonOnImage                = "data/ui/buttonOn.png";
-	const char* s_psCheckboxEnabledImage         = "data/ui/CheckBox_enabled.png";
-	const char* s_psCheckboxDisabledImage        = "data/ui/CheckBox_disabled.png";
-	const char* s_psSliderLeftButtonNormalImage  = "data/ui/Slider_Left_Normal.png";
-	const char* s_psSliderLeftButtonPushImage    = "data/ui/Slider_Left_Push.png";
-	const char* s_psSliderRightButtonNormalImage = "data/ui/Slider_Right_Normal.png";
-	const char* s_psSliderRightButtonPushImage   = "data/ui/Slider_Right_Push.png";
-	const char* s_psSliderBarImage               = "data/ui/Slider_bar.png";
-	const char* s_psSliderBallImage              = "data/ui/Slider_ball.png";
+	const char* s_psButtonOffImage               = "data/images/ui/buttonOff.png";
+	const char* s_psButtonOnImage                = "data/images/ui/buttonOn.png";
+	const char* s_psCheckboxEnabledImage         = "data/images/ui/CheckBox_enabled.png";
+	const char* s_psCheckboxDisabledImage        = "data/images/ui/CheckBox_disabled.png";
+	const char* s_psSliderLeftButtonNormalImage  = "data/images/ui/Slider_Left_Normal.png";
+	const char* s_psSliderLeftButtonPushImage    = "data/images/ui/Slider_Left_Push.png";
+	const char* s_psSliderRightButtonNormalImage = "data/images/ui/Slider_Right_Normal.png";
+	const char* s_psSliderRightButtonPushImage   = "data/images/ui/Slider_Right_Push.png";
+	const char* s_psSliderBarImage               = "data/images/ui/Slider_bar.png";
+	const char* s_psSliderBallImage              = "data/images/ui/Slider_ball.png";
 	const char* s_psMusicFile                    = "data/audio/music.wav";
 
 	// Texts

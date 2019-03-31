@@ -35,7 +35,7 @@ FontCharDef fontchardefs[MAX_FONT_CHARDEFS] = { 0 };
 void FONT_Init()
 {
   // Load texture
-  FONT_Tex = CORE_LoadPNG("data/kromasky.png", false);
+  FONT_Tex = CORE_LoadPNG("data/images/ui/kromasky.png", false);
 
   // Preapre coords
   for (int i = 0; i < FONT_ROWS; i++) // One iteration per row

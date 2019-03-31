@@ -5,7 +5,7 @@
       
       <CheckLife iLife="15" />
       <Sequence>
-        <ChangeSprite sSprite="data/boss_shield.png" />
+        <ChangeSprite sSprite="data/images/boss_shield.png" />
         <ChangeWeapon sWeapon="boss weapon1" />
         <Repeat>
           <Sequence>
@@ -26,7 +26,7 @@
 
     <!--Fase 2, sin escudo y con arma de dispersion-->
     <Sequence>
-      <ChangeSprite sSprite="data/boss.png" />
+      <ChangeSprite sSprite="data/images/boss.png" />
       <ChangeWeapon sWeapon="boss weapon2" />
       <ChangeSpeed fSpeed ="360.0" />
       <Wait fTime="0.5" />

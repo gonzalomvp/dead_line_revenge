@@ -13,8 +13,8 @@
 		"isAutomatic": false,
 		"isExplossive": false,
 		"isBouncy": false,
-		"imageFile": "data/bullet.png",
-		"soundFile": "data/shot.wav"
+		"imageFile": "data/images/bullet.png",
+		"soundFile": "data/audio/shot.wav"
 	},
 	{
 		"name": "machinegun",
@@ -29,8 +29,8 @@
 		"isAutomatic": true,
 		"isExplossive": false,
 		"isBouncy": false,
-		"imageFile": "data/bullet.png",
-		"soundFile": "data/shot.wav"
+		"imageFile": "data/images/bullet.png",
+		"soundFile": "data/audio/shot.wav"
 	},
 	{
 		"name": "shotgun",
@@ -45,8 +45,8 @@
 		"isAutomatic": false,
 		"isExplossive": false,
 		"isBouncy": true,
-		"imageFile": "data/shotgunBullet.png",
-		"soundFile": "data/shotgun.wav"
+		"imageFile": "data/images/shotgunBullet.png",
+		"soundFile": "data/audio/shotgun.wav"
 	},
 	{
 		"name": "mines",
@@ -61,8 +61,8 @@
 		"isAutomatic": false,
 		"isExplossive": true,
 		"isBouncy": false,
-		"imageFile": "data/mine.png",
-		"soundFile": "data/mine.wav"
+		"imageFile": "data/images/mine.png",
+		"soundFile": "data/audio/mine.wav"
 	},
 	{
 		"name": "c4",
@@ -77,8 +77,8 @@
 		"isAutomatic": false,
 		"isExplossive": true,
 		"isBouncy": false,
-		"imageFile": "data/c4.png",
-		"soundFile": "data/mine.wav"
+		"imageFile": "data/images/c4.png",
+		"soundFile": "data/audio/mine.wav"
 	},
 	{
 		"name": "rocket launcher",
@@ -93,8 +93,8 @@
 		"isAutomatic": false,
 		"isExplossive": true,
 		"isBouncy": false,
-		"imageFile": "data/rocket.png",
-		"soundFile": "data/rocketlauncher.wav"
+		"imageFile": "data/images/rocket.png",
+		"soundFile": "data/audio/rocketlauncher.wav"
 	},
 	{
 		"name": "nuclear bomb",
@@ -125,7 +125,7 @@
 		"isAutomatic": false,
 		"isExplossive": false,
 		"isBouncy": false,
-		"imageFile": "data/bullet.png",
+		"imageFile": "data/images/bullet.png",
 		"soundFile": ""
 	},
 	{
@@ -142,7 +142,7 @@
 		"isAutomatic": false,
 		"isExplossive": false,
 		"isBouncy": false,
-		"imageFile": "data/bullet.png",
+		"imageFile": "data/images/bullet.png",
 		"soundFile": ""
 	},
 	{
@@ -159,7 +159,7 @@
 		"isAutomatic": false,
 		"isExplossive": false,
 		"isBouncy": false,
-		"imageFile": "data/bullet.png",
+		"imageFile": "data/images/bullet.png",
 		"soundFile": ""
 	}
 	],
@@ -171,7 +171,7 @@
 		"speed": 180.0,
 		"collisionDamage": -1,
 		"size": [ 25 ,25 ],
-		"imageFile": "data/enemy.png",
+		"imageFile": "data/images/enemy.png",
 		"behaviorTree": "data/bt/melee_bt.xml"
 	},
 	{
@@ -181,7 +181,7 @@
 		"speed": 120.0,
 		"collisionDamage": -2,
 		"size": [ 35 ,35 ],
-		"imageFile": "data/bigEnemy.png",
+		"imageFile": "data/images/bigEnemy.png",
 		"behaviorTree": "data/bt/melee_bt.xml"
 	},
 	{
@@ -192,7 +192,7 @@
 		"collisionDamage": -1,
 		"weapon": "enemy weapon",
 		"size": [ 40 ,40 ],
-		"imageFile": "data/rangeEnemy.png",
+		"imageFile": "data/images/rangeEnemy.png",
 		"behaviorTree": "data/bt/range_bt.xml"
 	},
 	{
@@ -203,7 +203,7 @@
 		"collisionDamage": -1,
 		"weapon": "enemy weapon",
 		"size": [ 25 ,25 ],
-		"imageFile": "data/turret.png",
+		"imageFile": "data/images/turret.png",
 		"behaviorTree": "data/bt/turret_bt.xml"
 	}
 	,
@@ -215,7 +215,7 @@
 		"collisionDamage": -2,
 		"weapon": "boss weapon1",
 		"size": [ 90 ,74 ],
-		"imageFile": "data/boss.png",
+		"imageFile": "data/images/boss.png",
 		"behaviorTree": "data/bt/boss_bt.xml"
 	}
 	],

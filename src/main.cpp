@@ -11,6 +11,12 @@
 
 #include <ctime>
 
+namespace {
+	const std::string s_sConfigFile      = "data/config/config.json";
+	const std::string s_sBackgroundImage = "data/images/background.png";
+	const std::string s_sMusicFile       = "data/audio/music.wav";
+}
+
 // Global variables
 CGraphicEngine*   g_pGraphicEngine;
 CSoundEngine*     g_pSoundEngine;
@@ -43,14 +49,14 @@ int Main(void) {
 	g_pSceneManager->switchScene(IScene::EMENU);
 
 	// Init Entities Factory
-	g_pEntitiesFactory->init("data/config.json");
+	g_pEntitiesFactory->init(s_sConfigFile.c_str());
 
 	//Set Background
-	CSprite background(g_pGraphicEngine->getTexture("data/background.png"), vmake(SCR_WIDTH * 0.5f, SCR_HEIGHT * 0.5f), vmake(SCR_WIDTH, SCR_HEIGHT), 0.0f, 1.0f, 100);
+	CSprite background(g_pGraphicEngine->getTexture(s_sBackgroundImage), vmake(SCR_WIDTH * 0.5f, SCR_HEIGHT * 0.5f), vmake(SCR_WIDTH, SCR_HEIGHT), 0.0f, 1.0f, 100);
 	g_pGraphicEngine->addGfxEntity(&background);
 
 	//Play Music
-	g_pSoundEngine->playMusic("data/audio/music.wav");
+	g_pSoundEngine->playMusic(s_sMusicFile.c_str());
 	
 	clock_t cBeginTime = clock();
 	clock_t cEndTime;
