@@ -48,7 +48,7 @@ inline float vdot  (vec2 v1, vec2 v2) { return v1.x * v2.x + v1.y * v2.y; }
 inline vec2  vunit (float angle)      { return vmake((float)cos(angle), (float)sin(angle)); }
 inline float vdist (vec2 v1, vec2 v2) { return vlen(vsub(v2, v1)); }
 inline float vdist2(vec2 v1, vec2 v2) { return vlen2(vsub(v2, v1)); }
-inline vec2  vnorm (vec2 v)           { return vmake(v.x / vlen(v), v.y / vlen(v)); }
+inline vec2  vnorm (vec2 v)           { return vlen2(v) == 0.0f ? vmake (0.0f, 0.0f) : vmake(v.x / vlen(v), v.y / vlen(v)); }
 inline float vangle(vec2 v)           { float a = atan2(v.y, v.x); return (a >= 0) ? a : (2.0f * M_PIf) + a; }
 inline float det   (vec2 v1, vec2 v2) { return v1.x * v2.y - v1.y * v2.x; }
 bool LineLineIntersect(vec2 start1, //Line 1 start
