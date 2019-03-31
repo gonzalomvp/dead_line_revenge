@@ -126,7 +126,7 @@ void CWeaponComponent::run(float _fDeltaTime) {
 		}
 
 		TMessageFire messageFire;
-		messageFire.isFiring = m_bIsFiring;
+		messageFire.bIsFiring = m_bIsFiring;
 		m_pOwner->receiveMessage(&messageFire);
 	}
 }
@@ -142,18 +142,18 @@ void CWeaponComponent::receiveMessage(TMessage* _pMessage) {
 		equipWeapon(pMessage->eWeaponType);
 	}
 	else if (TMessageFire* pMessage = dynamic_cast<TMessageFire*>(_pMessage)) {
-		m_bIsFiring = pMessage->isFiring;
+		m_bIsFiring = pMessage->bIsFiring;
 	}
 	else if (TMessageSetAimDirection* pMessage = dynamic_cast<TMessageSetAimDirection*>(_pMessage)) {
-		m_v2AimDir = pMessage->direction;
+		m_v2AimDir = pMessage->v2Dir;
 	}
 	else if (TMessageGetAimDirection* pMessage = dynamic_cast<TMessageGetAimDirection*>(_pMessage)) {
-		pMessage->direction = m_v2AimDir;
+		pMessage->v2Dir = m_v2AimDir;
 	}
 	else if (TMessageAmmoInfo* pMessage = dynamic_cast<TMessageAmmoInfo*>(_pMessage)) {
-		pMessage->currentAmmo = m_iCurrentBullets;
-		pMessage->totalAmmo = m_iMaxBullets;
-		pMessage->reloadPercent = clamp((m_fReloadTime - m_fReloadTimer) / m_fReloadTime, 0.0f, 1.0f);
+		pMessage->iCurrentAmmo = m_iCurrentBullets;
+		pMessage->iTotalAmmo = m_iMaxBullets;
+		pMessage->fReloadPercent = clamp((m_fReloadTime - m_fReloadTimer) / m_fReloadTime, 0.0f, 1.0f);
 	}
 	else if (TMessageReload* pMessage = dynamic_cast<TMessageReload*>(_pMessage)) {
 		if (m_iCurrentBullets < m_iMaxBullets && m_fReloadTimer <= 0.0f) {

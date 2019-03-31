@@ -30,16 +30,16 @@ void CLifeComponent::receiveMessage(TMessage* _pMessage) {
 	ASSERT(_pMessage);
 
 	if (TMessageGetLife* pMessage = dynamic_cast<TMessageGetLife*>(_pMessage)) {
-		pMessage->currentLife = m_iLife;
+		pMessage->iCurrentLife = m_iLife;
 	}
 	else if (TMessageChangeLife* pMessage = dynamic_cast<TMessageChangeLife*>(_pMessage)) {
 		// Apply heal
-		if (pMessage->deltaLife > 0) {
-			m_iLife += pMessage->deltaLife;
+		if (pMessage->iDeltaLife > 0) {
+			m_iLife += pMessage->iDeltaLife;
 		}
 		// Only apply damage if life is not infinite and not invencible
 		else if (m_iLife != -1 && m_fInvencibleTimer <= 0) {
-			m_iLife += pMessage->deltaLife;
+			m_iLife += pMessage->iDeltaLife;
 			if (m_iLife <= 0) {
 				onDead();
 			}

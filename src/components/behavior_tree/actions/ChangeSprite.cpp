@@ -16,7 +16,7 @@ EStatus CChangeSprite::onUpdate(float step) {
 	
 	Entity* self = getOwnerEntity();
 	TMessageChangeSprite messageChangeSprite;
-	messageChangeSprite.texture = m_sTextureFile;
+	messageChangeSprite.sTexture = m_sTextureFile;
 	self->receiveMessage(&messageChangeSprite);
 
 	return EStatus::ESuccess;

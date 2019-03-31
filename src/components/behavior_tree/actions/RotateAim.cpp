@@ -18,11 +18,11 @@ EStatus CRotateAim::onUpdate(float step) {
 	TMessageGetAimDirection messageGetAimDirection;
 	self->receiveMessage(&messageGetAimDirection);
 
-	float angle = RAD2DEG(vangle(messageGetAimDirection.direction));
+	float angle = RAD2DEG(vangle(messageGetAimDirection.v2Dir));
 	angle += m_fAngle * step;
 
 	TMessageSetAimDirection messageSetAimDirection;
-	messageSetAimDirection.direction = vunit(DEG2RAD(angle));
+	messageSetAimDirection.v2Dir = vunit(DEG2RAD(angle));
 	self->receiveMessage(&messageSetAimDirection);
 
 	return EStatus::ESuccess;

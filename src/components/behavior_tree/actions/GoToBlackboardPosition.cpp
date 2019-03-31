@@ -83,7 +83,7 @@ EStatus CGoToBlackboardPosition::onUpdate(float step) {
 	}
 
 	TMessageSetMovementDir msgSetMovementDir;
-	msgSetMovementDir.dir = direction;
+	msgSetMovementDir.v2Dir = direction;
 	self->receiveMessage(&msgSetMovementDir);
 	return EStatus::ERunning;
 }

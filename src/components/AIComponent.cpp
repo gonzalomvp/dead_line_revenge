@@ -9,7 +9,7 @@ void CAIComponent::receiveMessage(TMessage* _pMessage) {
 	ASSERT(_pMessage);
 
 	if (TMessageEnableAI* pMessage = dynamic_cast<TMessageEnableAI*>(_pMessage)) {
-		if (pMessage->enable) {
+		if (pMessage->bWantsEnable) {
 			activate();
 		}
 		else {

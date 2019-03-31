@@ -36,8 +36,8 @@ void CWeaponPickupComponent::receiveMessage(TMessage* _pMessage) {
 		}
 
 		TMessageShowHUDTMessage msgShowHUDTMessage;
-		msgShowHUDTMessage.message = sHudTMessageText;
-		msgShowHUDTMessage.time = 1.5f;
+		msgShowHUDTMessage.sMessage = sHudTMessageText;
+		msgShowHUDTMessage.fTime = 1.5f;
 		g_pWorld->getPlayer()->receiveMessage(&msgShowHUDTMessage);
 	}
 }

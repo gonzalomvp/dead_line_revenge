@@ -18,5 +18,5 @@ bool CCheckLife::check(float step) {
 	TMessageGetLife messageGetLife;
 	self->receiveMessage(&messageGetLife);
 
-	return messageGetLife.currentLife >= m_iLife;
+	return messageGetLife.iCurrentLife >= m_iLife;
 }

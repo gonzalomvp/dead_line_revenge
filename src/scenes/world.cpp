@@ -264,7 +264,7 @@ void CWorld::checkCollisions() {
 		for (size_t j = i + 1; j < m_vEntities.size(); ++j) {
 			Entity* pEntity2 = m_vEntities[j];
 			TMessageCheckCollision msgCheckCollision;
-			msgCheckCollision.other = pEntity2;
+			msgCheckCollision.pOther = pEntity2;
 			pEntity1->receiveMessage(&msgCheckCollision);
 		}
 	}

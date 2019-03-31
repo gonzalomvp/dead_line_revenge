@@ -27,7 +27,7 @@ void CPlayerControllerComponent::run(float _fDeltaTime) {
 		return;
 
 	TMessageSetMovementDir msgSetMovementDir;
-	msgSetMovementDir.dir = m_v2InputDir;
+	msgSetMovementDir.v2Dir = m_v2InputDir;
 	m_pOwner->receiveMessage(&msgSetMovementDir);
 
 	m_v2InputDir = vmake(0.0f, 0.0f);
@@ -80,13 +80,13 @@ bool CPlayerControllerComponent::onEvent(const IInputManager::CEvent& _event) {
 			if (pEvent->getType() == IInputManager::EEventType::EMouseButtonDown) {
 				bConsumed = true;
 				TMessageFire messageFire;
-				messageFire.isFiring = true;
+				messageFire.bIsFiring = true;
 				m_pOwner->receiveMessage(&messageFire);
 			}
 			else if (pEvent->getType() == IInputManager::EEventType::EMouseButtonUp) {
 				bConsumed = true;
 				TMessageFire messageFire;
-				messageFire.isFiring = false;
+				messageFire.bIsFiring = false;
 				m_pOwner->receiveMessage(&messageFire);
 			}
 		}

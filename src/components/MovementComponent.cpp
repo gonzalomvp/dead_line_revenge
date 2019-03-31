@@ -22,9 +22,9 @@ void CMovementComponent::run(float _fDeltaTime) {
 
 		if (v2ValidPos.x != v2NewPos.x || v2ValidPos.y != v2NewPos.y) {
 			TMessageCheckCollision msgCheckCollision;
-			msgCheckCollision.overlap = true;
-			msgCheckCollision.deltaLife = -1;
-			msgCheckCollision.collisionChannel = CColliderComponent::EBoundariesCollider;
+			msgCheckCollision.bIsOverlapping = true;
+			msgCheckCollision.iDamage = -1;
+			msgCheckCollision.iChannelMask = CColliderComponent::EBoundariesCollider;
 			m_pOwner->receiveMessage(&msgCheckCollision);
 
 			if (m_bHasBounce && v2ValidPos.x != v2NewPos.x) {
@@ -46,12 +46,12 @@ void CMovementComponent::receiveMessage(TMessage* _pMessage) {
 	ASSERT(_pMessage);
 
 	if (TMessageGetMovementDir* pMessage = dynamic_cast<TMessageGetMovementDir*>(_pMessage)) {
-		pMessage->dir = m_v2Direction;
+		pMessage->v2Dir = m_v2Direction;
 	}
 	else if (TMessageSetMovementDir* pMessage = dynamic_cast<TMessageSetMovementDir*>(_pMessage)) {
-		m_v2Direction = pMessage->dir;
+		m_v2Direction = pMessage->v2Dir;
 	}
 	else if (TMessageSetMovementSpeed* pMessage = dynamic_cast<TMessageSetMovementSpeed*>(_pMessage)) {
-		m_fSpeed = pMessage->speed;
+		m_fSpeed = pMessage->fSpeed;
 	}
 }

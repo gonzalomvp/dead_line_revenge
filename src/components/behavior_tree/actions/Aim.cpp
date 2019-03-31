@@ -18,7 +18,7 @@ EStatus CAim::onUpdate(float step) {
 	Entity* player = g_pWorld->getPlayer();
 
 	TMessageSetAimDirection messageSetAimDirection;
-	messageSetAimDirection.direction = vnorm(vsub(player->getPos(), self->getPos()));
+	messageSetAimDirection.v2Dir = vnorm(vsub(player->getPos(), self->getPos()));
 	self->receiveMessage(&messageSetAimDirection);
 
 	return EStatus::ESuccess;

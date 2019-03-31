@@ -34,13 +34,13 @@ void CRenderableComponent::run(float _fDeltaTime) {
 	if (m_bAlignToMovement) {
 		TMessageGetMovementDir messageGetMovementDirection;
 		m_pOwner->receiveMessage(&messageGetMovementDirection);
-		v2Orientation = messageGetMovementDirection.dir;
+		v2Orientation = messageGetMovementDirection.v2Dir;
 		
 	}
 	if (m_bAlignToAim && vlen2(v2Orientation) == 0.0f) {
 		TMessageGetAimDirection messageGetAimDirection;
 		m_pOwner->receiveMessage(&messageGetAimDirection);
-		v2Orientation = messageGetAimDirection.direction;
+		v2Orientation = messageGetAimDirection.v2Dir;
 	}
 	if (vlen2(v2Orientation) != 0.0f) {
 		m_pSprite->setAngle(RAD2DEG(vangle(v2Orientation)));
@@ -69,7 +69,7 @@ void CRenderableComponent::receiveMessage(TMessage* _pMessage) {
 	ASSERT(_pMessage && m_pSprite && g_pGraphicEngine);
 
 	if (TMessageChangeLife* pMessage = dynamic_cast<TMessageChangeLife*>(_pMessage)) {
-		if (m_fHitTimer <= 0.0f && pMessage->deltaLife < 0) {
+		if (m_fHitTimer <= 0.0f && pMessage->iDeltaLife < 0) {
 			m_fHitTimer = m_fHitTime;
 		}
 	}
@@ -78,7 +78,7 @@ void CRenderableComponent::receiveMessage(TMessage* _pMessage) {
 		g_pGraphicEngine->removeGfxEntity(m_pSprite);
 		DELETE(m_pSprite);
 
-		m_sTexture = pMessage->texture;
+		m_sTexture = pMessage->sTexture;
 		m_pSprite = NEW(CSprite, g_pGraphicEngine->getTexture(m_sTexture), vmake(0.0f, 0.0f), vmake(0.0f, 0.0f), m_fAngle, m_fAlpha, m_iPriority);
 		g_pGraphicEngine->addGfxEntity(m_pSprite);
 	}

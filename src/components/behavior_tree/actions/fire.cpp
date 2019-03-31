@@ -10,7 +10,7 @@ EStatus CFire::onUpdate(float step) {
 
 	Entity* self = getOwnerEntity();
 	TMessageFire messageFire;
-	messageFire.isFiring = true;
+	messageFire.bIsFiring = true;
 	self->receiveMessage(&messageFire);
 
 	return EStatus::ESuccess;

@@ -102,28 +102,28 @@ void CHUDComponent::run(float _fDeltaTime) {
 
 	TMessageGetLife msgLife;
 	m_pOwner->receiveMessage(&msgLife);
-	m_pLifeText->setText(std::to_string(msgLife.currentLife));
+	m_pLifeText->setText(std::to_string(msgLife.iCurrentLife));
 
 	m_pScoreText->setText(std::to_string(g_pWorld->getScore()));
 
 	TMessageAmmoInfo msgAmmo;
 	m_pOwner->receiveMessage(&msgAmmo);
-	m_pAmmoText->setText(std::to_string(msgAmmo.currentAmmo) + "/" + std::to_string(msgAmmo.totalAmmo));
+	m_pAmmoText->setText(std::to_string(msgAmmo.iCurrentAmmo) + "/" + std::to_string(msgAmmo.iTotalAmmo));
 
 	vec2 v2Pos = m_pOwner->getPos();
 	vec2 v2Size = m_pOwner->getSize();
 
 	// Full sprite reload animation
-	//m_pReloadSprite->setPos(vmake(v2Pos.x, v2Pos.y - v2Size.y * msgAmmo.reloadPercent * 0.5f));
-	//m_pReloadSprite->setSize(vmake(v2Size.x, v2Size.y * (1.0f - msgAmmo.reloadPercent)));
+	//m_pReloadSprite->setPos(vmake(v2Pos.x, v2Pos.y - v2Size.y * msgAmmo.fReloadPercent * 0.5f));
+	//m_pReloadSprite->setSize(vmake(v2Size.x, v2Size.y * (1.0f - msgAmmo.fReloadPercent)));
 
 	// Right sprite reload animation
-	m_pReloadSprite->setPos(vmake(v2Pos.x + v2Size.x * 0.5f + 5.0f, v2Pos.y - v2Size.y * msgAmmo.reloadPercent * 0.5f));
-	m_pReloadSprite->setSize(vmake(5, v2Size.y * (1 - msgAmmo.reloadPercent)));
+	m_pReloadSprite->setPos(vmake(v2Pos.x + v2Size.x * 0.5f + 5.0f, v2Pos.y - v2Size.y * msgAmmo.fReloadPercent * 0.5f));
+	m_pReloadSprite->setSize(vmake(5, v2Size.y * (1 - msgAmmo.fReloadPercent)));
 
 	// Top sprite reload animation
-	//m_pReloadSprite->setPos(vmake(v2Pos.x - v2Size.x * msgAmmo.reloadPercent * 0.5f, v2Pos.y + v2Size.y * 0.5f + 5));
-	//m_pReloadSprite->setSize(vmake(v2Size.x * (1.0f - msgAmmo.reloadPercent), 5));
+	//m_pReloadSprite->setPos(vmake(v2Pos.x - v2Size.x * msgAmmo.fReloadPercent * 0.5f, v2Pos.y + v2Size.y * 0.5f + 5));
+	//m_pReloadSprite->setSize(vmake(v2Size.x * (1.0f - msgAmmo.fReloadPercent), 5));
 }
 
 void CHUDComponent::receiveMessage(TMessage* _pMessage) {
@@ -133,9 +133,9 @@ void CHUDComponent::receiveMessage(TMessage* _pMessage) {
 
 	ASSERT(_pMessage && m_pMessageText);
 	if (TMessageShowHUDTMessage* pMessage = dynamic_cast<TMessageShowHUDTMessage*>(_pMessage)) {
-		m_pMessageText->setText(pMessage->message);
-		m_pMessageText->setPos(vmake((WORLD_WIDTH * 0.5f) - g_pStringManager->calculateTextHalfWidth(pMessage->message), m_pMessageText->getPos().y));
-		m_fTMessageTimer = pMessage->time;
+		m_pMessageText->setText(pMessage->sMessage);
+		m_pMessageText->setPos(vmake((WORLD_WIDTH * 0.5f) - g_pStringManager->calculateTextHalfWidth(pMessage->sMessage), m_pMessageText->getPos().y));
+		m_fTMessageTimer = pMessage->fTime;
 	}
 }
 
@@ -153,7 +153,7 @@ bool CHUDComponent::onEvent(const IInputManager::CEvent& _event) {
 			m_pTargetSprite->setPos(v2TargetPos);
 
 			TMessageSetAimDirection messageSetAimDirection;
-			messageSetAimDirection.direction = vnorm(vsub(v2TargetPos, m_pOwner->getPos()));
+			messageSetAimDirection.v2Dir = vnorm(vsub(v2TargetPos, m_pOwner->getPos()));
 			m_pOwner->receiveMessage(&messageSetAimDirection);
 		}
 	}
