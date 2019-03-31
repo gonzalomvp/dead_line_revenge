@@ -8,7 +8,7 @@
 CWorld* g_pWorld;
 
 void CGameScene::init() {
-	ASSERT(g_pMenuManager && g_pWorld);
+	ASSERT(g_pMenuManager);
 	g_pMenuManager->deactivateMenu();
 	g_pWorld = NEW(CWorld);
 	g_pWorld->init(m_uLevel);
