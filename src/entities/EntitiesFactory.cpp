@@ -297,6 +297,8 @@ CEntity* CEntitiesFactory::createEnemy(vec2 _v2Pos, CEntity::EType _tEnemyType, 
 		bAlignToAim = true;
 		CBehaviorTreeComponent * pBTComponent = NEW(CBehaviorTreeComponent, enemy, sBTFile.c_str());
 		pBTComponent->init();
+		CExplossiveComponent* explossive = NEW(CExplossiveComponent, enemy);
+		explossive->init();
 		break;
 	}
 	case CEntity::EENEMYTURRET: {
@@ -304,6 +306,8 @@ CEntity* CEntitiesFactory::createEnemy(vec2 _v2Pos, CEntity::EType _tEnemyType, 
 		CBehaviorTreeComponent * pBTComponent = NEW(CBehaviorTreeComponent, enemy, sBTFile.c_str());
 		pBTComponent->setActivationDelay(CORE_FRand(1.0f, 2.0f));
 		pBTComponent->init();
+		CExplossiveComponent* explossive = NEW(CExplossiveComponent, enemy);
+		explossive->init();
 		break;
 	}
 	case CEntity::EENEMYBOSS: {
