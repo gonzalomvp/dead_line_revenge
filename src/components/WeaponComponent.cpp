@@ -69,14 +69,14 @@ void CWeaponComponent::run(float _fDeltaTime) {
 				vec2 v2bulletDir = m_v2AimDir;
 				Entity* pBullet = g_pEntitiesFactory->createBullet(m_eType, m_pOwner->getPos(), v2bulletDir, m_pOwner->getType());
 				g_pWorld->addEntity(pBullet);
-				float fAngle = RAD2DEG(vangle(m_v2AimDir));
-				fAngle += s_fShotgunAngle;
-				v2bulletDir = vunit(DEG2RAD(fAngle));
+				float fAngle = vangle(m_v2AimDir);
+				fAngle += DEG2RAD(s_fShotgunAngle);
+				v2bulletDir = vunit(fAngle);
 				pBullet = g_pEntitiesFactory->createBullet(m_eType, m_pOwner->getPos(), v2bulletDir, m_pOwner->getType());
 				g_pWorld->addEntity(pBullet);
-				fAngle = RAD2DEG(vangle(m_v2AimDir));
-				fAngle -= s_fShotgunAngle;
-				v2bulletDir = vunit(DEG2RAD(fAngle));
+				fAngle = vangle(m_v2AimDir);
+				fAngle -= DEG2RAD(s_fShotgunAngle);
+				v2bulletDir = vunit(fAngle);
 				pBullet = g_pEntitiesFactory->createBullet(m_eType, m_pOwner->getPos(), v2bulletDir, m_pOwner->getType());
 				g_pWorld->addEntity(pBullet);
 				break;
@@ -104,8 +104,8 @@ void CWeaponComponent::run(float _fDeltaTime) {
 			}
 			default: {
 				for (size_t i = 0; i < m_uBulletsPerShot; i++) {
-					float fAngle = RAD2DEG(vangle(m_v2AimDir) + (i * 360.f / m_uBulletsPerShot));
-					Entity* pBullet = g_pEntitiesFactory->createBullet(m_eType, m_pOwner->getPos(), vunit(DEG2RAD(fAngle)), m_pOwner->getType());
+					float fAngle = vangle(m_v2AimDir) + (i * 2.0f * M_PIf / m_uBulletsPerShot);
+					Entity* pBullet = g_pEntitiesFactory->createBullet(m_eType, m_pOwner->getPos(), vunit(fAngle), m_pOwner->getType());
 					g_pWorld->addEntity(pBullet);
 				}
 				break;

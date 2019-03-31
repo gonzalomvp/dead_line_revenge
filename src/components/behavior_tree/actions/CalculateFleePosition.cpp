@@ -50,9 +50,9 @@ EStatus CCalculateFleePosition::onUpdate(float step) {
 	vec2 v2ToEnemyDir = vnorm(vsub(self->getPos(), v2FromPos));
 	vec2 v2TargetPos = vadd(v2FromPos, vscale(v2ToEnemyDir, m_fDistance));
 
-	float fAngleStep = s_fAngleStep * (rand() % 2 - 0.5f) * 2.0f;
+	float fAngleStep = DEG2RAD(s_fAngleStep) * (rand() % 2 - 0.5f) * 2.0f;
 	int iStep = 0;
-	float fInitAngle = RAD2DEG(vangle(v2ToEnemyDir));
+	float fInitAngle = vangle(v2ToEnemyDir);
 
 	// find a valid pos in the world changing progressively the angle
 	while (v2TargetPos.x < selfSize.x * 0.5f || v2TargetPos.x > WORLD_WIDTH - selfSize.x * 0.5f
@@ -60,10 +60,10 @@ EStatus CCalculateFleePosition::onUpdate(float step) {
 		int iNumStep = iStep / 2 + 1;
 		float fSign = (iStep % 2 - 0.5f) * 2.0f;
 		float fAngle = fInitAngle + fAngleStep * iNumStep * fSign;
-		v2TargetPos = vadd(v2FromPos, vscale(vunit(DEG2RAD(fAngle)), m_fDistance));
+		v2TargetPos = vadd(v2FromPos, vscale(vunit(fAngle), m_fDistance));
 		++iStep;
 
-		if (iStep >= (360.0 / s_fAngleStep)) {
+		if (iStep >= (360.0f / s_fAngleStep)) {
 			return EStatus::EFail;
 		}
 	}
