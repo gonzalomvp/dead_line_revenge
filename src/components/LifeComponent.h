@@ -4,7 +4,7 @@
 
 class CLifeComponent : public CComponent {
 public:
-	CLifeComponent(CEntity* _pOwner, int _iLife, float _fInvencibleTime = 0.0, float _fTimeToLive = -1.0f)
+	CLifeComponent(CEntity* _pOwner, int _iLife, float _fInvencibleTime = 0.0f, float _fTimeToLive = -1.0f)
 	: CComponent(_pOwner)
 	, m_iLife(_iLife)
 	, m_fInvencibleTime(_fInvencibleTime)

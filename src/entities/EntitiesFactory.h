@@ -40,35 +40,36 @@ public:
 	//CEntitiesFactory();
 	//~CEntitiesFactory();
 
+	// mover a weapon y entity???
 	static CWeaponComponent::EType getWeaponTypeByName(const std::string& name);
 	static CEntity::EType          getEntityTypeByName(const std::string& name);
 	
 	bool init(const char* _sConfigFile);
 
-	CEntity* createPlayer(vec2 _v2Pos);
-	CEntity* createBullet(CWeaponComponent::EType _eWeaponType, vec2 _v2Pos, vec2 _v2Direction, CEntity::EType _eOwnerType);
-	CEntity* createExplossion(vec2 _v2Pos, CWeaponComponent::EType _eWeaponType = CWeaponComponent::EInvalid);
-	CEntity* createEnemy(vec2 _v2Pos, CEntity::EType _tEnemyType, const std::string& _sBTFile = "", vec2 _v2MoveDir = vmake(0.0f, 0.0f), vec2 _vAimDir = vmake(0.0f, 0.0f));
+	CEntity* createPlayer(const vec2& _v2Pos);
+	CEntity* createBullet(const CWeaponComponent::EType& _eWeaponType, const vec2& _v2Pos, const vec2& _v2Direction, const CEntity::EType& _eOwnerType);
+	CEntity* createExplossion(const vec2& _v2Pos, const CWeaponComponent::EType& _eWeaponType = CWeaponComponent::EInvalid);
+	CEntity* createEnemy(const vec2& _v2Pos, const CEntity::EType& _eEnemyType, const std::string& _sBTFile = "", const vec2& _v2MoveDir = vmake(0.0f, 0.0f), const vec2& _vAimDir = vmake(0.0f, 0.0f));
 	CEntity* createWeaponPickup();
 
-	TWeaponDef getWeaponDef(const CWeaponComponent::EType& _tWeaponType) { return m_mWeaponDef[_tWeaponType]; }
-	TEnemyDef  getEnemyDef(const CEntity::EType& _tEnemyType)             { return m_mEnemyDef[_tEnemyType];   }
+	TWeaponDef getWeaponDef(const CWeaponComponent::EType& _eWeaponType) { return m_mWeaponDef[_eWeaponType]; }
+	TEnemyDef  getEnemyDef (const CEntity::EType& _eEnemyType)           { return m_mEnemyDef[_eEnemyType];   }
 	
 
 	std::map<CWeaponComponent::EType, TWeaponDef> m_mWeaponDef;
-	std::map<CEntity::EType, TEnemyDef>            m_mEnemyDef;
+	std::map<CEntity::EType, TEnemyDef>           m_mEnemyDef;
 	std::vector<CWeaponComponent::EType>          m_vWeaponPickups;
 
 private:
 	struct TWeaponInfo {
 		CWeaponComponent::EType eType;
-		std::string sName;
+		std::string             sName;
 	};
 	static TWeaponInfo s_aWeaponInfo[];
 
 	struct TEntityInfo {
 		CEntity::EType eType;
-		std::string sName;
+		std::string    sName;
 	};
 	static TEntityInfo s_aEntityInfo[];
 };

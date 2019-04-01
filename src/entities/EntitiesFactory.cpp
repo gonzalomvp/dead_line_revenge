@@ -25,9 +25,17 @@
 using namespace rapidjson;
 
 namespace {
+	// Image files
 	const std::string s_sPlayerImage     = "data/images/player.png";
 	const std::string s_sCrateImage      = "data/images/crate.png";
 	const std::string s_sExplossionImage = "data/images/explossion.png";
+
+	// Render priorities
+	const int s_iExplossionRenderPriority = 5;
+	const int s_iPlayerRenderPriority     = 6;
+	const int s_iBulletsRenderPriority    = 7;
+	const int s_iPickupsRenderPriority    = 8;
+	const int s_iEnemiesRenderPriority    = 9;
 }
 
 CEntitiesFactory::TWeaponInfo CEntitiesFactory::s_aWeaponInfo[] = {
@@ -144,11 +152,11 @@ bool CEntitiesFactory::init(const char* _sConfigFile) {
 	return true;
 }
 
-CEntity* CEntitiesFactory::createPlayer(vec2 _v2Pos) {
+CEntity* CEntitiesFactory::createPlayer(const vec2& _v2Pos) {
 	CEntity* player = NEW(CEntity, CEntity::EPLAYER, _v2Pos, vmake(30.0f, 25.0f));
 	//CTransformComponent* transform = NEW(CTransformComponent, player, _v2Pos, vmake(30, 25));
 	//transform->init();
-	CRenderableComponent* renderable = NEW(CRenderableComponent, player, s_sPlayerImage, 0.0f, 1.0f, 5, false, true, 0.5f);
+	CRenderableComponent* renderable = NEW(CRenderableComponent, player, s_sPlayerImage, 0.0f, 1.0f, s_iPlayerRenderPriority, false, true, 0.5f);
 	renderable->init();
 	CPlayerControllerComponent* playerControl = NEW(CPlayerControllerComponent, player);
 	playerControl->init();
@@ -165,7 +173,7 @@ CEntity* CEntitiesFactory::createPlayer(vec2 _v2Pos) {
 	return player;
 }
 
-CEntity* CEntitiesFactory::createBullet(CWeaponComponent::EType _eWeaponType, vec2 _v2Pos, vec2 _v2Direction, CEntity::EType _eOwnerType) {
+CEntity* CEntitiesFactory::createBullet(const CWeaponComponent::EType& _eWeaponType, const vec2& _v2Pos, const vec2& _v2Direction, const CEntity::EType& _eOwnerType) {
 	if (!m_mWeaponDef.count(_eWeaponType)) {
 		ASSERT(false, "Weapon definition not found");
 		return nullptr;
@@ -174,7 +182,7 @@ CEntity* CEntitiesFactory::createBullet(CWeaponComponent::EType _eWeaponType, ve
 	
 	CEntity* bullet = NEW(CEntity, CEntity::EWEAPON, _v2Pos, weaponData.v2BulletSize);
 
-	CRenderableComponent* renderable = NEW(CRenderableComponent, bullet, weaponData.sImageFile, vangle(_v2Direction), 1.0f, 6, true, false);
+	CRenderableComponent* renderable = NEW(CRenderableComponent, bullet, weaponData.sImageFile, vangle(_v2Direction), 1.0f, s_iBulletsRenderPriority, true, false);
 	renderable->init();
 	CMovementComponent* movement = NEW(CMovementComponent, bullet, _v2Direction, weaponData.fBulletSpeed, weaponData.bIsBouncy);
 	movement->init();
@@ -220,12 +228,15 @@ CEntity* CEntitiesFactory::createBullet(CWeaponComponent::EType _eWeaponType, ve
 	return bullet;
 }
 
-CEntity* CEntitiesFactory::createExplossion(vec2 _v2Pos, CWeaponComponent::EType _eWeaponType) {
-	vec2 v2InitSize = vmake(0.0f, 0.0f);
-	vec2 v2EndSize = vmake(0.0f, 0.0f);
-	float fDuration = 0.0f;
-	int iColliderChannelMask = CColliderComponent::ENoneCollider;
+CEntity* CEntitiesFactory::createExplossion(const vec2& _v2Pos, const CWeaponComponent::EType& _eWeaponType) {
+	// Defaults
+	vec2 v2InitSize = vmake(10.0f, 10.0f);
+	vec2 v2EndSize = vmake(110.0f, 110.0f);
+	int iExplossionDamage = -5;
+	float fDuration = 0.8f;
+	int iColliderChannelMask = CColliderComponent::EPlayerWeaponCollider | CColliderComponent::EEnemyWeaponCollider | CColliderComponent::EBoundariesCollider;
 
+	// Explossion specific
 	switch (_eWeaponType) {
 		case CWeaponComponent::ENUCLEARBOMB:
 			v2InitSize = vmake(20.0f, 20.0f);
@@ -234,115 +245,113 @@ CEntity* CEntitiesFactory::createExplossion(vec2 _v2Pos, CWeaponComponent::EType
 			iColliderChannelMask = CColliderComponent::EPlayerWeaponCollider | CColliderComponent::EBoundariesCollider;
 			break;
 		default:
-			v2InitSize = vmake(10.0f, 10.0f);
-			v2EndSize = vmake(110.0f, 110.0f);
-			fDuration = 0.8f;
-			iColliderChannelMask = CColliderComponent::EPlayerWeaponCollider | CColliderComponent::EEnemyWeaponCollider | CColliderComponent::EBoundariesCollider;
 			break;
 	}
 
-	CEntity* explossion = NEW(CEntity, CEntity::EWEAPON, _v2Pos, v2InitSize);
+	CEntity* pExplossion = NEW(CEntity, CEntity::EWEAPON, _v2Pos, v2InitSize);
 
-	CRenderableComponent* renderable = NEW(CRenderableComponent, explossion, s_sExplossionImage, 0.0f, 0.5f, 5);
-	renderable->init();
-	CColliderComponent* collider = NEW(CColliderComponent, explossion, CColliderComponent::ECircleCollider, -5, iColliderChannelMask, CColliderComponent::ENoneCollider);
-	collider->init();
-	CLifeComponent* life = NEW(CLifeComponent, explossion, 1, 0.0f, fDuration);
-	life->init();
-	CExplossionComponent* explossionComp = NEW(CExplossionComponent, explossion, v2InitSize, v2EndSize, fDuration);
+	CRenderableComponent* pRenderableComp = NEW(CRenderableComponent, pExplossion, s_sExplossionImage, 0.0f, 0.5f, s_iExplossionRenderPriority);
+	pRenderableComp->init();
+
+	CColliderComponent* pColliderComp = NEW(CColliderComponent, pExplossion, CColliderComponent::ECircleCollider, iExplossionDamage, iColliderChannelMask, CColliderComponent::ENoneCollider);
+	pColliderComp->init();
+
+	CLifeComponent* pLifeComp = NEW(CLifeComponent, pExplossion, -1, 0.0f, fDuration);
+	pLifeComp->init();
+
+	CExplossionComponent* explossionComp = NEW(CExplossionComponent, pExplossion, v2InitSize, v2EndSize, fDuration);
 	explossionComp->init();
 	
-	return explossion;
+	return pExplossion;
 }
 
-CEntity* CEntitiesFactory::createEnemy(vec2 _v2Pos, CEntity::EType _tEnemyType, const std::string& _sBTFile, vec2 _v2MoveDir, vec2 _vAimDir) {
-	TEnemyDef tEnemyDef = m_mEnemyDef[_tEnemyType];
-
-	CEntity* enemy = NEW(CEntity, _tEnemyType, _v2Pos, tEnemyDef.v2Size);
+CEntity* CEntitiesFactory::createEnemy(const vec2& _v2Pos, const CEntity::EType& _eEnemyType, const std::string& _sBTFile, const vec2& _v2MoveDir, const vec2& _vAimDir) {
+	TEnemyDef tEnemyDef = m_mEnemyDef[_eEnemyType];
 	
+	// Defaults
 	bool bAlignToMovement = false;
 	bool bAlignToAim = false;
+	bool bExplodeOnDeath = false;
+	float fActivationDelay = 0.0f;
 	std::string sBTFile = tEnemyDef.sBTFile;
 	if (_sBTFile != "") {
 		sBTFile = _sBTFile;
 	}
 
-	CMovementComponent * movement = NEW(CMovementComponent, enemy, _v2MoveDir, tEnemyDef.fSpeed, true);
-	movement->init();
-	CColliderComponent* collider = NEW(CColliderComponent, enemy, CColliderComponent::ERectCollider, tEnemyDef.iCollisionDamage, CColliderComponent::EEnemyCollider, CColliderComponent::EPlayerWeaponCollider);
-	collider->init();
-	CLifeComponent* life = NEW(CLifeComponent, enemy, tEnemyDef.iLife, tEnemyDef.fInvencibleTime);
-	life->init();
-	CPointsComponent* points = NEW(CPointsComponent, enemy);
-	points->init();
+	// Enemy specific
+	switch (tEnemyDef.eType) {
+		case CEntity::EENEMYRANGE:
+			bAlignToAim = true;
+			bExplodeOnDeath = true;
+			break;
+		case CEntity::EENEMYTURRET:
+			bAlignToAim = true;
+			bExplodeOnDeath = true;
+			break;
+		case CEntity::EENEMYBOSS:
+			bExplodeOnDeath = true;
+			break;
+		default:
+			break;
+	}
+
+	CEntity* pEnemy = NEW(CEntity, _eEnemyType, _v2Pos, tEnemyDef.v2Size);
+
+	CMovementComponent * pMovementComp = NEW(CMovementComponent, pEnemy, _v2MoveDir, tEnemyDef.fSpeed, true);
+	pMovementComp->init();
+
+	CRenderableComponent* pRenderableComp = NEW(CRenderableComponent, pEnemy, tEnemyDef.sImageFile.c_str(), 0.0f, 1.0f, s_iEnemiesRenderPriority, bAlignToMovement, bAlignToAim, 0.5f);
+	pRenderableComp->init();
+
+	CColliderComponent* pColliderComp = NEW(CColliderComponent, pEnemy, CColliderComponent::ERectCollider, tEnemyDef.iCollisionDamage, CColliderComponent::EEnemyCollider, CColliderComponent::EPlayerWeaponCollider);
+	pColliderComp->init();
+
+	CLifeComponent* pLifeComp = NEW(CLifeComponent, pEnemy, tEnemyDef.iLife, tEnemyDef.fInvencibleTime);
+	pLifeComp->init();
+
+	CPointsComponent* pPointsComp = NEW(CPointsComponent, pEnemy);
+	pPointsComp->init();
+	
+	CBehaviorTreeComponent * pBTComp = NEW(CBehaviorTreeComponent, pEnemy, sBTFile.c_str());
+	pBTComp->setActivationDelay(fActivationDelay);
+	pBTComp->init();
 
 	if (tEnemyDef.eWeapon != CWeaponComponent::EType::EInvalid) {
-		CWeaponComponent* gun = NEW(CWeaponComponent, enemy, tEnemyDef.eWeapon, _vAimDir);
-		gun->init();
+		CWeaponComponent* pWeaponComp = NEW(CWeaponComponent, pEnemy, tEnemyDef.eWeapon, _vAimDir);
+		pWeaponComp->init();
 	}
 
-	switch (tEnemyDef.eType)
-	{
-	case CEntity::EENEMYMELEE: {
-		CBehaviorTreeComponent * pBTComponent = NEW(CBehaviorTreeComponent, enemy, sBTFile.c_str());
-		pBTComponent->init();
-		break;
-	}
-	case CEntity::EENEMYBIG: {
-		CBehaviorTreeComponent * pBTComponent = NEW(CBehaviorTreeComponent, enemy, sBTFile.c_str());
-		pBTComponent->init();
-		break;
-	}	
-	case CEntity::EENEMYRANGE: {
-		bAlignToAim = true;
-		CBehaviorTreeComponent * pBTComponent = NEW(CBehaviorTreeComponent, enemy, sBTFile.c_str());
-		pBTComponent->init();
-		CExplossiveComponent* explossive = NEW(CExplossiveComponent, enemy);
-		explossive->init();
-		break;
-	}
-	case CEntity::EENEMYTURRET: {
-		bAlignToAim = true;
-		CBehaviorTreeComponent * pBTComponent = NEW(CBehaviorTreeComponent, enemy, sBTFile.c_str());
-		pBTComponent->setActivationDelay(CORE_FRand(1.0f, 2.0f));
-		pBTComponent->init();
-		CExplossiveComponent* explossive = NEW(CExplossiveComponent, enemy);
-		explossive->init();
-		break;
-	}
-	case CEntity::EENEMYBOSS: {
-		CBehaviorTreeComponent * pBTComponent = NEW(CBehaviorTreeComponent, enemy, sBTFile.c_str());
-		pBTComponent->init();
-		CExplossiveComponent* explossive = NEW(CExplossiveComponent, enemy);
-		explossive->init();
-		break;
-	}
-	default:
-		break;
+	if (bExplodeOnDeath) {
+		CExplossiveComponent* pExplossiveComp = NEW(CExplossiveComponent, pEnemy);
+		pExplossiveComp->init();
 	}
 
-	CRenderableComponent* renderable = NEW(CRenderableComponent, enemy, tEnemyDef.sImageFile.c_str(), 0.0f, 1.0f, 8, bAlignToMovement, bAlignToAim, 0.5f);
-	renderable->init();
-
-	return enemy;
+	return pEnemy;
 }
 
 CEntity* CEntitiesFactory::createWeaponPickup() {
-	// Calculate a random weapon type
-	CWeaponComponent::EType type = m_vWeaponPickups[rand() % m_vWeaponPickups.size()];
-	// Calculate a random spawn position
-	vec2 randomPos = vmake(CORE_FRand(0.0, WORLD_WIDTH), CORE_FRand(80, WORLD_HEIGHT - 80));
+	// Choose a random weapon type
+	CWeaponComponent::EType eWeaponType = m_vWeaponPickups[rand() % m_vWeaponPickups.size()];
 
-	CEntity* weaponPickup = NEW(CEntity, CEntity::EPICKUP, randomPos, vmake(20, 20));
-	CRenderableComponent* renderable = NEW(CRenderableComponent, weaponPickup, s_sCrateImage, 0.0f, 1.0f, 7);
-	renderable->init();
-	CColliderComponent* collider = NEW(CColliderComponent, weaponPickup, CColliderComponent::ERectCollider, 0, CColliderComponent::EPickupCollider, CColliderComponent::EPlayerCollider);
-	collider->init();
-	CWeaponPickupComponent* pickup = NEW(CWeaponPickupComponent, weaponPickup, type);
-	pickup->init();
-	CPointsComponent* points = NEW(CPointsComponent, weaponPickup);
-	points->init();
-	CLifeComponent* life = NEW(CLifeComponent, weaponPickup, 1);
-	life->init();
-	return weaponPickup;
+	// Choose a random spawn position
+	vec2 v2RandomPos = vmake(CORE_FRand(0.0f, WORLD_WIDTH), CORE_FRand(80.0f, WORLD_HEIGHT - 80.0f));
+
+	CEntity* pWeaponPickup = NEW(CEntity, CEntity::EPICKUP, v2RandomPos, vmake(20.0f, 20.0f));
+
+	CRenderableComponent* pRenderableComp = NEW(CRenderableComponent, pWeaponPickup, s_sCrateImage, 0.0f, 1.0f, s_iPickupsRenderPriority);
+	pRenderableComp->init();
+
+	CColliderComponent* pColliderComp = NEW(CColliderComponent, pWeaponPickup, CColliderComponent::ERectCollider, 0, CColliderComponent::EPickupCollider, CColliderComponent::EPlayerCollider);
+	pColliderComp->init();
+
+	CWeaponPickupComponent* pPickupComp = NEW(CWeaponPickupComponent, pWeaponPickup, eWeaponType);
+	pPickupComp->init();
+
+	CLifeComponent* pLifeComp = NEW(CLifeComponent, pWeaponPickup, 1);
+	pLifeComp->init();
+
+	CPointsComponent* pPointsComp = NEW(CPointsComponent, pWeaponPickup);
+	pPointsComp->init();
+
+	return pWeaponPickup;
 }
