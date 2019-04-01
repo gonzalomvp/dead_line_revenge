@@ -202,126 +202,126 @@ void CMenuManager::onValueChange(CSlider* _pSlider) {
 }
 
 void CMenuManager::createMainMenu() {
-	CMenu* menu = NEW(CMenu, s_psMainMenuName, vmake(0.0f, 0.0f), vmake(0.0f, 0.0f), false);
-	m_mMenus[EMainMenu] = menu;
+	CMenu* pMenu = NEW(CMenu, s_psMainMenuName, vmake(0.0f, 0.0f), vmake(0.0f, 0.0f), false);
+	m_mMenus[EMainMenu] = pMenu;
 
-	CButton* button = NEW(CButton, s_psPlayMenuButtonName, vmake(SCR_WIDTH / 2, SCR_HEIGHT * 0.6), vmake(150, 35), s_psButtonOffImage, s_psButtonOnImage, s_psPlayText);
-	button->init();
-	button->addListener(this);
-	menu->addControl(button);
+	CButton* pButton = NEW(CButton, s_psPlayMenuButtonName, vmake(SCR_WIDTH / 2.0f, SCR_HEIGHT * 0.6f), vmake(150.0f, 35.0f), s_psButtonOffImage, s_psButtonOnImage, s_psPlayText);
+	pButton->init();
+	pButton->addListener(this);
+	pMenu->addControl(pButton);
 
-	button = NEW(CButton, s_psOptionsMenuButtonName, vmake(SCR_WIDTH / 2, SCR_HEIGHT * 0.5), vmake(150, 35), s_psButtonOffImage, s_psButtonOnImage, s_psOptionsText);
-	button->init();
-	button->addListener(this);
-	menu->addControl(button);
+	pButton = NEW(CButton, s_psOptionsMenuButtonName, vmake(SCR_WIDTH / 2.0f, SCR_HEIGHT * 0.5f), vmake(150.0f, 35.0f), s_psButtonOffImage, s_psButtonOnImage, s_psOptionsText);
+	pButton->init();
+	pButton->addListener(this);
+	pMenu->addControl(pButton);
 
-	button = NEW(CButton, s_psExitButtonName, vmake(SCR_WIDTH / 2, SCR_HEIGHT * 0.4), vmake(150, 35), s_psButtonOffImage, s_psButtonOnImage, s_psExitText);
-	button->init();
-	button->addListener(this);
-	menu->addControl(button);
+	pButton = NEW(CButton, s_psExitButtonName, vmake(SCR_WIDTH / 2.0f, SCR_HEIGHT * 0.4f), vmake(150.0f, 35.0f), s_psButtonOffImage, s_psButtonOnImage, s_psExitText);
+	pButton->init();
+	pButton->addListener(this);
+	pMenu->addControl(pButton);
 }
 
 void CMenuManager::createPlayMenu() {
-	CMenu* menu = NEW(CMenu, s_psPlayMenuName, vmake(0.0f, 0.0f), vmake(0.0f, 0.0f), false);
-	m_mMenus[EPlayMenu] = menu;
+	CMenu* pMenu = NEW(CMenu, s_psPlayMenuName, vmake(0.0f, 0.0f), vmake(0.0f, 0.0f), false);
+	m_mMenus[EPlayMenu] = pMenu;
 
-	CButton* button = NEW(CButton, s_psEasyButtonName, vmake(SCR_WIDTH / 2, SCR_HEIGHT * 0.65), vmake(150, 35), s_psButtonOffImage, s_psButtonOnImage, s_psEasyText);
-	button->init();
-	button->addListener(this);
-	menu->addControl(button);
+	CButton* pButton = NEW(CButton, s_psEasyButtonName, vmake(SCR_WIDTH / 2.0f, SCR_HEIGHT * 0.65f), vmake(150.0f, 35.0f), s_psButtonOffImage, s_psButtonOnImage, s_psEasyText);
+	pButton->init();
+	pButton->addListener(this);
+	pMenu->addControl(pButton);
 
-	button = NEW(CButton, s_psMediumButtonName, vmake(SCR_WIDTH / 2, SCR_HEIGHT * 0.55), vmake(150, 35), s_psButtonOffImage, s_psButtonOnImage, s_psMediumText);
-	button->init();
-	button->addListener(this);
-	menu->addControl(button);
+	pButton = NEW(CButton, s_psMediumButtonName, vmake(SCR_WIDTH / 2.0f, SCR_HEIGHT * 0.55f), vmake(150.0f, 35.0f), s_psButtonOffImage, s_psButtonOnImage, s_psMediumText);
+	pButton->init();
+	pButton->addListener(this);
+	pMenu->addControl(pButton);
 
-	button = NEW(CButton, s_psHardButtonName, vmake(SCR_WIDTH / 2, SCR_HEIGHT * 0.45), vmake(150, 35), s_psButtonOffImage, s_psButtonOnImage, s_psHardText);
-	button->init();
-	button->addListener(this);
-	menu->addControl(button);
+	pButton = NEW(CButton, s_psHardButtonName, vmake(SCR_WIDTH / 2.0f, SCR_HEIGHT * 0.45f), vmake(150.0f, 35.0f), s_psButtonOffImage, s_psButtonOnImage, s_psHardText);
+	pButton->init();
+	pButton->addListener(this);
+	pMenu->addControl(pButton);
 
-	button = NEW(CButton, s_psMainMenuButtonName, vmake(SCR_WIDTH / 2, SCR_HEIGHT * 0.35), vmake(150, 35), s_psButtonOffImage, s_psButtonOnImage, s_psBackText);
-	button->init();
-	button->addListener(this);
-	menu->addControl(button);
+	pButton = NEW(CButton, s_psMainMenuButtonName, vmake(SCR_WIDTH / 2.0f, SCR_HEIGHT * 0.35f), vmake(150.0f, 35.0f), s_psButtonOffImage, s_psButtonOnImage, s_psBackText);
+	pButton->init();
+	pButton->addListener(this);
+	pMenu->addControl(pButton);
 }
 
 void CMenuManager::createOptionsMenu() {
-	CMenu* menu = NEW(CMenu, s_psOptionsMenuName, vmake(0.0f, 0.0f), vmake(0.0f, 0.0f), false);
-	m_mMenus[EOptionsMenu] = menu;
+	CMenu* pMenu = NEW(CMenu, s_psOptionsMenuName, vmake(0.0f, 0.0f), vmake(0.0f, 0.0f), false);
+	m_mMenus[EOptionsMenu] = pMenu;
 
-	CLabel* label = NEW(CLabel, s_psSettingsMusicLabelName, vmake(SCR_WIDTH / 2 - 100, SCR_HEIGHT * 0.8), vmake(0.0, 0.0), s_psMusicText);
-	label->init();
-	menu->addControl(label);
+	CLabel* pLabel = NEW(CLabel, s_psSettingsMusicLabelName, vmake(SCR_WIDTH / 2.0f - 100.0f, SCR_HEIGHT * 0.8f), vmake(0.0f, 0.0f), s_psMusicText);
+	pLabel->init();
+	pMenu->addControl(pLabel);
 
-	CCheckbox* checkbox = NEW(CCheckbox, s_psSettingsMusicCheckboxName, vmake(SCR_WIDTH / 2 + 100, SCR_HEIGHT * 0.8), vmake(35, 35), s_psCheckboxEnabledImage, s_psCheckboxDisabledImage, g_settings.music);
-	checkbox->init();
-	checkbox->addListener(this);
-	menu->addControl(checkbox);
+	CCheckbox* pCheckbox = NEW(CCheckbox, s_psSettingsMusicCheckboxName, vmake(SCR_WIDTH / 2.0f + 100.0f, SCR_HEIGHT * 0.8f), vmake(35.0f, 35.0f), s_psCheckboxEnabledImage, s_psCheckboxDisabledImage, g_settings.music);
+	pCheckbox->init();
+	pCheckbox->addListener(this);
+	pMenu->addControl(pCheckbox);
 
-	label = NEW(CLabel, s_psSettingsSFXLabelName, vmake(SCR_WIDTH / 2 - 100, SCR_HEIGHT * 0.65), vmake(0.0, 0.0), s_psSFXText);
-	label->init();
-	menu->addControl(label);
+	pLabel = NEW(CLabel, s_psSettingsSFXLabelName, vmake(SCR_WIDTH / 2.0f - 100.0f, SCR_HEIGHT * 0.65f), vmake(0.0f, 0.0f), s_psSFXText);
+	pLabel->init();
+	pMenu->addControl(pLabel);
 
-	checkbox = NEW(CCheckbox, s_psSettingsSFXCheckboxName, vmake(SCR_WIDTH / 2 + 100, SCR_HEIGHT * 0.65), vmake(35, 35), s_psCheckboxEnabledImage, s_psCheckboxDisabledImage, g_settings.sfx);
-	checkbox->init();
-	checkbox->addListener(this);
-	menu->addControl(checkbox);
+	pCheckbox = NEW(CCheckbox, s_psSettingsSFXCheckboxName, vmake(SCR_WIDTH / 2.0f + 100.0f, SCR_HEIGHT * 0.65f), vmake(35.0f, 35.0f), s_psCheckboxEnabledImage, s_psCheckboxDisabledImage, g_settings.sfx);
+	pCheckbox->init();
+	pCheckbox->addListener(this);
+	pMenu->addControl(pCheckbox);
 
-	label = NEW(CLabel, s_psSettingsVolumeLabelName, vmake(SCR_WIDTH / 2 - 100, SCR_HEIGHT * 0.5), vmake(0.0, 0.0), s_psVolumeText);
-	label->init();
-	menu->addControl(label);
+	pLabel = NEW(CLabel, s_psSettingsVolumeLabelName, vmake(SCR_WIDTH / 2.0f - 100.0f, SCR_HEIGHT * 0.5f), vmake(0.0f, 0.0f), s_psVolumeText);
+	pLabel->init();
+	pMenu->addControl(pLabel);
 
-	CSlider* slider = NEW(CSlider, s_psSettingsVolumeSliderName, vmake(SCR_WIDTH / 2 + 100, SCR_HEIGHT * 0.5), vmake(100, 32), s_psSliderLeftButtonNormalImage, s_psSliderLeftButtonPushImage, s_psSliderRightButtonNormalImage, s_psSliderRightButtonPushImage, s_psSliderBarImage, s_psSliderBallImage, g_settings.volume, 0.1f);
-	slider->init();
-	slider->addListener(this);
-	menu->addControl(slider);
+	CSlider* pSlider = NEW(CSlider, s_psSettingsVolumeSliderName, vmake(SCR_WIDTH / 2.0f + 100.0f, SCR_HEIGHT * 0.5f), vmake(100.0f, 32.0f), s_psSliderLeftButtonNormalImage, s_psSliderLeftButtonPushImage, s_psSliderRightButtonNormalImage, s_psSliderRightButtonPushImage, s_psSliderBarImage, s_psSliderBallImage, g_settings.volume, 0.1f);
+	pSlider->init();
+	pSlider->addListener(this);
+	pMenu->addControl(pSlider);
 
-	label = NEW(CLabel, s_psSettingsLanguageLabelName, vmake(SCR_WIDTH / 2 - 100, SCR_HEIGHT * 0.35), vmake(0.0, 0.0), s_psLanguageText);
-	label->init();
-	menu->addControl(label);
+	pLabel = NEW(CLabel, s_psSettingsLanguageLabelName, vmake(SCR_WIDTH / 2.0f - 100.0f, SCR_HEIGHT * 0.35f), vmake(0.0f, 0.0f), s_psLanguageText);
+	pLabel->init();
+	pMenu->addControl(pLabel);
 
-	CButton* button = NEW(CButton, s_psSettingsLanguageButtonName, vmake(SCR_WIDTH / 2 + 100, SCR_HEIGHT * 0.35), vmake(150, 35), s_psButtonOffImage, s_psButtonOnImage, s_psLanguageValueText);
-	button->init();
-	button->addListener(this);
-	menu->addControl(button);
+	CButton* pButton = NEW(CButton, s_psSettingsLanguageButtonName, vmake(SCR_WIDTH / 2.0f + 100.0f, SCR_HEIGHT * 0.35f), vmake(150.0f, 35.0f), s_psButtonOffImage, s_psButtonOnImage, s_psLanguageValueText);
+	pButton->init();
+	pButton->addListener(this);
+	pMenu->addControl(pButton);
 	
-	button = NEW(CButton, s_psMainMenuButtonName, vmake(SCR_WIDTH / 2, SCR_HEIGHT * 0.15), vmake(150, 35), s_psButtonOffImage, s_psButtonOnImage, s_psBackText);
-	button->init();
-	button->addListener(this);
-	menu->addControl(button);
+	pButton = NEW(CButton, s_psMainMenuButtonName, vmake(SCR_WIDTH / 2.0f, SCR_HEIGHT * 0.15f), vmake(150.0f, 35.0f), s_psButtonOffImage, s_psButtonOnImage, s_psBackText);
+	pButton->init();
+	pButton->addListener(this);
+	pMenu->addControl(pButton);
 }
 
 void CMenuManager::createPauseMenu() {
-	CMenu* menu = NEW(CMenu, s_psPauseMenuName, vmake(0.0f, 0.0f), vmake(0.0f, 0.0f), false);
-	m_mMenus[EPauseMenu] = menu;
+	CMenu* pMenu = NEW(CMenu, s_psPauseMenuName, vmake(0.0f, 0.0f), vmake(0.0f, 0.0f), false);
+	m_mMenus[EPauseMenu] = pMenu;
 
-	CButton* button = NEW(CButton, s_psResumeButtonName, vmake(SCR_WIDTH / 2, SCR_HEIGHT * 0.6), vmake(175, 35), s_psButtonOffImage, s_psButtonOnImage, s_psResumeText);
-	button->init();
-	button->addListener(this);
-	menu->addControl(button);
+	CButton* pButton = NEW(CButton, s_psResumeButtonName, vmake(SCR_WIDTH / 2.0f, SCR_HEIGHT * 0.6f), vmake(175.0f, 35.0f), s_psButtonOffImage, s_psButtonOnImage, s_psResumeText);
+	pButton->init();
+	pButton->addListener(this);
+	pMenu->addControl(pButton);
 
-	button = NEW(CButton, s_psAbandonButtonName, vmake(SCR_WIDTH / 2, SCR_HEIGHT * 0.5), vmake(175, 35), s_psButtonOffImage, s_psButtonOnImage, s_psAbandonText);
-	button->init();
-	button->addListener(this);
-	menu->addControl(button);
+	pButton = NEW(CButton, s_psAbandonButtonName, vmake(SCR_WIDTH / 2.0f, SCR_HEIGHT * 0.5f), vmake(175.0f, 35.0f), s_psButtonOffImage, s_psButtonOnImage, s_psAbandonText);
+	pButton->init();
+	pButton->addListener(this);
+	pMenu->addControl(pButton);
 }
 
 void CMenuManager::createGameOverMenu() {
-	CMenu* menu = NEW(CMenu, s_psGameOverMenuName, vmake(0.0f, 0.0f), vmake(0.0f, 0.0f), false);
-	m_mMenus[EGameOverMenu] = menu;
+	CMenu* pMenu = NEW(CMenu, s_psGameOverMenuName, vmake(0.0f, 0.0f), vmake(0.0f, 0.0f), false);
+	m_mMenus[EGameOverMenu] = pMenu;
 
-	CButton* button = NEW(CButton, s_psRetryButtonName, vmake(SCR_WIDTH / 2, SCR_HEIGHT * 0.6), vmake(175, 35), s_psButtonOffImage, s_psButtonOnImage, s_psRetryText);
-	button->init();
-	button->addListener(this);
-	menu->addControl(button);
+	CButton* pButton = NEW(CButton, s_psRetryButtonName, vmake(SCR_WIDTH / 2.0f, SCR_HEIGHT * 0.6f), vmake(175.0f, 35.0f), s_psButtonOffImage, s_psButtonOnImage, s_psRetryText);
+	pButton->init();
+	pButton->addListener(this);
+	pMenu->addControl(pButton);
 
-	button = NEW(CButton, s_psMainMenuButtonName, vmake(SCR_WIDTH / 2, SCR_HEIGHT * 0.5), vmake(175, 35), s_psButtonOffImage, s_psButtonOnImage, s_psAbandonText);
-	button->init();
-	button->addListener(this);
-	menu->addControl(button);
+	pButton = NEW(CButton, s_psMainMenuButtonName, vmake(SCR_WIDTH / 2.0f, SCR_HEIGHT * 0.5f), vmake(175.0f, 35.0f), s_psButtonOffImage, s_psButtonOnImage, s_psAbandonText);
+	pButton->init();
+	pButton->addListener(this);
+	pMenu->addControl(pButton);
 
-	CLabel* pLabel = NEW(CLabel, s_psScoreLabelName, vmake(SCR_WIDTH / 2, SCR_HEIGHT * 0.8), vmake(0.0, 0.0), "");
+	CLabel* pLabel = NEW(CLabel, s_psScoreLabelName, vmake(SCR_WIDTH / 2.0f, SCR_HEIGHT * 0.8f), vmake(0.0f, 0.0f), "");
 	pLabel->init();
-	menu->addControl(pLabel);
+	pMenu->addControl(pLabel);
 }
