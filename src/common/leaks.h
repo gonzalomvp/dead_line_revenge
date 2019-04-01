@@ -3,8 +3,8 @@
 
 #include <stdlib.h>
 
-#ifdef MEMORY_LEAKS_MONITOR
 #pragma warning(disable:4005)
+#ifdef MEMORY_LEAKS_MONITOR
 
 struct ALLOC_INFO 
 {
