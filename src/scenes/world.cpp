@@ -129,7 +129,7 @@ bool CWorld::init(uint16_t _uLevel) {
 	const Value& enemies = doc["enemies"];
 	for (SizeType i = 0; i < enemies.Size(); i++) {
 		ASSERT(enemies[i].HasMember("type"));
-		CEntity::EType eEnemyType = CEntitiesFactory::getEntityTypeByName(enemies[i]["type"].GetString());
+		CEntity::EType eEnemyType = CEntity::getEntityTypeByName(enemies[i]["type"].GetString());
 		ASSERT(enemies[i].HasMember("spawnProbability"));
 		fTotalProbability += enemies[i]["spawnProbability"].GetFloat();
 		m_mEnemyProbabilities[eEnemyType] = fTotalProbability;

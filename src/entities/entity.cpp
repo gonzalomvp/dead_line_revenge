@@ -5,6 +5,25 @@
 
 #include <algorithm>
 
+CEntity::TEntityInfo CEntity::s_aEntityInfo[] = {
+#define REG_ENTITY(val, name) \
+	{CEntity::E##val, name},
+#include "REG_ENTITIES.h"
+#undef REG_ENTITY
+};
+
+CEntity::EType CEntity::getEntityTypeByName(const std::string& name) {
+	CEntity::EType etype = CEntity::EInvalid;
+	int i = 0;
+	while ((etype == CEntity::EInvalid) && (i < CEntity::NUM_ENTITIES)) {
+		if (name == s_aEntityInfo[i].sName) {
+			etype = s_aEntityInfo[i].eType;
+		}
+		i++;
+	}
+	return etype;
+}
+
 CEntity::~CEntity() {
 	for (auto itComponent = m_vComponents.begin(); itComponent != m_vComponents.end(); ++itComponent) {
 		DELETE(*itComponent);

@@ -17,7 +17,7 @@ CBehavior::EStatus CChangeWeapon::onUpdate(float _fDeltaTime) {
 	CEntity* pOwnerEntity = getOwnerEntity();
 	ASSERT(pOwnerEntity);
 	TMessageWeaponChange messageWeaponChange;
-	messageWeaponChange.eWeaponType = CEntitiesFactory::getWeaponTypeByName(m_sWeaponName);
+	messageWeaponChange.eWeaponType = CWeaponComponent::getWeaponTypeByName(m_sWeaponName);
 	pOwnerEntity->receiveMessage(&messageWeaponChange);
 
 	return EStatus::ESuccess;

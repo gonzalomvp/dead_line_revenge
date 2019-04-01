@@ -19,6 +19,7 @@ public:
 		EInvalid,
 	};
 	static const int NUM_ENTITIES = EInvalid;
+	static CEntity::EType getEntityTypeByName(const std::string& name);
 
 	CEntity(EType _eType, const vec2& _v2Pos, const vec2& _v2Size)
 	: m_eType(_eType)
@@ -51,4 +52,10 @@ private:
 	
 	std::vector<CComponent*> m_vComponents;
 	std::vector<IListener*>  m_vDestroyListeners;
+
+	struct TEntityInfo {
+		CEntity::EType eType;
+		std::string    sName;
+	};
+	static TEntityInfo s_aEntityInfo[];
 };

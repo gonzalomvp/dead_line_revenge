@@ -11,6 +11,25 @@ namespace {
 	const float s_fShotgunAngle = 15.0f;
 }
 
+CWeaponComponent::TWeaponInfo CWeaponComponent::s_aWeaponInfo[] = {
+#define REG_WEAPON(val, name) \
+	{CWeaponComponent::E##val, name},
+#include "REG_WEAPONS.h"
+#undef REG_WEAPON
+};
+
+CWeaponComponent::EType CWeaponComponent::getWeaponTypeByName(const std::string& name) {
+	CWeaponComponent::EType etype = CWeaponComponent::EInvalid;
+	int i = 0;
+	while ((etype == CWeaponComponent::EInvalid) && (i < CWeaponComponent::NUM_WEAPON_TYPES)) {
+		if (name == s_aWeaponInfo[i].sName) {
+			etype = s_aWeaponInfo[i].eType;
+		}
+		i++;
+	}
+	return etype;
+}
+
 CWeaponComponent::~CWeaponComponent() {
 	if (m_pRemoteBullet) {
 		m_pRemoteBullet->unregisterToDestroy(this);

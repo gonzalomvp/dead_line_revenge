@@ -37,13 +37,9 @@ public:
 		std::string              sBTFile;
 	};
 
-	//CEntitiesFactory();
-	//~CEntitiesFactory();
+	CEntitiesFactory()  {}
+	~CEntitiesFactory() {}
 
-	// mover a weapon y entity???
-	static CWeaponComponent::EType getWeaponTypeByName(const std::string& name);
-	static CEntity::EType          getEntityTypeByName(const std::string& name);
-	
 	bool init(const char* _sConfigFile);
 
 	CEntity* createPlayer(const vec2& _v2Pos);
@@ -55,21 +51,7 @@ public:
 	TWeaponDef getWeaponDef(const CWeaponComponent::EType& _eWeaponType) { return m_mWeaponDef[_eWeaponType]; }
 	TEnemyDef  getEnemyDef (const CEntity::EType& _eEnemyType)           { return m_mEnemyDef[_eEnemyType];   }
 	
-
 	std::map<CWeaponComponent::EType, TWeaponDef> m_mWeaponDef;
 	std::map<CEntity::EType, TEnemyDef>           m_mEnemyDef;
 	std::vector<CWeaponComponent::EType>          m_vWeaponPickups;
-
-private:
-	struct TWeaponInfo {
-		CWeaponComponent::EType eType;
-		std::string             sName;
-	};
-	static TWeaponInfo s_aWeaponInfo[];
-
-	struct TEntityInfo {
-		CEntity::EType eType;
-		std::string    sName;
-	};
-	static TEntityInfo s_aEntityInfo[];
 };

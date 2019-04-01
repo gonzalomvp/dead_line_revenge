@@ -15,6 +15,7 @@ public:
 		EInvalid,
 	};
 	static const int NUM_WEAPON_TYPES = EInvalid;
+	static CWeaponComponent::EType getWeaponTypeByName(const std::string& name);
 
 	CWeaponComponent(CEntity* _pOwner, EType _eType, vec2 _v2AimDir = vmake(0.0f, 0.0f))
 	: CComponent(_pOwner)
@@ -61,4 +62,10 @@ private:
 	//Timers
 	float       m_fFireTimer;
 	float       m_fReloadTimer;
+
+	struct TWeaponInfo {
+		CWeaponComponent::EType eType;
+		std::string             sName;
+	};
+	static TWeaponInfo s_aWeaponInfo[];
 };

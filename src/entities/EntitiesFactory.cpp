@@ -38,45 +38,6 @@ namespace {
 	const int s_iEnemiesRenderPriority    = 9;
 }
 
-CEntitiesFactory::TWeaponInfo CEntitiesFactory::s_aWeaponInfo[] = {
-#define REG_WEAPON(val, name) \
-	{CWeaponComponent::E##val, name},
-#include "REG_WEAPONS.h"
-#undef REG_WEAPON
-};
-
-CEntitiesFactory::TEntityInfo CEntitiesFactory::s_aEntityInfo[] = {
-#define REG_ENTITY(val, name) \
-	{CEntity::E##val, name},
-#include "REG_ENTITIES.h"
-#undef REG_ENTITY
-};
-
-CWeaponComponent::EType CEntitiesFactory::getWeaponTypeByName(const std::string& name) {
-	CWeaponComponent::EType etype = CWeaponComponent::EInvalid;
-	int i = 0;
-	while ((etype == CWeaponComponent::EInvalid) && (i < CWeaponComponent::NUM_WEAPON_TYPES)) {
-		if (name == s_aWeaponInfo[i].sName) {
-			etype = s_aWeaponInfo[i].eType;
-		}
-		i++;
-	}
-	return etype;
-}
-
-
-CEntity::EType CEntitiesFactory::getEntityTypeByName(const std::string& name) {
-	CEntity::EType etype = CEntity::EInvalid;
-	int i = 0;
-	while ((etype == CEntity::EInvalid) && (i < CEntity::NUM_ENTITIES)) {
-		if (name == s_aEntityInfo[i].sName) {
-			etype = s_aEntityInfo[i].eType;
-		}
-		i++;
-	}
-	return etype;
-}
-
 bool CEntitiesFactory::init(const char* _sConfigFile) {
 	FILE* file = fopen(_sConfigFile, "r");
 	if (!file) return false;
@@ -92,7 +53,7 @@ bool CEntitiesFactory::init(const char* _sConfigFile) {
 	const Value& weapons = doc["weapons"];
 	for (SizeType i = 0; i < weapons.Size(); i++) {
 		TWeaponDef weapon;
-		weapon.eType = getWeaponTypeByName(weapons[i]["name"].GetString());
+		weapon.eType = CWeaponComponent::getWeaponTypeByName(weapons[i]["name"].GetString());
 		weapon.fFireRate = weapons[i]["fireRate"].GetFloat();
 		weapon.fReloadTime = weapons[i]["reloadTime"].GetFloat();
 		weapon.iMaxBullets = weapons[i]["maxBullets"].GetInt();
@@ -123,14 +84,14 @@ bool CEntitiesFactory::init(const char* _sConfigFile) {
 	const Value& enemies = doc["enemies"];
 	for (SizeType i = 0; i < enemies.Size(); i++) {
 		TEnemyDef enemy;
-		enemy.eType = getEntityTypeByName(enemies[i]["type"].GetString());
+		enemy.eType = CEntity::getEntityTypeByName(enemies[i]["type"].GetString());
 		enemy.iLife = enemies[i]["life"].GetInt();
 		enemy.fInvencibleTime = enemies[i]["invencibleTime"].GetFloat();
 		enemy.fSpeed = enemies[i]["speed"].GetFloat();
 		enemy.iCollisionDamage = enemies[i]["collisionDamage"].GetInt();
 		enemy.eWeapon = CWeaponComponent::EType::EInvalid;
 		if (enemies[i].HasMember("weapon")) {
-			enemy.eWeapon = getWeaponTypeByName(enemies[i]["weapon"].GetString());
+			enemy.eWeapon = CWeaponComponent::getWeaponTypeByName(enemies[i]["weapon"].GetString());
 		}
 		enemy.v2Size = vmake(enemies[i]["size"][0].GetFloat(), enemies[i]["size"][1].GetFloat());
 		enemy.sImageFile = enemies[i]["imageFile"].GetString();
@@ -144,7 +105,7 @@ bool CEntitiesFactory::init(const char* _sConfigFile) {
 	// Load weapon pickups
 	const Value& pickups = doc["pickups"];
 	for (SizeType i = 0; i < pickups.Size(); i++) {
-		m_vWeaponPickups.push_back(getWeaponTypeByName(pickups[i].GetString()));
+		m_vWeaponPickups.push_back(CWeaponComponent::getWeaponTypeByName(pickups[i].GetString()));
 	}
 
 	fclose(file);
