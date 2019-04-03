@@ -15,21 +15,21 @@ void CRepeat::init(TiXmlElement* _pBehaviorElem) {
 void CRepeat::onEnter() {
 	CDecorator::onEnter();
 
-	m_iCounter = 0;
+	m_iCounter = m_iRepeatTimes;
 }
 
 CBehavior::EStatus CRepeat::onUpdate(float _fDeltaTime) {
-	if (m_iCounter < m_iRepeatTimes || m_iRepeatTimes == -1) {
+	if (m_iCounter != 0) {
 		EStatus eChildStatus = m_pChildBehavior->run(_fDeltaTime);
 		if (eChildStatus != EStatus::ESuccess) {
 			return eChildStatus;
 		}
-		else {
-			++m_iCounter;
-		}
+		if (m_iCounter > 0) {
+			--m_iCounter;
+		}	
 	}
 
-	if (m_iCounter >= m_iRepeatTimes) {
+	if (m_iCounter == 0) {
 		return EStatus::ESuccess;
 	}
 	else {
