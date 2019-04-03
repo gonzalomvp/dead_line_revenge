@@ -86,33 +86,33 @@ void CWeaponComponent::run(float _fDeltaTime) {
 		switch (m_eType) {
 			case ESHOTGUN: {
 				vec2 v2bulletDir = m_v2AimDir;
-				CEntity* pBullet = g_pEntitiesFactory->createBullet(m_eType, m_pOwner->getPos(), v2bulletDir, m_pOwner->getType());
+				CEntity* pBullet = g_pEntitiesFactory->createBullet(m_pOwner->getPos(), m_eType, v2bulletDir, m_pOwner->getType());
 				g_pWorld->addEntity(pBullet);
 				float fAngle = vangle(m_v2AimDir);
 				fAngle += DEG2RAD(s_fShotgunAngle);
 				v2bulletDir = vunit(fAngle);
-				pBullet = g_pEntitiesFactory->createBullet(m_eType, m_pOwner->getPos(), v2bulletDir, m_pOwner->getType());
+				pBullet = g_pEntitiesFactory->createBullet(m_pOwner->getPos(), m_eType, v2bulletDir, m_pOwner->getType());
 				g_pWorld->addEntity(pBullet);
 				fAngle = vangle(m_v2AimDir);
 				fAngle -= DEG2RAD(s_fShotgunAngle);
 				v2bulletDir = vunit(fAngle);
-				pBullet = g_pEntitiesFactory->createBullet(m_eType, m_pOwner->getPos(), v2bulletDir, m_pOwner->getType());
+				pBullet = g_pEntitiesFactory->createBullet(m_pOwner->getPos(), m_eType, v2bulletDir, m_pOwner->getType());
 				g_pWorld->addEntity(pBullet);
 				break;
 			}
 			case EMINES: {
-				CEntity* pBullet = g_pEntitiesFactory->createBullet(m_eType, m_pOwner->getPos(), m_v2AimDir, m_pOwner->getType());
+				CEntity* pBullet = g_pEntitiesFactory->createBullet(m_pOwner->getPos(), m_eType, m_v2AimDir, m_pOwner->getType());
 				g_pWorld->addEntity(pBullet);
 				break;
 			}
 			case EC4: {
-				m_pRemoteBullet = g_pEntitiesFactory->createBullet(m_eType, m_pOwner->getPos(), m_v2AimDir, m_pOwner->getType());
+				m_pRemoteBullet = g_pEntitiesFactory->createBullet(m_pOwner->getPos(), m_eType, m_v2AimDir, m_pOwner->getType());
 				m_pRemoteBullet->registerToDestroy(this);
 				g_pWorld->addEntity(m_pRemoteBullet);
 				break;
 			}
 			case EROCKETLAUNCHER: {
-				CEntity* pBullet = g_pEntitiesFactory->createBullet(m_eType, m_pOwner->getPos(), m_v2AimDir, m_pOwner->getType());
+				CEntity* pBullet = g_pEntitiesFactory->createBullet(m_pOwner->getPos(), m_eType, m_v2AimDir, m_pOwner->getType());
 				g_pWorld->addEntity(pBullet);
 				break;
 			}
@@ -124,7 +124,7 @@ void CWeaponComponent::run(float _fDeltaTime) {
 			default: {
 				for (size_t i = 0; i < m_uBulletsPerShot; i++) {
 					float fAngle = vangle(m_v2AimDir) + (i * 2.0f * M_PIf / m_uBulletsPerShot);
-					CEntity* pBullet = g_pEntitiesFactory->createBullet(m_eType, m_pOwner->getPos(), vunit(fAngle), m_pOwner->getType());
+					CEntity* pBullet = g_pEntitiesFactory->createBullet(m_pOwner->getPos(), m_eType, vunit(fAngle), m_pOwner->getType());
 					g_pWorld->addEntity(pBullet);
 				}
 				break;

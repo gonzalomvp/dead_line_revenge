@@ -1,8 +1,6 @@
 #include "common/stdafx.h"
 #include "EntitiesFactory.h"
 
-#include "engine/SoundEngine.h"
-
 #include "components/BehaviorTreeComponent.h"
 #include "components/ColliderComponent.h"
 #include "components/ExplossionComponent.h"
@@ -36,6 +34,9 @@ namespace {
 	const int s_iBulletsRenderPriority    = 7;
 	const int s_iPickupsRenderPriority    = 8;
 	const int s_iEnemiesRenderPriority    = 9;
+
+	// 
+	const float s_fPlayerInvencibleTime = 0.5f;
 }
 
 bool CEntitiesFactory::init(const char* _sConfigFile) {
@@ -114,27 +115,33 @@ bool CEntitiesFactory::init(const char* _sConfigFile) {
 }
 
 CEntity* CEntitiesFactory::createPlayer(const vec2& _v2Pos) {
-	CEntity* player = NEW(CEntity, CEntity::EPLAYER, _v2Pos, vmake(30.0f, 25.0f));
-	//CTransformComponent* transform = NEW(CTransformComponent, player, _v2Pos, vmake(30, 25));
-	//transform->init();
-	CRenderableComponent* renderable = NEW(CRenderableComponent, player, s_sPlayerImage, 0.0f, 1.0f, s_iPlayerRenderPriority, false, true, 0.5f);
-	renderable->init();
-	CPlayerControllerComponent* playerControl = NEW(CPlayerControllerComponent, player);
-	playerControl->init();
-	CMovementComponent* movement = NEW(CMovementComponent, player, vmake(0.0f, 0.0f), g_pWorld->getPlayerSpeed(), false);
-	movement->init();
-	CWeaponComponent* weapon = NEW(CWeaponComponent, player, CWeaponComponent::EREVOLVER);
-	weapon->init();
-	CColliderComponent* collider = NEW(CColliderComponent, player, CColliderComponent::ERectCollider, -1, CColliderComponent::EPlayerCollider, CColliderComponent::EEnemyCollider | CColliderComponent::EEnemyWeaponCollider);
-	collider->init();
-	CLifeComponent* life = NEW(CLifeComponent, player, g_pWorld->getPlayerLife(), 0.5f);
-	life->init();
-	CHUDComponent* hudComponent = NEW(CHUDComponent, player);
-	hudComponent->init();
-	return player;
+	CEntity* pPlayer = NEW(CEntity, CEntity::EPLAYER, _v2Pos, vmake(30.0f, 25.0f));
+
+	CRenderableComponent* pRenderableComp = NEW(CRenderableComponent, pPlayer, s_sPlayerImage, 0.0f, 1.0f, s_iPlayerRenderPriority, false, true, s_fPlayerInvencibleTime);
+	pRenderableComp->init();
+
+	CPlayerControllerComponent* pPlayerControllerComp = NEW(CPlayerControllerComponent, pPlayer);
+	pPlayerControllerComp->init();
+
+	CMovementComponent* pMovementComp = NEW(CMovementComponent, pPlayer, vmake(0.0f, 0.0f), g_pWorld->getPlayerSpeed(), false);
+	pMovementComp->init();
+
+	CWeaponComponent* pWeaponComp = NEW(CWeaponComponent, pPlayer, CWeaponComponent::EREVOLVER);
+	pWeaponComp->init();
+
+	CColliderComponent* pColliderComp = NEW(CColliderComponent, pPlayer, CColliderComponent::ERectCollider, -1, CColliderComponent::EPlayerCollider, CColliderComponent::EEnemyCollider | CColliderComponent::EEnemyWeaponCollider);
+	pColliderComp->init();
+
+	CLifeComponent* pLifeComp = NEW(CLifeComponent, pPlayer, g_pWorld->getPlayerLife(), s_fPlayerInvencibleTime);
+	pLifeComp->init();
+
+	CHUDComponent* pHudComp = NEW(CHUDComponent, pPlayer);
+	pHudComp->init();
+	
+	return pPlayer;
 }
 
-CEntity* CEntitiesFactory::createBullet(const CWeaponComponent::EType& _eWeaponType, const vec2& _v2Pos, const vec2& _v2Direction, const CEntity::EType& _eOwnerType) {
+CEntity* CEntitiesFactory::createBullet(const vec2& _v2Pos, const CWeaponComponent::EType& _eWeaponType, const vec2& _v2Direction, const CEntity::EType& _eOwnerType) {
 	if (!m_mWeaponDef.count(_eWeaponType)) {
 		ASSERT(false, "Weapon definition not found");
 		return nullptr;
@@ -226,7 +233,11 @@ CEntity* CEntitiesFactory::createExplossion(const vec2& _v2Pos, const CWeaponCom
 	return pExplossion;
 }
 
-CEntity* CEntitiesFactory::createEnemy(const vec2& _v2Pos, const CEntity::EType& _eEnemyType, const std::string& _sBTFile, const vec2& _v2MoveDir, const vec2& _vAimDir) {
+CEntity* CEntitiesFactory::createEnemy(const vec2& _v2Pos, const CEntity::EType& _eEnemyType, const std::string& _sBTFile, const vec2& _v2MoveDir, const vec2& _v2AimDir) {
+	if (!m_mEnemyDef.count(_eEnemyType)) {
+		ASSERT(false, "Enemy definition not found");
+		return nullptr;
+	}
 	TEnemyDef tEnemyDef = m_mEnemyDef[_eEnemyType];
 	
 	// Defaults
@@ -278,7 +289,7 @@ CEntity* CEntitiesFactory::createEnemy(const vec2& _v2Pos, const CEntity::EType&
 	pBTComp->init();
 
 	if (tEnemyDef.eWeapon != CWeaponComponent::EType::EInvalid) {
-		CWeaponComponent* pWeaponComp = NEW(CWeaponComponent, pEnemy, tEnemyDef.eWeapon, _vAimDir);
+		CWeaponComponent* pWeaponComp = NEW(CWeaponComponent, pEnemy, tEnemyDef.eWeapon, _v2AimDir);
 		pWeaponComp->init();
 	}
 
