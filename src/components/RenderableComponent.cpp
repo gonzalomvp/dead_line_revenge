@@ -13,8 +13,8 @@ CRenderableComponent::~CRenderableComponent() {
 void CRenderableComponent::init() {
 	CComponent::init();
 
-	ASSERT(g_pGraphicEngine);
-	m_pSprite = NEW(CSprite, g_pGraphicEngine->getTexture(m_sTexture), vmake(0.0f, 0.0f), vmake(0.0f, 0.0f), m_fAngle, m_fAlpha, m_iPriority);
+	ASSERT(m_pOwner && g_pGraphicEngine);
+	m_pSprite = NEW(CSprite, g_pGraphicEngine->getTexture(m_sTexture), m_pOwner->getPos(), m_pOwner->getSize(), m_fAngle, m_fAlpha, m_iPriority);
 	g_pGraphicEngine->addGfxEntity(m_pSprite);
 }
 
@@ -66,7 +66,7 @@ void CRenderableComponent::receiveMessage(TMessage* _pMessage) {
 	if (!m_bIsActive)
 		return;
 
-	ASSERT(_pMessage && m_pSprite && g_pGraphicEngine);
+	ASSERT(_pMessage && m_pOwner && m_pSprite && g_pGraphicEngine);
 
 	if (TMessageChangeLife* pMessage = dynamic_cast<TMessageChangeLife*>(_pMessage)) {
 		if (m_fHitTimer <= 0.0f && pMessage->iDeltaLife < 0) {
@@ -74,12 +74,11 @@ void CRenderableComponent::receiveMessage(TMessage* _pMessage) {
 		}
 	}
 	else if (TMessageChangeSprite* pMessage = dynamic_cast<TMessageChangeSprite*>(_pMessage)) {
-		ASSERT(g_pGraphicEngine);
 		g_pGraphicEngine->removeGfxEntity(m_pSprite);
 		DELETE(m_pSprite);
 
 		m_sTexture = pMessage->sTexture;
-		m_pSprite = NEW(CSprite, g_pGraphicEngine->getTexture(m_sTexture), vmake(0.0f, 0.0f), vmake(0.0f, 0.0f), m_fAngle, m_fAlpha, m_iPriority);
+		m_pSprite = NEW(CSprite, g_pGraphicEngine->getTexture(m_sTexture), m_pOwner->getPos(), m_pOwner->getSize(), m_fAngle, m_fAlpha, m_iPriority);
 		g_pGraphicEngine->addGfxEntity(m_pSprite);
 	}
 }
