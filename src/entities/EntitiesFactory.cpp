@@ -24,8 +24,6 @@ using namespace rapidjson;
 
 namespace {
 	// Image files
-	const std::string s_sPlayerImage     = "data/images/player.png";
-	const std::string s_sCrateImage      = "data/images/crate.png";
 	const std::string s_sExplossionImage = "data/images/explossion.png";
 
 	// Render priorities
@@ -34,9 +32,6 @@ namespace {
 	const int s_iBulletsRenderPriority    = 7;
 	const int s_iPickupsRenderPriority    = 8;
 	const int s_iEnemiesRenderPriority    = 9;
-
-	// 
-	const float s_fPlayerInvencibleTime = 0.5f;
 }
 
 bool CEntitiesFactory::init(const char* _sConfigFile) {
@@ -49,6 +44,33 @@ bool CEntitiesFactory::init(const char* _sConfigFile) {
 	FileReadStream is(file, fileData.data(), fileData.size());
 	Document doc;
 	doc.ParseStream(is);
+
+	// Load player definition
+	ASSERT(doc.HasMember("player"));
+	const Value& player = doc["player"];
+	ASSERT(player.HasMember("invencibleTime"));
+	m_PlayerDef.fInvencibleTime = player["invencibleTime"].GetFloat();
+	ASSERT(player.HasMember("speed"));
+	m_PlayerDef.fSpeed = player["speed"].GetFloat();
+	ASSERT(player.HasMember("size") && player["size"].Size() == 2);
+	m_PlayerDef.v2Size = vmake(player["size"][0].GetFloat(), player["size"][1].GetFloat());
+	ASSERT(player.HasMember("imageFile"));
+	m_PlayerDef.sImageFile = player["imageFile"].GetString();
+
+	// Load pickups definition
+	ASSERT(doc.HasMember("pickup"));
+	const Value& pickup = doc["pickup"];
+	ASSERT(pickup.HasMember("points"));
+	m_PickupDef.uPoints = pickup["points"].GetUint();
+	ASSERT(pickup.HasMember("weapons"));
+	const Value& pickupsWeapons = pickup["weapons"];
+	for (SizeType i = 0; i < pickupsWeapons.Size(); i++) {
+		m_PickupDef.vWeapons.push_back(CWeaponComponent::getWeaponTypeByName(pickupsWeapons[i].GetString()));
+	}
+	ASSERT(pickup.HasMember("size") && pickup["size"].Size() == 2);
+	m_PickupDef.v2Size = vmake(pickup["size"][0].GetFloat(), pickup["size"][1].GetFloat());
+	ASSERT(pickup.HasMember("imageFile"));
+	m_PickupDef.sImageFile = pickup["imageFile"].GetString();
 
 	// Load weapon definitions
 	const Value& weapons = doc["weapons"];
@@ -90,6 +112,10 @@ bool CEntitiesFactory::init(const char* _sConfigFile) {
 		enemy.fInvencibleTime = enemies[i]["invencibleTime"].GetFloat();
 		enemy.fSpeed = enemies[i]["speed"].GetFloat();
 		enemy.iCollisionDamage = enemies[i]["collisionDamage"].GetInt();
+		
+		ASSERT(enemies[i].HasMember("points"));
+		enemy.uPoints = enemies[i]["points"].GetUint();
+
 		enemy.eWeapon = CWeaponComponent::EType::EInvalid;
 		if (enemies[i].HasMember("weapon")) {
 			enemy.eWeapon = CWeaponComponent::getWeaponTypeByName(enemies[i]["weapon"].GetString());
@@ -103,27 +129,21 @@ bool CEntitiesFactory::init(const char* _sConfigFile) {
 		m_mEnemyDef[enemy.eType] = enemy;
 	}
 
-	// Load weapon pickups
-	const Value& pickups = doc["pickups"];
-	for (SizeType i = 0; i < pickups.Size(); i++) {
-		m_vWeaponPickups.push_back(CWeaponComponent::getWeaponTypeByName(pickups[i].GetString()));
-	}
-
 	fclose(file);
 
 	return true;
 }
 
-CEntity* CEntitiesFactory::createPlayer(const vec2& _v2Pos) {
-	CEntity* pPlayer = NEW(CEntity, CEntity::EPLAYER, _v2Pos, vmake(30.0f, 25.0f));
+CEntity* CEntitiesFactory::createPlayer(const vec2& _v2Pos, int _iLife) {
+	CEntity* pPlayer = NEW(CEntity, CEntity::EPLAYER, _v2Pos, m_PlayerDef.v2Size);
 
-	CRenderableComponent* pRenderableComp = NEW(CRenderableComponent, pPlayer, s_sPlayerImage, 0.0f, 1.0f, s_iPlayerRenderPriority, false, true, s_fPlayerInvencibleTime);
+	CRenderableComponent* pRenderableComp = NEW(CRenderableComponent, pPlayer, m_PlayerDef.sImageFile, 0.0f, 1.0f, s_iPlayerRenderPriority, false, true, m_PlayerDef.fInvencibleTime);
 	pRenderableComp->init();
 
 	CPlayerControllerComponent* pPlayerControllerComp = NEW(CPlayerControllerComponent, pPlayer);
 	pPlayerControllerComp->init();
 
-	CMovementComponent* pMovementComp = NEW(CMovementComponent, pPlayer, vmake(0.0f, 0.0f), g_pWorld->getPlayerSpeed(), false);
+	CMovementComponent* pMovementComp = NEW(CMovementComponent, pPlayer, vmake(0.0f, 0.0f), m_PlayerDef.fSpeed, false);
 	pMovementComp->init();
 
 	CWeaponComponent* pWeaponComp = NEW(CWeaponComponent, pPlayer, CWeaponComponent::EREVOLVER);
@@ -132,7 +152,7 @@ CEntity* CEntitiesFactory::createPlayer(const vec2& _v2Pos) {
 	CColliderComponent* pColliderComp = NEW(CColliderComponent, pPlayer, CColliderComponent::ERectCollider, -1, CColliderComponent::EPlayerCollider, CColliderComponent::EEnemyCollider | CColliderComponent::EEnemyWeaponCollider);
 	pColliderComp->init();
 
-	CLifeComponent* pLifeComp = NEW(CLifeComponent, pPlayer, g_pWorld->getPlayerLife(), s_fPlayerInvencibleTime);
+	CLifeComponent* pLifeComp = NEW(CLifeComponent, pPlayer, _iLife, m_PlayerDef.fInvencibleTime);
 	pLifeComp->init();
 
 	CHUDComponent* pHudComp = NEW(CHUDComponent, pPlayer);
@@ -281,7 +301,7 @@ CEntity* CEntitiesFactory::createEnemy(const vec2& _v2Pos, const CEntity::EType&
 	CLifeComponent* pLifeComp = NEW(CLifeComponent, pEnemy, tEnemyDef.iLife, tEnemyDef.fInvencibleTime);
 	pLifeComp->init();
 
-	CPointsComponent* pPointsComp = NEW(CPointsComponent, pEnemy);
+	CPointsComponent* pPointsComp = NEW(CPointsComponent, pEnemy, tEnemyDef.uPoints);
 	pPointsComp->init();
 	
 	CBehaviorTreeComponent * pBTComp = NEW(CBehaviorTreeComponent, pEnemy, sBTFile.c_str());
@@ -303,14 +323,14 @@ CEntity* CEntitiesFactory::createEnemy(const vec2& _v2Pos, const CEntity::EType&
 
 CEntity* CEntitiesFactory::createWeaponPickup() {
 	// Choose a random weapon type
-	CWeaponComponent::EType eWeaponType = m_vWeaponPickups[rand() % m_vWeaponPickups.size()];
+	CWeaponComponent::EType eWeaponType = m_PickupDef.vWeapons[rand() % m_PickupDef.vWeapons.size()];
 
 	// Choose a random spawn position
 	vec2 v2RandomPos = vmake(CORE_FRand(0.0f, WORLD_WIDTH), CORE_FRand(80.0f, WORLD_HEIGHT - 80.0f));
 
-	CEntity* pWeaponPickup = NEW(CEntity, CEntity::EPICKUP, v2RandomPos, vmake(20.0f, 20.0f));
+	CEntity* pWeaponPickup = NEW(CEntity, CEntity::EPICKUP, v2RandomPos, m_PickupDef.v2Size);
 
-	CRenderableComponent* pRenderableComp = NEW(CRenderableComponent, pWeaponPickup, s_sCrateImage, 0.0f, 1.0f, s_iPickupsRenderPriority);
+	CRenderableComponent* pRenderableComp = NEW(CRenderableComponent, pWeaponPickup, m_PickupDef.sImageFile, 0.0f, 1.0f, s_iPickupsRenderPriority);
 	pRenderableComp->init();
 
 	CColliderComponent* pColliderComp = NEW(CColliderComponent, pWeaponPickup, CColliderComponent::ERectCollider, 0, CColliderComponent::EPickupCollider, CColliderComponent::EPlayerCollider);
@@ -322,7 +342,7 @@ CEntity* CEntitiesFactory::createWeaponPickup() {
 	CLifeComponent* pLifeComp = NEW(CLifeComponent, pWeaponPickup, 1);
 	pLifeComp->init();
 
-	CPointsComponent* pPointsComp = NEW(CPointsComponent, pWeaponPickup);
+	CPointsComponent* pPointsComp = NEW(CPointsComponent, pWeaponPickup, m_PickupDef.uPoints);
 	pPointsComp->init();
 
 	return pWeaponPickup;

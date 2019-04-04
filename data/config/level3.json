@@ -1,53 +1,47 @@
 {
-	"playerLife": -1,
-	"playerSpeed": 300,
-	"pickupPoints": 10,
-	"pickupSpawnWait": 10.0,
-	"enemySpawnWait": 1.0,
-	"bossSpawnPoints": 100,
-	"maxEnemies": 5,
-	"enemies": [
-	{
-		"type": "melee",
-		"spawnProbability": 0.6,
-		"points": 1
-	},
-	{
-		"type": "big",
-		"spawnProbability": 0.3,
-		"points": 2
-	},
-	{
-		"type": "range",
-		"spawnProbability": 0.1,
-		"points": 5
-	},
-	{
-		"type": "turret",
-		"spawnProbability": 0,
-		"points": 3
-	},
-	{
-		"type": "boss",
-		"spawnProbability": 0,
-		"points": 20
-	}
-	],
-	"turrets": [
-	{
-		"position": [ 600 ,400 ],
-		"moveDirection": [ -1, 0 ],
-		"aimDirection": [ 0, -1 ]
-	},
-	{
-		"position": [ 600 ,40 ],
-		"moveDirection": [ 0, 1 ],
-		"aimDirection": [ -1, 0 ]
-	},
-	{
-		"position": [ 150 ,300 ],
-		"aimDirection": [ 1, 0 ],
-		"behaviorTree": "data/bt/rotating-turret_bt.xml"
-	}
-	]
-}
+  "player": 
+  {
+    "life": -1,
+    "startPosition": [ 320, 240 ]
+  },
+  "pickup": {
+    "spawnWait": 10.0
+  },
+  "enemies": 
+   {
+    "spawnWait": 1.0,
+    "maxEnemies": 5,
+    "bossSpawnPoints": 10,
+    "spawnProbabilities": [
+    {
+      "type": "melee",
+      "spawnProbability": 0.6
+    },
+    {
+      "type": "big",
+      "spawnProbability": 0.3
+    },
+    {
+      "type": "range",
+      "spawnProbability": 0.1
+    }
+    ],
+    "turrets": [
+    {
+      "position": [ 600, 400 ],
+      "moveDirection": [ -1, 0 ],
+      "aimDirection": [ 0, -1 ]
+    },
+    {
+      "position": [ 600, 40 ],
+      "moveDirection": [ 0, 1 ],
+      "aimDirection": [ -1, 0 ]
+    },
+    {
+      "position": [ 150, 300 ],
+      "aimDirection": [ 1, 0 ],
+      "behaviorTree": "data/bt/rotating-turret_bt.xml"
+    }
+    ]
+  }
+ }

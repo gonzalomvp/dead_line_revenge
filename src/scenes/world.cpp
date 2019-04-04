@@ -27,8 +27,6 @@ CWorld::CWorld()
 , m_bIsGameOver(false)
 , m_bIsPaused(false)
 , m_uScore(0)
-, m_iPlayerLife(0)
-, m_fPlayerSpeed(0.0f)
 , m_fPickupSpawnWait(0.0f)
 , m_fEnemySpawnWait(0.0f)
 , m_iCurrentEnemies(0)
@@ -47,8 +45,6 @@ bool CWorld::init(uint16_t _uLevel) {
 	m_bIsGameOver = false;
 	m_bIsPaused = false;
 	m_uScore = 0;
-	m_iPlayerLife = 0;
-	m_fPlayerSpeed = 0.0f;
 	m_fPickupSpawnWait = 0.0f;
 	m_fEnemySpawnWait = 0.0f;
 	m_iCurrentEnemies = 0;
@@ -63,7 +59,6 @@ bool CWorld::init(uint16_t _uLevel) {
 	m_vEntitiesToAdd.clear();
 
 	m_mEnemyProbabilities.clear();
-	m_mEntityPoints.clear();
 	m_vSpawnPositions.clear();
 
 	ASSERT(g_pInputManager);
@@ -96,80 +91,91 @@ bool CWorld::init(uint16_t _uLevel) {
 	Document doc;
 	doc.ParseStream(is);
 
-	// Load general level rules
-	ASSERT(doc.HasMember("playerLife"));
-	m_iPlayerLife = doc["playerLife"].GetInt();
-	ASSERT(doc.HasMember("playerSpeed"));
-	m_fPlayerSpeed = doc["playerSpeed"].GetFloat();
-	ASSERT(doc.HasMember("pickupSpawnWait"));
-	m_fPickupSpawnWait = doc["pickupSpawnWait"].GetFloat();
-	ASSERT(doc.HasMember("enemySpawnWait"));
-	m_fEnemySpawnWait = doc["enemySpawnWait"].GetFloat();
-	ASSERT(doc.HasMember("maxEnemies"));
-	m_iMaxEnemies = doc["maxEnemies"].GetInt();
-	ASSERT(doc.HasMember("bossSpawnPoints"));
-	m_iBossSpawnPoints = doc["bossSpawnPoints"].GetInt();
-	ASSERT(doc.HasMember("pickupPoints"));
-	m_mEntityPoints[CEntity::EPICKUP] = doc["pickupPoints"].GetInt();
+	// Load player level configuration
+	ASSERT(doc.HasMember("player"));
+	const Value& player = doc["player"];
+	
+	ASSERT(player.HasMember("life"));
+	int iPlayerLife = player["life"].GetInt();
+	
+	ASSERT(player.HasMember("startPosition") && player["startPosition"].Size() == 2);
+	vec2 v2StartPos = vmake(player["startPosition"][0].GetFloat(), player["startPosition"][1].GetFloat());
 
-	// Create player and first pickup
-	CEntity* pPlayer = g_pEntitiesFactory->createPlayer(vmake(WORLD_WIDTH * 0.5f, WORLD_HEIGHT * 0.5f));
-	addEntity(pPlayer);
-	m_pPlayer = pPlayer;
+	// Create player
+	m_pPlayer = g_pEntitiesFactory->createPlayer(v2StartPos, iPlayerLife);
+	addEntity(m_pPlayer);
 
+	// Load pickup level configuration
+	ASSERT(doc.HasMember("pickup"));
+	const Value& pickup = doc["pickup"];
+	
+	ASSERT(pickup.HasMember("spawnWait"));
+	m_fPickupSpawnWait = pickup["spawnWait"].GetFloat();
+
+	// Create first pickup
 	CEntity* pPickup = g_pEntitiesFactory->createWeaponPickup();
 	addEntity(pPickup);
-
-	m_fEnemySpawnTimer = m_fEnemySpawnWait;
-	m_iBossSpawnPointsCounter = m_iBossSpawnPoints;
 
 	// Load enemy level configuration
 	float fTotalProbability = 0.0f;
 	ASSERT(doc.HasMember("enemies"));
 	const Value& enemies = doc["enemies"];
-	for (SizeType i = 0; i < enemies.Size(); i++) {
-		ASSERT(enemies[i].HasMember("type"));
-		CEntity::EType eEnemyType = CEntity::getEntityTypeByName(enemies[i]["type"].GetString());
-		ASSERT(enemies[i].HasMember("spawnProbability"));
-		fTotalProbability += enemies[i]["spawnProbability"].GetFloat();
+
+	ASSERT(enemies.HasMember("spawnWait"));
+	m_fEnemySpawnWait = enemies["spawnWait"].GetFloat();
+	m_fEnemySpawnTimer = m_fEnemySpawnWait;
+	
+	ASSERT(enemies.HasMember("maxEnemies"));
+	m_iMaxEnemies = enemies["maxEnemies"].GetInt();
+
+	ASSERT(enemies.HasMember("bossSpawnPoints"));
+	m_iBossSpawnPoints = enemies["bossSpawnPoints"].GetInt();
+	m_iBossSpawnPointsCounter = m_iBossSpawnPoints;
+
+	ASSERT(enemies.HasMember("spawnProbabilities"));
+	const Value& spawnProbabilities = enemies["spawnProbabilities"];
+
+	for (SizeType i = 0; i < spawnProbabilities.Size(); ++i) {
+		ASSERT(spawnProbabilities[i].HasMember("type"));
+		CEntity::EType eEnemyType = CEntity::getEntityTypeByName(spawnProbabilities[i]["type"].GetString());
+		
+		ASSERT(spawnProbabilities[i].HasMember("spawnProbability"));
+		fTotalProbability += spawnProbabilities[i]["spawnProbability"].GetFloat();
 		m_mEnemyProbabilities[eEnemyType] = fTotalProbability;
-		ASSERT(enemies[i].HasMember("points"));
-		m_mEntityPoints[eEnemyType] = enemies[i]["points"].GetUint();
 	}
+	ASSERT(fTotalProbability == 1.f);
 
 	// Load turret level configuration
-	const Value& turrets = doc["turrets"];
-	for (SizeType i = 0; i < turrets.Size(); i++) {
-		ASSERT(turrets[i].HasMember("position") && turrets[i]["position"].Size() == 2);
-		vec2 v2Pos = vmake(turrets[i]["position"][0].GetFloat(), turrets[i]["position"][1].GetFloat());
+	if (enemies.HasMember("turrets")) {
+		const Value& turrets = enemies["turrets"];
+		for (SizeType i = 0; i < turrets.Size(); ++i) {
+			ASSERT(turrets[i].HasMember("position") && turrets[i]["position"].Size() == 2);
+			vec2 v2Pos = vmake(turrets[i]["position"][0].GetFloat(), turrets[i]["position"][1].GetFloat());
 
-		vec2 v2MoveDirection = vmake(0.0f, 0.0f);
-		if (turrets[i].HasMember("moveDirection")) {
-			ASSERT(turrets[i]["moveDirection"].Size() == 2);
-			v2MoveDirection = vmake(turrets[i]["moveDirection"][0].GetFloat(), turrets[i]["moveDirection"][1].GetFloat());
-		}
-			
-		bool bShuffleAim = true;
-		if (turrets[i].HasMember("shuffleAim")) {
-			bShuffleAim = turrets[i]["shuffleAim"].GetBool();
-		}
+			vec2 v2MoveDirection = vmake(0.0f, 0.0f);
+			if (turrets[i].HasMember("moveDirection")) {
+				ASSERT(turrets[i]["moveDirection"].Size() == 2);
+				v2MoveDirection = vmake(turrets[i]["moveDirection"][0].GetFloat(), turrets[i]["moveDirection"][1].GetFloat());
+			}
 
-		vec2 v2AimDirection = vmake(1.0f, 0.0f);
-		if (turrets[i].HasMember("aimDirection")) {
-			ASSERT(turrets[i]["aimDirection"].Size() == 2);
-			v2AimDirection = vmake(turrets[i]["aimDirection"][0].GetFloat(), turrets[i]["aimDirection"][1].GetFloat());
-		}
+			vec2 v2AimDirection = vmake(1.0f, 0.0f);
+			if (turrets[i].HasMember("aimDirection")) {
+				ASSERT(turrets[i]["aimDirection"].Size() == 2);
+				v2AimDirection = vmake(turrets[i]["aimDirection"][0].GetFloat(), turrets[i]["aimDirection"][1].GetFloat());
+			}
 
-		std::string sBTFile = "";
-		if (turrets[i].HasMember("behaviorTree")) {
-			sBTFile = turrets[i]["behaviorTree"].GetString();
-		}
+			std::string sBTFile = "";
+			if (turrets[i].HasMember("behaviorTree")) {
+				sBTFile = turrets[i]["behaviorTree"].GetString();
+			}
 
-		// Create turrets
-		CEntity* pTurret = g_pEntitiesFactory->createEnemy(v2Pos, CEntity::EENEMYTURRET, sBTFile, v2MoveDirection, v2AimDirection);
-		addEntity(pTurret);
-		++m_iCurrentEnemies;
+			// Create turret
+			CEntity* pTurret = g_pEntitiesFactory->createEnemy(v2Pos, CEntity::EENEMYTURRET, sBTFile, v2MoveDirection, v2AimDirection);
+			addEntity(pTurret);
+			++m_iCurrentEnemies;
+		}
 	}
+	
 	fclose(pFile);
 
 	// Generate spawn points

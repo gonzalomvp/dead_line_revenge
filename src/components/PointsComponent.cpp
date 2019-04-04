@@ -12,6 +12,6 @@ void CPointsComponent::receiveMessage(TMessage* _pMessage) {
 	ASSERT(_pMessage && m_pOwner && g_pWorld);
 
 	if (TMessageDestroy* pMessage = dynamic_cast<TMessageDestroy*>(_pMessage)) {
-		g_pWorld->addPoints(m_pOwner->getType());
+		g_pWorld->addPoints(uPoints);
 	}
 }
