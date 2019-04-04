@@ -2,7 +2,7 @@
   <Selector>
     <!--Fase 1, con escudo y con arma rotatoria-->
     <Parallel>
-      
+
       <CheckLife iLife="15" />
       <Sequence>
         <ChangeSprite sSprite="data/images/boss_shield.png" />
