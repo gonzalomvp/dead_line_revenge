@@ -1,7 +1,7 @@
 {
   "player": 
   {
-    "life": -1,
+    "life": 15,
     "startPosition": [ 320, 240 ]
   },
   "pickup": {
@@ -11,7 +11,7 @@
    {
     "spawnWait": 1.0,
     "maxEnemies": 5,
-    "bossSpawnPoints": 10,
+    "bossSpawnPoints": 100,
     "spawnProbabilities": [
     {
       "type": "melee",

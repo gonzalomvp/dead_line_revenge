@@ -48,41 +48,65 @@ bool CEntitiesFactory::init(const char* _sConfigFile) {
 	// Load player definition
 	ASSERT(doc.HasMember("player"));
 	const Value& player = doc["player"];
+
 	ASSERT(player.HasMember("invencibleTime"));
 	m_PlayerDef.fInvencibleTime = player["invencibleTime"].GetFloat();
+	
 	ASSERT(player.HasMember("speed"));
 	m_PlayerDef.fSpeed = player["speed"].GetFloat();
+	
 	ASSERT(player.HasMember("size") && player["size"].Size() == 2);
 	m_PlayerDef.v2Size = vmake(player["size"][0].GetFloat(), player["size"][1].GetFloat());
+	
 	ASSERT(player.HasMember("imageFile"));
 	m_PlayerDef.sImageFile = player["imageFile"].GetString();
 
 	// Load pickups definition
 	ASSERT(doc.HasMember("pickup"));
 	const Value& pickup = doc["pickup"];
-	ASSERT(pickup.HasMember("points"));
-	m_PickupDef.uPoints = pickup["points"].GetUint();
+	
 	ASSERT(pickup.HasMember("weapons"));
 	const Value& pickupsWeapons = pickup["weapons"];
-	for (SizeType i = 0; i < pickupsWeapons.Size(); i++) {
+	for (SizeType i = 0; i < pickupsWeapons.Size(); ++i) {
 		m_PickupDef.vWeapons.push_back(CWeaponComponent::getWeaponTypeByName(pickupsWeapons[i].GetString()));
 	}
+
+	ASSERT(pickup.HasMember("points"));
+	m_PickupDef.uPoints = pickup["points"].GetUint();
+	
 	ASSERT(pickup.HasMember("size") && pickup["size"].Size() == 2);
 	m_PickupDef.v2Size = vmake(pickup["size"][0].GetFloat(), pickup["size"][1].GetFloat());
+	
 	ASSERT(pickup.HasMember("imageFile"));
 	m_PickupDef.sImageFile = pickup["imageFile"].GetString();
 
 	// Load weapon definitions
+	ASSERT(doc.HasMember("weapons"));
 	const Value& weapons = doc["weapons"];
 	for (SizeType i = 0; i < weapons.Size(); i++) {
 		TWeaponDef weapon;
+		ASSERT(weapons[i].HasMember("name"));
 		weapon.eType = CWeaponComponent::getWeaponTypeByName(weapons[i]["name"].GetString());
+
+		ASSERT(weapons[i].HasMember("fireRate"));
 		weapon.fFireRate = weapons[i]["fireRate"].GetFloat();
+
+		ASSERT(weapons[i].HasMember("reloadTime"));
 		weapon.fReloadTime = weapons[i]["reloadTime"].GetFloat();
+
+		ASSERT(weapons[i].HasMember("maxBullets"));
 		weapon.iMaxBullets = weapons[i]["maxBullets"].GetInt();
+
+		ASSERT(weapons[i].HasMember("bulletSpeed"));
 		weapon.fBulletSpeed = weapons[i]["bulletSpeed"].GetFloat();
+
+		ASSERT(weapons[i].HasMember("bulletDamage"));
 		weapon.iBulletDamage = weapons[i]["bulletDamage"].GetInt();
+
+		ASSERT(weapons[i].HasMember("bulletLife"));
 		weapon.iBulletLife = weapons[i]["bulletLife"].GetInt();
+
+		ASSERT(weapons[i].HasMember("bulletRange"));
 		weapon.fBulletRange = weapons[i]["bulletRange"].GetFloat();
 
 		ASSERT(weapons[i].HasMember("bulletSize") && weapons[i]["bulletSize"].Size() == 2);
@@ -92,25 +116,48 @@ bool CEntitiesFactory::init(const char* _sConfigFile) {
 		if (weapons[i].HasMember("bulletsPerShot")) {
 			weapon.uBulletsPerShot = weapons[i]["bulletsPerShot"].GetUint();
 		}
+
+		ASSERT(weapons[i].HasMember("isAutomatic"));
 		weapon.bIsAutomatic = weapons[i]["isAutomatic"].GetBool();
+
+		ASSERT(weapons[i].HasMember("isExplossive"));
 		weapon.bIsExplossive = weapons[i]["isExplossive"].GetBool();
+
+		ASSERT(weapons[i].HasMember("isBouncy"));
 		weapon.bIsBouncy = weapons[i]["isBouncy"].GetBool();
 
-		ASSERT(weapons[i].HasMember("imageFile"));
-		weapon.sImageFile = weapons[i]["imageFile"].GetString();
+		weapon.sImageFile = "";
+		if (weapons[i].HasMember("imageFile")) {
+			weapon.sImageFile = weapons[i]["imageFile"].GetString();
+		}
 
-		weapon.sSoundFile = weapons[i]["soundFile"].GetString();
+		weapon.sSoundFile = "";
+		if (weapons[i].HasMember("soundFile")) {
+			weapon.sSoundFile = weapons[i]["soundFile"].GetString();
+		}
+		
 		m_mWeaponDef[weapon.eType] = weapon;
 	}
 
 	// Load enemy definitions
+	ASSERT(doc.HasMember("enemies"));
 	const Value& enemies = doc["enemies"];
 	for (SizeType i = 0; i < enemies.Size(); i++) {
 		TEnemyDef enemy;
-		enemy.eType = CEntity::getEntityTypeByName(enemies[i]["type"].GetString());
+
+		ASSERT(enemies[i].HasMember("name"));
+		enemy.eType = CEntity::getEntityTypeByName(enemies[i]["name"].GetString());
+
+		ASSERT(enemies[i].HasMember("life"));
 		enemy.iLife = enemies[i]["life"].GetInt();
+
+		ASSERT(enemies[i].HasMember("invencibleTime"));
 		enemy.fInvencibleTime = enemies[i]["invencibleTime"].GetFloat();
+
+		ASSERT(enemies[i].HasMember("speed"));
 		enemy.fSpeed = enemies[i]["speed"].GetFloat();
+
+		ASSERT(enemies[i].HasMember("collisionDamage"));
 		enemy.iCollisionDamage = enemies[i]["collisionDamage"].GetInt();
 		
 		ASSERT(enemies[i].HasMember("points"));
@@ -120,12 +167,18 @@ bool CEntitiesFactory::init(const char* _sConfigFile) {
 		if (enemies[i].HasMember("weapon")) {
 			enemy.eWeapon = CWeaponComponent::getWeaponTypeByName(enemies[i]["weapon"].GetString());
 		}
+
+		ASSERT(enemies[i].HasMember("size") && enemies[i]["size"].Size() == 2);
 		enemy.v2Size = vmake(enemies[i]["size"][0].GetFloat(), enemies[i]["size"][1].GetFloat());
+
+		ASSERT(enemies[i].HasMember("imageFile")); 
 		enemy.sImageFile = enemies[i]["imageFile"].GetString();
+		
 		enemy.sBTFile == "";
 		if (enemies[i].HasMember("behaviorTree")) {
 			enemy.sBTFile = enemies[i]["behaviorTree"].GetString();
 		}
+
 		m_mEnemyDef[enemy.eType] = enemy;
 	}
 

@@ -120,9 +120,7 @@
       "bulletSize": [ 0, 0 ],
       "isAutomatic": false,
       "isExplossive": false,
-      "isBouncy": false,
-      "imageFile": "",
-      "soundFile": ""
+      "isBouncy": false
     },
     {
       "name": "enemy weapon",
@@ -137,8 +135,7 @@
       "isAutomatic": false,
       "isExplossive": false,
       "isBouncy": false,
-      "imageFile": "data/images/bullet.png",
-      "soundFile": ""
+      "imageFile": "data/images/bullet.png"
     },
     {
       "name": "boss weapon1",
@@ -154,8 +151,7 @@
       "isAutomatic": false,
       "isExplossive": false,
       "isBouncy": false,
-      "imageFile": "data/images/bullet.png",
-      "soundFile": ""
+      "imageFile": "data/images/bullet.png"
     },
     {
       "name": "boss weapon2",
@@ -171,13 +167,12 @@
       "isAutomatic": false,
       "isExplossive": false,
       "isBouncy": false,
-      "imageFile": "data/images/bullet.png",
-      "soundFile": ""
+      "imageFile": "data/images/bullet.png"
     }
   ],
   "enemies": [
     {
-      "type": "melee",
+      "name": "melee",
       "life": 1,
       "invencibleTime": 0.0,
       "speed": 180.0,
@@ -188,7 +183,7 @@
       "behaviorTree": "data/bt/melee_bt.xml"
     },
     {
-      "type": "big",
+      "name": "big",
       "life": 4,
       "invencibleTime": 0.0,
       "speed": 120.0,
@@ -199,7 +194,7 @@
       "behaviorTree": "data/bt/melee_bt.xml"
     },
     {
-      "type": "range",
+      "name": "range",
       "life": 1,
       "invencibleTime": 0.0,
       "speed": 200.0,
@@ -211,7 +206,7 @@
       "behaviorTree": "data/bt/range_bt.xml"
     },
     {
-      "type": "turret",
+      "name": "turret",
       "life": 3,
       "invencibleTime": 0.0,
       "speed": 120.0,
@@ -223,7 +218,7 @@
       "behaviorTree": "data/bt/turret_bt.xml"
     },
     {
-      "type": "boss",
+      "name": "boss",
       "life": 30,
       "invencibleTime": 0.3,
       "speed": 120.0,
